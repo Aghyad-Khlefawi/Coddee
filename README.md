@@ -5,7 +5,7 @@ Coddee is a framework for building .Net applications using MVVM pattern and depe
 # Examples
 An example project is included in the source folder
 
-#Nuget
+# Nuget
 [Coddee.Core](https://www.nuget.org/packages/Coddee.Core/1.0.0)
 
 [Coddee.Data](https://www.nuget.org/packages/Coddee.Data/1.0.0)
