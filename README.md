@@ -17,7 +17,7 @@ An example project is included in the source folder
 
 [Coddee.Crypto](https://www.nuget.org/packages/Coddee.Crypto/1.0.0)
 
-[Coddee.Security ](https://www.nuget.org/packages/Coddee.Security /1.0.0)
+[Coddee.Security ](https://www.nuget.org/packages/Coddee.Security/1.0.0)
 
 
 [Coddee.Windows](https://www.nuget.org/packages/Coddee.Windows/1.0.0)
