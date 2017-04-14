@@ -1,0 +1,289 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{340CE7F7-7E40-4A54-9DE6-968F46BF7D9A}</ProjectGuid>
+    <OutputType>library</OutputType>
+    <RootNamespace>Coddee.WPF</RootNamespace>
+    <AssemblyName>Coddee.WPF</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'REST|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\REST\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Unity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=6d32ff45e0ccc69f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.4.0.1\lib\net45\Microsoft.Practices.Unity.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Unity.Configuration, Version=4.0.0.0, Culture=neutral, PublicKeyToken=6d32ff45e0ccc69f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.4.0.1\lib\net45\Microsoft.Practices.Unity.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Unity.RegistrationByConvention, Version=4.0.0.0, Culture=neutral, PublicKeyToken=6d32ff45e0ccc69f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.4.0.1\lib\net45\Microsoft.Practices.Unity.RegistrationByConvention.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.Linq" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AppBuilder\IShell.cs" />
+    <Compile Include="AppBuilder\IShellViewModel.cs" />
+    <Compile Include="AppBuilder\IWPFApplicationFactory.cs" />
+    <Compile Include="AppBuilder\LiqnRepositoryExtension.cs" />
+    <Compile Include="AppBuilder\RESTRepositoryExtenstion.cs" />
+    <Compile Include="AppBuilder\WPFApplication.cs" />
+    <Compile Include="AppBuilder\WPFApplicationBuilder.cs" />
+    <Compile Include="BindableBase.cs" />
+    <Compile Include="Collections\AsyncObservableCollectionView.cs" />
+    <Compile Include="Commands\KeyDownCommand.cs" />
+    <Compile Include="Commands\OnEnterCommand.cs" />
+    <Compile Include="Commands\RelayCommand.cs" />
+    <Compile Include="Controls\BusyIndicator.cs" />
+    <Compile Include="Controls\Form.cs" />
+    <Compile Include="Controls\FormField.cs" />
+    <Compile Include="Controls\GlowBorder.cs" />
+    <Compile Include="Controls\RegionControl.cs" />
+    <Compile Include="Controls\TabsPanel.cs" />
+    <Compile Include="Controls\WaterMarkPasswordBox.cs" />
+    <Compile Include="Controls\WaterMarkTextBox.cs" />
+    <Compile Include="Converters\NullToBoolConverter.cs" />
+    <Compile Include="Converters\NullToVisibilityConverter.cs" />
+    <Compile Include="DefaultShell\DefaultRegions.cs" />
+    <Compile Include="Extensions.cs" />
+    <Compile Include="Globals.cs" />
+    <Compile Include="Modules\BuiltInModules.cs" />
+    <Compile Include="Modules\Configuration\ConfigurationManager.cs" />
+    <Compile Include="Modules\Configuration\ConfigurationManagerModule.cs" />
+    <Compile Include="Modules\Console\ApplicationConsoleModule.cs" />
+    <Compile Include="Modules\Console\ApplicationConsoleView.xaml.cs">
+      <DependentUpon>ApplicationConsoleView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Console\ApplicationConsole.cs" />
+    <Compile Include="Modules\Console\ConsoleCommand.cs" />
+    <Compile Include="Modules\Console\ConsoleCommandArgs.cs" />
+    <Compile Include="Modules\Console\ConsoleCommandParser.cs" />
+    <Compile Include="Modules\Console\DefaultCommands.cs" />
+    <Compile Include="Modules\Console\StringLogger.cs" />
+    <Compile Include="Converters\BoolToVisibilityConverter.cs" />
+    <Compile Include="DefaultShell\DefaultShell.xaml.cs">
+      <DependentUpon>DefaultShell.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DefaultShell\DefaultShellViewModel.cs" />
+    <Compile Include="IPresentable.cs" />
+    <Compile Include="Modules\Dialogs\ConfirmationDialogView.xaml.cs">
+      <DependentUpon>ConfirmationDialogView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Dialogs\EditorDialogView.xaml.cs">
+      <DependentUpon>EditorDialogView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Dialogs\EditorDialogViewModel.cs" />
+    <Compile Include="Modules\Dialogs\ConfirmationDialogViewModel.cs" />
+    <Compile Include="Modules\Dialogs\DialogContainer.xaml.cs">
+      <DependentUpon>DialogContainer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Dialogs\DialogService.cs" />
+    <Compile Include="Modules\Dialogs\DialogServiceView.xaml.cs">
+      <DependentUpon>DialogServiceView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Dialogs\DialogServicsModule.cs" />
+    <Compile Include="Modules\Dialogs\DialogViewModelBase.cs" />
+    <Compile Include="Modules\Dialogs\IDialog.cs" />
+    <Compile Include="Modules\Dialogs\MessageDialog.cs" />
+    <Compile Include="Modules\Dialogs\MessageDialogView.xaml.cs">
+      <DependentUpon>MessageDialogView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\GlobalVariables\GlobalVariablesService.cs" />
+    <Compile Include="Modules\GlobalVariables\GlobalVariablesServiceModule.cs" />
+    <Compile Include="Modules\IApplicationModulesManager.cs" />
+    <Compile Include="Modules\Interfaces\IDialogService.cs" />
+    <Compile Include="Modules\Interfaces\INavigationService.cs" />
+    <Compile Include="Modules\Module.cs" />
+    <Compile Include="Modules\IModule.cs" />
+    <Compile Include="Modules\Interfaces\IApplicationConsole.cs" />
+    <Compile Include="Modules\Interfaces\IConfigurationManager.cs" />
+    <Compile Include="Modules\ModuleException.cs" />
+    <Compile Include="Modules\ModuleInitializationTypes.cs" />
+    <Compile Include="Modules\ApplicationModulesManager.cs" />
+    <Compile Include="Modules\Navigation\NavigationModule.cs" />
+    <Compile Include="Modules\Navigation\NavigationService.cs" />
+    <Compile Include="Modules\Navigation\NavigationServiceView.xaml.cs">
+      <DependentUpon>NavigationServiceView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\SQLBrowser\ISQLDBBrowser.cs" />
+    <Compile Include="Modules\SQLBrowser\SQLDBBrowser.cs" />
+    <Compile Include="Modules\SQLBrowser\SQLDBBrowserModule.cs" />
+    <Compile Include="Modules\SQLBrowser\SQLDBBrowserView.xaml.cs">
+      <DependentUpon>SQLDBBrowserView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\SQLBrowser\SQLNativeBrowser.cs" />
+    <Compile Include="Modules\SQLBrowser\SQLServer.cs" />
+    <Compile Include="Modules\Interfaces\IToastService.cs" />
+    <Compile Include="Modules\Toast\Toast.cs" />
+    <Compile Include="Modules\Toast\ToastService.cs" />
+    <Compile Include="Modules\Toast\ToastServiceModule.cs" />
+    <Compile Include="Modules\Toast\ToastServiceView.xaml.cs">
+      <DependentUpon>ToastServiceView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Toast\ToastTemplateSelector.cs" />
+    <Compile Include="Modules\Navigation\NavigationItem.cs" />
+    <Compile Include="PasswordBoxText.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="Regions\Region.cs" />
+    <Compile Include="Regions\RegionManager.cs" />
+    <Compile Include="Security\ILoginViewModel.cs" />
+    <Compile Include="ViewModelBase.cs" />
+    <Compile Include="XamlHelpers\FocusOnLoad.cs" />
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Coddee.Core\Coddee.Core.csproj">
+      <Project>{200805C2-E25C-4D1B-AC1E-0DBB5869AEB9}</Project>
+      <Name>Coddee.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Coddee.Data.Linq\Coddee.Data.LinqToSQL.csproj">
+      <Project>{B7F174A8-5037-4C30-9E8B-9896315AE855}</Project>
+      <Name>Coddee.Data.LinqToSQL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Coddee.Data.Rest\Coddee.Data.Rest.csproj">
+      <Project>{D37A3BAF-2C12-4947-AA65-C737DACC5B54}</Project>
+      <Name>Coddee.Data.Rest</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Coddee.Data\Coddee.Data.csproj">
+      <Project>{9541018B-0CC1-4237-8370-DF8F20940EED}</Project>
+      <Name>Coddee.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Coddee.Security\Coddee.Security.csproj">
+      <Project>{86CFA30D-188C-485D-8DF5-544313D445C7}</Project>
+      <Name>Coddee.Security</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Coddee.Secutiry\Coddee.Crypto.csproj">
+      <Project>{8912BAEF-8AD3-4F8B-A36B-7350746893FA}</Project>
+      <Name>Coddee.Crypto</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Coddee.Windows\Coddee.Windows.csproj">
+      <Project>{91804C4A-4272-4736-8DB9-61A0BBD21642}</Project>
+      <Name>Coddee.Windows</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Modules\Dialogs\ConfirmationDialogView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Modules\Dialogs\DialogContainer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Modules\Dialogs\DialogServiceView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Modules\Dialogs\EditorDialogView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Modules\Dialogs\MessageDialogView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Modules\Navigation\NavigationServiceView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Modules\SQLBrowser\SQLDBBrowserView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Modules\Toast\ToastServiceView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Themes\Generic.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Modules\Console\ApplicationConsoleView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="DefaultShell\DefaultShell.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="LICENSE.txt" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

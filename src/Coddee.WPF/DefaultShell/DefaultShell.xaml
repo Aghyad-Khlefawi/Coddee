@@ -1,0 +1,117 @@
+﻿<!-- Copyright (c) Aghyad khlefawi. All rights reserved.  
+     Licensed under the MIT License. See LICENSE file in the project root for full license information.-->
+<Window x:Class="Coddee.WPF.DefaultShell.DefaultShellView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:controls="clr-namespace:Coddee.WPF.Controls"
+        xmlns:defaultShell="clr-namespace:Coddee.WPF.DefaultShell"
+        xmlns:system="clr-namespace:System;assembly=mscorlib"
+        WindowStartupLocation="CenterScreen"
+        ShowInTaskbar="True"
+        mc:Ignorable="d"
+        Title="DefaultShell"
+        AllowsTransparency="True"
+        Background="Transparent"
+        WindowState="Maximized"
+        WindowStyle="None"
+        d:DesignHeight="768"
+        d:DesignWidth="1366"
+        x:Name="ShellWindow">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Resources.xaml" />
+                <ResourceDictionary>
+                    <defaultShell:DefaultShellViewModel x:Key="DesignViewModel" />
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Grid d:DataContext="{StaticResource DesignViewModel}"
+          Margin="5"
+          x:Name="RootGrid">
+        <controls:GlowBorder Brush="{StaticResource ApplicationAccentColor}"
+                             Background="WhiteSmoke"
+                             x:Name="GlowBorder" />
+
+        <Border x:Name="ContentBorder"
+                Background="WhiteSmoke"
+                BorderBrush="{StaticResource ApplicationAccentColor}">
+            <DockPanel>
+                <DockPanel Background="{StaticResource ApplicationAccentColor}"
+                           x:Name="ToolBar"
+                           Margin="0 0 0 0"
+                           Dock="Top"
+                           Height="35">
+                    <Label Content="{Binding ApplicationName}"
+                           VerticalAlignment="Center"
+                           Foreground="White"
+                           FontSize="16" />
+                    <DockPanel HorizontalAlignment="Right"
+                               Dock="Right">
+                        <DockPanel.Resources>
+                            <Style TargetType="Button"
+                                   BasedOn="{StaticResource HighlightButton}">
+                                <Setter Property="Padding" Value="10 0" />
+                            </Style>
+                        </DockPanel.Resources>
+                        <Button IsTabStop="False"
+                                Command="{Binding MinimizeCommand}">
+                            <Path Style="{StaticResource MinimizeShape}"
+                                  Height="3"
+                                  Width="15" />
+                        </Button>
+                        <Button x:Name="RestoreButton"
+                                Click="Restore">
+                            <Path Style="{StaticResource RestoreWindowShape}"
+                                  Stretch="Fill"
+                                  Width="15"
+                                  FlowDirection="RightToLeft"
+                                  Height="15" />
+                        </Button>
+
+                        <Button x:Name="MaximizeButton"
+                                Click="Maximaize">
+                            <Path Style="{StaticResource MaximaizeWindowShape}"
+                                  Stretch="Fill"
+                                  Width="15"
+                                  Height="15" />
+                        </Button>
+
+                        <Button IsTabStop="False"
+                                Command="{Binding ExitCommand}">
+                            <Path Style="{StaticResource ExitShape}"
+                                  Height="15"
+                                  Width="15" />
+                        </Button>
+                    </DockPanel>
+                </DockPanel>
+
+                <Grid>
+
+                    <Grid>
+                        <DockPanel>
+                            <Border
+                                Visibility="{Binding UseNavigation,Converter={StaticResource BoolToVisibilityConverter}}"
+                                Width="{StaticResource MenuWidth}" />
+                            <controls:RegionControl
+                                Region="{x:Static defaultShell:DefaultRegions.ApplicationMainRegion}" />
+                        </DockPanel>
+
+                        <controls:RegionControl HorizontalAlignment="Right"
+                                                Margin="0 5 10 5"
+                                                MaxWidth="300"
+                                                Region="{x:Static defaultShell:DefaultRegions.ToastRegion}"
+                                                Grid.Column="1" />
+                    </Grid>
+                    <controls:RegionControl HorizontalAlignment="Left"
+                                            Region="{x:Static defaultShell:DefaultRegions.NavbarRegion}" />
+                    <controls:RegionControl Region="{x:Static defaultShell:DefaultRegions.DialogRegion}" />
+
+                </Grid>
+            </DockPanel>
+        </Border>
+    </Grid>
+</Window>
