@@ -18,7 +18,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Coddee.Data", "Coddee.Data\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Coddee.Data.LinqToSQL", "Coddee.Data.Linq\Coddee.Data.LinqToSQL.csproj", "{B7F174A8-5037-4C30-9E8B-9896315AE855}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Coddee.Crypto", "Coddee.Secutiry\Coddee.Crypto.csproj", "{8912BAEF-8AD3-4F8B-A36B-7350746893FA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Coddee.Crypto", "Coddee.Crypto\Coddee.Crypto.csproj", "{8912BAEF-8AD3-4F8B-A36B-7350746893FA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Coddee.Data.Rest", "Coddee.Data.Rest\Coddee.Data.Rest.csproj", "{D37A3BAF-2C12-4947-AA65-C737DACC5B54}"
 EndProject

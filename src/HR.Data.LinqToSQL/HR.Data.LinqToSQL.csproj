@@ -92,7 +92,7 @@
       <Project>{86CFA30D-188C-485D-8DF5-544313D445C7}</Project>
       <Name>Coddee.Security</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Coddee.Secutiry\Coddee.Crypto.csproj">
+    <ProjectReference Include="..\Coddee.Crypto\Coddee.Crypto.csproj">
       <Project>{8912BAEF-8AD3-4F8B-A36B-7350746893FA}</Project>
       <Name>Coddee.Crypto</Name>
     </ProjectReference>
