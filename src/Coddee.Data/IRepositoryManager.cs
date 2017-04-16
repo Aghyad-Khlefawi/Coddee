@@ -13,7 +13,6 @@ namespace Coddee.Data
     /// </summary>
     public interface IRepositoryManager
     {
-        void Initialize(IObjectMapper mapper);
 
         /// <summary>
         /// Gets a repository by its interface

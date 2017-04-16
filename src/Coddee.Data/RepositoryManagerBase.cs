@@ -14,7 +14,7 @@ namespace Coddee.Data
     /// </summary>
     public abstract class RepositoryManagerBase : IRepositoryManager
     {
-        public virtual void Initialize(IObjectMapper mapper)
+        protected virtual void Initialize(IObjectMapper mapper)
         {
             _repositories = new Dictionary<Type, IRepository>();
             _mapper = mapper;
