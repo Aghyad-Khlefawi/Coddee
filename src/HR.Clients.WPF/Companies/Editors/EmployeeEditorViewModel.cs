@@ -10,9 +10,10 @@ using HR.Data.Repositories;
 
 namespace HR.Clients.WPF.Companies.Editors
 {
-    public class EmployeeEditorViewModel:ViewModelBase<EmployeeEditorView>
+    public class EmployeeEditorViewModel : ViewModelBase<EmployeeEditorView>
     {
         private Employee _editedItem;
+        private Company _selectedCompany;
 
         public event Action<OperationType, Employee> OnSave;
 
@@ -37,43 +38,37 @@ namespace HR.Clients.WPF.Companies.Editors
             set { SetProperty(ref this._lastName, value); }
         }
 
-        private AsyncObservableCollection<Company> _Companies;
-        public AsyncObservableCollection<Company> Companies
-        {
-            get { return _Companies; }
-            set { SetProperty(ref this._Companies, value); }
-        }
 
         public override async Task Initialize()
         {
             await base.Initialize();
-            Companies = AsyncObservableCollection<Company>.Create(await Resolve<ICompanyRepository>().GetItems());
         }
 
         public void Clear()
         {
             FirstName = null;
             LastName = null;
-            Companies.SelectedItem = null;
             _editedItem = null;
         }
 
 
         public void Add(Company companiesSelectedItem)
         {
-            Companies.SelectedItem = Companies.FirstOrDefault(e => e.ID == companiesSelectedItem.ID);
+            _selectedCompany = companiesSelectedItem;
             OperationType = OperationType.Add;
             Resolve<IDialogService>().ShowEditorDialog(GetView(), Save, Cancel);
         }
-        public void Edit(Employee item)
+
+        public void Edit(Employee item, Company companiesSelectedItem)
         {
+            _selectedCompany = companiesSelectedItem;
             _editedItem = item;
             OperationType = OperationType.Edit;
             FirstName = item.FirstName;
             LastName = item.LastName;
-            Companies.SelectedItem = Companies.FirstOrDefault(e => e.ID == item.CompanyID);
             Resolve<IDialogService>().ShowEditorDialog(GetView(), Save, Cancel);
         }
+
         private void Cancel()
         {
             Clear();
@@ -86,11 +81,6 @@ namespace HR.Clients.WPF.Companies.Editors
                 ToastError("First and last name fields are required");
                 return;
             }
-            if (Companies.SelectedItem == null)
-            {
-                ToastError("The Company field is required");
-                return;
-            }
             Employee res;
             if (OperationType == OperationType.Add)
             {
@@ -99,7 +89,9 @@ namespace HR.Clients.WPF.Companies.Editors
                     {
                         FirstName = FirstName,
                         LastName = LastName,
-                        CompanyID = Companies.SelectedItem.ID
+                        CompanyID = _selectedCompany.ID,
+                        CompanyName = _selectedCompany.Name,
+                        StateName = _selectedCompany.StateName
                     });
             }
             else
@@ -110,7 +102,9 @@ namespace HR.Clients.WPF.Companies.Editors
                         ID = _editedItem.ID,
                         FirstName = FirstName,
                         LastName = LastName,
-                        CompanyID = Companies.SelectedItem.ID
+                        CompanyID = _selectedCompany.ID,
+                        CompanyName = _selectedCompany.Name,
+                        StateName = _selectedCompany.StateName
                     });
             }
             OnSave?.Invoke(OperationType, res);

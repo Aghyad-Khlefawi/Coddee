@@ -18,57 +18,86 @@ namespace Coddee.Data.MongoDB
     public abstract class MongoRepositoryBase : RepositoryBase, IMongoRepository
     {
         protected IMongoDBManager _dbManager;
+        protected IMongoDatabase _database;
 
         /// <summary>
         /// Do any required initialization
         /// </summary>
-        public void Initialize(IMongoDBManager dbManager,
-                               IRepositoryManager repositoryManager,
-                               IObjectMapper mapper,
-                               Type implementedInterface)
+        public virtual void Initialize(IMongoDBManager dbManager,
+                                       IRepositoryManager repositoryManager,
+                                       IObjectMapper mapper,
+                                       Type implementedInterface)
         {
             _dbManager = dbManager;
+            _database = _dbManager.GetDatabase();
             Initialize(repositoryManager, mapper, implementedInterface);
+        }
+
+        protected virtual void ConfigureDetaultTableMappings<TType, TKey>(
+            BsonClassMap<TType> c,
+            Expression<Func<TType, TKey>> idMap)
+        {
+            c.AutoMap();
+            if (idMap != null)
+                c.MapIdMember(idMap);
+            c.SetIgnoreExtraElements(true);
+        }
+
+        protected virtual void ConfigureDetaultTableMappings<TType>(
+            BsonClassMap<TType> c,
+            string idColumn)
+        {
+            c.AutoMap();
+            c.MapIdProperty(idColumn);
+            c.SetIgnoreExtraElements(true);
         }
     }
 
     /// <summary>
     /// Base implementation for a MongoDB repository
-    /// <remarks>
-    /// Implements the ReadOnly functionality
-    /// </remarks>
+    /// Register class mapping for a collection 
     /// </summary>
-    public abstract class ReadOnlyMongoRepositoryBase<TModel, TKey> : MongoRepositoryBase,
-        IReadOnlyRepository<TModel, TKey>
+    public abstract class MongoRepositoryBase<TModel, TKey> : MongoRepositoryBase
     {
+        protected IMongoCollection<TModel> _collection;
         protected readonly Expression<Func<TModel, TKey>> _idProperty;
         protected readonly string _collectionName;
-        protected IMongoCollection<TModel> _collection;
 
-        protected ReadOnlyMongoRepositoryBase(string collectionName)
+        protected MongoRepositoryBase(string collectionName)
         {
             _collectionName = collectionName;
         }
 
-        protected ReadOnlyMongoRepositoryBase(string collectionName, Expression<Func<TModel, TKey>> idProperty)
+        protected MongoRepositoryBase(string collectionName, Expression<Func<TModel, TKey>> idProperty)
             : this(collectionName)
         {
             _idProperty = idProperty;
         }
 
-        public Task<TModel> this[TKey index] => _collection.Find(new BsonDocument("_id", BsonValue.Create(index)))
-            .FirstAsync();
 
-        public async Task<IEnumerable<TModel>> GetItems()
+        /// <summary>
+        /// Do any required initialization
+        /// </summary>
+        public override void Initialize(IMongoDBManager dbManager,
+                                        IRepositoryManager repositoryManager,
+                                        IObjectMapper mapper,
+                                        Type implementedInterface)
         {
-            return (await _collection.Find(e => true).ToListAsync()).AsEnumerable();
+            base.Initialize(dbManager, repositoryManager, mapper, implementedInterface);
+            RegisterTableMappings();
+            _collection = _database.GetCollection<TModel>(_collectionName);
         }
+
 
         protected virtual void RegisterTableMappings()
         {
             BsonClassMap.RegisterClassMap<TModel>(c =>
             {
-                ConfigureDetaultTableMappings(c, _idProperty);
+                if (_idProperty != null)
+                    ConfigureDetaultTableMappings(c, _idProperty);
+                else
+                    ConfigureDetaultTableMappings(c, GetDefaultIdColumnName());
+
                 ConfigureTableMappings(c);
             });
         }
@@ -78,20 +107,39 @@ namespace Coddee.Data.MongoDB
             return "ID";
         }
 
-        protected virtual void ConfigureDetaultTableMappings<TType>(
-            BsonClassMap<TType> c,
-            Expression<Func<TType, TKey>> idMap)
+
+        protected virtual void ConfigureTableMappings(BsonClassMap<TModel> bsonClassMap)
         {
-            c.AutoMap();
-            if (idMap != null)
-                c.MapIdMember(idMap);
-            else
-                c.MapIdProperty(GetDefaultIdColumnName());
-            c.SetIgnoreExtraElements(true);
+        }
+    }
+
+    /// <summary>
+    /// Base implementation for a MongoDB repository
+    /// <remarks>
+    /// Implements the ReadOnly functionality
+    /// </remarks>
+    /// </summary>
+    public abstract class ReadOnlyMongoRepositoryBase<TModel, TKey> : MongoRepositoryBase<TModel, TKey>,
+        IReadOnlyRepository<TModel, TKey>
+    {
+        protected ReadOnlyMongoRepositoryBase(string collectionName)
+            : base(collectionName)
+        {
         }
 
-        protected virtual void ConfigureTableMappings<TType>(BsonClassMap<TType> bsonClassMap)
+        protected ReadOnlyMongoRepositoryBase(string collectionName, Expression<Func<TModel, TKey>> idProperty)
+            : base(collectionName, idProperty)
         {
+        }
+
+
+        public virtual Task<TModel> this[TKey index] => _collection
+            .Find(new BsonDocument("_id", BsonValue.Create(index)))
+            .FirstAsync();
+
+        public virtual async Task<IEnumerable<TModel>> GetItems()
+        {
+            return (await _collection.Find(e => true).ToListAsync()).AsEnumerable();
         }
     }
 
@@ -114,24 +162,24 @@ namespace Coddee.Data.MongoDB
         {
         }
 
-        public async Task<TModel> UpdateItem(TModel item)
+        public virtual async Task<TModel> UpdateItem(TModel item)
         {
             await _collection.ReplaceOneAsync(new BsonDocument("_id", BsonValue.Create(item.GetKey)), item);
             return item;
         }
 
-        public async Task<TModel> InsertItem(TModel item)
+        public virtual async Task<TModel> InsertItem(TModel item)
         {
             await _collection.InsertOneAsync(item);
             return item;
         }
 
-        public Task DeleteItem(TKey ID)
+        public virtual Task DeleteItem(TKey ID)
         {
             return _collection.DeleteOneAsync(new BsonDocument("_id", BsonValue.Create(ID)));
         }
 
-        public Task DeleteItem(TModel item)
+        public virtual Task DeleteItem(TModel item)
         {
             return DeleteItem(item.GetKey);
         }

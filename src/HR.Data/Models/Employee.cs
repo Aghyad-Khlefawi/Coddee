@@ -6,7 +6,7 @@ using Coddee;
 
 namespace HR.Data.Models
 {
-    public class Employee:IUniqueObject<Guid>
+    public class Employee:IUniqueObject<Guid>,IEquatable<Employee>
     {
         public Guid ID { get; set; }
         public string FirstName { get; set; }
@@ -24,6 +24,26 @@ namespace HR.Data.Models
         public override string ToString()
         {
             return FullName;
+        }
+
+        public bool Equals(Employee other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return ID.Equals(other.ID);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((Employee) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return ID.GetHashCode();
         }
     }
 }

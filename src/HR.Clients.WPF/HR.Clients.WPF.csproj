@@ -120,6 +120,10 @@
       <Project>{200805C2-E25C-4D1B-AC1E-0DBB5869AEB9}</Project>
       <Name>Coddee.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Coddee.Data.Linq\Coddee.Data.LinqToSQL.csproj">
+      <Project>{b7f174a8-5037-4c30-9e8b-9896315ae855}</Project>
+      <Name>Coddee.Data.LinqToSQL</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Coddee.Data.Rest\Coddee.Data.Rest.csproj">
       <Project>{d37a3baf-2c12-4947-aa65-c737dacc5b54}</Project>
       <Name>Coddee.Data.Rest</Name>
@@ -135,6 +139,14 @@
     <ProjectReference Include="..\Coddee.WPF\Coddee.WPF.csproj">
       <Project>{340CE7F7-7E40-4A54-9DE6-968F46BF7D9A}</Project>
       <Name>Coddee.WPF</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HR.Data.LinqToSQL\HR.Data.LinqToSQL.csproj">
+      <Project>{c7cdd99f-b288-45d9-b06c-4aa535e2c4a8}</Project>
+      <Name>HR.Data.LinqToSQL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HR.Data.Mongo\HR.Data.Mongo.csproj">
+      <Project>{70c08f57-4641-427f-ad33-1a280efdd39f}</Project>
+      <Name>HR.Data.Mongo</Name>
     </ProjectReference>
     <ProjectReference Include="..\HR.Data.REST\HR.Data.REST.csproj">
       <Project>{7acf3991-336e-49eb-835a-b29d6762c483}</Project>

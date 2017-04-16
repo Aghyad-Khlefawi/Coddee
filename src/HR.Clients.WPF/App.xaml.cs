@@ -2,6 +2,7 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
 using System;
+using System.IO;
 using System.Windows;
 using System.Windows.Input;
 using Coddee.Loggers;
@@ -11,6 +12,7 @@ using Coddee.WPF.Navigation;
 using HR.Clients.WPF.Login;
 using HR.Clients.WPF.Main;
 using HR.Clients.WPF.Settings;
+using HR.Data.LinqToSQL;
 
 namespace HR.Clients.WPF
 {
@@ -23,6 +25,7 @@ namespace HR.Clients.WPF
 
         public override void BuildApplication(IWPFApplicationFactory app)
         {
+            var dbLocation = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..\\", "..\\", "..\\", "HR.Web", "DB"));
             app.CreateWPFApplication("HR application", AppID)
                 .UseConfigurationFile(true)
                 .UseLogger(LoggerTypes.ApplicationConsole | LoggerTypes.DebugOutput, LogRecordTypes.Debug)
@@ -33,7 +36,13 @@ namespace HR.Clients.WPF
                 .UseNavigation(HRNavigation.Navigations)
                 .UseToast()
                 .UseDialogs()
-                .UseRESTRepositoryManager("http://localhost:15297/api/", OnUnauthorizedRequest, "HR.Data.REST", true)
+
+                //.UseLinqRepositoryManager<HRDBManager,HRRepositoryManager>($@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename={dbLocation}\HRDatabase.mdf;Integrated Security=True;Connect Timeout=30",
+                //                                                           "HR.Data.LinqToSQL",
+                //                                                           true)
+                //.UseRESTRepositoryManager("http://localhost:15297/api/", OnUnauthorizedRequest, "HR.Data.REST", true)
+                .UseMongoDBRepository("mongodb://192.168.1.160:27017", "HR","HR.Data.Mongo",true)
+                
                 .Start();
         }
 

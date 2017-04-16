@@ -11,6 +11,7 @@
         mc:Ignorable="d"
         SizeToContent="Height"
         Title="Login"
+        Topmost="True"
         WindowStyle="ToolWindow"
         ShowInTaskbar="True"
         WindowStartupLocation="CenterScreen"

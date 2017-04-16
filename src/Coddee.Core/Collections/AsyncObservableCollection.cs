@@ -149,7 +149,7 @@ namespace Coddee.Collections
         /// <param name="collection">The other collection</param>
         public void Fill(IEnumerable<T> collection)
         {
-            if (collection == null) return;
+            if (collection == null || !collection.Any()) return;
             IsBusy = true;
             foreach (var item in collection)
             {

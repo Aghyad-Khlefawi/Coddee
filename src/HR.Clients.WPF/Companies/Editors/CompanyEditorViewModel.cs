@@ -2,6 +2,7 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Coddee;
@@ -59,6 +60,7 @@ namespace HR.Clients.WPF.Companies.Editors
             OperationType = OperationType.Add;
             Resolve<IDialogService>().ShowEditorDialog(GetView(), Save, Cancel);
         }
+
         public void Edit(Company item)
         {
             _editedItem = item;
@@ -67,6 +69,7 @@ namespace HR.Clients.WPF.Companies.Editors
             States.SelectedItem = States.FirstOrDefault(e => e.ID == item.StateID);
             Resolve<IDialogService>().ShowEditorDialog(GetView(), Save, Cancel);
         }
+
         private void Cancel()
         {
             Clear();
@@ -91,7 +94,9 @@ namespace HR.Clients.WPF.Companies.Editors
                     .InsertItem(new Company
                     {
                         Name = Name,
-                        StateID = States.SelectedItem.ID
+                        StateID = States.SelectedItem.ID,
+                        StateName = States.SelectedItem.Name,
+                        Employees = new List<Employee>()
                     });
             }
             else
@@ -101,7 +106,8 @@ namespace HR.Clients.WPF.Companies.Editors
                     {
                         ID = _editedItem.ID,
                         Name = Name,
-                        StateID = States.SelectedItem.ID
+                        StateID = States.SelectedItem.ID,
+                        StateName = States.SelectedItem.Name,
                     });
             }
             OnSave?.Invoke(OperationType, res);

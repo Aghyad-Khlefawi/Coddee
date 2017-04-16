@@ -54,7 +54,7 @@ namespace HR.Clients.WPF.Companies
 
         private void EditEmployee()
         {
-            _employeeEditor.Edit(Employees.SelectedItem);
+            _employeeEditor.Edit(Employees.SelectedItem,Companies.SelectedItem);
         }
 
         private void AddEmployee()
@@ -88,7 +88,7 @@ namespace HR.Clients.WPF.Companies
             var companyRepo = Resolve<ICompanyRepository>();
 
             Companies = AsyncObservableCollectionView<Company>.Create(CompanySearch,
-                                                                      await companyRepo.GetItems());
+                                                                      await companyRepo.GetDetailedItems());
 
             Employees = AsyncObservableCollectionView<Employee>.Create(EmployeeSearch);
 

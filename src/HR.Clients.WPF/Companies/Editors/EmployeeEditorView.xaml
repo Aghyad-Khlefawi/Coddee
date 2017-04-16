@@ -20,11 +20,6 @@
             <controls:FormField Title="Last name">
                 <TextBox Text="{Binding LastName,UpdateSourceTrigger=PropertyChanged}" />
             </controls:FormField>
-            <controls:FormField Title="State">
-                <ComboBox ItemsSource="{Binding Companies}"
-                          SelectedItem="{Binding Companies.SelectedItem}"
-                          DisplayMemberPath="Name" />
-            </controls:FormField>
         </controls:Form>
     </Grid>
 </UserControl>

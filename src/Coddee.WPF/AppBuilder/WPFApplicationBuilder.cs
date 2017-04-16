@@ -158,6 +158,7 @@ namespace Coddee.WPF
             catch (Exception ex)
             {
                 _logger.Log(EventsSource, ex);
+                throw;
             }
         }
 

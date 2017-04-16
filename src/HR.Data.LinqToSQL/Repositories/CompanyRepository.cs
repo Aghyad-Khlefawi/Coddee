@@ -23,25 +23,19 @@ namespace HR.Data.LinqToSQL.Repositories
 
         public override async Task<Company> InsertItem(Company item)
         {
-            var res =await base.InsertItem(item);
-            return await Execute(db =>
-            {
-                return _mapper.Map<Company>(db.CompaniesViews.First(e=>e.ID == res.ID));
-            });
+            var res = await base.InsertItem(item);
+            return await Execute(db => { return _mapper.Map<Company>(db.CompaniesViews.First(e => e.ID == res.ID)); });
+        }
+
+        public Task<IEnumerable<Company>> GetDetailedItems()
+        {
+            return Execute(db => _mapper.MapCollection<Company>(db.CompaniesViews.ToList()));
         }
 
         public override async Task<Company> UpdateItem(Company item)
         {
             var res = await base.UpdateItem(item);
-            return await Execute(db =>
-            {
-                return _mapper.Map<Company>(db.CompaniesViews.First(e => e.ID == res.ID));
-            });
-        }
-
-        protected override Task<IEnumerable<Company>> GetItemFromDB()
-        {
-            return Execute(db => _mapper.MapCollection<Company>(db.CompaniesViews.ToList()));
+            return await Execute(db => { return _mapper.Map<Company>(db.CompaniesViews.First(e => e.ID == res.ID)); });
         }
     }
 }
