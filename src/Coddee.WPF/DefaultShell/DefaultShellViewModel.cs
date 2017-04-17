@@ -91,7 +91,7 @@ namespace Coddee.WPF.DefaultShell
        
         public Task Initialize(IPresentable mainContent,bool useNavigation)
         {
-            _username = _globalVariables.GetValue<string>(Globals.Username);
+            _globalVariables.TryGetValue(Globals.Username, out _username);
             _applicationName = _globalVariables.GetValue<string>(Globals.ApplicationName);
 
             DefaultRegions.ApplicationMainRegion.View(mainContent);

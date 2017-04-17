@@ -2,9 +2,7 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media;
 
 namespace Coddee.WPF.DefaultShell
 {
@@ -17,13 +15,12 @@ namespace Coddee.WPF.DefaultShell
         public DefaultShellView()
         {
             InitializeComponent();
+            StateChanged += DefaultShellView_StateChanged;
         }
 
-
-        public void SetState(WindowState state)
+        private void DefaultShellView_StateChanged(object sender, System.EventArgs e)
         {
-            WindowState = state;
-            if (state == WindowState.Maximized)
+            if (WindowState == WindowState.Maximized)
             {
                 GlowBorder.Visibility = Visibility.Collapsed;
                 ToolBar.MouseDown -= DragWindow;
@@ -37,6 +34,11 @@ namespace Coddee.WPF.DefaultShell
                 MaximizeButton.Visibility = Visibility.Visible;
                 RestoreButton.Visibility = Visibility.Collapsed;
             }
+        }
+
+        public void SetState(WindowState state)
+        {
+            WindowState = state;
         }
 
         private void DragWindow(object sender, MouseButtonEventArgs e)
