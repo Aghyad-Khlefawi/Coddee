@@ -20,6 +20,7 @@ namespace Coddee.WPF.Navigation
     {
         bool IsSelected { get; set; }
         bool ShowTitle { get; set; }
+        bool IsInitialized { get; set; }
         Task Initialize();
 
         event EventHandler<IPresentable> NavigationRequested;
@@ -31,7 +32,7 @@ namespace Coddee.WPF.Navigation
             IPresentable destination,
             string title,
             string icon,
-            NavItemPosition position=NavItemPosition.Top)
+            NavItemPosition position = NavItemPosition.Top)
         {
             _destination = destination;
             Title = title;
@@ -39,6 +40,7 @@ namespace Coddee.WPF.Navigation
                 Icon = Geometry.Parse(icon);
             Position = position;
         }
+        public bool IsInitialized { get; set; }
 
         public event EventHandler<IPresentable> NavigationRequested;
 
@@ -81,6 +83,7 @@ namespace Coddee.WPF.Navigation
             get { return _showTitle; }
             set { SetProperty(ref this._showTitle, value); }
         }
+
         private bool _isFirstItem;
         public bool IsFirstItem
         {
@@ -95,25 +98,35 @@ namespace Coddee.WPF.Navigation
         }
         public ICommand NavigateCommand => new RelayCommand(Navigate);
 
-        private void Navigate()
+        protected virtual void Navigate()
         {
             NavigationRequested?.Invoke(this, _destination);
+        }
+
+        public override async Task Initialize()
+        {
+            await base.Initialize();
+            var vm = _destination as ViewModelBase;
+            if (vm != null)
+                await vm.Initialize();
+            IsInitialized = true;
         }
     }
 
     public class NavigationItem<TViewModel> : NavigationItem where TViewModel : IPresentable
     {
-        public NavigationItem(string title, string icon,
+        public NavigationItem(string title,
+                              string icon,
                               NavItemPosition position = NavItemPosition.Top)
             : base(null, title, icon, position)
         {
         }
 
-        public override Task Initialize()
+        protected override void Navigate()
         {
             if (_destination == null)
                 _destination = Resolve<TViewModel>();
-            return completedTask;
+            base.Navigate();
         }
     }
 }

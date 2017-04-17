@@ -39,11 +39,12 @@ namespace Coddee.WPF.DefaultShell
         public void SetState(WindowState state)
         {
             WindowState = state;
+            DefaultShellView_StateChanged(null, null);
         }
 
         private void DragWindow(object sender, MouseButtonEventArgs e)
         {
-            if (e.ChangedButton == MouseButton.Left)
+            if (e.ChangedButton == MouseButton.Left && e.ButtonState == MouseButtonState.Pressed)
                 DragMove();
         }
 
