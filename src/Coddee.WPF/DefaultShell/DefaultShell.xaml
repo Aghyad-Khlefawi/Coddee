@@ -12,10 +12,11 @@
         ShowInTaskbar="True"
         mc:Ignorable="d"
         Title="DefaultShell"
-        AllowsTransparency="True"
+        AllowsTransparency="False"
         Background="Transparent"
         WindowState="Maximized"
         WindowStyle="None"
+        ResizeMode="NoResize"
         d:DesignHeight="768"
         d:DesignWidth="1366"
         x:Name="ShellWindow">
@@ -30,15 +31,12 @@
         </ResourceDictionary>
     </Window.Resources>
     <Grid d:DataContext="{StaticResource DesignViewModel}"
-          Margin="5"
           x:Name="RootGrid">
-        <controls:GlowBorder Brush="{StaticResource ApplicationAccentColor}"
-                             Background="WhiteSmoke"
-                             x:Name="GlowBorder" />
-
+        
         <Border x:Name="ContentBorder"
                 Background="WhiteSmoke"
-                BorderBrush="{StaticResource ApplicationAccentColor}">
+                BorderBrush="LightGray"
+                BorderThickness="1">
             <DockPanel>
                 <DockPanel Background="{StaticResource ApplicationAccentColor}"
                            x:Name="ToolBar"

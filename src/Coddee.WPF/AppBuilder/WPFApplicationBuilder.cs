@@ -229,7 +229,7 @@ namespace Coddee.WPF
         /// Register the default shell as the application shell
         /// </summary>
         /// <typeparam name="TContent"></typeparam>
-        public void SetDefaultShell<TContent>(WindowState state) where TContent : IPresentable
+        public Window SetDefaultShell<TContent>(WindowState state) where TContent : IPresentable
         {
             _shell = CreateDefaultShell();
             ((DefaultShellView) _shell).SetState(state);
@@ -238,6 +238,7 @@ namespace Coddee.WPF
             _container.RegisterInstance<IDefaultShellViewModel, DefaultShellViewModel>();
             _defaultPresentable = typeof(TContent);
             _usingDefaultShell = true;
+            return (Window)_shell;
         }
 
         /// <summary>
@@ -526,10 +527,16 @@ namespace Coddee.WPF
         /// <returns></returns>
         public static IWPFApplicationBuilder UseDefaultShell<TContent>(
             this IWPFApplicationBuilder builder,
-            WindowState state = WindowState.Maximized)
+            WindowState state = WindowState.Maximized,
+            Action<Window> config = null)
             where TContent : IPresentable
         {
-            builder.SetBuildAction(BuildActions.Shell, () => builder.WPFBuilder.SetDefaultShell<TContent>(state));
+            builder.SetBuildAction(BuildActions.Shell,
+                                   () =>
+                                   {
+                                       var win = builder.WPFBuilder.SetDefaultShell<TContent>(state);
+                                       config?.Invoke(win);
+                                   });
             return builder;
         }
 
