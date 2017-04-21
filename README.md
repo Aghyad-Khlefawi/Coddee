@@ -1,6 +1,8 @@
 # Coddee
 Coddee is a framework for building .Net applications using MVVM pattern and dependency injection.
 
+# Features
+Features and thier documentation is available in the [Wiki](https://github.com/Aghyad-Khlefawi/Coddee/wiki)
 
 # Examples
 An example project is included in the source folder
