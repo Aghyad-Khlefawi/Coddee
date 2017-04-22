@@ -2,13 +2,16 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
-using System.Threading;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Threading;
 using Coddee.Loggers;
 using Coddee.Services;
+using Coddee.WPF.Commands;
 using Coddee.WPF.Modules;
 using Microsoft.Practices.Unity;
 
@@ -18,7 +21,7 @@ namespace Coddee.WPF
     /// The base class for all ViewModels of the application
     /// Contains the property changed handlers and UI execute method
     /// </summary>
-    public class ViewModelBase : BindableBase
+    public class ViewModelBase : BindableBase, IViewModel
     {
         protected static readonly Task completedTask = Task.FromResult(false);
         protected static WPFApplication _app;
@@ -27,6 +30,31 @@ namespace Coddee.WPF
         protected static IToastService _toast;
         protected static ILogger _logger;
 
+        public ViewModelBase()
+        {
+            Initialized += OnInitialized;
+            ChildCreated += OnChildCreated;
+        }
+
+        public event EventHandler Initialized;
+        public event EventHandler<IViewModel> ChildCreated;
+
+        public IViewModel Parent { get; set; }
+        public IList<IViewModel> Childreen { get; protected set; }
+        public bool IsInitialized { get; protected set; }
+
+        public TResult CreateViewModel<TResult>() where TResult : IViewModel
+        {
+            var vm = Resolve<TResult>();
+            vm.Parent = this;
+            Childreen.Add(vm);
+            ChildCreated?.Invoke(this, vm);
+            return vm;
+        }
+
+        protected virtual void OnChildCreated(object sender, IViewModel e)
+        {
+        }
 
         /// <summary>
         /// Return the running application instance
@@ -54,13 +82,24 @@ namespace Coddee.WPF
             UISynchronizationContext.ExecuteOnUIContext(action);
         }
 
+        protected virtual Task OnInitialization()
+        {
+            return completedTask;
+        }
+
         /// <summary>
         /// Called when the ViewModel is ready to be presented
         /// </summary>
         /// <returns></returns>
-        public virtual Task Initialize()
+        public async Task Initialize()
         {
-            return completedTask;
+            await OnInitialization();
+            IsInitialized = true;
+            Initialized?.Invoke(this, EventArgs.Empty);
+        }
+
+        protected virtual void OnInitialized(object sender, EventArgs e)
+        {
         }
 
         /// <summary>
@@ -139,19 +178,30 @@ namespace Coddee.WPF
     /// Contains the property changed handlers and UI execute method
     /// </summary>
     /// <typeparam name="TView"></typeparam>
-    public class ViewModelBase<TView> : ViewModelBase, IPresentable where TView : UIElement, new()
+    public class ViewModelBase<TView> : ViewModelBase, IPresentable<TView> where TView : UIElement, new()
     {
+        public ViewModelBase()
+        {
+            ViewCreate += OnViewCreated;
+        }
+
+        protected virtual void OnViewCreated(object sender, TView e)
+        {
+        }
+
         /// <summary>
         /// The view object
         /// </summary>
         protected TView _view;
+
+        public event EventHandler<TView> ViewCreate;
 
         /// <summary>
         /// Returns a the view object 
         /// Creates a new object on the first call
         /// </summary>
         /// <returns></returns>
-        public virtual UIElement GetView()
+        public virtual TView GetView()
         {
             if (_view == null)
                 ExecuteOnUIContext(() =>
@@ -162,8 +212,84 @@ namespace Coddee.WPF
                     var frameworkElement = _view as FrameworkElement;
                     if (frameworkElement != null)
                         frameworkElement.DataContext = this;
+                    ViewCreate?.Invoke(this, _view);
                 });
             return _view;
+        }
+    }
+
+    public class EditorViewModel<TView, TModel> : ViewModelBase<TView>, IEditorViewModel<TModel> where TView : UIElement, new() where TModel : new()
+
+    {
+        public EditorViewModel()
+        {
+            Saved += OnSave;
+            Canceled += OnCanceled;
+        }
+
+
+        public event EventHandler<EditorSaveArgs<TModel>> Saved;
+        public event EventHandler<EditorSaveArgs<TModel>> Canceled;
+
+        private OperationType _operationType;
+        public OperationType OperationType
+        {
+            get { return _operationType; }
+            set { SetProperty(ref this._operationType, value); }
+        }
+
+        private TModel _editedItem;
+        public TModel EditedItem
+        {
+            get { return _editedItem; }
+            set { SetProperty(ref this._editedItem, value); }
+        }
+
+        public void Add()
+        {
+            OperationType = OperationType.Add;
+            EditedItem = new TModel();
+        }
+
+        public void Edit(TModel item)
+        {
+            OperationType = OperationType.Edit;
+            EditedItem = item;
+        }
+        
+        public void Cancel()
+        {
+
+        }
+        
+        public void Save()
+        {
+            var errors = Validate();
+            if (errors != null && errors.Any())
+            {
+                ShowErrors(errors);
+            }
+            else
+            {
+                Saved?.Invoke(this, new EditorSaveArgs<TModel>(OperationType, EditedItem));
+            }
+        }
+
+        protected virtual void ShowErrors(IEnumerable<string> errors)
+        {
+        }
+
+        public virtual void OnSave(object sender, EditorSaveArgs<TModel> e)
+        {
+        }
+
+        public virtual void OnCanceled(object sender, EditorSaveArgs<TModel> e)
+        {
+        }
+
+        public virtual IEnumerable<string> Validate()
+        {
+            return null;
         }
     }
 }

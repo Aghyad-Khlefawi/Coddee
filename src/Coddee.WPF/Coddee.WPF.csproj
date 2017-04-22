@@ -98,6 +98,8 @@
     <Compile Include="DefaultShell\DefaultRegions.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Globals.cs" />
+    <Compile Include="IEditorViewModel.cs" />
+    <Compile Include="IViewModel.cs" />
     <Compile Include="Modules\BuiltInModules.cs" />
     <Compile Include="Modules\Configuration\ConfigurationManager.cs" />
     <Compile Include="Modules\Configuration\ConfigurationManagerModule.cs" />
