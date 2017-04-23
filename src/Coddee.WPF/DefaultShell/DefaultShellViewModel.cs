@@ -78,7 +78,7 @@ namespace Coddee.WPF.DefaultShell
         /// </summary>
         protected virtual void Exit()
         {
-            _app.Shutdown();
+            _app.GetSystemApplication().Shutdown();
         }
 
         /// <summary>

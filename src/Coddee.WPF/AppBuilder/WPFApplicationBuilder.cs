@@ -37,6 +37,7 @@ namespace Coddee.WPF
         private const string EventsSource = "WPFApplicationBuilder";
 
         private readonly WPFApplication _app;
+        private Application _systemApplication=>_app.GetSystemApplication();
         private readonly IUnityContainer _container;
         private readonly LogAggregator _logger;
         private IApplicationModulesManager _modulesManager;
@@ -107,15 +108,13 @@ namespace Coddee.WPF
         {
             _logger.Log(EventsSource, $"Application started", LogRecordTypes.Information);
 
-            _app.Startup += OnStartup;
-
-            //Shat the application
-            _app.RunApplication();
+            _systemApplication.Startup += OnStartup;
+            
         }
 
         private async void OnStartup(object sender, StartupEventArgs e)
         {
-            _app.Dispatcher.Invoke(() => { UISynchronizationContext.SetContext(SynchronizationContext.Current); });
+            _systemApplication.Dispatcher.Invoke(() => { UISynchronizationContext.SetContext(SynchronizationContext.Current); });
             ViewModelBase.SetApplication(_app);
             ViewModelBase.SetContainer(_container);
 
@@ -169,8 +168,8 @@ namespace Coddee.WPF
         {
             {
                 //Show the application window
-                _app.MainWindow = (Window) _shell;
-                _app.MainWindow.Closed += delegate { _app.Shutdown(); };
+                _systemApplication.MainWindow = (Window) _shell;
+                _systemApplication.MainWindow.Closed += delegate { _systemApplication.Shutdown(); };
                 _app.ShowWindow();
 
                 //Initialize shell view model
@@ -340,7 +339,7 @@ namespace Coddee.WPF
             _shell = shell;
             _container.RegisterInstance<IShell>(shell);
             var window = shell as Window;
-            _app.MainWindow = window ?? throw new ApplicationBuildException("The application shell must be a Window");
+            _app.GetSystemApplication().MainWindow = window ?? throw new ApplicationBuildException("The application shell must be a Window");
         }
 
         public ILogger GetLogger()

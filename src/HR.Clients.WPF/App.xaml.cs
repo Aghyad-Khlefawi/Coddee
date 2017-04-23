@@ -19,13 +19,23 @@ namespace HR.Clients.WPF
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
-    public partial class App : WPFApplication
+    public partial class App : Application
+    {
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            new WPFApp().Run();
+            base.OnStartup(e);
+        }
+    }
+
+
+    public class WPFApp : WPFApplication
     {
         public static Guid AppID = new Guid("c1fae5da-5d56-4116-b574-82609a453ee0");
 
         public override void BuildApplication(IWPFApplicationFactory app)
         {
-            var dbLocation = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..\\", "..\\", "..\\", "HR.Web", "DB"));
+            var dbLocation = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"..\\","..\\","..\\","HR.Web","DB"));
             app.CreateWPFApplication("HR application", AppID)
                 .UseConfigurationFile(true)
                 .UseLogger(LoggerTypes.ApplicationConsole | LoggerTypes.DebugOutput, LogRecordTypes.Debug)
@@ -36,13 +46,14 @@ namespace HR.Clients.WPF
                 .UseNavigation(HRNavigation.Navigations)
                 .UseToast()
                 .UseDialogs()
-
-                .UseLinqRepositoryManager<HRDBManager,HRRepositoryManager>($@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename={dbLocation}\HRDatabase.mdf;Integrated Security=True;Connect Timeout=30",
-                                                                           "HR.Data.LinqToSQL",
-                                                                          true)
+                .UseLinqRepositoryManager<HRDBManager, HRRepositoryManager
+                >($@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename={
+                          dbLocation
+                      }\HRDatabase.mdf;Integrated Security=True;Connect Timeout=30",
+                  "HR.Data.LinqToSQL",
+                  true)
                 //.UseRESTRepositoryManager("http://localhost:15297/api/", OnUnauthorizedRequest, "HR.Data.REST", true)
                 //.UseMongoDBRepository("mongodb://192.168.1.160:27017", "HR","HR.Data.Mongo",true)
-                
                 .Start();
         }
 

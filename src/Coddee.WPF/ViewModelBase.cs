@@ -90,7 +90,7 @@ namespace Coddee.WPF
         /// </summary>
         public Dispatcher GetDispatcher()
         {
-            return IsDesignMode() ? Application.Current.Dispatcher : _app.Dispatcher;
+            return IsDesignMode() ? Application.Current.Dispatcher : _app.GetSystemApplication().Dispatcher;
         }
 
         /// <summary>
