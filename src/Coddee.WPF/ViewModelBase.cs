@@ -49,27 +49,25 @@ namespace Coddee.WPF
             await vm.Initialize();
             return vm;
         }
+
         protected async Task<TResult> InitializeViewModel<TResult>() where TResult : IViewModel
         {
-            var vm = CreateViewModel<TResult>();
-            await vm.Initialize();
-            return vm;
+            return (TResult)await InitializeViewModel(typeof(TResult));
         }
+
         protected IViewModel CreateViewModel(Type viewModelType)
         {
-            IViewModel vm = (IViewModel)Resolve(viewModelType);
+            IViewModel vm = (IViewModel) Resolve(viewModelType);
             vm.ParentViewModel = this;
             (ChildViewModels ?? (ChildViewModels = new List<IViewModel>())).Add(vm);
             ChildCreated?.Invoke(this, vm);
+            vm.ChildCreated += ChildCreated;
             return vm;
         }
+
         protected TResult CreateViewModel<TResult>() where TResult : IViewModel
         {
-            var vm = Resolve<TResult>();
-            vm.ParentViewModel = this;
-            (ChildViewModels ?? (ChildViewModels = new List<IViewModel>())).Add(vm);
-            ChildCreated?.Invoke(this, vm);
-            return vm;
+            return (TResult) CreateViewModel(typeof(TResult));
         }
 
         protected virtual void OnChildCreated(object sender, IViewModel e)
@@ -88,7 +86,7 @@ namespace Coddee.WPF
         /// <summary>
         /// Returns the application Dispatcher
         /// </summary>
-        public Dispatcher GetDispatcher()
+        protected Dispatcher GetDispatcher()
         {
             return IsDesignMode() ? Application.Current.Dispatcher : _app.GetSystemApplication().Dispatcher;
         }
@@ -161,10 +159,12 @@ namespace Coddee.WPF
         {
             return DesignerProperties.GetIsInDesignMode(new DependencyObject());
         }
+
         protected object Resolve(Type type)
         {
             return _container.Resolve(type);
         }
+
         protected T Resolve<T>()
         {
             return _container.Resolve<T>();
@@ -185,12 +185,12 @@ namespace Coddee.WPF
             _container.RegisterInstance<T>(instance);
         }
 
-        public object FindResource(string ResourceName)
+        protected object FindResource(string ResourceName)
         {
             return Application.Current.TryFindResource(ResourceName);
         }
 
-        public T FindResource<T>(string ResourceName)
+        protected T FindResource<T>(string ResourceName)
         {
             return (T) Application.Current.TryFindResource(ResourceName);
         }

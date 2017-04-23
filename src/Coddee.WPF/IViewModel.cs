@@ -9,6 +9,9 @@ namespace Coddee.WPF
 {
     public interface IViewModel:IDisposable
     {
+        event EventHandler Initialized;
+        event EventHandler<IViewModel> ChildCreated;
+
         IViewModel ParentViewModel { get; set; }
         IList<IViewModel> ChildViewModels { get; }
 
