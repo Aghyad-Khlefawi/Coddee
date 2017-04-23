@@ -39,15 +39,15 @@ namespace Coddee.WPF
         public event EventHandler Initialized;
         public event EventHandler<IViewModel> ChildCreated;
 
-        public IViewModel Parent { get; set; }
-        public IList<IViewModel> Childreen { get; protected set; }
+        public IViewModel ParentViewModel { get; set; }
+        public IList<IViewModel> ChildViewModels { get; protected set; }
         public bool IsInitialized { get; protected set; }
 
         public TResult CreateViewModel<TResult>() where TResult : IViewModel
         {
             var vm = Resolve<TResult>();
-            vm.Parent = this;
-            Childreen.Add(vm);
+            vm.ParentViewModel = this;
+            ChildViewModels.Add(vm);
             ChildCreated?.Invoke(this, vm);
             return vm;
         }
@@ -171,6 +171,14 @@ namespace Coddee.WPF
         {
             return (T) Application.Current.TryFindResource(ResourceName);
         }
+
+        public virtual void Dispose()
+        {
+            foreach (var child in ChildViewModels)
+            {
+                child.Dispose();
+            }
+        }
     }
 
     /// <summary>
@@ -193,6 +201,7 @@ namespace Coddee.WPF
         /// The view object
         /// </summary>
         protected TView _view;
+        public TView View => (TView)GetView();
 
         public event EventHandler<TView> ViewCreate;
 
@@ -201,7 +210,7 @@ namespace Coddee.WPF
         /// Creates a new object on the first call
         /// </summary>
         /// <returns></returns>
-        public virtual TView GetView()
+        public virtual UIElement GetView()
         {
             if (_view == null)
                 ExecuteOnUIContext(() =>
@@ -216,9 +225,10 @@ namespace Coddee.WPF
                 });
             return _view;
         }
+
     }
 
-    public class EditorViewModel<TView, TModel> : ViewModelBase<TView>, IEditorViewModel<TModel> where TView : UIElement, new() where TModel : new()
+    public class EditorViewModel<TView, TModel> : ViewModelBase<TView>, IEditorViewModel<TView,TModel> where TView : UIElement, new() where TModel : new()
 
     {
         public EditorViewModel()

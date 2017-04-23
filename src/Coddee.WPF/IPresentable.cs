@@ -8,19 +8,20 @@ namespace Coddee.WPF
     /// <summary>
     /// Implemented by object that have an associated view
     /// </summary>
-    public interface IPresentable<TView> where TView:UIElement
+    public interface IPresentable
     {
         /// <summary>
         /// Returns the view associated with this object
         /// </summary>
         /// <returns></returns>
-        TView GetView();
+        UIElement GetView();
     }
+
     /// <summary>
     /// Implemented by object that have an associated view
     /// </summary>
-    public interface IPresentable:IPresentable<UIElement>
+    public interface IPresentable<TView> : IPresentable where TView : UIElement
     {
-
+        TView View { get; }
     }
 }
