@@ -59,9 +59,8 @@ namespace HR.Clients.WPF.States
             set { SetProperty(ref this._statesList, value); }
         }
 
-        public override async Task Initialize()
+        protected override async Task OnInitialization()
         {
-            await base.Initialize();
             var statesRepo = Resolve<IStateRepository>();
             StatesList =
                 AsyncObservableCollectionView<State>.Create((item, searchText) => item.Name.ToLower().Contains(searchText),

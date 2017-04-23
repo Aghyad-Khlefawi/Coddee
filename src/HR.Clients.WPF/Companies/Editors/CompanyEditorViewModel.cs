@@ -41,9 +41,8 @@ namespace HR.Clients.WPF.Companies.Editors
             set { SetProperty(ref this._states, value); }
         }
 
-        public override async Task Initialize()
+        protected override async Task OnInitialization()
         {
-            await base.Initialize();
             States = AsyncObservableCollection<State>.Create(await Resolve<IStateRepository>().GetItems());
         }
 

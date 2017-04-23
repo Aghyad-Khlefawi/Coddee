@@ -39,10 +39,7 @@ namespace HR.Clients.WPF.Companies.Editors
         }
 
 
-        public override async Task Initialize()
-        {
-            await base.Initialize();
-        }
+      
 
         public void Clear()
         {

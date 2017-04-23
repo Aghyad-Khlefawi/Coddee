@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Aghyad khlefawi. All rights reserved.  
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
+using System;
 using System.Threading.Tasks;
 
 namespace Coddee.WPF
@@ -10,6 +11,8 @@ namespace Coddee.WPF
     /// </summary>
     public interface IShellViewModel
     {
+        IViewModel CreateViewModel(Type viewModelType);
+        TViewModel CreateViewModel<TViewModel>() where TViewModel : IViewModel;
     }
 
     /// <summary>
@@ -17,6 +20,6 @@ namespace Coddee.WPF
     /// </summary>
     public interface IDefaultShellViewModel : IShellViewModel
     {
-        Task Initialize(IPresentable mainContent,bool useNavigation);
+        Task<IViewModel> Initialize(Type defaultPresentable, bool useNavigation);
     }
 }

@@ -43,7 +43,7 @@ namespace Coddee.WPF
 
         private bool _usingDefaultShell;
         private Type _defaultPresentable;
-        private IPresentable _mainContent;
+        private IViewModel _mainContent;
         private IShell _shell;
         private LoggerTypes _loggerType;
         private ILoginViewModel _loginViewModel;
@@ -178,14 +178,11 @@ namespace Coddee.WPF
                 var shellVmBase = shellViewModel as ViewModelBase;
                 if (_usingDefaultShell)
                 {
-                    _mainContent = (IPresentable) _container.Resolve(_defaultPresentable);
-                    InvokeBuildAction(BuildActions.Navigation);
-                    await ((IDefaultShellViewModel) shellVmBase).Initialize(_mainContent,
+                    _mainContent=await((IDefaultShellViewModel) shellVmBase).Initialize(_defaultPresentable,
                                                                             _buildActions.ContainsKey(BuildActions
                                                                                                           .Navigation));
-                    var mainViewModel = _mainContent as ViewModelBase;
-                    if (mainViewModel != null)
-                        await mainViewModel.Initialize();
+                    InvokeBuildAction(BuildActions.Navigation);
+
                 }
                 else
                     await shellVmBase?.Initialize();
@@ -358,7 +355,7 @@ namespace Coddee.WPF
 
         public IPresentable GetDefaultPresentable()
         {
-            return _mainContent;
+            return (IPresentable)_mainContent;
         }
 
         public void SetLoginViewModel(ILoginViewModel vm)

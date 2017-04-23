@@ -65,11 +65,11 @@ namespace HR.Clients.WPF.Login
 
         }
 
-        public override Task Initialize()
+        protected override Task OnInitialization()
         {
             _authenticationProvider = Resolve<IUserRepository>();
             RegisterInstance<IAuthenticationProvider<HRAuthenticationResponse>>(_authenticationProvider);
-            return completedTask;
+            return base.OnInitialization();
         }
     }
 }

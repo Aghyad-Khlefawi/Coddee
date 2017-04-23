@@ -39,16 +39,12 @@ namespace HR.Clients.WPF.Main
             set { SetProperty(ref this._username, value); }
         }
 
-        public override async Task Initialize()
+        protected override async Task OnInitialization()
         {
-            await base.Initialize();
             try
             {
-                StatesViewModel = Resolve<StatesViewModel>();
-                await StatesViewModel.Initialize();
-
-                CompaniesViewModel = Resolve<CompaniesViewModel>();
-                await CompaniesViewModel.Initialize();
+                StatesViewModel = await InitializeViewModel<StatesViewModel>();
+                CompaniesViewModel = await InitializeViewModel<CompaniesViewModel>();
             }
             catch (Exception e)
             {

@@ -2,9 +2,6 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using Coddee.Collections;
 using Coddee.WPF.Commands;
@@ -61,6 +58,9 @@ namespace Coddee.WPF.Modules.Navigation
 
         public void AddNavigationItem(INavigationItem navigationItem)
         {
+            if (!navigationItem.DestinationResolved)
+                navigationItem.SetDestination((IPresentable)Resolve<IShellViewModel>()
+                                                  .CreateViewModel(navigationItem.DestinationType));
             navigationItem.NavigationRequested += NavigationItem_NavigationRequested;
             NavigationItems.Add(navigationItem);
         }

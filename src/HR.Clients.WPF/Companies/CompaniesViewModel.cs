@@ -82,9 +82,8 @@ namespace HR.Clients.WPF.Companies
             _companyEditor.Add();
         }
 
-        public override async Task Initialize()
+        protected override async Task OnInitialization()
         {
-            await base.Initialize();
             var companyRepo = Resolve<ICompanyRepository>();
 
             Companies = AsyncObservableCollectionView<Company>.Create(CompanySearch,
@@ -94,12 +93,11 @@ namespace HR.Clients.WPF.Companies
 
             Companies.SelectedItemChanged += CompanySelected;
 
-            _companyEditor = Resolve<CompanyEditorViewModel>();
-            await _companyEditor.Initialize();
+            _companyEditor = await InitializeViewModel<CompanyEditorViewModel>();
             _companyEditor.OnSave += CompanySaved;
 
-            _employeeEditor = Resolve<EmployeeEditorViewModel>();
-            await _employeeEditor.Initialize();
+            _employeeEditor = await InitializeViewModel<EmployeeEditorViewModel>();
+
             _employeeEditor.OnSave += EmployeeSaved;
         }
 

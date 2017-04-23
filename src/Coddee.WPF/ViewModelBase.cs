@@ -43,11 +43,31 @@ namespace Coddee.WPF
         public IList<IViewModel> ChildViewModels { get; protected set; }
         public bool IsInitialized { get; protected set; }
 
-        public TResult CreateViewModel<TResult>() where TResult : IViewModel
+        protected async Task<IViewModel> InitializeViewModel(Type viewModelType)
+        {
+            var vm = CreateViewModel(viewModelType);
+            await vm.Initialize();
+            return vm;
+        }
+        protected async Task<TResult> InitializeViewModel<TResult>() where TResult : IViewModel
+        {
+            var vm = CreateViewModel<TResult>();
+            await vm.Initialize();
+            return vm;
+        }
+        protected IViewModel CreateViewModel(Type viewModelType)
+        {
+            IViewModel vm = (IViewModel)Resolve(viewModelType);
+            vm.ParentViewModel = this;
+            (ChildViewModels ?? (ChildViewModels = new List<IViewModel>())).Add(vm);
+            ChildCreated?.Invoke(this, vm);
+            return vm;
+        }
+        protected TResult CreateViewModel<TResult>() where TResult : IViewModel
         {
             var vm = Resolve<TResult>();
             vm.ParentViewModel = this;
-            ChildViewModels.Add(vm);
+            (ChildViewModels ?? (ChildViewModels = new List<IViewModel>())).Add(vm);
             ChildCreated?.Invoke(this, vm);
             return vm;
         }
@@ -141,7 +161,10 @@ namespace Coddee.WPF
         {
             return DesignerProperties.GetIsInDesignMode(new DependencyObject());
         }
-
+        protected object Resolve(Type type)
+        {
+            return _container.Resolve(type);
+        }
         protected T Resolve<T>()
         {
             return _container.Resolve<T>();
@@ -201,7 +224,7 @@ namespace Coddee.WPF
         /// The view object
         /// </summary>
         protected TView _view;
-        public TView View => (TView)GetView();
+        public TView View => (TView) GetView();
 
         public event EventHandler<TView> ViewCreate;
 
@@ -225,10 +248,10 @@ namespace Coddee.WPF
                 });
             return _view;
         }
-
     }
 
-    public class EditorViewModel<TView, TModel> : ViewModelBase<TView>, IEditorViewModel<TView,TModel> where TView : UIElement, new() where TModel : new()
+    public class EditorViewModel<TView, TModel> : ViewModelBase<TView>, IEditorViewModel<TView, TModel>
+        where TView : UIElement, new() where TModel : new()
 
     {
         public EditorViewModel()
@@ -266,12 +289,11 @@ namespace Coddee.WPF
             OperationType = OperationType.Edit;
             EditedItem = item;
         }
-        
+
         public void Cancel()
         {
-
         }
-        
+
         public void Save()
         {
             var errors = Validate();
