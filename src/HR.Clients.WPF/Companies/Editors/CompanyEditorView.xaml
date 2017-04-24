@@ -15,7 +15,7 @@
     <Grid d:DataContext="{StaticResource designData}">
         <controls:Form>
             <controls:FormField Title="Name">
-                <TextBox Text="{Binding Name,UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBox Text="{Binding EditedItem.Name,UpdateSourceTrigger=PropertyChanged}"/>
             </controls:FormField>
             <controls:FormField Title="State">
                 <ComboBox ItemsSource="{Binding States}"

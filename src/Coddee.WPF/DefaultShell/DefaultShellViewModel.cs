@@ -91,16 +91,16 @@ namespace Coddee.WPF.DefaultShell
 
         private IViewModel _mainViewModel;
 
-        public async Task<IViewModel> Initialize(Type defaultPresentable, bool useNavigation)
+        public IViewModel SetMainContent(Type defaultPresentable, bool useNavigation)
         {
             _globalVariables.TryGetValue(Globals.Username, out _username);
             _applicationName = _globalVariables.GetValue<string>(Globals.ApplicationName);
 
 
             UseNavigation = useNavigation;
-            _mainViewModel = await InitializeViewModel(defaultPresentable);
-            DefaultRegions.ApplicationMainRegion.View((IPresentable)_mainViewModel);
-            await base.Initialize();
+            _mainViewModel = CreateViewModel(defaultPresentable);
+            _mainViewModel.Initialize();
+            DefaultRegions.ApplicationMainRegion.View((IPresentable) _mainViewModel);
             return _mainViewModel;
         }
 

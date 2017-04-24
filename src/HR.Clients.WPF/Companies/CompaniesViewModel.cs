@@ -75,30 +75,29 @@ namespace HR.Clients.WPF.Companies
         private void EditCompany()
         {
             _companyEditor.Edit(Companies.SelectedItem);
+            Resolve<IDialogService>().ShowEditorDialog(_companyEditor);
         }
 
         private void AddCompany()
         {
             _companyEditor.Add();
+            Resolve<IDialogService>().ShowEditorDialog(_companyEditor);
         }
 
         protected override async Task OnInitialization()
         {
             var companyRepo = Resolve<ICompanyRepository>();
 
-            Companies = AsyncObservableCollectionView<Company>.Create(CompanySearch,
-                                                                      await companyRepo.GetDetailedItems());
-
+            Companies = AsyncObservableCollectionView<Company>.Create(CompanySearch,await companyRepo.GetDetailedItems());
             Employees = AsyncObservableCollectionView<Employee>.Create(EmployeeSearch);
 
             Companies.SelectedItemChanged += CompanySelected;
 
             _companyEditor = await InitializeViewModel<CompanyEditorViewModel>();
-            _companyEditor.OnSave += CompanySaved;
+            _companyEditor.Saved += CompanySaved;
 
             _employeeEditor = await InitializeViewModel<EmployeeEditorViewModel>();
-
-            _employeeEditor.OnSave += EmployeeSaved;
+            _employeeEditor.Saved += EmployeeSaved;
         }
 
         private bool EmployeeSearch(Employee item, string search)
@@ -113,9 +112,9 @@ namespace HR.Clients.WPF.Companies
                    item.StateName.ToLower().Contains(search);
         }
 
-        private void CompanySaved(OperationType op, Company company)
+        private void CompanySaved(object sernder,EditorSaveArgs<Company> args)
         {
-            Companies.Update(op,company);
+            Companies.Update(args.OperationType, args.Item);
             ToastSuccess();
         }
 
@@ -128,14 +127,14 @@ namespace HR.Clients.WPF.Companies
             }
         }
 
-        private void EmployeeSaved(OperationType op, Employee employee)
+        private void EmployeeSaved(object sernder, EditorSaveArgs<Employee> args)
         {
-            if (employee.CompanyID == Companies.SelectedItem.ID)
+            if (args.Item.CompanyID == Companies.SelectedItem.ID)
             {
-                Employees.Update(op, employee);
+                Employees.Update(args.OperationType, args.Item);
             }
             else
-                Employees.Remove(e=>e.ID == employee.ID);
+                Employees.Remove(e=>e.ID == args.Item.ID);
             ToastSuccess();
         }
         

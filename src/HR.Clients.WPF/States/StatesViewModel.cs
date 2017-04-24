@@ -2,6 +2,7 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
 using System.ComponentModel;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Input;
@@ -61,9 +62,11 @@ namespace HR.Clients.WPF.States
 
         protected override async Task OnInitialization()
         {
+            Thread.Sleep(2000);
             var statesRepo = Resolve<IStateRepository>();
             StatesList =
-                AsyncObservableCollectionView<State>.Create((item, searchText) => item.Name.ToLower().Contains(searchText),
+                AsyncObservableCollectionView<State>.Create((item, searchText) => item.Name.ToLower()
+                                                                .Contains(searchText),
                                                             await statesRepo.GetItems());
         }
     }

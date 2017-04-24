@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
+using Coddee.Data;
 using Coddee.Loggers;
 using Coddee.Services;
 using Coddee.WPF.Commands;
@@ -34,6 +35,7 @@ namespace Coddee.WPF
         {
             Initialized += OnInitialized;
             ChildCreated += OnChildCreated;
+            ChildViewModels = new List<IViewModel>();
         }
 
         public event EventHandler Initialized;
@@ -42,6 +44,13 @@ namespace Coddee.WPF
         public IViewModel ParentViewModel { get; set; }
         public IList<IViewModel> ChildViewModels { get; protected set; }
         public bool IsInitialized { get; protected set; }
+
+        private bool _isBusy;
+        public bool IsBusy
+        {
+            get { return _isBusy; }
+            set { SetProperty(ref this._isBusy, value); }
+        }
 
         protected async Task<IViewModel> InitializeViewModel(Type viewModelType)
         {
@@ -52,14 +61,14 @@ namespace Coddee.WPF
 
         protected async Task<TResult> InitializeViewModel<TResult>() where TResult : IViewModel
         {
-            return (TResult)await InitializeViewModel(typeof(TResult));
+            return (TResult) await InitializeViewModel(typeof(TResult));
         }
 
         protected IViewModel CreateViewModel(Type viewModelType)
         {
             IViewModel vm = (IViewModel) Resolve(viewModelType);
             vm.ParentViewModel = this;
-            (ChildViewModels ?? (ChildViewModels = new List<IViewModel>())).Add(vm);
+            ChildViewModels.Add(vm);
             ChildCreated?.Invoke(this, vm);
             vm.ChildCreated += ChildCreated;
             return vm;
@@ -109,11 +118,16 @@ namespace Coddee.WPF
         /// Called when the ViewModel is ready to be presented
         /// </summary>
         /// <returns></returns>
-        public async Task Initialize()
+        public Task Initialize()
         {
-            await OnInitialization();
-            IsInitialized = true;
-            Initialized?.Invoke(this, EventArgs.Empty);
+            IsBusy = true;
+            return Task.Run(async () =>
+            {
+                await OnInitialization();
+                IsInitialized = true;
+                IsBusy = false;
+                Initialized?.Invoke(this, EventArgs.Empty);
+            });
         }
 
         protected virtual void OnInitialized(object sender, EventArgs e)
@@ -294,8 +308,13 @@ namespace Coddee.WPF
         {
         }
 
+        public virtual void PreSave()
+        {
+        }
+
         public void Save()
         {
+            PreSave();
             var errors = Validate();
             if (errors != null && errors.Any())
             {
@@ -323,5 +342,21 @@ namespace Coddee.WPF
         {
             return null;
         }
+    }
+
+    public class EditorViewModel<TView, TRepository, TModel, TKey> : EditorViewModel<TView, TModel>
+        where TView : UIElement, new()
+        where TModel : class, new()
+        where TRepository : class, ICRUDRepository<TModel, TKey>
+    {
+        protected TRepository _repository;
+
+        protected override Task OnInitialization()
+        {
+            _repository = Resolve<TRepository>();
+            Saved += _repository.Update;
+            return base.OnInitialization();
+        }
+        
     }
 }

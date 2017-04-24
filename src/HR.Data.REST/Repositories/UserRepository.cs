@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Coddee.Data;
-using Coddee.Data.Rest;
+using Coddee.Data.REST;
 using Coddee.Security;
 using HR.Data.Models;
 using HR.Data.Repositories;

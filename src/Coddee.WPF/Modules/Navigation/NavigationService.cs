@@ -2,6 +2,7 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Coddee.Collections;
 using Coddee.WPF.Commands;
@@ -47,8 +48,8 @@ namespace Coddee.WPF.Modules.Navigation
         private Region _navigationRegion;
 
         public void Initialize(Region navbarRegion,
-                                     Region navigationRegion,
-                                     IEnumerable<INavigationItem> navigationItems)
+                               Region navigationRegion,
+                               IEnumerable<INavigationItem> navigationItems)
         {
             _navigationRegion = navigationRegion;
             NavigationItems = AsyncObservableCollection<INavigationItem>.Create();
@@ -59,7 +60,7 @@ namespace Coddee.WPF.Modules.Navigation
         public void AddNavigationItem(INavigationItem navigationItem)
         {
             if (!navigationItem.DestinationResolved)
-                navigationItem.SetDestination((IPresentable)Resolve<IShellViewModel>()
+                navigationItem.SetDestination((IPresentable) Resolve<IShellViewModel>()
                                                   .CreateViewModel(navigationItem.DestinationType));
             navigationItem.NavigationRequested += NavigationItem_NavigationRequested;
             NavigationItems.Add(navigationItem);
@@ -78,16 +79,16 @@ namespace Coddee.WPF.Modules.Navigation
             ShowTitles = !ShowTitles;
         }
 
-        private async void NavigationItem_NavigationRequested(object sender, IPresentable e)
+        private void NavigationItem_NavigationRequested(object sender, IPresentable e)
         {
             var nav = sender as INavigationItem;
             foreach (var navigationItem in NavigationItems)
             {
                 navigationItem.IsSelected = false;
             }
-            if (!nav.IsInitialized)
-                await nav.Initialize();
             _navigationRegion.View(e);
+            if (!nav.IsInitialized)
+                Task.Factory.StartNew(async () => { await nav.Initialize(); });
             ShowTitles = false;
             nav.IsSelected = true;
         }

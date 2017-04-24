@@ -9,7 +9,7 @@ namespace Coddee.WPF
     /// <summary>
     /// This interface represent a WPF application shell ViewModel
     /// </summary>
-    public interface IShellViewModel
+    public interface IShellViewModel:IViewModel
     {
         IViewModel CreateViewModel(Type viewModelType);
         TViewModel CreateViewModel<TViewModel>() where TViewModel : IViewModel;
@@ -20,6 +20,6 @@ namespace Coddee.WPF
     /// </summary>
     public interface IDefaultShellViewModel : IShellViewModel
     {
-        Task<IViewModel> Initialize(Type defaultPresentable, bool useNavigation);
+        IViewModel SetMainContent(Type defaultPresentable, bool useNavigation);
     }
 }

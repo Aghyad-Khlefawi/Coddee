@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Coddee.Data;
-using Coddee.Data.Rest;
+using Coddee.Data.REST;
 using HR.Data.Models;
 using HR.Data.Repositories;
 
@@ -14,7 +14,11 @@ namespace HR.Data.REST.Repositories
     [Repository(typeof(IEmployeeRepository))]
     public class EmployeeRepository: CRUDRESTRepositoryBase<Models.Employee,Guid>, IEmployeeRepository
     {
-        public override string ControllerName => "Employee";
+        public EmployeeRepository()
+            :base("Employee")
+        {
+            
+        }
 
         public Task<IEnumerable<Employee>> GetEmployeesByCompany(Guid companyID)
         {

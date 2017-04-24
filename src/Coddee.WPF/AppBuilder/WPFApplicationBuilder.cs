@@ -177,7 +177,8 @@ namespace Coddee.WPF
                 var shellVmBase = shellViewModel as ViewModelBase;
                 if (_usingDefaultShell)
                 {
-                    _mainContent=await((IDefaultShellViewModel) shellVmBase).Initialize(_defaultPresentable,
+                    await ((IDefaultShellViewModel) shellVmBase).Initialize();
+                    _mainContent = ((IDefaultShellViewModel)shellVmBase).SetMainContent(_defaultPresentable,
                                                                             _buildActions.ContainsKey(BuildActions
                                                                                                           .Navigation));
                     InvokeBuildAction(BuildActions.Navigation);
