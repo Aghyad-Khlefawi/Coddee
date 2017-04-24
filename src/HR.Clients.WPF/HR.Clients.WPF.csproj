@@ -124,9 +124,9 @@
       <Project>{b7f174a8-5037-4c30-9e8b-9896315ae855}</Project>
       <Name>Coddee.Data.LinqToSQL</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Coddee.Data.Rest\Coddee.Data.Rest.csproj">
+    <ProjectReference Include="..\Coddee.Data.Rest\Coddee.Data.REST.csproj">
       <Project>{d37a3baf-2c12-4947-aa65-c737dacc5b54}</Project>
-      <Name>Coddee.Data.Rest</Name>
+      <Name>Coddee.Data.REST</Name>
     </ProjectReference>
     <ProjectReference Include="..\Coddee.Data\Coddee.Data.csproj">
       <Project>{9541018b-0cc1-4237-8370-df8f20940eed}</Project>

@@ -3,7 +3,7 @@
 
 using System;
 using Coddee.AppBuilder;
-using Coddee.Data.Rest;
+using Coddee.Data.REST;
 
 namespace Coddee.WPF.AppBuilder
 {

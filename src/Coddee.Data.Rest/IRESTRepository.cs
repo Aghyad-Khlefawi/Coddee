@@ -4,7 +4,7 @@
 using System;
 using System.Net.Http;
 
-namespace Coddee.Data.Rest
+namespace Coddee.Data.REST
 {
     /// <summary>
     /// Defines the requirements for a repository that uses a REST api

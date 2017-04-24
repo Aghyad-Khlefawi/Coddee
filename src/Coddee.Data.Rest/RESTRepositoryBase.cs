@@ -10,7 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
-namespace Coddee.Data.Rest
+namespace Coddee.Data.REST
 {
     /// <summary>
     /// Base implementation for a REST repository functionality
@@ -305,14 +305,20 @@ namespace Coddee.Data.Rest
     /// </summary>
     /// <typeparam name="TModel">The model type</typeparam>
     /// <typeparam name="TKey">The table key(ID) type</typeparam>
-    public abstract class ReadOnlyRESTRepositoryBase<TModel, TKey> : RESTRepositoryBase, IReadOnlyRepository<TModel, TKey>
+    public abstract class ReadOnlyRESTRepositoryBase<TModel, TKey> : RESTRepositoryBase,
+        IReadOnlyRepository<TModel, TKey>
     {
+        protected ReadOnlyRESTRepositoryBase(string controllerName)
+        {
+            ControllerName = controllerName;
+        }
+
+        public string ControllerName { get; private set; }
+
         /// <summary>
         /// Return the name of the targeted controller
         /// </summary>
         /// <returns></returns>
-        public abstract string ControllerName { get; }
-
         protected Task<T> GetFromController<T>(string action,
                                                params KeyValuePair<string, string>[] param)
         {
@@ -344,6 +350,10 @@ namespace Coddee.Data.Rest
         ICRUDRepository<TModel, TKey>
         where TModel : IUniqueObject<TKey>
     {
+        protected CRUDRESTRepositoryBase(string controllerName) : base(controllerName)
+        {
+        }
+
         protected Task PostToController(string action,
                                         object param = null)
         {
@@ -372,9 +382,6 @@ namespace Coddee.Data.Rest
         {
             return Delete(ControllerName, action, id.ToString());
         }
-
-
-
 
 
         public Task<TModel> UpdateItem(TModel item)

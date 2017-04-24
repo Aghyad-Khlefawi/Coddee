@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26403.0
+VisualStudioVersion = 15.0.26403.7
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Coddee.Core", "Coddee.Core\Coddee.Core.csproj", "{200805C2-E25C-4D1B-AC1E-0DBB5869AEB9}"
 EndProject
@@ -20,7 +20,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Coddee.Data.LinqToSQL", "Co
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Coddee.Crypto", "Coddee.Crypto\Coddee.Crypto.csproj", "{8912BAEF-8AD3-4F8B-A36B-7350746893FA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Coddee.Data.Rest", "Coddee.Data.Rest\Coddee.Data.Rest.csproj", "{D37A3BAF-2C12-4947-AA65-C737DACC5B54}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Coddee.Data.REST", "Coddee.Data.Rest\Coddee.Data.REST.csproj", "{D37A3BAF-2C12-4947-AA65-C737DACC5B54}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Coddee.AspNet", "Coddee.AspNet\Coddee.AspNet.csproj", "{37CCE7B1-AAD7-4D4A-A783-D7DADEB7F3B7}"
 EndProject
