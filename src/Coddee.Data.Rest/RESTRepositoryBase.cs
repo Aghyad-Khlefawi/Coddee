@@ -17,8 +17,8 @@ namespace Coddee.Data.REST
     /// </summary>
     public abstract class RESTRepositoryBase : RepositoryBase, IRESTRepository
     {
-        private HttpClient _httpClient;
-        private Action _unauthorizedRequestHandler;
+        protected HttpClient _httpClient;
+        protected Action _unauthorizedRequestHandler;
 
         public void Initialize(HttpClient httpClient,
                                Action unauthorizedRequestHandler,

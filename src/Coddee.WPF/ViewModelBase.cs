@@ -250,17 +250,22 @@ namespace Coddee.WPF
         public virtual UIElement GetView()
         {
             if (_view == null)
-                ExecuteOnUIContext(() =>
-                {
-                    _view = new TView();
-                    // Check if the view is a Framework element then
-                    // set the DataContext to this ViewModel
-                    var frameworkElement = _view as FrameworkElement;
-                    if (frameworkElement != null)
-                        frameworkElement.DataContext = this;
-                    ViewCreate?.Invoke(this, _view);
-                });
+                CreateView();
             return _view;
+        }
+
+        protected void CreateView()
+        {
+            ExecuteOnUIContext(() =>
+            {
+                _view = new TView();
+                // Check if the view is a Framework element then
+                // set the DataContext to this ViewModel
+                var frameworkElement = _view as FrameworkElement;
+                if (frameworkElement != null)
+                    frameworkElement.DataContext = this;
+                ViewCreate?.Invoke(this, _view);
+            });
         }
     }
 

@@ -12,5 +12,6 @@ namespace Coddee.WPF.Modules
         public const string ToastService = nameof(ToastService);
         public const string NavigationService = nameof(NavigationService);
         public const string DialogService = nameof(DialogService);
+        public const string DebugTool = nameof(DebugTool);
     }
 }

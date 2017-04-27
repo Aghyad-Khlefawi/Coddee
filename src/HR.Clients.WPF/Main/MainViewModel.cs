@@ -3,10 +3,8 @@
 
 using System;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using Coddee.WPF;
-using Coddee.WPF.DefaultShell;
 using Coddee.WPF.Modules;
 using Coddee.WPF.Modules.Console;
 using HR.Clients.WPF.Companies;

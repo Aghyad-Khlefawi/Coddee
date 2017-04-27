@@ -14,6 +14,7 @@ using Coddee.Loggers;
 using Coddee.WPF.AppBuilder;
 using Coddee.AppBuilder;
 using Coddee.Data;
+using Coddee.Security;
 using Coddee.Services;
 using Coddee.SQL;
 using Coddee.Windows.Mapper;
@@ -37,7 +38,7 @@ namespace Coddee.WPF
         private const string EventsSource = "WPFApplicationBuilder";
 
         private readonly WPFApplication _app;
-        private Application _systemApplication=>_app.GetSystemApplication();
+        private Application _systemApplication => _app.GetSystemApplication();
         private readonly IUnityContainer _container;
         private readonly LogAggregator _logger;
         private IApplicationModulesManager _modulesManager;
@@ -94,7 +95,7 @@ namespace Coddee.WPF
             _modulesManager.RegisterModule(_modulesManager.DescoverModulesFromAssambles(Assembly.GetAssembly(GetType()))
                                                .ToArray());
             _modulesManager.InitializeAutoModules();
-
+            _app.OnAutoModulesInitialized();
             _container.Resolve<IGlobalVariablesService>().SetValue(Globals.ApplicationName, applicationName);
             return this;
         }
@@ -109,12 +110,15 @@ namespace Coddee.WPF
             _logger.Log(EventsSource, $"Application started", LogRecordTypes.Information);
 
             _systemApplication.Startup += OnStartup;
-            
         }
 
         private async void OnStartup(object sender, StartupEventArgs e)
         {
-            _systemApplication.Dispatcher.Invoke(() => { UISynchronizationContext.SetContext(SynchronizationContext.Current); });
+            _systemApplication.Dispatcher.Invoke(() =>
+            {
+                UISynchronizationContext
+                    .SetContext(SynchronizationContext.Current);
+            });
             ViewModelBase.SetApplication(_app);
             ViewModelBase.SetContainer(_container);
 
@@ -129,6 +133,7 @@ namespace Coddee.WPF
                 InvokeBuildAction(BuildActions.Login);
                 InvokeBuildAction(BuildActions.Shell);
                 InvokeBuildAction(BuildActions.AppConsole);
+                InvokeBuildAction(BuildActions.DebugTool);
                 InvokeBuildAction(BuildActions.DialogService);
 
 
@@ -178,11 +183,11 @@ namespace Coddee.WPF
                 if (_usingDefaultShell)
                 {
                     await ((IDefaultShellViewModel) shellVmBase).Initialize();
-                    _mainContent = ((IDefaultShellViewModel)shellVmBase).SetMainContent(_defaultPresentable,
-                                                                            _buildActions.ContainsKey(BuildActions
-                                                                                                          .Navigation));
+                    _mainContent = ((IDefaultShellViewModel) shellVmBase).SetMainContent(_defaultPresentable,
+                                                                                         _buildActions
+                                                                                             .ContainsKey(BuildActions
+                                                                                                              .Navigation));
                     InvokeBuildAction(BuildActions.Navigation);
-
                 }
                 else
                     await shellVmBase?.Initialize();
@@ -235,7 +240,7 @@ namespace Coddee.WPF
             _container.RegisterInstance<IDefaultShellViewModel, DefaultShellViewModel>();
             _defaultPresentable = typeof(TContent);
             _usingDefaultShell = true;
-            return (Window)_shell;
+            return (Window) _shell;
         }
 
         /// <summary>
@@ -274,6 +279,7 @@ namespace Coddee.WPF
                         $"Registering repository manager of type {repositoryManager.GetType().Name}",
                         LogRecordTypes.Debug);
             _container.RegisterInstance<IRepositoryManager>(repositoryManager);
+            _app.OnRepositoryManagerSet();
             if (registerTheRepositoresInContainer)
                 foreach (var repository in repositoryManager.GetRepositories())
                 {
@@ -340,7 +346,8 @@ namespace Coddee.WPF
             _shell = shell;
             _container.RegisterInstance<IShell>(shell);
             var window = shell as Window;
-            _app.GetSystemApplication().MainWindow = window ?? throw new ApplicationBuildException("The application shell must be a Window");
+            _app.GetSystemApplication().MainWindow =
+                window ?? throw new ApplicationBuildException("The application shell must be a Window");
         }
 
         public ILogger GetLogger()
@@ -355,7 +362,7 @@ namespace Coddee.WPF
 
         public IPresentable GetDefaultPresentable()
         {
-            return (IPresentable)_mainContent;
+            return (IPresentable) _mainContent;
         }
 
         public void SetLoginViewModel(ILoginViewModel vm)
@@ -406,7 +413,7 @@ namespace Coddee.WPF
                                    });
             return builder;
         }
-
+        
         /// <summary>
         /// Initialize the configuration manager
         /// </summary>
@@ -415,13 +422,14 @@ namespace Coddee.WPF
         public static IWPFApplicationBuilder UseConfigurationFile(
             this IWPFApplicationBuilder builder,
             bool encryptFile = false,
-            string configFile = "config")
+            string configFile = "config",
+            Dictionary<string, object> defaultValues = null)
         {
             builder.SetBuildAction(BuildActions.ConfigFile,
                                    delegate
                                    {
                                        var config = builder.WPFBuilder.GetContainer().Resolve<IConfigurationManager>();
-                                       config.Initialize(configFile);
+                                       config.Initialize(configFile, defaultValues);
                                        if (encryptFile)
                                            config.SetEncrpytion(builder.WPFBuilder.GetApp().ApplicationID.ToString());
                                        config.ReadFile();
@@ -457,6 +465,32 @@ namespace Coddee.WPF
                                           //Sets the Shell KeyDown event handler to toggle the console visibility
                                           //when Ctrl+F12 are pressed
                                           applicationConsole.SetToggleCondition(toggleCondition);
+                                      });
+            return builder;
+        }
+
+        /// <summary>
+        /// Add a console to the application
+        /// </summary>
+        /// <param name="toggleCondition">A function that is executed on the shell KeyDown event show return true to toggle the console</param>
+        /// <returns></returns>
+        public static IWPFApplicationBuilder UseCoddeeDebugTool(this IWPFApplicationBuilder builder,
+                                                                Func<KeyEventArgs, bool> toggleCondition)
+        {
+            var appBuilder = builder.WPFBuilder;
+            appBuilder.SetBuildAction(BuildActions.DebugTool,
+                                      async () =>
+                                      {
+                                          Window shell = (Window) appBuilder.GetShell();
+                                          if (shell == null)
+                                              throw new
+                                                  ApplicationBuildException("The method must be called after the UseShell method");
+                                          var debugTool =
+                                              appBuilder.GetContainer().Resolve<IDebugTool>();
+
+                                          await debugTool.Initialize();
+
+                                          debugTool.SetToggleCondition(toggleCondition);
                                       });
             return builder;
         }
@@ -583,7 +617,9 @@ namespace Coddee.WPF
             builder.SetBuildAction(BuildActions.DialogService,
                                    () =>
                                    {
-                                       builder.GetContainer().Resolve<IDialogService>().Initialize(dialogRegion, dialogBorderBrush);
+                                       builder.GetContainer()
+                                           .Resolve<IDialogService>()
+                                           .Initialize(dialogRegion, dialogBorderBrush);
                                    });
             return builder;
         }

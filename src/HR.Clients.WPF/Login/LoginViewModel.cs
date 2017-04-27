@@ -21,6 +21,10 @@ namespace HR.Clients.WPF.Login
 #if DEBUG
             _username = "user";
             _password = "123";
+            View.Loaded += delegate
+            {
+                Login();
+            };
 #endif
         }
 

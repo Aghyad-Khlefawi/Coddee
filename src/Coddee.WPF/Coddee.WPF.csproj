@@ -95,6 +95,11 @@
     <Compile Include="Controls\WaterMarkTextBox.cs" />
     <Compile Include="Converters\NullToBoolConverter.cs" />
     <Compile Include="Converters\NullToVisibilityConverter.cs" />
+    <Compile Include="DebugTool\DebugToolModule.cs" />
+    <Compile Include="DebugTool\DebugToolViewModel.cs" />
+    <Compile Include="DebugTool\DebugToolView.xaml.cs">
+      <DependentUpon>DebugToolView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="DefaultShell\DefaultRegions.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Globals.cs" />
@@ -144,6 +149,7 @@
     <Compile Include="Modules\GlobalVariables\GlobalVariablesService.cs" />
     <Compile Include="Modules\GlobalVariables\GlobalVariablesServiceModule.cs" />
     <Compile Include="Modules\IApplicationModulesManager.cs" />
+    <Compile Include="Modules\Interfaces\IDebugTool.cs" />
     <Compile Include="Modules\Interfaces\IDialogService.cs" />
     <Compile Include="Modules\Interfaces\INavigationService.cs" />
     <Compile Include="Modules\Module.cs" />
@@ -239,6 +245,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="DebugTool\DebugToolView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Modules\Dialogs\ConfirmationDialogView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

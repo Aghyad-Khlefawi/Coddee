@@ -2,6 +2,7 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Windows;
 using System.Windows.Input;
@@ -40,20 +41,24 @@ namespace HR.Clients.WPF
                 .UseConfigurationFile(true)
                 .UseLogger(LoggerTypes.ApplicationConsole | LoggerTypes.DebugOutput, LogRecordTypes.Debug)
                 .UseApplicationConsole(e => e.Key == Key.F12)
+                .UseCoddeeDebugTool(e=>e.Key == Key.F11)
                 .UseILMapper()
                 .UseLogin<LoginViewModel>()
                 .UseDefaultShell<MainViewModel>()
                 .UseNavigation(HRNavigation.Navigations)
                 .UseToast()
                 .UseDialogs()
-                .UseLinqRepositoryManager<HRDBManager, HRRepositoryManager
-                >($@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename={
-                          dbLocation
-                      }\HRDatabase.mdf;Integrated Security=True;Connect Timeout=30",
-                  "HR.Data.LinqToSQL",
-                  true)
-                //.UseRESTRepositoryManager("http://localhost:15297/api/", OnUnauthorizedRequest, "HR.Data.REST", true)
-                //.UseMongoDBRepository("mongodb://192.168.1.160:27017", "HR","HR.Data.Mongo",true)
+                //.UseLinqRepositoryManager<HRDBManager, HRRepositoryManager
+                //>($@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename={
+                //          dbLocation
+                //      }\HRDatabase.mdf;Integrated Security=True;Connect Timeout=30",
+                //  "HR.Data.LinqToSQL",
+                //  true)
+                //.UseRESTRepositoryManager(config =>
+                //{
+                //    config.
+                //})
+                .UseMongoDBRepository("mongodb://192.168.1.160:27017", "HR","HR.Data.Mongo",true)
                 .Start();
         }
 

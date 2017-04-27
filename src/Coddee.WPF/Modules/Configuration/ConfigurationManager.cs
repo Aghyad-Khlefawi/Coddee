@@ -25,16 +25,18 @@ namespace Coddee.WPF.Configuration
         private Dictionary<string, string> _configurations;
         private bool _encrpyt;
         private string _key;
+        private Dictionary<string, object> _defaultValues;
 
         /// <summary>
         /// Initialize the configurations manager
         /// On calling this method the configurations will be created or loaded if it exists
         /// </summary>
         /// <param name="configFile">The file path without the extension</param>
-        public void Initialize(string configFile = "config")
+        /// <param name="defaultValues"></param>
+        public void Initialize(string configFile = "config", Dictionary<string, object> defaultValues = null)
         {
             _file = new FileInfo(configFile + ".cfg");
-            
+            _defaultValues = defaultValues;
         }
 
         /// <summary>
@@ -46,6 +48,13 @@ namespace Coddee.WPF.Configuration
             {
                 _configurations = new Dictionary<string, string>();
                 _file.Create().Dispose();
+                if (_defaultValues != null)
+                {
+                    foreach (var defaultValue in _defaultValues)
+                    {
+                        SetValue(defaultValue.Key, defaultValue.Value);
+                    }
+                }
                 UpdateFile();
             }
             using (var fs = _file.OpenRead())

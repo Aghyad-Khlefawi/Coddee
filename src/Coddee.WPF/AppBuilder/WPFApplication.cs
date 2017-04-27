@@ -47,6 +47,11 @@ namespace Coddee.WPF
 
         public abstract void BuildApplication(IWPFApplicationFactory app);
 
+        public virtual void OnAutoModulesInitialized()
+        {
+            
+        }
+
         /// <summary>
         /// Setter for the application name called by the application identifier
         /// </summary>
@@ -91,6 +96,11 @@ namespace Coddee.WPF
         public void ShowWindow()
         {
             _systemApplication.MainWindow.Show();
+        }
+
+        public virtual void OnRepositoryManagerSet()
+        {
+            
         }
     }
 }
