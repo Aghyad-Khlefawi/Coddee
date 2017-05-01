@@ -332,7 +332,7 @@ namespace Coddee.Data.REST
         }
 
         public Task<TModel> this[TKey index] =>
-            GetFromController<TModel>(ApiCommonActions.GetItems,
+            GetFromController<TModel>(ApiCommonActions.GetItem,
                                       new KeyValuePair<string, string>("ID", index.ToString()));
 
         public Task<IEnumerable<TModel>> GetItems()

@@ -212,7 +212,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Coddee.Core\Coddee.Core.csproj">
-      <Project>{200805C2-E25C-4D1B-AC1E-0DBB5869AEB9}</Project>
+      <Project>{200805c2-e25c-4d1b-ac1e-0dbb5869aeb9}</Project>
       <Name>Coddee.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\Coddee.Data.Linq\Coddee.Data.LinqToSQL.csproj">
