@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Aghyad khlefawi. All rights reserved.  
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
+using System;
 using System.Collections.Generic;
 
 namespace Coddee.WPF.Modules.Interfaces
@@ -10,6 +11,9 @@ namespace Coddee.WPF.Modules.Interfaces
     /// </summary>
     public interface IConfigurationManager
     {
+
+        event EventHandler Loaded; 
+
         /// <summary>
         /// Initialize the configurations manager
         /// On calling this method the configurations will be created or loaded if it exists

@@ -48,17 +48,17 @@ namespace HR.Clients.WPF
                 .UseNavigation(HRNavigation.Navigations)
                 .UseToast()
                 .UseDialogs()
-                //.UseLinqRepositoryManager<HRDBManager, HRRepositoryManager
-                //>($@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename={
-                //          dbLocation
-                //      }\HRDatabase.mdf;Integrated Security=True;Connect Timeout=30",
-                //  "HR.Data.LinqToSQL",
-                //  true)
+                .UseLinqRepositoryManager<HRDBManager, HRRepositoryManager
+                >($@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename={
+                          dbLocation
+                      }\HRDatabase.mdf;Integrated Security=True;Connect Timeout=30",
+                  "HR.Data.LinqToSQL",
+                  true)
                 //.UseRESTRepositoryManager(config =>
                 //{
-                //    config.
+                //    return new RESTRepositoryManagerConfig{};
                 //})
-                .UseMongoDBRepository("mongodb://192.168.1.160:27017", "HR","HR.Data.Mongo",true)
+                //.UseMongoDBRepository("mongodb://192.168.1.160:27017", "HR","HR.Data.Mongo",true)
                 .Start();
         }
 

@@ -269,7 +269,7 @@ namespace Coddee.WPF
         }
     }
 
-    public class EditorViewModel<TView, TModel> : ViewModelBase<TView>, IEditorViewModel<TView, TModel>
+    public abstract class EditorViewModel<TView, TModel> : ViewModelBase<TView>, IEditorViewModel<TView, TModel>
         where TView : UIElement, new() where TModel : new()
 
     {
@@ -279,7 +279,7 @@ namespace Coddee.WPF
             Canceled += OnCanceled;
         }
 
-
+        private IObjectMapper _mapper;
         public event EventHandler<EditorSaveArgs<TModel>> Saved;
         public event EventHandler<EditorSaveArgs<TModel>> Canceled;
 
@@ -297,16 +297,35 @@ namespace Coddee.WPF
             set { SetProperty(ref this._editedItem, value); }
         }
 
-        public void Add()
+        public virtual void Add()
         {
             OperationType = OperationType.Add;
             EditedItem = new TModel();
+            OnAdd();
         }
 
-        public void Edit(TModel item)
+        public virtual void Edit(TModel item)
         {
             OperationType = OperationType.Edit;
-            EditedItem = item;
+            EditedItem = _mapper.Map<TModel>(item);
+            OnEdit(item);
+        }
+
+        protected override Task OnInitialization()
+        {
+            _mapper = Resolve<IObjectMapper>();
+            _mapper.RegisterMap<TModel,TModel>();
+            return base.OnInitialization();
+        }
+
+        protected virtual void OnAdd()
+        {
+
+        }
+
+        protected virtual void OnEdit(TModel item)
+        {
+
         }
 
         public void Cancel()
@@ -317,7 +336,7 @@ namespace Coddee.WPF
         {
         }
 
-        public void Save()
+        public virtual void Save()
         {
             PreSave();
             var errors = Validate();
@@ -355,13 +374,26 @@ namespace Coddee.WPF
         where TRepository : class, ICRUDRepository<TModel, TKey>
     {
         protected TRepository _repository;
+        public new event EventHandler<EditorSaveArgs<TModel>> Saved;
 
         protected override Task OnInitialization()
         {
             _repository = Resolve<TRepository>();
-            Saved += _repository.Update;
             return base.OnInitialization();
         }
-        
+
+        public override async void Save()
+        {
+            PreSave();
+            var errors = Validate();
+            if (errors != null && errors.Any())
+            {
+                ShowErrors(errors);
+            }
+            else
+            {
+                Saved?.Invoke(this, new EditorSaveArgs<TModel>(OperationType, await _repository.Update(OperationType,EditedItem)));
+            }
+        }
     }
 }

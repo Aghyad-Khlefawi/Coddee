@@ -17,6 +17,28 @@ namespace Coddee.Collections
     public class AsyncObservableDictionary<TKey, TValue> : AsyncObservableCollection<TValue>
         where TValue : IUniqueObject<TKey>
     {
+
+        public new static AsyncObservableDictionary<TKey,TValue> Create()
+        {
+            AsyncObservableDictionary<TKey, TValue> collection = null;
+            ExecuteOnSyncContext(() => { collection = new AsyncObservableDictionary<TKey, TValue>(); });
+            return collection;
+        }
+
+        public new static AsyncObservableDictionary<TKey, TValue> Create(IList<TValue> list)
+        {
+            AsyncObservableDictionary<TKey, TValue> collection = null;
+            ExecuteOnSyncContext(() => { collection = new AsyncObservableDictionary<TKey, TValue>(list); });
+            return collection;
+        }
+
+        public new static AsyncObservableDictionary<TKey, TValue> Create(IEnumerable<TValue> list)
+        {
+            AsyncObservableDictionary<TKey, TValue> collection = null;
+            ExecuteOnSyncContext(() => { collection = new AsyncObservableDictionary<TKey, TValue>(list); });
+            return collection;
+        }
+
         public AsyncObservableDictionary()
         {
             _dictionary = new Dictionary<TKey, TValue>();

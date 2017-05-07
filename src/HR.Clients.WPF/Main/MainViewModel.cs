@@ -2,13 +2,16 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
 using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Coddee.Collections;
 using Coddee.WPF;
 using Coddee.WPF.Modules;
 using Coddee.WPF.Modules.Console;
 using HR.Clients.WPF.Companies;
 using HR.Clients.WPF.States;
+using HR.Data.Models;
 
 namespace HR.Clients.WPF.Main
 {
@@ -18,6 +21,7 @@ namespace HR.Clients.WPF.Main
         {
             if (IsDesignMode())
             {
+                
             }
         }
 
