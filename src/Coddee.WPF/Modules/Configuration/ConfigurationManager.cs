@@ -25,16 +25,21 @@ namespace Coddee.WPF.Configuration
         private Dictionary<string, string> _configurations;
         private bool _encrpyt;
         private string _key;
+        private Dictionary<string, object> _defaultValues;
+
+        public event EventHandler Loaded;
+
 
         /// <summary>
         /// Initialize the configurations manager
         /// On calling this method the configurations will be created or loaded if it exists
         /// </summary>
         /// <param name="configFile">The file path without the extension</param>
-        public void Initialize(string configFile = "config")
+        /// <param name="defaultValues"></param>
+        public void Initialize(string configFile = "config", Dictionary<string, object> defaultValues = null)
         {
             _file = new FileInfo(configFile + ".cfg");
-            
+            _defaultValues = defaultValues;
         }
 
         /// <summary>
@@ -46,7 +51,15 @@ namespace Coddee.WPF.Configuration
             {
                 _configurations = new Dictionary<string, string>();
                 _file.Create().Dispose();
+                if (_defaultValues != null)
+                {
+                    foreach (var defaultValue in _defaultValues)
+                    {
+                        SetValue(defaultValue.Key, defaultValue.Value);
+                    }
+                }
                 UpdateFile();
+                Loaded?.Invoke(this, EventArgs.Empty);
             }
             using (var fs = _file.OpenRead())
             {
@@ -56,15 +69,18 @@ namespace Coddee.WPF.Configuration
                     {
                         using (var sr = new StreamReader(fs))
                         {
-                           _configurations = JsonConvert.DeserializeObject<Dictionary<string, string>>(sr.ReadToEnd());
+                            _configurations = JsonConvert.DeserializeObject<Dictionary<string, string>>(sr.ReadToEnd());
                         }
                     }
                     else
                     {
                         var buffer = new byte[fs.Length];
                         fs.Read(buffer, 0, buffer.Length);
-                         _configurations = JsonConvert.DeserializeObject<Dictionary<string, string>>(EncryptionHelper.Decrypt(buffer,_key));
+                        _configurations =
+                            JsonConvert
+                                .DeserializeObject<Dictionary<string, string>>(EncryptionHelper.Decrypt(buffer, _key));
                     }
+                    Loaded?.Invoke(this, EventArgs.Empty);
                 }
                 catch (Exception e)
                 {
@@ -128,7 +144,7 @@ namespace Coddee.WPF.Configuration
                 else
                 {
                     var buffer = EncryptionHelper.EncryptString(JsonConvert.SerializeObject(_configurations), _key);
-                    fs.Write(buffer,0,buffer.Length);
+                    fs.Write(buffer, 0, buffer.Length);
                 }
             }
         }

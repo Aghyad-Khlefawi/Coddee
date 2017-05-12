@@ -56,7 +56,7 @@ namespace Coddee.WPF.Console
         /// <summary>
         /// StringLogger to append the ConsoleContent property
         /// </summary>
-        private readonly StringLogger _logger;
+        private new readonly StringLogger _logger;
 
         /// <summary>
         /// Called when a new log record added
@@ -147,10 +147,10 @@ namespace Coddee.WPF.Console
         /// Initialize the console
         /// </summary>
         /// <param name="shell"></param>
-        public void Initialize(IShell shell)
+        public void Initialize(IShell shell,LogRecordTypes logLevel)
         {
             var shellWindow = (Window) shell;
-
+            _logger.Initialize(logLevel);
             //Check if the root element of the shell is grid
             //if not a grid will be created and the original content added to it
             var grid = shellWindow.Content as Grid;
@@ -346,7 +346,7 @@ namespace Coddee.WPF.Console
         private void OnRestartCommand(object sender, ConsoleCommandArgs e)
         {
             Process.Start(Assembly.GetEntryAssembly().GetName().CodeBase);
-            _app.Shutdown();
+            _app.GetSystemApplication().Shutdown();
         }
 
         private void OnHelpCommand(object sender, ConsoleCommandArgs e)
@@ -421,7 +421,7 @@ namespace Coddee.WPF.Console
 
         private void OnExitCommand(object sender, ConsoleCommandArgs e)
         {
-            _app.Shutdown();
+            _app.GetSystemApplication().Shutdown();
         }
 
         private void OnCMDCommand(object sender, ConsoleCommandArgs e)

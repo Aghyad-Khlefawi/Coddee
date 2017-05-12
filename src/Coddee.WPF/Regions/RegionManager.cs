@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Windows;
 
 namespace Coddee.WPF.Regions
@@ -45,9 +46,11 @@ namespace Coddee.WPF.Regions
         /// <param name="region">Region to add</param>
         public static void Add(Region region)
         {
-            if (_regions.ContainsKey(region.GetName()))
-                throw new ArgumentException($"A region with the same name [{region.GetName()}] already exists");
-
+            //if (_regions.ContainsKey(region.GetName()))
+            //    if (!DesignerProperties.GetIsInDesignMode(new DependencyObject()))
+            //    {
+            //        throw new ArgumentException($"A region with the same name [{region.GetName()}] already exists");
+            //    }
             _regions[region.GetName()] = region;
         }
 

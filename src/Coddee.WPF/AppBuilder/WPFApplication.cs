@@ -13,11 +13,11 @@ namespace Coddee.WPF
     /// The WPF application wrapper
     /// Extend the functionality of the regular WPF Application class
     /// </summary>
-    public abstract class WPFApplication : Application, IApplication
+    public abstract class WPFApplication : IApplication
     {
-        public new void Run()
+        public void Run()
         {
-            _systemApplication = this;
+            _systemApplication = Application.Current;
             _container = new UnityContainer();
             _systemApplication.ShutdownMode = ShutdownMode.OnExplicitShutdown;
             Start();
@@ -46,6 +46,11 @@ namespace Coddee.WPF
         }
 
         public abstract void BuildApplication(IWPFApplicationFactory app);
+
+        public virtual void OnAutoModulesInitialized()
+        {
+            
+        }
 
         /// <summary>
         /// Setter for the application name called by the application identifier
@@ -83,13 +88,7 @@ namespace Coddee.WPF
             return _systemApplication;
         }
 
-        /// <summary>
-        /// Starts the WPF application by showing the Shell
-        /// </summary>
-        public void RunApplication()
-        {
-            _systemApplication.Run();
-        }
+        
 
         /// <summary>
         /// Shows the application mainwindow
@@ -97,6 +96,11 @@ namespace Coddee.WPF
         public void ShowWindow()
         {
             _systemApplication.MainWindow.Show();
+        }
+
+        public virtual void OnRepositoryManagerSet()
+        {
+            
         }
     }
 }

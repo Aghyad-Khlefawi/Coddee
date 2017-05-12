@@ -1,6 +1,9 @@
 ﻿// Copyright (c) Aghyad khlefawi. All rights reserved.  
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
+using System;
+using System.Collections.Generic;
+
 namespace Coddee.WPF.Modules.Interfaces
 {
     /// <summary>
@@ -8,12 +11,16 @@ namespace Coddee.WPF.Modules.Interfaces
     /// </summary>
     public interface IConfigurationManager
     {
+
+        event EventHandler Loaded; 
+
         /// <summary>
         /// Initialize the configurations manager
         /// On calling this method the configurations will be created or loaded if it exists
         /// </summary>
         /// <param name="configFile">The file path</param>
-        void Initialize(string configFile = "config");
+        /// <param name="defaultValues"></param>
+        void Initialize(string configFile = "config", Dictionary<string, object> defaultValues = null);
 
         /// <summary>
         /// Upsert a configuration value

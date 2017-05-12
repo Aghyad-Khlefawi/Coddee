@@ -46,6 +46,7 @@
     <Content Include="LICENSE.txt" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Extensions.cs" />
     <Compile Include="IRepository.cs" />
     <Compile Include="IRepositoryManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

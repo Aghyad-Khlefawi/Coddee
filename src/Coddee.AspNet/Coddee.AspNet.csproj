@@ -268,6 +268,10 @@
       <Project>{B7F174A8-5037-4C30-9E8B-9896315AE855}</Project>
       <Name>Coddee.Data.LinqToSQL</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Coddee.Data.MongoDB\Coddee.Data.MongoDB.csproj">
+      <Project>{8750B71C-E3ED-440D-9D2F-7BAA6A30ACD1}</Project>
+      <Name>Coddee.Data.MongoDB</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Coddee.Data\Coddee.Data.csproj">
       <Project>{9541018B-0CC1-4237-8370-DF8F20940EED}</Project>
       <Name>Coddee.Data</Name>

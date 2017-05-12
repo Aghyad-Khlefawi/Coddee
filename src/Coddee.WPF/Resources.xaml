@@ -121,6 +121,8 @@
     <!--#region Converters-->
     <Style x:Key="HighlightButton"
            TargetType="{x:Type Button}">
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
         <Setter Property="Background"
                 Value="{StaticResource ApplicationAccentColor}" />
         <Setter Property="Foreground" Value="White" />
@@ -187,9 +189,9 @@
                         </Border>
                         <DockPanel>
                             <ContentControl Margin="{TemplateBinding Padding}"
-                                            VerticalAlignment="Center"
+                                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                                             IsTabStop="False"
-                                            HorizontalAlignment="Center"
+                                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                             Content="{Binding Content, RelativeSource={RelativeSource TemplatedParent}}" />
                         </DockPanel>
                     </Grid>

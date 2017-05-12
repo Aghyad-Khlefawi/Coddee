@@ -95,9 +95,16 @@
     <Compile Include="Controls\WaterMarkTextBox.cs" />
     <Compile Include="Converters\NullToBoolConverter.cs" />
     <Compile Include="Converters\NullToVisibilityConverter.cs" />
+    <Compile Include="DebugTool\DebugToolModule.cs" />
+    <Compile Include="DebugTool\DebugToolViewModel.cs" />
+    <Compile Include="DebugTool\DebugToolView.xaml.cs">
+      <DependentUpon>DebugToolView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="DefaultShell\DefaultRegions.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Globals.cs" />
+    <Compile Include="IEditorViewModel.cs" />
+    <Compile Include="IViewModel.cs" />
     <Compile Include="Modules\BuiltInModules.cs" />
     <Compile Include="Modules\Configuration\ConfigurationManager.cs" />
     <Compile Include="Modules\Configuration\ConfigurationManagerModule.cs" />
@@ -142,6 +149,7 @@
     <Compile Include="Modules\GlobalVariables\GlobalVariablesService.cs" />
     <Compile Include="Modules\GlobalVariables\GlobalVariablesServiceModule.cs" />
     <Compile Include="Modules\IApplicationModulesManager.cs" />
+    <Compile Include="Modules\Interfaces\IDebugTool.cs" />
     <Compile Include="Modules\Interfaces\IDialogService.cs" />
     <Compile Include="Modules\Interfaces\INavigationService.cs" />
     <Compile Include="Modules\Module.cs" />
@@ -204,7 +212,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Coddee.Core\Coddee.Core.csproj">
-      <Project>{200805C2-E25C-4D1B-AC1E-0DBB5869AEB9}</Project>
+      <Project>{200805c2-e25c-4d1b-ac1e-0dbb5869aeb9}</Project>
       <Name>Coddee.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\Coddee.Data.Linq\Coddee.Data.LinqToSQL.csproj">
@@ -215,9 +223,9 @@
       <Project>{8750B71C-E3ED-440D-9D2F-7BAA6A30ACD1}</Project>
       <Name>Coddee.Data.MongoDB</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Coddee.Data.Rest\Coddee.Data.Rest.csproj">
+    <ProjectReference Include="..\Coddee.Data.Rest\Coddee.Data.REST.csproj">
       <Project>{D37A3BAF-2C12-4947-AA65-C737DACC5B54}</Project>
-      <Name>Coddee.Data.Rest</Name>
+      <Name>Coddee.Data.REST</Name>
     </ProjectReference>
     <ProjectReference Include="..\Coddee.Data\Coddee.Data.csproj">
       <Project>{9541018B-0CC1-4237-8370-DF8F20940EED}</Project>
@@ -237,6 +245,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="DebugTool\DebugToolView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Modules\Dialogs\ConfirmationDialogView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

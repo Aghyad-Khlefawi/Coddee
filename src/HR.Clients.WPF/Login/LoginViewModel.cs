@@ -21,6 +21,10 @@ namespace HR.Clients.WPF.Login
 #if DEBUG
             _username = "user";
             _password = "123";
+            View.Loaded += delegate
+            {
+                Login();
+            };
 #endif
         }
 
@@ -65,11 +69,11 @@ namespace HR.Clients.WPF.Login
 
         }
 
-        public override Task Initialize()
+        protected override Task OnInitialization()
         {
             _authenticationProvider = Resolve<IUserRepository>();
             RegisterInstance<IAuthenticationProvider<HRAuthenticationResponse>>(_authenticationProvider);
-            return completedTask;
+            return base.OnInitialization();
         }
     }
 }

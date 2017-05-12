@@ -22,14 +22,14 @@ namespace Coddee.WPF.DefaultShell
         {
             if (WindowState == WindowState.Maximized)
             {
-                GlowBorder.Visibility = Visibility.Collapsed;
+                //GlowBorder.Visibility = Visibility.Collapsed;
                 ToolBar.MouseDown -= DragWindow;
                 MaximizeButton.Visibility = Visibility.Collapsed;
                 RestoreButton.Visibility = Visibility.Visible;
             }
             else
             {
-                GlowBorder.Visibility = Visibility.Visible;
+                //GlowBorder.Visibility = Visibility.Visible;
                 ToolBar.MouseDown += DragWindow;
                 MaximizeButton.Visibility = Visibility.Visible;
                 RestoreButton.Visibility = Visibility.Collapsed;

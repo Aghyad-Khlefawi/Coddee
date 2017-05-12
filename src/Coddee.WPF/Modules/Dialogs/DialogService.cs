@@ -68,6 +68,11 @@ namespace Coddee.WPF.Modules.Dialogs
             return ShowDialog(dialog);
         }
 
+        public IDialog ShowEditorDialog(IEditorViewModel editor)
+        {
+            return ShowEditorDialog(editor.GetView(), editor.Save, editor.Cancel);
+        }
+
 
         public IDialog ShowDialog(IDialog dialog)
         {

@@ -3,6 +3,7 @@
 
 using Coddee.Data;
 using Coddee.Data.LinqToSQL;
+using Coddee.Data.MongoDB;
 using Coddee.Loggers;
 using Coddee.Windows.Mapper;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,7 +21,9 @@ namespace Coddee.AspNet
             return services;
         }
 
-        public static IServiceCollection AddLogger(this IServiceCollection services, LoggerTypes loggerType, LogRecordTypes level)
+        public static IServiceCollection AddLogger(this IServiceCollection services,
+                                                   LoggerTypes loggerType,
+                                                   LogRecordTypes level)
         {
             var logger = new LogAggregator();
             logger.Initialize(level);
@@ -40,11 +43,12 @@ namespace Coddee.AspNet
             services.AddSingleton<ILogger>(logger);
             return services;
         }
+
         public static IServiceCollection AddLinqRepositoryManager<TDBManager, TRepositoryManager>(
             this IServiceCollection services,
             string connectionString,
             string repositoriesAssembly,
-            bool registerTheRepositoresInContainer)
+            bool registerTheRepositoresInContainer = true)
             where TDBManager : ILinqDBManager, new()
             where TRepositoryManager : ILinqRepositoryManager, new()
         {
@@ -54,9 +58,9 @@ namespace Coddee.AspNet
             var repositoryManager = new TRepositoryManager();
             services.AddSingleton<ILinqDBManager>(dbManager);
             services.AddSingleton<IRepositoryManager>(repositoryManager);
-            repositoryManager.Initialize(dbManager,mapper);
+            repositoryManager.Initialize(dbManager, mapper);
             repositoryManager.RegisterRepositories(repositoriesAssembly);
-            if(registerTheRepositoresInContainer)
+            if (registerTheRepositoresInContainer)
                 foreach (var repository in repositoryManager.GetRepositories())
                 {
                     services.AddSingleton(repository.ImplementedInterface, repository);
@@ -64,12 +68,44 @@ namespace Coddee.AspNet
             return services;
         }
 
+        public static IServiceCollection AddMongoRepositoryManager<TRepositoryManager>(
+            this IServiceCollection services,
+            string connectionString,
+            string dbName,
+            string repositoriesAssembly,
+            bool registerTheRepositoresInContainer = true)
+            where TRepositoryManager : IMongoRepositoryManager, new()
+        {
+            var mapper = services.BuildServiceProvider().GetService<IObjectMapper>();
+            IMongoRepositoryManager repositoryManager = new TRepositoryManager();
+            var dbManager = new MongoDBManager(connectionString, dbName);
+            repositoryManager.Initialize(dbManager, mapper);
+            repositoryManager.RegisterRepositories(repositoriesAssembly);
+            services.AddSingleton<IMongoDBManager>(dbManager);
+            services.AddSingleton<IRepositoryManager>(repositoryManager);
+            if (registerTheRepositoresInContainer)
+                foreach (var repository in repositoryManager.GetRepositories())
+                {
+                    services.AddSingleton(repository.ImplementedInterface, repository);
+                }
+            return services;
+        }
+        public static IServiceCollection AddMongoRepositoryManager(
+            this IServiceCollection services,
+            string connectionString,
+            string dbName,
+            string repositoriesAssembly,
+            bool registerTheRepositoresInContainer = true)
+        {
+            return services.AddMongoRepositoryManager<MongoRepositoryManager>(connectionString,
+                                                                              dbName,
+                                                                              repositoriesAssembly,
+                                                                              registerTheRepositoresInContainer);
+        }
+
         public static IApplicationBuilder UseMVCWithCoddeeRoutes(this IApplicationBuilder app)
         {
-            return app.UseMvc(routes =>
-            {
-                routes.MapRoute("default", "api/{controller}/{action}");
-            });
+            return app.UseMvc(routes => { routes.MapRoute("default", "api/{controller}/{action}"); });
         }
     }
 }

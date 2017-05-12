@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Aghyad khlefawi. All rights reserved.  
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
+using System;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -77,7 +78,7 @@ namespace Coddee.WPF.DefaultShell
         /// </summary>
         protected virtual void Exit()
         {
-            _app.Shutdown();
+            _app.GetSystemApplication().Shutdown();
         }
 
         /// <summary>
@@ -88,16 +89,29 @@ namespace Coddee.WPF.DefaultShell
             ((Window) _shell).WindowState = WindowState.Minimized;
         }
 
-       
-        public Task Initialize(IPresentable mainContent,bool useNavigation)
+        private IViewModel _mainViewModel;
+
+        public IViewModel SetMainContent(Type defaultPresentable, bool useNavigation)
         {
             _globalVariables.TryGetValue(Globals.Username, out _username);
             _applicationName = _globalVariables.GetValue<string>(Globals.ApplicationName);
 
-            DefaultRegions.ApplicationMainRegion.View(mainContent);
 
             UseNavigation = useNavigation;
-            return Initialize();
+            _mainViewModel = CreateViewModel(defaultPresentable);
+            _mainViewModel.Initialize();
+            DefaultRegions.ApplicationMainRegion.View((IPresentable) _mainViewModel);
+            return _mainViewModel;
+        }
+
+        public new IViewModel CreateViewModel(Type viewModelType)
+        {
+            return base.CreateViewModel(viewModelType);
+        }
+
+        public new TViewModel CreateViewModel<TViewModel>() where TViewModel : IViewModel
+        {
+            return base.CreateViewModel<TViewModel>();
         }
     }
 }

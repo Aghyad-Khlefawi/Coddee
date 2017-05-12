@@ -7,15 +7,15 @@ using System.Reflection;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Coddee.Data.Rest")]
+[assembly: AssemblyTitle("Coddee.Data.REST")]
 [assembly: AssemblyDescription("Coddee data.rest assembly")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Coddee")]
-[assembly: AssemblyProduct("Coddee.Data.Rest")]
+[assembly: AssemblyProduct("Coddee.Data.REST")]
 [assembly: AssemblyCopyright("Copyright ©  2017 Aghyad khlefawi")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: NeutralResourcesLanguage("en")]
 
-[assembly: AssemblyVersion("1.0.1.0")]
-[assembly: AssemblyFileVersion("1.0.1.0")]
+[assembly: AssemblyVersion("1.0.4.0")]
+[assembly: AssemblyFileVersion("1.0.4.0")]

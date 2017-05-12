@@ -45,7 +45,18 @@ namespace Coddee.AspTest.Controllers
         public ReadOnlyApiControllerBase(IRepositoryManager repoManager, ILogger logger) : base(repoManager, logger)
         {
         }
-
+        [HttpGet]
+        public virtual async Task<IActionResult> GetItem(TKey id)
+        {
+            try
+            {
+                return Json(await _repository[id]);
+            }
+            catch (Exception ex)
+            {
+                return Error(ex);
+            }
+        }
         [HttpGet]
         public virtual async Task<IActionResult> GetItems()
         {

@@ -4,16 +4,11 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
-using System.Threading;
 using System.Windows;
 using System.Windows.Input;
-using Coddee;
-using Coddee.Collections;
 using Coddee.Loggers;
 using Coddee.WPF;
 using Coddee.WPF.AppBuilder;
-using Coddee.WPF.Console;
 using Coddee.WPF.Navigation;
 using HR.Clients.WPF.Login;
 using HR.Clients.WPF.Main;
@@ -25,64 +20,46 @@ namespace HR.Clients.WPF
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
-    public partial class App : WPFApplication
+    public partial class App : Application
+    {
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            new WPFApp().Run();
+            base.OnStartup(e);
+        }
+    }
+
+
+    public class WPFApp : WPFApplication
     {
         public static Guid AppID = new Guid("c1fae5da-5d56-4116-b574-82609a453ee0");
 
         public override void BuildApplication(IWPFApplicationFactory app)
         {
-            StringBuilder log = new StringBuilder();
-            StringLogger logger = new StringLogger();
-            logger.Initialize(LogRecordTypes.Debug);
-            logger.AppendString += newLog => { log.Append(log); };
-            logger.Log("Coddee", "A simple log", LogRecordTypes.Information);
-
-
-            var dbLocation = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
-                                                           "..\\",
-                                                           "..\\",
-                                                           "..\\",
-                                                           "HR.Web",
-                                                           "DB"));
+            var dbLocation = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"..\\","..\\","..\\","HR.Web","DB"));
             app.CreateWPFApplication("HR application", AppID)
                 .UseConfigurationFile(true)
                 .UseLogger(LoggerTypes.ApplicationConsole | LoggerTypes.DebugOutput, LogRecordTypes.Debug)
                 .UseApplicationConsole(e => e.Key == Key.F12)
+                .UseCoddeeDebugTool(e=>e.Key == Key.F11)
                 .UseILMapper()
                 .UseLogin<LoginViewModel>()
                 .UseDefaultShell<MainViewModel>()
                 .UseNavigation(HRNavigation.Navigations)
                 .UseToast()
                 .UseDialogs()
-                //.UseLinqRepositoryManager<HRDBManager,HRRepositoryManager>($@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename={dbLocation}\HRDatabase.mdf;Integrated Security=True;Connect Timeout=30",
-                //                                                           "HR.Data.LinqToSQL",
-                //                                                           true)
-                .UseRESTRepositoryManager("http://localhost:15297/api/", OnUnauthorizedRequest, "HR.Data.REST", true)
+                .UseLinqRepositoryManager<HRDBManager, HRRepositoryManager
+                >($@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename={
+                          dbLocation
+                      }\HRDatabase.mdf;Integrated Security=True;Connect Timeout=30",
+                  "HR.Data.LinqToSQL",
+                  true)
+                //.UseRESTRepositoryManager(config =>
+                //{
+                //    return new RESTRepositoryManagerConfig{};
+                //})
                 //.UseMongoDBRepository("mongodb://192.168.1.160:27017", "HR","HR.Data.Mongo",true)
                 .Start();
-        }
-
-
-        public class Person : IUniqueObject<int>
-        {
-            public int ID { get; set; }
-            public string FirstName { get; set; }
-            public int GetKey
-            {
-                get { return ID; }
-            }
-        }
-
-        public class PersonDbModel : IUniqueObject<int>
-        {
-            public int ID { get; set; }
-            public string FirstName { get; set; }
-            public string LastName { get; set; }
-            public int Age { get; set; }
-            public int GetKey
-            {
-                get { return ID; }
-            }
         }
 
         private void OnUnauthorizedRequest()

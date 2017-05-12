@@ -51,6 +51,7 @@
     <Compile Include="AppBuilder\IApplication.cs" />
     <Compile Include="AppBuilder\IApplicationBuilder.cs" />
     <Compile Include="AppBuilder\IApplicationIdentifier.cs" />
+    <Compile Include="EditorSaveArgs.cs" />
     <Compile Include="Mapper\BasicObjectMapper.cs" />
     <Compile Include="Collections\AsyncObservableCollection.cs" />
     <Compile Include="Collections\AsyncObservableDictionary.cs" />

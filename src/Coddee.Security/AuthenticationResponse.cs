@@ -10,4 +10,8 @@ namespace Coddee.Security
         public AuthenticationStatus Status { get; set; }
         public string Error { get; set; }
     }
+    public class AuthenticationResponse<TUser>: AuthenticationResponse
+    {
+        public TUser User { get; set; }
+    }
 }

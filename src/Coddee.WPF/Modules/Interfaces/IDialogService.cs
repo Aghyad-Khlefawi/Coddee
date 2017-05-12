@@ -14,6 +14,7 @@ namespace Coddee.WPF.Modules.Dialogs
         IDialog ShowMessage(string message);
         IDialog ShowConfirmation(string message,Action OnYes,Action OnNo = null);
         IDialog ShowEditorDialog(UIElement content, Action OnSave, Action OnCancel = null);
+        IDialog ShowEditorDialog(IEditorViewModel editor);
 
         IDialog ShowDialog(IDialog dialog);
         TType CreateDialog<TType>() where TType : IDialog;

@@ -4,7 +4,7 @@
 using System;
 using System.Net.Http;
 
-namespace Coddee.Data.Rest
+namespace Coddee.Data.REST
 {
     public interface IRESTRepositoryManager : IRepositoryManager
     {
