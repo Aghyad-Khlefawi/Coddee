@@ -147,10 +147,10 @@ namespace Coddee.WPF.Console
         /// Initialize the console
         /// </summary>
         /// <param name="shell"></param>
-        public void Initialize(IShell shell)
+        public void Initialize(IShell shell,LogRecordTypes logLevel)
         {
             var shellWindow = (Window) shell;
-
+            _logger.Initialize(logLevel);
             //Check if the root element of the shell is grid
             //if not a grid will be created and the original content added to it
             var grid = shellWindow.Content as Grid;

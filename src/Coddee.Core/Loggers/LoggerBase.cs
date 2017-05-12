@@ -65,7 +65,7 @@ namespace Coddee.Loggers
         {
             Log(new LogRecord
             {
-                Content = BuildExceptionString(exception),
+                Content = BuildExceptionString(exception, 0, _minimumLevel == LogRecordTypes.Debug),
                 Source = source,
                 Type = LogRecordTypes.Error,
                 Date = date,

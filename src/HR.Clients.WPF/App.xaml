@@ -10,11 +10,15 @@
                 
                 <!--This ResourceDictionary is required for the built in modules-->
                 <ResourceDictionary Source="pack://application:,,,/Coddee.WPF;component/Resources.xaml" />
-                
-                
-                
+               
+
                 <ResourceDictionary>
-                     <Style
+                    <SolidColorBrush x:Key="ApplicationAccentColor"
+                                     Color="#065FCF" />
+                    <Style TargetType="wpf:BusyIndicator" >
+                        <Setter Property="FillColor" Value="{StaticResource ApplicationAccentColor}"/>
+                    </Style>
+                    <Style
                         x:Key="ButtonBase"
                         TargetType="Button"
                         BasedOn="{StaticResource HighlightButton}">

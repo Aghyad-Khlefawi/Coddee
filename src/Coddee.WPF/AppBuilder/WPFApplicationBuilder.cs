@@ -61,7 +61,8 @@ namespace Coddee.WPF
 
 
         //Build Actions
-        private Dictionary<string, Action> _buildActions;
+        private readonly Dictionary<string, Action> _buildActions;
+        private LogRecordTypes _logLevel;
 
 
         public void SetBuildAction(string actionName, Action action)
@@ -369,6 +370,16 @@ namespace Coddee.WPF
         {
             _loginViewModel = vm;
         }
+
+        public void SetLogLevel(LogRecordTypes level)
+        {
+            _logLevel = level;
+        }
+
+        public LogRecordTypes GetLogLevel()
+        {
+            return _logLevel;
+        }
     }
 
     public static class BuilderExtensions
@@ -413,7 +424,7 @@ namespace Coddee.WPF
                                    });
             return builder;
         }
-        
+
         /// <summary>
         /// Initialize the configuration manager
         /// </summary>
@@ -455,12 +466,11 @@ namespace Coddee.WPF
                                                   ApplicationBuildException("The method must be called after the UseShell method");
                                           var applicationConsole =
                                               appBuilder.GetContainer().Resolve<IApplicationConsole>();
-
-                                          applicationConsole.Initialize(appBuilder.GetShell());
+                                          applicationConsole.Initialize(appBuilder.GetShell(),
+                                                                        appBuilder.GetLogLevel());
                                           //Add the console logger to loggers collection
                                           appBuilder.AddLogger(LoggerTypes.ApplicationConsole,
                                                                applicationConsole.GetLogger());
-
 
                                           //Sets the Shell KeyDown event handler to toggle the console visibility
                                           //when Ctrl+F12 are pressed
@@ -531,6 +541,8 @@ namespace Coddee.WPF
             builder.SetBuildAction(BuildActions.Logger,
                                    delegate
                                    {
+                                       appBuilder.WPFBuilder.SetLogLevel(level);
+
                                        var logger = appBuilder.GetLogger();
                                        logger.Initialize(level);
                                        appBuilder.SetLogType(loggerType);

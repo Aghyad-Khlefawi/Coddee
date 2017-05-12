@@ -14,7 +14,8 @@ namespace Coddee.WPF.Modules
         /// Initialize the console
         /// </summary>
         /// <param name="shell"></param>
-        void Initialize(IShell shell);
+        /// <param name="logLevellogLevel"></param>
+        void Initialize(IShell shell, LogRecordTypes logLevellogLevel);
 
         /// <summary>
         /// Returns the logger that writes to the console

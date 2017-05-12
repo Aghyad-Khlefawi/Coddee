@@ -42,10 +42,17 @@ namespace Coddee.WPF
         public event EventHandler<IViewModel> ChildCreated;
 
         public IViewModel ParentViewModel { get; set; }
-        public IList<IViewModel> ChildViewModels { get; protected set; }
-        public bool IsInitialized { get; protected set; }
 
-        private bool _isBusy;
+        public IList<IViewModel> ChildViewModels { get; protected set; }
+
+        private bool _isInitialized ;
+        public bool IsInitialized 
+        {
+            get { return _isInitialized ; }
+            protected set { SetProperty(ref this._isInitialized , value); }
+        }
+
+        private bool _isBusy=true;
         public bool IsBusy
         {
             get { return _isBusy; }
@@ -64,7 +71,7 @@ namespace Coddee.WPF
             return (TResult) await InitializeViewModel(typeof(TResult));
         }
 
-        protected IViewModel CreateViewModel(Type viewModelType)
+        public IViewModel CreateViewModel(Type viewModelType)
         {
             IViewModel vm = (IViewModel) Resolve(viewModelType);
             vm.ParentViewModel = this;
@@ -74,7 +81,7 @@ namespace Coddee.WPF
             return vm;
         }
 
-        protected TResult CreateViewModel<TResult>() where TResult : IViewModel
+        public TResult CreateViewModel<TResult>() where TResult : IViewModel
         {
             return (TResult) CreateViewModel(typeof(TResult));
         }
@@ -120,10 +127,9 @@ namespace Coddee.WPF
         /// <returns></returns>
         public Task Initialize()
         {
-            IsBusy = true;
-            return Task.Run(async () =>
+            return Task.Run(() =>
             {
-                await OnInitialization();
+                OnInitialization().Wait();
                 IsInitialized = true;
                 IsBusy = false;
                 Initialized?.Invoke(this, EventArgs.Empty);
@@ -314,22 +320,21 @@ namespace Coddee.WPF
         protected override Task OnInitialization()
         {
             _mapper = Resolve<IObjectMapper>();
-            _mapper.RegisterMap<TModel,TModel>();
+            _mapper.RegisterMap<TModel, TModel>();
             return base.OnInitialization();
         }
 
         protected virtual void OnAdd()
         {
-
         }
 
         protected virtual void OnEdit(TModel item)
         {
-
         }
 
         public void Cancel()
         {
+            Canceled?.Invoke(this, new EditorSaveArgs<TModel>(OperationType, EditedItem));
         }
 
         public virtual void PreSave()
@@ -392,7 +397,9 @@ namespace Coddee.WPF
             }
             else
             {
-                Saved?.Invoke(this, new EditorSaveArgs<TModel>(OperationType, await _repository.Update(OperationType,EditedItem)));
+                Saved?.Invoke(this,
+                              new EditorSaveArgs<TModel>(OperationType,
+                                                         await _repository.Update(OperationType, EditedItem)));
             }
         }
     }
