@@ -4,6 +4,7 @@
 using System;
 using Coddee.AppBuilder;
 using Coddee.Data.LinqToSQL;
+using Microsoft.Practices.Unity;
 
 namespace Coddee.WPF.AppBuilder
 {
@@ -17,6 +18,7 @@ namespace Coddee.WPF.AppBuilder
             where TDBManager : ILinqDBManager, new()
             where TRepositoryManager : ILinqRepositoryManager, new()
         {
+           
             builder.SetBuildAction(BuildActions.Repository,delegate
             {
                 var connectionString = builder.WPFBuilder.GetSQLDBConnection();
@@ -25,12 +27,7 @@ namespace Coddee.WPF.AppBuilder
                     ConnectionStringNotFound();
                     return;
                 }
-                var dbManager = new TDBManager();
-                dbManager.Initialize(connectionString);
-                var repositoryManager = new TRepositoryManager();
-                repositoryManager.Initialize(dbManager, builder.WPFBuilder.GetMapper());
-                repositoryManager.RegisterRepositories(repositoriesAssembly);
-                builder.WPFBuilder.SetRepositoryManager(repositoryManager, registerTheRepositoresInContainer);
+                CreateRepositoryManager<TDBManager, TRepositoryManager>(builder, connectionString, repositoriesAssembly, registerTheRepositoresInContainer);
             });
             return builder;
         }
@@ -45,14 +42,22 @@ namespace Coddee.WPF.AppBuilder
         {
             builder.SetBuildAction(BuildActions.Repository,delegate
             {
-                var dbManager = new TDBManager();
-                dbManager.Initialize(connectionString);
-                var repositoryManager = new TRepositoryManager();
-                repositoryManager.Initialize(dbManager, builder.WPFBuilder.GetMapper());
-                repositoryManager.RegisterRepositories(repositoriesAssembly);
-                builder.WPFBuilder.SetRepositoryManager(repositoryManager, registerTheRepositoresInContainer);
+                CreateRepositoryManager<TDBManager, TRepositoryManager>(builder, connectionString, repositoriesAssembly, registerTheRepositoresInContainer);
             });
             return builder;
+        }
+
+        private static void CreateRepositoryManager<TDBManager, TRepositoryManager>(IWPFApplicationBuilder builder, string connectionString, string repositoriesAssembly, bool registerTheRepositoresInContainer)
+            where TDBManager : ILinqDBManager, new()
+            where TRepositoryManager : ILinqRepositoryManager, new()
+        {
+            var dbManager = new TDBManager();
+            builder.WPFBuilder.GetContainer().RegisterInstance<ILinqDBManager>(dbManager);
+            dbManager.Initialize(connectionString);
+            var repositoryManager = new TRepositoryManager();
+            repositoryManager.Initialize(dbManager, builder.WPFBuilder.GetMapper());
+            repositoryManager.RegisterRepositories(repositoriesAssembly);
+            builder.WPFBuilder.SetRepositoryManager(repositoryManager, registerTheRepositoresInContainer);
         }
     }
 }

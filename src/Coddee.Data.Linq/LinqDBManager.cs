@@ -7,7 +7,7 @@ namespace Coddee.Data.LinqToSQL
 {
     public interface ILinqDBManager
     {
-        string Connection { get; }
+        string Connection { get; set; }
         void Initialize(string connection);
     }
 
