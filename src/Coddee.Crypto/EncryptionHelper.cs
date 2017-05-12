@@ -11,7 +11,7 @@ namespace Coddee.Crypto
     public class EncryptionHelper
     {
         /// <summary>
-        /// Encrypts a string using AesManaged algorithm
+        /// Encrypts a string using symmetric algorithm
         /// </summary>
         /// <param name="text">The text to encrypt</param>
         /// <param name="secrectKey">The encryption key</param>
@@ -105,7 +105,7 @@ namespace Coddee.Crypto
         }
 
         /// <summary>
-        /// Decrypt bytes using AesManaged algorithm
+        /// Decrypt a Base64 string using AesManaged algorithm
         /// </summary>
         /// <param name="text">The encrypted text</param>
         /// <param name="secrectKey">The encryption key</param>

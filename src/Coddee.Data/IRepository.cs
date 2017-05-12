@@ -27,6 +27,7 @@ namespace Coddee.Data
     /// <typeparam name="TModel">The model type</typeparam>
     /// <typeparam name="TKey">The Key(ID) Type</typeparam>
     public interface IIndexedRepository<TModel, TKey> : IRepository
+        where TModel:IUniqueObject<TKey>
     {
         /// <summary>
         /// Return the item by its key(ID)
@@ -42,6 +43,8 @@ namespace Coddee.Data
     /// <typeparam name="TModel">The model type</typeparam>
     /// <typeparam name="TKey">The Key(ID) Type</typeparam>
     public interface IReadOnlyRepository<TModel, TKey> : IIndexedRepository<TModel, TKey>
+        where TModel : IUniqueObject<TKey>
+
     {
         /// <summary>
         /// Returns all the items in the repository
@@ -56,6 +59,8 @@ namespace Coddee.Data
     /// <typeparam name="TModel">The model type</typeparam>
     /// <typeparam name="TKey">The Key(ID) Type</typeparam>
     public interface ICRUDRepository<TModel, TKey> : IReadOnlyRepository<TModel, TKey>
+        where TModel : IUniqueObject<TKey>
+
     {
         /// <summary>
         /// Updates and items in the repository

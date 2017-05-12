@@ -30,6 +30,9 @@ namespace Coddee.Loggers
                 logger.Log(record);
         }
 
+        /// <summary>
+        /// Adds a logger to the loggers collection
+        /// </summary>
         public void AddLogger(ILogger logger)
         {
             foreach (var log in _records)

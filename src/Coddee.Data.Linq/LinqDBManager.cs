@@ -23,7 +23,7 @@ namespace Coddee.Data.LinqToSQL
             Connection = connection;
         }
         /// <summary>
-        /// Creates a new DataContext using the stored connection string (_connection)
+        /// Creates a new DataContext using the stored connection string (Connection)
         /// </summary>
         /// <returns></returns>
         public abstract TDataContext CreateContext();

@@ -12,6 +12,9 @@ namespace Coddee.Data.LinqToSQL
     /// <typeparam name="TDataContext"></typeparam>
     public interface ILinqRepository<TDataContext> : IRepository where TDataContext : DataContext
     {
+        /// <summary>
+        /// Do any required initialization
+        /// </summary>
         void Initialize(
             LinqDBManager<TDataContext> dbManager,
             IRepositoryManager repositoryManager,
