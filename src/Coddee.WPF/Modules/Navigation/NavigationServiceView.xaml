@@ -53,6 +53,7 @@
                         <DataTemplate>
                             <Border Style="{StaticResource MenuBorder}"
                                     HorizontalAlignment="Left"
+                                    Visibility="{Binding IsVisible,Converter={StaticResource BoolToVisibilityConverter}}"
                                     Height="50">
                                 <Button Style="{StaticResource MenuItem}"
                                         MinWidth="{StaticResource MenuWidth}"

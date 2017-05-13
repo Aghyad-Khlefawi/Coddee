@@ -15,7 +15,7 @@
         Background="WhiteSmoke"
         Title="SQL Browser" Height="400" Width="600">
     <Window.Resources>
-        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+        <ResourceDictionary Source="../../Resources.xaml" />
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
@@ -62,6 +62,7 @@
                         </controls:FormField>
                         <controls:FormField Title="Integrated secutiry">
                             <CheckBox IsChecked="{Binding CustomServer.IntegratedSecurity}"
+                                      Style="{x:Null}"
                                       VerticalAlignment="Center" />
                         </controls:FormField>
                         <controls:FormField Title="Username"
@@ -75,7 +76,8 @@
                                 wpf:PasswordBoxText.Attach="True" />
                         </controls:FormField>
                         <controls:FormField>
-                            <Button Command="{Binding CustomServer.ConnectCommand}">Connect</Button>
+                            <Button 
+                                Command="{Binding CustomServer.ConnectCommand}">Connect</Button>
                         </controls:FormField>
                     </controls:Form>
 
@@ -134,6 +136,7 @@
             </StackPanel>
             <Button DockPanel.Dock="Bottom"
                     Margin="5 0"
+                    Style="{StaticResource HighlightButton}"
                     Command="{Binding UseDatabaseCommand}"
                     Height="25">
                 Use selected database
@@ -147,6 +150,8 @@
                                        Text="{Binding SearchValue,UpdateSourceTrigger=PropertyChanged}" />
             <ListBox ItemsSource="{Binding Databases}"
                      Margin="5 0"
+                     ItemContainerStyle="{x:Null}"
+                     Style="{x:Null}"
                      SelectedItem="{Binding Databases.SelectedItem}" />
         </DockPanel>
     </Grid>

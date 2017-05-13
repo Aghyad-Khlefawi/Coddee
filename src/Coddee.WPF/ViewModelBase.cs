@@ -375,7 +375,7 @@ namespace Coddee.WPF
 
     public class EditorViewModel<TView, TRepository, TModel, TKey> : EditorViewModel<TView, TModel>
         where TView : UIElement, new()
-        where TModel : class, new()
+        where TModel : class, IUniqueObject<TKey>, new()
         where TRepository : class, ICRUDRepository<TModel, TKey>
     {
         protected TRepository _repository;

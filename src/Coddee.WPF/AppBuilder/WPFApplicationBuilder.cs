@@ -3,8 +3,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Threading;
 using System.Windows;
 using System.Windows.Input;
@@ -92,6 +94,13 @@ namespace Coddee.WPF
             _app.SetApplicationID(applicationID);
             _app.SetApplicationType(ApplicationTypes.WPF);
 
+            _logger.Log(EventsSource,
+                        $"using Coddee.Core: {FileVersionInfo.GetVersionInfo(Assembly.Load("Coddee.Core").Location).ProductVersion}");
+            _logger.Log(EventsSource,
+                        $"using Coddee.Data: {FileVersionInfo.GetVersionInfo(Assembly.Load("Coddee.Data").Location).ProductVersion}");
+            _logger.Log(EventsSource,
+                        $"using Coddee.WPF: {FileVersionInfo.GetVersionInfo(Assembly.Load("Coddee.WPF").Location).ProductVersion}");
+
             _modulesManager = _container.Resolve<ApplicationModulesManager>();
             _modulesManager.RegisterModule(_modulesManager.DescoverModulesFromAssambles(Assembly.GetAssembly(GetType()))
                                                .ToArray());
@@ -108,13 +117,14 @@ namespace Coddee.WPF
         /// </summary>
         public void Start()
         {
-            _logger.Log(EventsSource, $"Application started", LogRecordTypes.Information);
-
             _systemApplication.Startup += OnStartup;
         }
 
         private async void OnStartup(object sender, StartupEventArgs e)
         {
+
+            _logger.Log(EventsSource, "Application startup.");
+
             _systemApplication.Dispatcher.Invoke(() =>
             {
                 UISynchronizationContext
@@ -126,6 +136,7 @@ namespace Coddee.WPF
             try
             {
                 //Invoke startup sequence
+                _logger.Log(EventsSource, "Initiating startup sequence");
 
                 InvokeBuildAction(BuildActions.Logger);
                 InvokeBuildAction(BuildActions.Mapper);
@@ -165,6 +176,7 @@ namespace Coddee.WPF
                 _logger.Log(EventsSource, ex);
                 throw;
             }
+            _logger.Log(EventsSource, $"Application started", LogRecordTypes.Information);
         }
 
         /// <summary>

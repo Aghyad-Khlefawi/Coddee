@@ -120,7 +120,7 @@ namespace Coddee.Data.MongoDB
     /// </remarks>
     /// </summary>
     public abstract class ReadOnlyMongoRepositoryBase<TModel, TKey> : MongoRepositoryBase<TModel, TKey>,
-        IReadOnlyRepository<TModel, TKey>
+        IReadOnlyRepository<TModel, TKey> where TModel : IUniqueObject<TKey>
     {
         protected ReadOnlyMongoRepositoryBase(string collectionName)
             : base(collectionName)

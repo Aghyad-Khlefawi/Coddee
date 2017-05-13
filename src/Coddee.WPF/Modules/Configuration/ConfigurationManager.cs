@@ -65,21 +65,12 @@ namespace Coddee.WPF.Configuration
             {
                 try
                 {
-                    if (!_encrpyt)
+                    using (var sr = new StreamReader(fs))
                     {
-                        using (var sr = new StreamReader(fs))
-                        {
-                            _configurations = JsonConvert.DeserializeObject<Dictionary<string, string>>(sr.ReadToEnd());
-                        }
+                        var configString = sr.ReadToEnd();
+                        _configurations = JsonConvert.DeserializeObject<Dictionary<string, string>>(!_encrpyt ? configString : EncryptionHelper.Decrypt(configString,_key));
                     }
-                    else
-                    {
-                        var buffer = new byte[fs.Length];
-                        fs.Read(buffer, 0, buffer.Length);
-                        _configurations =
-                            JsonConvert
-                                .DeserializeObject<Dictionary<string, string>>(EncryptionHelper.Decrypt(buffer, _key));
-                    }
+
                     Loaded?.Invoke(this, EventArgs.Empty);
                 }
                 catch (Exception e)
@@ -134,17 +125,11 @@ namespace Coddee.WPF.Configuration
         {
             using (var fs = _file.OpenWrite())
             {
-                if (!_encrpyt)
+                var configString = JsonConvert.SerializeObject(_configurations);
+
+                using (var sw = new StreamWriter(fs))
                 {
-                    using (var sw = new StreamWriter(fs))
-                    {
-                        sw.WriteLine(JsonConvert.SerializeObject(_configurations));
-                    }
-                }
-                else
-                {
-                    var buffer = EncryptionHelper.EncryptString(JsonConvert.SerializeObject(_configurations), _key);
-                    fs.Write(buffer, 0, buffer.Length);
+                    sw.WriteLine(!_encrpyt ? configString : EncryptionHelper.EncryptStringAsBase64(configString, _key));
                 }
             }
         }

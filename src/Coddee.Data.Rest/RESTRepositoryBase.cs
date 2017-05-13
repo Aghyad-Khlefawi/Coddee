@@ -306,7 +306,7 @@ namespace Coddee.Data.REST
     /// <typeparam name="TModel">The model type</typeparam>
     /// <typeparam name="TKey">The table key(ID) type</typeparam>
     public abstract class ReadOnlyRESTRepositoryBase<TModel, TKey> : RESTRepositoryBase,
-        IReadOnlyRepository<TModel, TKey>
+        IReadOnlyRepository<TModel, TKey> where TModel : IUniqueObject<TKey>
     {
         protected ReadOnlyRESTRepositoryBase(string controllerName)
         {

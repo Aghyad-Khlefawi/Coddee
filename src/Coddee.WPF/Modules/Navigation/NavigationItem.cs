@@ -23,6 +23,7 @@ namespace Coddee.WPF.Navigation
         bool IsSelected { get; set; }
         bool ShowTitle { get; set; }
         bool IsInitialized { get; }
+        bool IsVisible { get; set; }
 
         Task Initialize();
         void SetDestination(IPresentable destination);
@@ -44,6 +45,13 @@ namespace Coddee.WPF.Navigation
             Position = position;
             DestinationType = _destination?.GetType();
             DestinationResolved = true;
+        }
+
+        private bool _isVisible=true;
+        public bool IsVisible
+        {
+            get { return _isVisible; }
+            set { SetProperty(ref this._isVisible, value); }
         }
 
         public Type DestinationType { get; protected set; }

@@ -40,7 +40,7 @@ namespace Coddee.AspTest.Controllers
     }
 
     public class ReadOnlyApiControllerBase<TRepository, TModel, TKey> : ApiControllerBase<TRepository>
-        where TRepository : IReadOnlyRepository<TModel, TKey>
+        where TRepository : IReadOnlyRepository<TModel, TKey> where TModel : IUniqueObject<TKey>
     {
         public ReadOnlyApiControllerBase(IRepositoryManager repoManager, ILogger logger) : base(repoManager, logger)
         {
@@ -71,7 +71,7 @@ namespace Coddee.AspTest.Controllers
         }
     }
     public class CRUDApiControllerBase<TRepository, TModel, TKey> : ReadOnlyApiControllerBase<TRepository, TModel, TKey>
-        where TRepository : ICRUDRepository<TModel, TKey>
+        where TRepository : ICRUDRepository<TModel, TKey> where TModel : IUniqueObject<TKey>
     {
 
 

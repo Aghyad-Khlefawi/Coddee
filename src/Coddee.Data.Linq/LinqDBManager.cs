@@ -16,7 +16,7 @@ namespace Coddee.Data.LinqToSQL
     /// </summary>
     public abstract class LinqDBManager<TDataContext>: ILinqDBManager where TDataContext : DataContext
     {
-        public string Connection { get; private set; }
+        public string Connection { get; set; }
 
         public void Initialize(string connection)
         {

@@ -59,7 +59,6 @@ namespace HR.Clients.WPF.Main
                 };
                 console.AddCommands(treeCommand);
                 console.AddCommandHandler(treeCommand.Name, OnTreeCommand);
-                throw new  AccessViolationException();
             }
             catch (Exception e)
             {

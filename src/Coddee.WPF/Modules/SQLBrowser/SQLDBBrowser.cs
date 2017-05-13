@@ -122,6 +122,7 @@ namespace Coddee.SQL
 
             GetView();
             GetServers();
+            CreateView();
             _view.ShowDialog();
             return _connection;
         }
