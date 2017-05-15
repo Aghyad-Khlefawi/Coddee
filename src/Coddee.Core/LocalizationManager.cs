@@ -66,7 +66,7 @@ namespace Coddee
 
             if (!_localziationValues.ContainsKey(key) || !_localziationValues[key].ContainsKey(culture))
             {
-                _logger.Log(nameof(LocalizationManager), $"Localization values not found for '{key}'");
+                _logger?.Log(nameof(LocalizationManager), $"Localization values not found for '{key}'",LogRecordTypes.Debug);
                 return key;
             }
 

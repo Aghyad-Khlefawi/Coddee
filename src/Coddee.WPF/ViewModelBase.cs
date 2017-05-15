@@ -29,6 +29,7 @@ namespace Coddee.WPF
         protected static IUnityContainer _container;
         protected static IGlobalVariablesService _globalVariables;
         protected static IToastService _toast;
+        protected static ILocalizationManager _localization;
         protected static ILogger _logger;
 
         public ViewModelBase()
@@ -158,6 +159,7 @@ namespace Coddee.WPF
             _globalVariables = _container.Resolve<IGlobalVariablesService>();
             _toast = _container.Resolve<IToastService>();
             _logger = _container.Resolve<ILogger>();
+            _localization = _container.Resolve<ILocalizationManager>();
         }
 
         protected void ToastError(string message = "An error occurred.")
