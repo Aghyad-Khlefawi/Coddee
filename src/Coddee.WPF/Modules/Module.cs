@@ -9,7 +9,7 @@ namespace Coddee.WPF.Modules
     /// Used to discover modules on start up
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
-    sealed class ModuleAttribute : Attribute
+    public sealed class ModuleAttribute : Attribute
     {
         public ModuleAttribute(string moduleName)
             : this(moduleName, ModuleInitializationTypes.Auto)
@@ -48,6 +48,4 @@ namespace Coddee.WPF.Modules
         public IModule Instance { get; set; }
         public bool Initialized { get; set; }
     }
-
-    
 }

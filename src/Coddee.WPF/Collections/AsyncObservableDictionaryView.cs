@@ -9,48 +9,49 @@ using Coddee.Collections;
 
 namespace Coddee.WPF.Collections
 {
-    public class AsyncObservableCollectionView<T> : AsyncObservableCollection<T>
+    public class AsyncObservableDictionaryView<TKey, TValue> : AsyncObservableDictionary<TKey,TValue>
+        where TValue : IUniqueObject<TKey>
     {
-        public static AsyncObservableCollectionView<T> Create(Func<T, string, bool> filterPredicate)
+        public static AsyncObservableDictionaryView<TKey, TValue> Create(Func<TValue, string, bool> filterPredicate)
         {
-            AsyncObservableCollectionView<T> collection = null;
-            ExecuteOnSyncContext(() => { collection = new AsyncObservableCollectionView<T>(); });
+            AsyncObservableDictionaryView<TKey, TValue> collection = null;
+            ExecuteOnSyncContext(() => { collection = new AsyncObservableDictionaryView<TKey, TValue>(); });
             collection.FilterItem = filterPredicate;
             return collection;
         }
 
-        public static AsyncObservableCollectionView<T> Create(Func<T, string, bool> filterPredicate,IList<T> list)
+        public static AsyncObservableDictionaryView<TKey, TValue> Create(Func<TValue, string, bool> filterPredicate,IList<TValue> list)
         {
-            AsyncObservableCollectionView<T> collection = null;
-            ExecuteOnSyncContext(() => { collection = new AsyncObservableCollectionView<T>(list); });
+            AsyncObservableDictionaryView<TKey, TValue> collection = null;
+            ExecuteOnSyncContext(() => { collection = new AsyncObservableDictionaryView<TKey, TValue>(list); });
             collection.FilterItem = filterPredicate;
             return collection;
         }
 
-        public static AsyncObservableCollectionView<T> Create(Func<T, string, bool> filterPredicate, IEnumerable<T> list)
+        public static AsyncObservableDictionaryView<TKey, TValue> Create(Func<TValue, string, bool> filterPredicate, IEnumerable<TValue> list)
         {
-            AsyncObservableCollectionView<T> collection = null;
-            ExecuteOnSyncContext(() => { collection = new AsyncObservableCollectionView<T>(list); });
+            AsyncObservableDictionaryView<TKey, TValue> collection = null;
+            ExecuteOnSyncContext(() => { collection = new AsyncObservableDictionaryView<TKey, TValue>(list); });
             collection.FilterItem = filterPredicate;
             return collection;
         }
 
-        public AsyncObservableCollectionView()
+        public AsyncObservableDictionaryView()
         {
         }
 
-        public AsyncObservableCollectionView(IList<T> list)
+        public AsyncObservableDictionaryView(IList<TValue> list)
             : base(list)
         {
         }
 
-        public AsyncObservableCollectionView(IEnumerable<T> list)
+        public AsyncObservableDictionaryView(IEnumerable<TValue> list)
             : base(list)
         {
 
         }
 
-        public Func<T, string, bool> FilterItem { get; set; }
+        public Func<TValue, string, bool> FilterItem { get; set; }
 
         private ICollectionView _collectionView;
         public ICollectionView CollectionView
@@ -78,7 +79,7 @@ namespace Coddee.WPF.Collections
         public void Search(string searchValue)
         {
             var search = searchValue.ToLower();
-            CollectionView.Filter = e => FilterItem((T) e, search);
+            CollectionView.Filter = e => FilterItem((TValue) e, search);
         }
 
     }

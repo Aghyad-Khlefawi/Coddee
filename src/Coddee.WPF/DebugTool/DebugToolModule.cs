@@ -11,9 +11,10 @@ namespace Coddee.WPF.DebugTool
     [Module(BuiltInModules.DebugTool)]
     public class DebugToolModule:IModule
     {
-        public void Initialize(IUnityContainer container)
+        public Task Initialize(IUnityContainer container)
         {
             container.RegisterInstance<IDebugTool,DebugToolViewModel>();
+            return Task.FromResult(true);
         }
     }
 }

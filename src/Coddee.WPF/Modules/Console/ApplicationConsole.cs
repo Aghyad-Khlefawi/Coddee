@@ -14,6 +14,8 @@ using Coddee.WPF.Modules;
 using Coddee.WPF.Modules.Console;
 using System.Diagnostics;
 using System.Reflection;
+using System.Windows.Forms;
+using KeyEventArgs = System.Windows.Input.KeyEventArgs;
 
 namespace Coddee.WPF.Console
 {
@@ -194,6 +196,7 @@ namespace Coddee.WPF.Console
                         DefaultCommands.ShowGlobalsCommand,
                         DefaultCommands.ClearCommand,
                         DefaultCommands.CMDCommand,
+                        DefaultCommands.SetScreenCommand,
                         DefaultCommands.ExitCommand);
         }
 
@@ -216,6 +219,49 @@ namespace Coddee.WPF.Console
 
             _defaultCommandHandlers[DefaultCommands.ClearCommand.Name] =
                 new List<EventHandler<ConsoleCommandArgs>> {OnClearCommand};
+
+            _defaultCommandHandlers[DefaultCommands.SetScreenCommand.Name] =
+                new List<EventHandler<ConsoleCommandArgs>> { OnSetScreenCommand };
+        }
+
+        private void OnSetScreenCommand(object sender, ConsoleCommandArgs e)
+        {
+            if (!e.Arguments.ContainsKey("/i"))
+            {
+                e.Result.Add("You must specify the /i argument.");
+                e.Handled = false;
+                return;
+            }
+            var indexStr = e.Arguments["/i"];
+            int index;
+            if (!int.TryParse(indexStr, out index))
+            {
+                e.Result.Add($"The value '{indexStr}' is invalid for the /i argument, you need to specify an integer value.");
+                e.Handled = false;
+                return;
+            }
+            var temp = Screen.AllScreens.ElementAtOrDefault(index);
+            if (temp == null)
+            {
+                e.Result.Add($"The value '{indexStr}' is invalid for the /i argument.");
+                e.Handled = false;
+                return;
+            }
+            var shell = Resolve<IShell>() as Window;
+            if (shell == null)
+            {
+                e.Result.Add("Shell not found.");
+                e.Handled = false;
+                return;
+            }
+
+            var oldState = shell.WindowState;
+            shell.WindowState = WindowState.Normal;
+            shell.Left = temp.WorkingArea.Left;
+            shell.WindowState = oldState;
+
+            e.Handled = true;
+
         }
 
 

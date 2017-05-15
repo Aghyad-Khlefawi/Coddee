@@ -36,8 +36,12 @@ namespace Coddee.WPF
             Initialized += OnInitialized;
             ChildCreated += OnChildCreated;
             ChildViewModels = new List<IViewModel>();
+
+            if (IsDesignMode())
+                OnDesignMode();
         }
 
+        
         public event EventHandler Initialized;
         public event EventHandler<IViewModel> ChildCreated;
 
@@ -64,6 +68,10 @@ namespace Coddee.WPF
             var vm = CreateViewModel(viewModelType);
             await vm.Initialize();
             return vm;
+        }
+        protected virtual void OnDesignMode()
+        {
+            IsBusy = false;
         }
 
         protected async Task<TResult> InitializeViewModel<TResult>() where TResult : IViewModel

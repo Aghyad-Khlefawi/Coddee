@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using Coddee.Loggers;
 using Microsoft.Practices.Unity;
 
@@ -54,8 +55,8 @@ namespace Coddee.WPF.Modules
         {
             string path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             return DescoverModulesFromAssambles(Directory.GetFiles(path, $"{assembliesPrefix}*.dll")
-                .Select(Assembly.LoadFile)
-                .ToArray());
+                                                    .Select(Assembly.LoadFile)
+                                                    .ToArray());
         }
 
         /// <summary>
@@ -87,7 +88,7 @@ namespace Coddee.WPF.Modules
 
                     if (type.GetConstructor(Type.EmptyTypes) == null)
                         throw new ModuleException(
-                            $"The module {appModule.Name} must have a parameterless constructor");
+                                                  $"The module {appModule.Name} must have a parameterless constructor");
 
                     _logger.Log(EventsSource, $"Module discovered [{appModule.Name}]", LogRecordTypes.Debug);
                     res.Add(appModule);
@@ -100,11 +101,11 @@ namespace Coddee.WPF.Modules
         /// Calls the initialization method on the modules
         /// </summary>
         /// <param name="modules"></param>
-        public void InitializeModules(params Module[] modules)
+        public async Task InitializeModules(params Module[] modules)
         {
             foreach (var module in modules)
             {
-                InitializeModuleWithDependincies(module, null);
+               await InitializeModuleWithDependincies(module, null);
             }
         }
 
@@ -112,12 +113,12 @@ namespace Coddee.WPF.Modules
         /// <summary>
         /// Calls the initialization method on the modules with auto initialize type
         /// </summary>
-        public void InitializeAutoModules()
+        public async Task InitializeAutoModules()
         {
             _logger.Log(EventsSource, $"Initializing auto modules", LogRecordTypes.Debug);
             foreach (var module in _modules.Values.Where(e => e.InitializationType == ModuleInitializationTypes.Auto))
             {
-                InitializeModuleWithDependincies(module, null);
+                await InitializeModuleWithDependincies(module, null);
             }
         }
 
@@ -126,11 +127,11 @@ namespace Coddee.WPF.Modules
         /// </summary>
         /// <param name="module"></param>
         /// <param name="dependencyStack"></param>
-        public void InitializeModuleWithDependincies(Module module, List<string> dependencyStack)
+        public async Task InitializeModuleWithDependincies(Module module, List<string> dependencyStack)
         {
             if (module.Dependencies == null || !module.Dependencies.Any())
             {
-                InitializeModule(module);
+               await InitializeModule(module);
             }
             else
             {
@@ -138,28 +139,28 @@ namespace Coddee.WPF.Modules
                 {
                     if (!_modules.ContainsKey(dependency))
                         throw new ModuleException(
-                            $"The module {module.Name} has an unresolved dependency on {dependency}");
+                                                  $"The module {module.Name} has an unresolved dependency on {dependency}");
 
                     var dep = _modules[dependency];
 
                     if (dependencyStack != null && dependencyStack.Contains(dep.Name))
                         throw new ModuleException(
-                            $"Module failed to initialize because of a circular dependency between {module.Name} and {dep.Name}");
+                                                  $"Module failed to initialize because of a circular dependency between {module.Name} and {dep.Name}");
 
                     if (!dep.Initialized)
                     {
                         if (dep.InitializationType == ModuleInitializationTypes.Manual && module.InitializationType ==
                             ModuleInitializationTypes.Auto)
                             throw new ModuleException(
-                                $"The module {module.Name} has a dependency on a manually initialized module," +
-                                $"An auto initialized module cannot depend on a manually initialized module");
+                                                      $"The module {module.Name} has a dependency on a manually initialized module," +
+                                                      $"An auto initialized module cannot depend on a manually initialized module");
 
                         var stack = dependencyStack != null ? new List<string>(dependencyStack) : new List<string>();
                         stack.Add(module.Name);
-                        InitializeModuleWithDependincies(dep, stack);
+                        await InitializeModuleWithDependincies(dep, stack);
                     }
                 }
-                InitializeModule(module);
+                await InitializeModule(module);
             }
         }
 
@@ -167,23 +168,23 @@ namespace Coddee.WPF.Modules
         /// Initialize a module by it's name
         /// </summary>
         /// <exception cref="ModuleException"></exception>
-        public void InitializeModule(string moduleName)
+        public Task InitializeModule(string moduleName)
         {
             if (!_modules.ContainsKey(moduleName))
                 throw new ModuleException($"Module initialization failed because the module {moduleName} not found.");
-            InitializeModuleWithDependincies(_modules[moduleName], null);
+           return InitializeModuleWithDependincies(_modules[moduleName], null);
         }
 
         /// <summary>
         /// Initialize a module
         /// </summary>
         /// <exception cref="ModuleException"></exception>
-        private void InitializeModule(Module module)
+        private Task InitializeModule(Module module)
         {
             if (module.Instance == null)
-                module.Instance = (IModule)Activator.CreateInstance(module.Type);
+                module.Instance = (IModule) Activator.CreateInstance(module.Type);
             _logger.Log(EventsSource, $"Initializing module [{module.Name}]", LogRecordTypes.Debug);
-            module.Instance.Initialize(_container);
+            return module.Instance.Initialize(_container);
         }
     }
 }

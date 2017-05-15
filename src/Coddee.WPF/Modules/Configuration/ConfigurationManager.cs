@@ -129,7 +129,10 @@ namespace Coddee.WPF.Configuration
 
                 using (var sw = new StreamWriter(fs))
                 {
-                    sw.WriteLine(!_encrpyt ? configString : EncryptionHelper.EncryptStringAsBase64(configString, _key));
+                    if (!_encrpyt)
+                        sw.WriteLine(configString);
+                    else
+                        sw.WriteLine(EncryptionHelper.EncryptStringAsBase64(configString, _key));
                 }
             }
         }

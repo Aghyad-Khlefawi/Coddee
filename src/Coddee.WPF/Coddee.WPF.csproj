@@ -58,6 +58,8 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.Linq" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -81,6 +83,7 @@
     <Compile Include="AppBuilder\WPFApplication.cs" />
     <Compile Include="AppBuilder\WPFApplicationBuilder.cs" />
     <Compile Include="BindableBase.cs" />
+    <Compile Include="Collections\AsyncObservableDictionaryView.cs" />
     <Compile Include="Collections\AsyncObservableCollectionView.cs" />
     <Compile Include="Commands\KeyDownCommand.cs" />
     <Compile Include="Commands\OnEnterCommand.cs" />

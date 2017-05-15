@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace Coddee.WPF.Modules
 {
@@ -39,18 +40,18 @@ namespace Coddee.WPF.Modules
         /// </summary>
         /// <param name="modules"></param>
         /// <exception cref="ModuleException"></exception>
-        void InitializeModules(params Module[] modules);
+        Task InitializeModules(params Module[] modules);
 
         /// <summary>
         /// Calls the initialization method on the modules with auto initialize type
         /// <exception cref="ModuleException"></exception>
         /// </summary>
-        void InitializeAutoModules();
-        
+        Task InitializeAutoModules();
+
         /// <summary>
         /// Initialize a module by it's name
         /// </summary>
         /// <exception cref="ModuleException"></exception>
-        void InitializeModule(string moduleName);
+        Task InitializeModule(string moduleName);
     }
 }

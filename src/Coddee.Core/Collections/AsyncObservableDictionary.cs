@@ -47,6 +47,7 @@ namespace Coddee.Collections
         public AsyncObservableDictionary(IList<TValue> list)
             : base(list)
         {
+            _dictionary = new Dictionary<TKey, TValue>();
             FillDicionaryValues(list);
         }
 
@@ -54,6 +55,7 @@ namespace Coddee.Collections
         public AsyncObservableDictionary(IEnumerable<TValue> list)
             : base(list)
         {
+            _dictionary = new Dictionary<TKey, TValue>();
             FillDicionaryValues(list);
         }
 
@@ -87,6 +89,8 @@ namespace Coddee.Collections
         protected override void UnsafeInsertItem(int index, TValue item)
         {
             base.UnsafeInsertItem(index, item);
+            if(_dictionary==null)
+                _dictionary = new Dictionary<TKey, TValue>();
             _dictionary.Add(item.GetKey, item);
         }
 

@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Aghyad khlefawi. All rights reserved.  
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
+using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Coddee;
@@ -19,8 +20,8 @@ namespace HR.Clients.WPF.Companies
         private CompanyEditorViewModel _companyEditor;
         private EmployeeEditorViewModel _employeeEditor;
 
-        private AsyncObservableCollectionView<Company> _companies;
-        public AsyncObservableCollectionView<Company> Companies
+        private AsyncObservableDictionaryView<Guid,Company> _companies;
+        public AsyncObservableDictionaryView<Guid, Company> Companies
         {
             get { return _companies; }
             set { SetProperty(ref this._companies, value); }
@@ -88,7 +89,7 @@ namespace HR.Clients.WPF.Companies
         {
             var companyRepo = Resolve<ICompanyRepository>();
 
-            Companies = AsyncObservableCollectionView<Company>.Create(CompanySearch,await companyRepo.GetDetailedItems());
+            Companies = AsyncObservableDictionaryView<Guid, Company>.Create(CompanySearch,await companyRepo.GetDetailedItems());
             Employees = AsyncObservableCollectionView<Employee>.Create(EmployeeSearch);
 
             Companies.SelectedItemChanged += CompanySelected;

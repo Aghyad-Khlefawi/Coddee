@@ -38,6 +38,15 @@ namespace Coddee.WPF.Modules.Console
             Name = "clear",
             Description = "Clears the console."
         };
+        public static ConsoleCommand SetScreenCommand = new ConsoleCommand
+        {
+            Name = "setscreen",
+            Description = "Moves the shell to another monitor when using multiple monitors.",
+            SupportedArguments = new Dictionary<string, string>
+            {
+                {"/i", "The screen index (Start index is 0)."}
+            }
+        };
         public static ConsoleCommand CMDCommand = new ConsoleCommand
         {
             Name = "cmd",
