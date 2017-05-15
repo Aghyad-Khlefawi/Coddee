@@ -2,10 +2,14 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Resources;
 using System.Threading;
 using System.Windows;
 using System.Windows.Input;
@@ -102,6 +106,8 @@ namespace Coddee.WPF
             _modulesManager = _container.Resolve<ApplicationModulesManager>();
             _modulesManager.RegisterModule(_modulesManager.DescoverModulesFromAssambles(Assembly.GetAssembly(GetType()))
                                                .ToArray());
+            _modulesManager.RegisterModule(_modulesManager.DescoverModulesFromAssambles(Assembly.GetAssembly(typeof(BuiltInModules)))
+                                               .ToArray());
             _modulesManager.InitializeAutoModules();
             _app.OnAutoModulesInitialized();
             _container.Resolve<IGlobalVariablesService>().SetValue(Globals.ApplicationName, applicationName);
@@ -120,7 +126,6 @@ namespace Coddee.WPF
 
         private async void OnStartup(object sender, StartupEventArgs e)
         {
-
             _logger.Log(EventsSource, "Application startup.");
 
             _systemApplication.Dispatcher.Invoke(() =>
@@ -137,6 +142,7 @@ namespace Coddee.WPF
                 _logger.Log(EventsSource, "Initiating startup sequence");
 
                 InvokeBuildAction(BuildActions.Logger);
+                InvokeBuildAction(BuildActions.Localization);
                 InvokeBuildAction(BuildActions.Mapper);
                 InvokeBuildAction(BuildActions.ConfigFile);
                 InvokeBuildAction(BuildActions.Repository);
@@ -394,6 +400,54 @@ namespace Coddee.WPF
 
     public static class BuilderExtensions
     {
+        public static IWPFApplicationBuilder UseLocalization(
+            this IWPFApplicationBuilder builder,
+            string defaultCluture = "en-US")
+        {
+            builder.SetBuildAction(BuildActions.Localization,
+                                   () =>
+                                   {
+                                       var localizationManager = builder.GetContainer().Resolve<ILocalizationManager>();
+                                       localizationManager.SetCulture(defaultCluture);
+                                       builder.GetContainer().RegisterInstance<IObjectMapper, ILObjectsMapper>();
+                                   });
+            return builder;
+        }
+
+        public static IWPFApplicationBuilder UseLocalization(
+            this IWPFApplicationBuilder builder,
+            string resourceManagerFullPath,
+            string resourceManagerAssembly,
+            string[] supportedCultures,
+            string defaultCluture = "en-US")
+        {
+            Action action = () =>
+            {
+                var localizationManager = builder.GetContainer().Resolve<ILocalizationManager>();
+                localizationManager.SetCulture(defaultCluture);
+                var values = new Dictionary<string,Dictionary<string,string>>();
+                var res =
+                    new ResourceManager(resourceManagerFullPath,
+                                        Assembly.LoadFrom(Path.Combine(AppDomain.CurrentDomain
+                                                                           .BaseDirectory,
+                                                                       resourceManagerAssembly)));
+                foreach (var culture in supportedCultures)
+                {
+                    foreach (DictionaryEntry val in
+                        res.GetResourceSet(new CultureInfo(culture), true, true))
+                    {
+                        if(!values.ContainsKey(val.Key.ToString()))
+                            values[val.Key.ToString()]= new Dictionary<string, string>();
+                        values[val.Key.ToString()][culture] = val.Value.ToString();
+                    }
+                }
+                localizationManager.AddValues(values);
+            };
+            builder.SetBuildAction(BuildActions.Localization,
+                                   action);
+            return builder;
+        }
+
         /// <summary>
         /// Use the IL object mapper
         /// </summary>

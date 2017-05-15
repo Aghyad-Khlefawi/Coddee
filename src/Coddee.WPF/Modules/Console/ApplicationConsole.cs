@@ -197,6 +197,7 @@ namespace Coddee.WPF.Console
                         DefaultCommands.ClearCommand,
                         DefaultCommands.CMDCommand,
                         DefaultCommands.SetScreenCommand,
+                        DefaultCommands.SetLanguageCommand,
                         DefaultCommands.ExitCommand);
         }
 
@@ -222,6 +223,21 @@ namespace Coddee.WPF.Console
 
             _defaultCommandHandlers[DefaultCommands.SetScreenCommand.Name] =
                 new List<EventHandler<ConsoleCommandArgs>> { OnSetScreenCommand };
+
+            _defaultCommandHandlers[DefaultCommands.SetLanguageCommand.Name] =
+                new List<EventHandler<ConsoleCommandArgs>> { OnSetLanguageCommand };
+        }
+
+        private void OnSetLanguageCommand(object sender, ConsoleCommandArgs e)
+        {
+            if (!e.Arguments.ContainsKey("/l"))
+            {
+                e.Result.Add("You must specify the /l argument.");
+                e.Handled = false;
+                return;
+            }
+
+            LocalizationManager.DefaultLocalizationManager.SetCulture(e.Arguments["/l"]);
         }
 
         private void OnSetScreenCommand(object sender, ConsoleCommandArgs e)

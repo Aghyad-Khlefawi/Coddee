@@ -27,7 +27,7 @@
             <StackPanel HorizontalAlignment="Center"
                         Width="125"
                         Margin="0 0 0 10">
-                <controls:WaterMarkTextBox WaterMarkContent="Username"
+                <controls:WaterMarkTextBox WaterMarkContent="{controls:Localize Username}"
                                            x:Name="username"
                                            Text="{Binding Username,UpdateSourceTrigger=PropertyChanged}"
                                            controls:OnEnterCommand.Command="{Binding LoginCommand}"

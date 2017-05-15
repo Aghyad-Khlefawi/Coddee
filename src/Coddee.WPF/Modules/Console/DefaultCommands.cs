@@ -47,6 +47,15 @@ namespace Coddee.WPF.Modules.Console
                 {"/i", "The screen index (Start index is 0)."}
             }
         };
+        public static ConsoleCommand SetLanguageCommand = new ConsoleCommand
+        {
+            Name = "setlanguage",
+            Description = "Changes the language of the localization manager.",
+            SupportedArguments = new Dictionary<string, string>
+            {
+                {"/l", "The new language."}
+            }
+        };
         public static ConsoleCommand CMDCommand = new ConsoleCommand
         {
             Name = "cmd",

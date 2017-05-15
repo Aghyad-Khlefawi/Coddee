@@ -16,5 +16,6 @@ namespace Coddee.AppBuilder
         public const string Navigation = nameof(Navigation);
         public const string DialogService = nameof(DialogService);
         public const string DebugTool = nameof(DebugTool);
+        public const string Localization = nameof(Localization);
     }
 }

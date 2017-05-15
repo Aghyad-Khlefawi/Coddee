@@ -19,12 +19,12 @@ namespace HR.Clients.WPF.Login
         public LoginViewModel()
         {
 #if DEBUG
-            _username = "user";
-            _password = "123";
-            View.Loaded += delegate
-            {
-                Login();
-            };
+            //_username = "user";
+            //_password = "123";
+            //View.Loaded += delegate
+            //{
+            //    Login();
+            //};
 #endif
         }
 

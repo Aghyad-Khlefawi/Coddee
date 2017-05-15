@@ -15,17 +15,16 @@
             
         </local:MainViewModel>
     </UserControl.Resources> 
-    <controls:BusyIndicator IsBusy="true" >
+    <controls:BusyIndicator IsBusy="{Binding IsBusy}" >
         <DockPanel d:DataContext="{StaticResource designData}"
                    Background="WhiteSmoke">
             <controls:TabsPanel Padding="5"
                                 HeaderForeground="{StaticResource ApplicationAccentColor}"
                                 Margin="5">
-
                 <controls:TabsPanelItem Header="Companies and Employees"
                                         Presentable="{Binding CompaniesViewModel}" />
 
-                <controls:TabsPanelItem Header="States"
+                <controls:TabsPanelItem Header="{controls:Localize States}"
                                         Presentable="{Binding StatesViewModel}" />
             </controls:TabsPanel>
         </DockPanel>

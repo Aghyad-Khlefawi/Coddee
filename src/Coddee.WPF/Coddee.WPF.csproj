@@ -108,7 +108,7 @@
     <Compile Include="Globals.cs" />
     <Compile Include="IEditorViewModel.cs" />
     <Compile Include="IViewModel.cs" />
-    <Compile Include="Modules\BuiltInModules.cs" />
+    <Compile Include="Localize.cs" />
     <Compile Include="Modules\Configuration\ConfigurationManager.cs" />
     <Compile Include="Modules\Configuration\ConfigurationManagerModule.cs" />
     <Compile Include="Modules\Console\ApplicationConsoleModule.cs" />
@@ -155,12 +155,9 @@
     <Compile Include="Modules\Interfaces\IDebugTool.cs" />
     <Compile Include="Modules\Interfaces\IDialogService.cs" />
     <Compile Include="Modules\Interfaces\INavigationService.cs" />
-    <Compile Include="Modules\Module.cs" />
-    <Compile Include="Modules\IModule.cs" />
     <Compile Include="Modules\Interfaces\IApplicationConsole.cs" />
     <Compile Include="Modules\Interfaces\IConfigurationManager.cs" />
     <Compile Include="Modules\ModuleException.cs" />
-    <Compile Include="Modules\ModuleInitializationTypes.cs" />
     <Compile Include="Modules\ApplicationModulesManager.cs" />
     <Compile Include="Modules\Navigation\NavigationModule.cs" />
     <Compile Include="Modules\Navigation\NavigationService.cs" />
@@ -201,6 +198,7 @@
     <Compile Include="Regions\Region.cs" />
     <Compile Include="Regions\RegionManager.cs" />
     <Compile Include="Security\ILoginViewModel.cs" />
+    <Compile Include="UpdatableMarkupExtension.cs" />
     <Compile Include="ViewModelBase.cs" />
     <Compile Include="XamlHelpers\FocusOnLoad.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">

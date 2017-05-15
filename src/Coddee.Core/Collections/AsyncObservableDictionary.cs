@@ -45,18 +45,16 @@ namespace Coddee.Collections
         }
 
         public AsyncObservableDictionary(IList<TValue> list)
-            : base(list)
         {
-            _dictionary = new Dictionary<TKey, TValue>();
-            FillDicionaryValues(list);
+            _dictionary = new Dictionary<TKey, TValue>(list.Count);
+            CopyFrom(list);
         }
 
 
         public AsyncObservableDictionary(IEnumerable<TValue> list)
-            : base(list)
         {
-            _dictionary = new Dictionary<TKey, TValue>();
-            FillDicionaryValues(list);
+            _dictionary = new Dictionary<TKey, TValue>(list.Count());
+            CopyFrom(list);
         }
 
         /// <summary>
@@ -89,8 +87,6 @@ namespace Coddee.Collections
         protected override void UnsafeInsertItem(int index, TValue item)
         {
             base.UnsafeInsertItem(index, item);
-            if(_dictionary==null)
-                _dictionary = new Dictionary<TKey, TValue>();
             _dictionary.Add(item.GetKey, item);
         }
 
@@ -103,17 +99,6 @@ namespace Coddee.Collections
             TValue item = Items.ElementAt(index);
             base.UnsafeRemoveItem(index);
             _dictionary.Remove(item.GetKey);
-        }
-
-        /// <summary>
-        /// Fills the dictionary with the keys and values
-        /// </summary>
-        /// <param name="collection">The collection to copy from</param>
-        private void FillDicionaryValues(IEnumerable<TValue> collection)
-        {
-            _dictionary = new Dictionary<TKey, TValue>(collection.Count());
-            foreach (var item in collection)
-                _dictionary[item.GetKey] = item;
         }
     }
 }

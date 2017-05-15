@@ -48,6 +48,7 @@ namespace HR.Clients.WPF
                 .UseNavigation(HRNavigation.Navigations)
                 .UseToast()
                 .UseDialogs()
+                .UseLocalization("HR.Clients.WPF.Properties.Resources", "HR.Clients.WPF.exe",new []{"ar-SY","en-US"}, "ar-SY")
                 .UseLinqRepositoryManager<HRDBManager, HRRepositoryManager
                 >($@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename={
                           dbLocation

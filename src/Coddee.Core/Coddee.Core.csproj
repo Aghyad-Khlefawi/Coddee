@@ -52,6 +52,8 @@
     <Compile Include="AppBuilder\IApplicationBuilder.cs" />
     <Compile Include="AppBuilder\IApplicationIdentifier.cs" />
     <Compile Include="EditorSaveArgs.cs" />
+    <Compile Include="ILocalizationManager.cs" />
+    <Compile Include="LocalizationManager.cs" />
     <Compile Include="Mapper\BasicObjectMapper.cs" />
     <Compile Include="Collections\AsyncObservableCollection.cs" />
     <Compile Include="Collections\AsyncObservableDictionary.cs" />
@@ -66,6 +68,11 @@
     <Compile Include="Loggers\ILogger.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="IUniqueObject.cs" />
+    <Compile Include="Modules\BuiltInModules.cs" />
+    <Compile Include="Modules\IModule.cs" />
+    <Compile Include="Modules\LocalizationManagerModule.cs" />
+    <Compile Include="Modules\Module.cs" />
+    <Compile Include="Modules\ModuleInitializationTypes.cs" />
     <Compile Include="OperationType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\IGlobalVariablesService.cs" />
