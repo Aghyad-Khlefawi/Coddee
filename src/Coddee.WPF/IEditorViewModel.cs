@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace Coddee.WPF
@@ -15,7 +16,7 @@ namespace Coddee.WPF
         
         void Add();
         void Cancel();
-        void Save();
+        Task<bool> Save();
         IEnumerable<string> Validate();
     }
 

@@ -18,7 +18,7 @@ namespace Coddee.WPF.Navigation
 
     public interface INavigationItem
     {
-        Type DestinationType { get;  }
+        Type DestinationType { get; }
         bool DestinationResolved { get; }
         bool IsSelected { get; set; }
         bool ShowTitle { get; set; }
@@ -36,7 +36,8 @@ namespace Coddee.WPF.Navigation
             IPresentable destination,
             string title,
             string icon,
-            NavItemPosition position = NavItemPosition.Top)
+            NavItemPosition position = NavItemPosition.Top,
+            bool localizedTitle = false)
         {
             _destination = destination;
             Title = title;
@@ -45,9 +46,12 @@ namespace Coddee.WPF.Navigation
             Position = position;
             DestinationType = _destination?.GetType();
             DestinationResolved = true;
+            _localizedTitle = localizedTitle;
         }
 
-        private bool _isVisible=true;
+        protected bool _localizedTitle;
+
+        private bool _isVisible = true;
         public bool IsVisible
         {
             get { return _isVisible; }
@@ -113,8 +117,14 @@ namespace Coddee.WPF.Navigation
         }
         public ICommand NavigateCommand => new RelayCommand(Navigate);
 
-        protected virtual void Navigate()
+        protected virtual async void Navigate()
         {
+            var vm = _destination as ViewModelBase;
+            if (vm != null && !vm.IsInitialized)
+            {
+                await vm.Initialize();
+            }
+
             NavigationRequested?.Invoke(this, _destination);
         }
 
@@ -124,13 +134,11 @@ namespace Coddee.WPF.Navigation
             DestinationResolved = true;
         }
 
-        protected override async Task OnInitialization()
+        protected override Task OnInitialization()
         {
-            var vm = _destination as ViewModelBase;
-            if (vm != null)
-            {
-                await vm.Initialize();
-            }
+            if (_localizedTitle)
+                Title = _localization.BindValue(this, e => e.Title, Title);
+            return base.OnInitialization();
         }
     }
 
@@ -138,8 +146,9 @@ namespace Coddee.WPF.Navigation
     {
         public NavigationItem(string title,
                               string icon,
-                              NavItemPosition position = NavItemPosition.Top)
-            : base(null, title, icon, position)
+                              NavItemPosition position = NavItemPosition.Top,
+                              bool localizedTitle = false)
+            : base(null, title, icon, position, localizedTitle)
         {
             DestinationType = typeof(TViewModel);
             DestinationResolved = false;

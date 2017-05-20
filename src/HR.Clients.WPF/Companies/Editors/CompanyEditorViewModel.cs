@@ -33,6 +33,7 @@ namespace HR.Clients.WPF.Companies.Editors
 
         protected override async Task OnInitialization()
         {
+            await base.OnInitialization();
             States = AsyncObservableCollection<State>.Create(await Resolve<IStateRepository>().GetItems());
         }
     }

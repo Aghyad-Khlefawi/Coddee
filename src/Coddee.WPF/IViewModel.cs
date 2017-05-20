@@ -18,4 +18,9 @@ namespace Coddee.WPF
         bool IsInitialized { get; }
         Task Initialize();
     }
+
+    public interface IPresentableViewModel : IViewModel, IPresentable
+    {
+        
+    }
 }

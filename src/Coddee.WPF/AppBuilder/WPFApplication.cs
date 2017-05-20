@@ -15,8 +15,10 @@ namespace Coddee.WPF
     /// </summary>
     public abstract class WPFApplication : IApplication
     {
+        public static WPFApplication Current { get; protected set; }
         public void Run()
         {
+            Current = this;
             _systemApplication = Application.Current;
             _container = new UnityContainer();
             _systemApplication.ShutdownMode = ShutdownMode.OnExplicitShutdown;
@@ -36,6 +38,12 @@ namespace Coddee.WPF
         public Guid ApplicationID { get; private set; }
         public string ApplicationName { get; private set; }
         public ApplicationTypes ApplicationType { get; private set; }
+
+
+        public IUnityContainer GetContainer()
+        {
+            return _container;
+        }
 
         /// <summary>
         /// Start the build phase

@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 
@@ -51,14 +52,14 @@ namespace Coddee.WPF.Modules.Dialogs
             return ShowDialog(dialog);
         }
 
-        public IDialog ShowEditorDialog(UIElement content, Action OnSave, Action OnCancel = null)
+        public IDialog ShowEditorDialog(UIElement content, Func<Task<bool>> OnSave, Action OnCancel = null)
         {
             var dialog = CreateDialog<EditorDialogViewModel>();
             dialog.Content = content;
-            dialog.OnSave += () =>
+            dialog.OnSave += async () =>
             {
-                OnSave?.Invoke();
-                CloseDialog(dialog);
+                if (await OnSave?.Invoke())
+                    CloseDialog(dialog);
             };
             dialog.OnCancel += () =>
             {

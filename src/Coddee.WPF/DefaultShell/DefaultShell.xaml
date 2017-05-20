@@ -8,6 +8,7 @@
         xmlns:controls="clr-namespace:Coddee.WPF.Controls"
         xmlns:defaultShell="clr-namespace:Coddee.WPF.DefaultShell"
         xmlns:system="clr-namespace:System;assembly=mscorlib"
+        xmlns:local="clr-namespace:Coddee.WPF"
         WindowStartupLocation="CenterScreen"
         ShowInTaskbar="True"
         mc:Ignorable="d"
@@ -38,7 +39,7 @@
                 BorderBrush="LightGray"
                 BorderThickness="1">
             <DockPanel>
-                <DockPanel Background="{StaticResource ApplicationAccentColor}"
+                <DockPanel Background="{DynamicResource ApplicationAccentColor}"
                            x:Name="ToolBar"
                            Margin="0 0 0 0"
                            Dock="Top"

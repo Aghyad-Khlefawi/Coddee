@@ -2,6 +2,7 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
 using System;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 
@@ -13,7 +14,7 @@ namespace Coddee.WPF.Modules.Dialogs
 
         IDialog ShowMessage(string message);
         IDialog ShowConfirmation(string message,Action OnYes,Action OnNo = null);
-        IDialog ShowEditorDialog(UIElement content, Action OnSave, Action OnCancel = null);
+        IDialog ShowEditorDialog(UIElement content, Func<Task<bool>> OnSave, Action OnCancel = null);
         IDialog ShowEditorDialog(IEditorViewModel editor);
 
         IDialog ShowDialog(IDialog dialog);

@@ -33,6 +33,7 @@ namespace Coddee.WPF.Modules.Navigation
                 };
             }
         }
+        
 
         private bool _showTitles;
         public bool ShowTitles
@@ -59,11 +60,12 @@ namespace Coddee.WPF.Modules.Navigation
 
         public void AddNavigationItem(INavigationItem navigationItem)
         {
+            NavigationItems.Add(navigationItem);
             if (!navigationItem.DestinationResolved)
                 navigationItem.SetDestination((IPresentable) Resolve<IShellViewModel>()
                                                   .CreateViewModel(navigationItem.DestinationType));
             navigationItem.NavigationRequested += NavigationItem_NavigationRequested;
-            NavigationItems.Add(navigationItem);
+            navigationItem.Initialize();
         }
 
         private AsyncObservableCollection<INavigationItem> _navigationItems;
@@ -87,8 +89,6 @@ namespace Coddee.WPF.Modules.Navigation
                 navigationItem.IsSelected = false;
             }
             _navigationRegion.View(e);
-            if (!nav.IsInitialized)
-                Task.Factory.StartNew(async () => { await nav.Initialize(); });
             ShowTitles = false;
             nav.IsSelected = true;
         }

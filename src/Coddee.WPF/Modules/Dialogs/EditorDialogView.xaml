@@ -6,6 +6,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Coddee.WPF.Modules.Dialogs"
+             xmlns:wpf="clr-namespace:Coddee.WPF"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
@@ -23,13 +24,13 @@
             <StackPanel HorizontalAlignment="Right"
                         DockPanel.Dock="Bottom"
                         Orientation="Horizontal">
-                <Button Content="Save"
+                <Button Content="{wpf:Localize Save}"
                         HorizontalContentAlignment="Center"
                         HorizontalAlignment="Right"
                         Margin="0 0 20 0"
                         Command="{Binding SaveCommand}"
                         Style="{StaticResource DialogButton}" />
-                <Button Content="Cancel"
+                <Button Content="{wpf:Localize Cancel}"
                         HorizontalContentAlignment="Center"
                         Command="{Binding CancelCommand}"
                         Style="{StaticResource DialogButton}" />

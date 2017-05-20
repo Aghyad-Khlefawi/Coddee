@@ -61,6 +61,15 @@ namespace HR.Clients.WPF.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Management.
+        /// </summary>
+        internal static string Management {
+            get {
+                return ResourceManager.GetString("Management", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to States.
         /// </summary>
         internal static string States {

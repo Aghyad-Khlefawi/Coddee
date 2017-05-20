@@ -106,7 +106,9 @@ namespace Coddee.WPF
             _modulesManager = _container.Resolve<ApplicationModulesManager>();
             _modulesManager.RegisterModule(_modulesManager.DescoverModulesFromAssambles(Assembly.GetAssembly(GetType()))
                                                .ToArray());
-            _modulesManager.RegisterModule(_modulesManager.DescoverModulesFromAssambles(Assembly.GetAssembly(typeof(BuiltInModules)))
+            _modulesManager.RegisterModule(_modulesManager
+                                               .DescoverModulesFromAssambles(Assembly
+                                                                                 .GetAssembly(typeof(BuiltInModules)))
                                                .ToArray());
             _modulesManager.InitializeAutoModules();
             _app.OnAutoModulesInitialized();
@@ -204,11 +206,11 @@ namespace Coddee.WPF
                                                                                          _buildActions
                                                                                              .ContainsKey(BuildActions
                                                                                                               .Navigation));
-                    InvokeBuildAction(BuildActions.Navigation);
                 }
                 else
                     await shellVmBase?.Initialize();
 
+                InvokeBuildAction(BuildActions.Navigation);
 
                 var shell = _container.Resolve<IShell>();
                 ((Window) shell).DataContext = shellViewModel;
@@ -425,7 +427,7 @@ namespace Coddee.WPF
             {
                 var localizationManager = builder.GetContainer().Resolve<ILocalizationManager>();
                 localizationManager.SetCulture(defaultCluture);
-                var values = new Dictionary<string,Dictionary<string,string>>();
+                var values = new Dictionary<string, Dictionary<string, string>>();
                 var res =
                     new ResourceManager(resourceManagerFullPath,
                                         Assembly.LoadFrom(Path.Combine(AppDomain.CurrentDomain
@@ -436,8 +438,8 @@ namespace Coddee.WPF
                     foreach (DictionaryEntry val in
                         res.GetResourceSet(new CultureInfo(culture), true, true))
                     {
-                        if(!values.ContainsKey(val.Key.ToString()))
-                            values[val.Key.ToString()]= new Dictionary<string, string>();
+                        if (!values.ContainsKey(val.Key.ToString()))
+                            values[val.Key.ToString()] = new Dictionary<string, string>();
                         values[val.Key.ToString()][culture] = val.Value.ToString();
                     }
                 }
@@ -659,25 +661,33 @@ namespace Coddee.WPF
                                    () =>
                                    {
                                        var container = builder.WPFBuilder.GetContainer();
-
+                                       var navs = new List<INavigationItem>();
                                        var nav = container.Resolve<INavigationService>();
-                                       var homeNav = new NavigationItem(builder.WPFBuilder.GetDefaultPresentable(),
-                                                                        "Home",
-                                                                        "M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z")
+                                       if (builder.WPFBuilder.GetDefaultPresentable() != null)
                                        {
-                                           IsSelected = true,
-                                           IsFirstItem = true
-                                       };
+                                           var homeNav = new NavigationItem(builder.WPFBuilder.GetDefaultPresentable(),
+                                                                            "Home",
+                                                                            "M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z")
+                                           {
+                                               IsSelected = true,
+                                               IsFirstItem = true
+                                           };
 
-                                       var navs = new List<INavigationItem>
+                                           navs.Add(homeNav);
+                                           navs.AddRange(navigationItems);
+
+
+                                           nav.Initialize(DefaultRegions.NavbarRegion,
+                                                          DefaultRegions.ApplicationMainRegion,
+                                                          navs);
+                                       }
+                                       else
                                        {
-                                           homeNav
-                                       };
-
-                                       navs.AddRange(navigationItems);
-                                       nav.Initialize(DefaultRegions.NavbarRegion,
-                                                      DefaultRegions.ApplicationMainRegion,
-                                                      navs);
+                                           navs.AddRange(navigationItems);
+                                           nav.Initialize(DefaultRegions.NavbarRegion,
+                                                          DefaultRegions.ApplicationMainRegion,
+                                                          navs);
+                                       }
                                    });
             return builder;
         }

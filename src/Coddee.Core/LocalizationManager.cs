@@ -1,11 +1,25 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq.Expressions;
+using System.Reflection;
 using Coddee.Loggers;
 using Microsoft.Practices.Unity;
 
 namespace Coddee
 {
-   
+    class BoundLocalizationObject
+    {
+        public object Item { get; set; }
+        public PropertyInfo PropertyInfo { get; set; }
+
+        public void SetValue(object value)
+        {
+            PropertyInfo.SetValue(Item,value);
+        }
+    }
+
+
     public class LocalizationManager : ILocalizationManager
     {
         private static LocalizationManager _defaultLocalizationManager;
@@ -22,6 +36,7 @@ namespace Coddee
         public LocalizationManager()
         {
             _localziationValues = new Dictionary<string, Dictionary<string, string>>();
+            _boundObjects = new ConcurrentDictionary<string, List<BoundLocalizationObject>>();
         }
 
         private ILogger _logger;
@@ -29,12 +44,45 @@ namespace Coddee
         public string DefaultCulture { get; set; }
 
         private readonly Dictionary<string, Dictionary<string, string>> _localziationValues;
+        private readonly ConcurrentDictionary<string, List<BoundLocalizationObject>> _boundObjects;
 
 
         public void SetCulture(string newCulture)
         {
             DefaultCulture = newCulture;
+            UpdateBoundObjects();
             CultureChanged?.Invoke(this, newCulture);
+        }
+
+        private void UpdateBoundObjects()
+        {
+            foreach (var boundObject in _boundObjects)
+            {
+                var newValue = GetValue(boundObject.Key);
+                foreach (var boundLocalizationObject in boundObject.Value)
+                {
+                    boundLocalizationObject.SetValue(newValue);
+                }
+            }
+        }
+
+        public string BindValue<T>(T item, Expression<Func<T, object>> property, string key, string culture = null)
+        {
+            var currentValue = GetValue(key, culture);
+            var propertyName = ((MemberExpression)property.Body).Member.Name;
+            var boundValue = new BoundLocalizationObject
+            {
+                Item = item,
+                PropertyInfo = item.GetType().GetTypeInfo().GetProperty(propertyName)
+            };
+
+            if (!_boundObjects.ContainsKey(key))
+                _boundObjects.TryAdd(key, new List<BoundLocalizationObject>());
+            List<BoundLocalizationObject> objects;
+            if (_boundObjects.TryGetValue(key, out objects))
+                objects.Add(boundValue);
+            boundValue.SetValue(currentValue);
+            return currentValue;
         }
 
         public void Initialize(IUnityContainer container)
@@ -66,7 +114,9 @@ namespace Coddee
 
             if (!_localziationValues.ContainsKey(key) || !_localziationValues[key].ContainsKey(culture))
             {
-                _logger?.Log(nameof(LocalizationManager), $"Localization values not found for '{key}'",LogRecordTypes.Debug);
+                _logger?.Log(nameof(LocalizationManager),
+                             $"Localization values not found for '{key}'",
+                             LogRecordTypes.Debug);
                 return key;
             }
 

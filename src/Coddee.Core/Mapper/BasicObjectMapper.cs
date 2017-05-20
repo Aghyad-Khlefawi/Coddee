@@ -67,8 +67,8 @@ namespace Coddee
 
             var propertiesInfo = new List<MapPropertyInfo>();
 
-            var sourcePoperties = ExtractProperties(sourceType.GetTypeInfo());
-            var targetPoperties = ExtractProperties(targetType.GetTypeInfo(), e => e.SetMethod != null);
+            var sourcePoperties = sourceType.GetTypeInfo().GetProperties();
+            var targetPoperties = targetType.GetTypeInfo().GetProperties(e => e.SetMethod != null);
 
             foreach (var targetProperty in targetPoperties)
             {
@@ -179,15 +179,7 @@ namespace Coddee
         }
 
 
-        private IEnumerable<PropertyInfo> ExtractProperties(TypeInfo type, Func<PropertyInfo, bool> predicate = null)
-        {
-            List<PropertyInfo> properties = new List<PropertyInfo>();
-            properties.AddRange(predicate == null ? type.DeclaredProperties : type.DeclaredProperties.Where(predicate));
-            if (type.BaseType != null && type.BaseType.Name != typeof(object).Name)
-                properties.AddRange(ExtractProperties(type.BaseType.GetTypeInfo()));
-            return properties;
         }
-    }
 
     /// <summary>
     /// Hold the information required to map between two types

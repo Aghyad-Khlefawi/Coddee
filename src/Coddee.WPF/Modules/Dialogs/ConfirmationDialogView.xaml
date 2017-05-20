@@ -6,6 +6,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:Coddee.WPF.Modules.Dialogs"
+             xmlns:wpf="clr-namespace:Coddee.WPF"
              mc:Ignorable="d"
              d:DesignHeight="500" d:DesignWidth="500">
     <UserControl.Resources>
@@ -23,12 +24,12 @@
             <StackPanel HorizontalAlignment="Right"
                         DockPanel.Dock="Bottom"
                         Orientation="Horizontal">
-                <Button Content="Yes"
+                <Button Content="{wpf:Localize Yes}"
                         HorizontalContentAlignment="Center"
                         HorizontalAlignment="Right" Margin="0 0 20 0"
                         Command="{Binding YesCommand}"
                         Style="{StaticResource DialogButton}" />
-                <Button Content="No"
+                <Button Content="{wpf:Localize No}"
                         HorizontalContentAlignment="Center"
                         Command="{Binding NoCommand}"
                         Style="{StaticResource DialogButton}" />

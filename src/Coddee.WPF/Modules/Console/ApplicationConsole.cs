@@ -149,7 +149,7 @@ namespace Coddee.WPF.Console
         /// Initialize the console
         /// </summary>
         /// <param name="shell"></param>
-        public void Initialize(IShell shell,LogRecordTypes logLevel)
+        public void Initialize(IShell shell, LogRecordTypes logLevel)
         {
             var shellWindow = (Window) shell;
             _logger.Initialize(logLevel);
@@ -222,10 +222,10 @@ namespace Coddee.WPF.Console
                 new List<EventHandler<ConsoleCommandArgs>> {OnClearCommand};
 
             _defaultCommandHandlers[DefaultCommands.SetScreenCommand.Name] =
-                new List<EventHandler<ConsoleCommandArgs>> { OnSetScreenCommand };
+                new List<EventHandler<ConsoleCommandArgs>> {OnSetScreenCommand};
 
             _defaultCommandHandlers[DefaultCommands.SetLanguageCommand.Name] =
-                new List<EventHandler<ConsoleCommandArgs>> { OnSetLanguageCommand };
+                new List<EventHandler<ConsoleCommandArgs>> {OnSetLanguageCommand};
         }
 
         private void OnSetLanguageCommand(object sender, ConsoleCommandArgs e)
@@ -252,7 +252,8 @@ namespace Coddee.WPF.Console
             int index;
             if (!int.TryParse(indexStr, out index))
             {
-                e.Result.Add($"The value '{indexStr}' is invalid for the /i argument, you need to specify an integer value.");
+                e.Result
+                    .Add($"The value '{indexStr}' is invalid for the /i argument, you need to specify an integer value.");
                 e.Handled = false;
                 return;
             }
@@ -277,7 +278,6 @@ namespace Coddee.WPF.Console
             shell.WindowState = oldState;
 
             e.Handled = true;
-
         }
 
 

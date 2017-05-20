@@ -15,6 +15,12 @@
                 <ResourceDictionary>
                     <SolidColorBrush x:Key="ApplicationAccentColor"
                                      Color="#065FCF" />
+                    <SolidColorBrush x:Key="NavigationBarBorderBrush"
+                                     Color="#065FCF" />
+
+                    <SolidColorBrush x:Key="NavbarBackground"
+                                     Color="#888888" />
+                    
                     <Style TargetType="wpf:BusyIndicator" >
                         <Setter Property="FillColor" Value="{StaticResource ApplicationAccentColor}"/>
                     </Style>

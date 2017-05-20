@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -42,7 +43,7 @@ namespace Coddee.WPF
                 OnDesignMode();
         }
 
-        
+
         public event EventHandler Initialized;
         public event EventHandler<IViewModel> ChildCreated;
 
@@ -50,14 +51,14 @@ namespace Coddee.WPF
 
         public IList<IViewModel> ChildViewModels { get; protected set; }
 
-        private bool _isInitialized ;
-        public bool IsInitialized 
+        private bool _isInitialized;
+        public bool IsInitialized
         {
-            get { return _isInitialized ; }
-            protected set { SetProperty(ref this._isInitialized , value); }
+            get { return _isInitialized; }
+            protected set { SetProperty(ref this._isInitialized, value); }
         }
 
-        private bool _isBusy=true;
+        private bool _isBusy = true;
         public bool IsBusy
         {
             get { return _isBusy; }
@@ -70,6 +71,7 @@ namespace Coddee.WPF
             await vm.Initialize();
             return vm;
         }
+
         protected virtual void OnDesignMode()
         {
             IsBusy = false;
@@ -239,7 +241,8 @@ namespace Coddee.WPF
     /// Contains the property changed handlers and UI execute method
     /// </summary>
     /// <typeparam name="TView"></typeparam>
-    public class ViewModelBase<TView> : ViewModelBase, IPresentable<TView> where TView : UIElement, new()
+    public class ViewModelBase<TView> : ViewModelBase, IPresentable<TView>, IPresentableViewModel
+        where TView : UIElement, new()
     {
         public ViewModelBase()
         {
@@ -312,6 +315,12 @@ namespace Coddee.WPF
             get { return _editedItem; }
             set { SetProperty(ref this._editedItem, value); }
         }
+        private bool _fillingValues;
+        public bool FillingValues
+        {
+            get { return _fillingValues; }
+            set { SetProperty(ref this._fillingValues, value); }
+        }
 
         public virtual void Add()
         {
@@ -322,16 +331,18 @@ namespace Coddee.WPF
 
         public virtual void Edit(TModel item)
         {
-            OperationType = OperationType.Edit;
+            FillingValues = true;
+               OperationType = OperationType.Edit;
             EditedItem = _mapper.Map<TModel>(item);
             OnEdit(item);
+            FillingValues = false;
         }
 
-        protected override Task OnInitialization()
+        protected override async Task OnInitialization()
         {
+            await base.OnInitialization();
             _mapper = Resolve<IObjectMapper>();
             _mapper.RegisterMap<TModel, TModel>();
-            return base.OnInitialization();
         }
 
         protected virtual void OnAdd()
@@ -351,22 +362,30 @@ namespace Coddee.WPF
         {
         }
 
-        public virtual void Save()
+        public virtual Task<bool> Save()
         {
-            PreSave();
             var errors = Validate();
             if (errors != null && errors.Any())
             {
                 ShowErrors(errors);
+                return Task.FromResult(false);
             }
-            else
-            {
-                Saved?.Invoke(this, new EditorSaveArgs<TModel>(OperationType, EditedItem));
-            }
+
+            PreSave();
+            Saved?.Invoke(this, new EditorSaveArgs<TModel>(OperationType, EditedItem));
+            return Task.FromResult(true);
         }
 
         protected virtual void ShowErrors(IEnumerable<string> errors)
         {
+            var errorBuilder = new StringBuilder();
+            foreach (var error in errors)
+            {
+                errorBuilder.Append(error);
+                errorBuilder.Append(Environment.NewLine);
+            }
+            var errorMessage = errorBuilder.ToString(0, errorBuilder.Length - Environment.NewLine.Length);
+            _toast.ShowToast(errorMessage, ToastType.Error);
         }
 
         public virtual void OnSave(object sender, EditorSaveArgs<TModel> e)
@@ -391,26 +410,25 @@ namespace Coddee.WPF
         protected TRepository _repository;
         public new event EventHandler<EditorSaveArgs<TModel>> Saved;
 
-        protected override Task OnInitialization()
+        protected override async Task OnInitialization()
         {
+            await base.OnInitialization();
             _repository = Resolve<TRepository>();
-            return base.OnInitialization();
         }
 
-        public override async void Save()
+        public override async Task<bool> Save()
         {
             PreSave();
             var errors = Validate();
             if (errors != null && errors.Any())
             {
                 ShowErrors(errors);
+                return false;
             }
-            else
-            {
-                Saved?.Invoke(this,
-                              new EditorSaveArgs<TModel>(OperationType,
-                                                         await _repository.Update(OperationType, EditedItem)));
-            }
+            Saved?.Invoke(this,
+                          new EditorSaveArgs<TModel>(OperationType,
+                                                     await _repository.Update(OperationType, EditedItem)));
+            return true;
         }
     }
 }

@@ -6,6 +6,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Coddee.WPF.Modules.Dialogs"
+             xmlns:wpf="clr-namespace:Coddee.WPF"
              mc:Ignorable="d" d:DesignWidth="300">
     <UserControl.Resources>
         <ResourceDictionary>
@@ -20,7 +21,7 @@
     <Grid d:DataContext="{StaticResource designData}">
         <DockPanel 
                    MinWidth="400">
-                <Button Content="OK"
+                <Button Content="{wpf:Localize OK}"
                         DockPanel.Dock="Bottom"
                         HorizontalContentAlignment="Center"
                         HorizontalAlignment="Right"

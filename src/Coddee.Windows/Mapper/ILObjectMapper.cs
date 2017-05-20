@@ -46,7 +46,7 @@ namespace Coddee.Windows.Mapper
                 ? _mappings[sourceType][targetType]
                 : new MappingInfo();
 
-            mappingInfo.ManulaMapper = (s, t) => convert((TSource) s, (TTarget) t);
+            mappingInfo.ManualMapper = (s, t) => convert((TSource) s, (TTarget) t);
             mappingInfo.InstanceMapper = (s, t) => convert((TSource) s, (TTarget) t);
             _mappings[sourceType][targetType] = mappingInfo;
         }
@@ -120,10 +120,10 @@ namespace Coddee.Windows.Mapper
                     InvalidOperationException($"The mapping from {sourceType.Name} to {targetType.Name} was not defined ");
 
             var mappings = _mappings[sourceType][targetType];
-            if (mappings.ManulaMapper != null)
+            if (mappings.ManualMapper != null)
             {
                 var target = new TTarget();
-                mappings.ManulaMapper(source, target);
+                mappings.ManualMapper(source, target);
                 return target;
             }
             if (mappings.SingleMapper != null)
@@ -151,13 +151,13 @@ namespace Coddee.Windows.Mapper
                         InvalidOperationException($"The mapping from {sourceType.Name} to {targetType.Name} was not defined ");
 
                 var mappings = _mappings[sourceType][targetType];
-                if (mappings.ManulaMapper != null)
+                if (mappings.ManualMapper != null)
                 {
                     var result = new TTarget[source.Count];
                     for (int i = 0; i < source.Count; i++)
                     {
                         var target = new TTarget();
-                        mappings.ManulaMapper(source, target);
+                        mappings.ManualMapper(source[i], target);
                         result[i] = target;
                     }
                     return result;
@@ -169,7 +169,7 @@ namespace Coddee.Windows.Mapper
                 throw new
                     InvalidOperationException($"The mapping from {sourceType.Name} to {targetType.Name} was not defined ");
             }
-            return null;
+            return new List<TTarget>();
         }
 
         /// <summary>
@@ -394,7 +394,7 @@ namespace Coddee.Windows.Mapper
     {
         public Func<object, object> SingleMapper { get; set; }
         public Func<object, object> CollectionMapper { get; set; }
-        public Action<object, object> ManulaMapper { get; set; }
+        public Action<object, object> ManualMapper { get; set; }
         public Action<object, object> InstanceMapper { get; set; }
     }
 }

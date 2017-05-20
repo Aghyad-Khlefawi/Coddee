@@ -6,16 +6,9 @@
 
     <system:Double x:Key="MenuWidth">50</system:Double>
 
-    <!--#region Brushes-->
-    <SolidColorBrush x:Key="ApplicationAccentColor"
-                     Color="#27ABD2" />
     <SolidColorBrush x:Key="ErrorColor"
                      Color="#D91D1D" />
-    <SolidColorBrush x:Key="NavbarBackground"
-                     Color="#959595" />
-    <!--#endregion-->
-
-
+    
     <!--#region Converters-->
     <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
     <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
@@ -124,7 +117,7 @@
         <Setter Property="HorizontalContentAlignment" Value="Center"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
         <Setter Property="Background"
-                Value="{StaticResource ApplicationAccentColor}" />
+                Value="{DynamicResource ApplicationAccentColor}" />
         <Setter Property="Foreground" Value="White" />
         <Setter Property="Padding"
                 Value="3" />
@@ -208,9 +201,9 @@
         </Style.Triggers>
     </Style>
     <Style x:Key="MenuBorder" TargetType="Border">
-        <Setter Property="BorderThickness" Value="0 0 1 0" />
+        <Setter Property="BorderThickness" Value="0 0 2 0" />
         <Setter Property="BorderBrush"
-                Value="#ABABAB" />
+                Value="{DynamicResource NavigationBarBorderBrush}" />
     </Style>
     <Style x:Key="MenuItem" TargetType="{x:Type Button}">
         <Setter Property="Background"
@@ -279,7 +272,7 @@
                         <Border Width="6"
                                 Visibility="{Binding IsSelected,Converter={StaticResource BoolToVisibilityConverter}}"
                                 HorizontalAlignment="Left"
-                                Background="{StaticResource ApplicationAccentColor}" />
+                                Background="{DynamicResource ApplicationAccentColor}" />
                         <DockPanel>
                             <Border DockPanel.Dock="Right"
                                     Width="250"
@@ -290,7 +283,7 @@
                                         <Style.Triggers>
                                             <DataTrigger Binding="{Binding IsFirstItem}"
                                                          Value="true">
-                                                <Setter Property="BorderThickness" Value="0 1 0 0" />
+                                                <Setter Property="BorderThickness" Value="0 2 0 0" />
                                             </DataTrigger>
                                         </Style.Triggers>
                                     </Style>
@@ -321,7 +314,6 @@
     </Style>
 
     <Style x:Key="MenuButton" TargetType="Button" BasedOn="{StaticResource HighlightButton}">
-        <Setter Property="Background" Value="{StaticResource ApplicationAccentColor}" />
         <Setter Property="Height" Value="50" />
         <Setter Property="Content">
             <Setter.Value>
@@ -376,8 +368,7 @@
     <DataTemplate x:Key="ToastSuccessTemplate">
         <Grid
             Margin="0 0 0 10">
-            <Border Background="#8BC34A"
-                    CornerRadius="5">
+            <Border Background="#8BC34A">
                 <Border.Effect>
                     <DropShadowEffect ShadowDepth="1"
                                       BlurRadius="5"
@@ -404,8 +395,7 @@
     </DataTemplate>
     <DataTemplate x:Key="ToastErrorTemplate">
         <Grid Margin="0 0 0 10">
-            <Border Background="#DD2027"
-                    CornerRadius="5">
+            <Border Background="#DD2027">
                 <Border.Effect>
                     <DropShadowEffect ShadowDepth="1"
                                       BlurRadius="5"
@@ -432,8 +422,7 @@
     </DataTemplate>
     <DataTemplate x:Key="ToastWarningTemplate">
         <Grid Margin="0 0 0 10">
-            <Border Background="#FFF39524"
-                    CornerRadius="5">
+            <Border Background="#FFF39524">
                 <Border.Effect>
                     <DropShadowEffect ShadowDepth="1"
                                       BlurRadius="5"
@@ -459,8 +448,7 @@
     </DataTemplate>
     <DataTemplate x:Key="ToastInformationTemplate">
         <Grid Margin="0 0 0 10">
-            <Border CornerRadius="5"
-                    Background="#2999E1">
+            <Border Background="#2999E1">
                 <Border.Effect>
                     <DropShadowEffect ShadowDepth="1"
                                       BlurRadius="5"
