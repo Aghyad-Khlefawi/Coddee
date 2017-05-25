@@ -46,6 +46,29 @@ namespace Coddee.WPF.Modules
             return modules;
         }
 
+        public IEnumerable<Module> RegisterModule(params Type[] modules)
+        {
+            var res = new List<Module>();
+            foreach (var type in modules)
+            {
+                var attr = type.GetCustomAttributes();
+                if (!attr.Any() || !attr.Any(e => e is ModuleAttribute))
+                    continue;
+
+                var module = attr.OfType<ModuleAttribute>().First();
+                var appModule = new Module
+                {
+                    Type = type,
+                    Name = module.ModuleName,
+                    Dependencies = module.Dependencies,
+                    InitializationType = module.InitializationTypes
+                };
+                res.Add(appModule);
+                RegisterModule(appModule);
+            }
+            return res;
+        }
+
         /// <summary>
         /// Search for modules in the executable folder.
         /// Finds the modules based on the ApplicationModuleAttribute

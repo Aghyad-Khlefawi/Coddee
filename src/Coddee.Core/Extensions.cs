@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.Practices.Unity;
 
 namespace Coddee
 {
@@ -115,6 +116,18 @@ namespace Coddee
                 collection.Remove(oldItem);
                 collection.Insert(oldIndex, item);
             }
+        }
+
+        /// <summary>
+        /// Register and instance by using the container to resolve it
+        /// </summary>
+        /// <typeparam name="TInterface"></typeparam>
+        /// <typeparam name="TImplementation"></typeparam>
+        /// <param name="container"></param>
+        public static void RegisterInstance<TInterface, TImplementation>(this IUnityContainer container)
+            where TImplementation : TInterface
+        {
+            container.RegisterInstance<TInterface>(container.Resolve<TImplementation>());
         }
     }
 }

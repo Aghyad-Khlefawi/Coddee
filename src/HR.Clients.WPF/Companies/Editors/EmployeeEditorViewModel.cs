@@ -11,7 +11,7 @@ using HR.Data.Repositories;
 
 namespace HR.Clients.WPF.Companies.Editors
 {
-    public class EmployeeEditorViewModel : EditorViewModel<EmployeeEditorView, IEmployeeRepository, Employee, Guid>
+    public class EmployeeEditorViewModel : EditorViewModel<EmployeeEditorViewModel,EmployeeEditorView, IEmployeeRepository, Employee, Guid>
     {
         private Company _selectedCompany;
 

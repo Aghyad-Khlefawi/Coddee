@@ -1,0 +1,12 @@
+﻿{
+  "supports": {},
+  "dependencies": {
+    "Microsoft.NETCore.Portable.Compatibility": "1.0.1",
+    "NETStandard.Library": "1.6.0",
+    "Newtonsoft.Json": "10.0.2",
+    "System.IO.FileSystem": "4.3.0"
+  },
+  "frameworks": {
+    "netstandard1.7": {}
+  }
+}

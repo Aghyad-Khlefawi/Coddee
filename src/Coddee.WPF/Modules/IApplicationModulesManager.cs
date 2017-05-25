@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Aghyad khlefawi. All rights reserved.  
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -18,6 +19,13 @@ namespace Coddee.WPF.Modules
         /// <param name="modules">The module information</param>
         /// <exception cref="ModuleException"></exception>
         IEnumerable<Module> RegisterModule(params Module[] modules);
+
+        /// <summary>
+        /// Register a module manually
+        /// </summary>
+        /// <param name="modules">The module type information</param>
+        /// <exception cref="ModuleException"></exception>
+        IEnumerable<Module> RegisterModule(params Type[] modules);
 
         /// <summary>
         /// Search for modules in the executable folder.

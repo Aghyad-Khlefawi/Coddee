@@ -2,7 +2,8 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:Coddee.WPF"
                     xmlns:converters="clr-namespace:Coddee.WPF.Converters"
-                    xmlns:system="clr-namespace:System;assembly=mscorlib">
+                    xmlns:system="clr-namespace:System;assembly=mscorlib"
+                    xmlns:controls="clr-namespace:Coddee.WPF.Controls">
 
     <system:Double x:Key="MenuWidth">50</system:Double>
 
@@ -16,6 +17,7 @@
     <!--#endregion-->
 
     <!--#region Shapes-->
+    
     <Style x:Key="ShapeBase"
            TargetType="{x:Type Path}">
         <Setter Property="FlowDirection"

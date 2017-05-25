@@ -1,17 +1,10 @@
 ﻿// Copyright (c) Aghyad khlefawi. All rights reserved.  
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
-using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Data;
-using System.Windows.Input;
-using Coddee.Collections;
 using Coddee.WPF;
 using Coddee.WPF.Collections;
-using Coddee.WPF.Commands;
-using Coddee.WPF.Modules;
-using Coddee.WPF.Modules.Interfaces;
 using HR.Data.Models;
 using HR.Data.Repositories;
 

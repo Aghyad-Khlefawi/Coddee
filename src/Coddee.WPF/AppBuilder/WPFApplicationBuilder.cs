@@ -19,14 +19,13 @@ using Coddee.Loggers;
 using Coddee.WPF.AppBuilder;
 using Coddee.AppBuilder;
 using Coddee.Data;
+using Coddee.ModuleDefinitions;
 using Coddee.Services;
 using Coddee.SQL;
 using Coddee.Windows.Mapper;
-using Coddee.WPF.Configuration;
 using Coddee.WPF.DefaultShell;
 using Coddee.WPF.Modules;
 using Coddee.WPF.Modules.Dialogs;
-using Coddee.WPF.Modules.Interfaces;
 using Coddee.WPF.Navigation;
 using Coddee.WPF.Security;
 
@@ -104,12 +103,12 @@ namespace Coddee.WPF
                         $"using Coddee.WPF: {FileVersionInfo.GetVersionInfo(Assembly.Load("Coddee.WPF").Location).ProductVersion}");
 
             _modulesManager = _container.Resolve<ApplicationModulesManager>();
-            _modulesManager.RegisterModule(_modulesManager.DescoverModulesFromAssambles(Assembly.GetAssembly(GetType()))
-                                               .ToArray());
-            _modulesManager.RegisterModule(_modulesManager
-                                               .DescoverModulesFromAssambles(Assembly
-                                                                                 .GetAssembly(typeof(BuiltInModules)))
-                                               .ToArray());
+
+
+            _modulesManager.RegisterModule(CoreModuleDefinitions.Modules);
+            _modulesManager.RegisterModule(WindowsModuleDefinitions.Modules);
+            _modulesManager.RegisterModule(WPFModuleDefinitions.Modules);
+
             _modulesManager.InitializeAutoModules();
             _app.OnAutoModulesInitialized();
             _container.Resolve<IGlobalVariablesService>().SetValue(Globals.ApplicationName, applicationName);

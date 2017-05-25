@@ -4,7 +4,7 @@
 using System;
 using Coddee.AppBuilder;
 using Coddee.Data.REST;
-using Coddee.WPF.Modules.Interfaces;
+using Coddee.Services;
 using Microsoft.Practices.Unity;
 
 namespace Coddee.WPF.AppBuilder

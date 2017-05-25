@@ -5,16 +5,16 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Input;
 using System.Windows.Threading;
 using Coddee.Data;
 using Coddee.Loggers;
 using Coddee.Services;
-using Coddee.WPF.Commands;
 using Coddee.WPF.Modules;
+using Coddee.WPF.Validation;
 using Microsoft.Practices.Unity;
 
 namespace Coddee.WPF
@@ -23,7 +23,7 @@ namespace Coddee.WPF
     /// The base class for all ViewModels of the application
     /// Contains the property changed handlers and UI execute method
     /// </summary>
-    public class ViewModelBase : BindableBase, IViewModel
+    public class ViewModelBase : BindableBase, IViewModel, IDataErrorInfo
     {
         protected static readonly Task completedTask = Task.FromResult(false);
         protected static WPFApplication _app;
@@ -38,11 +38,15 @@ namespace Coddee.WPF
             Initialized += OnInitialized;
             ChildCreated += OnChildCreated;
             ChildViewModels = new List<IViewModel>();
+            RequiredFields = new RequiredFieldCollection();
+            _requiredFieldsPropertyInfo = new Dictionary<string, PropertyInfo>();
 
             if (IsDesignMode())
                 OnDesignMode();
         }
 
+        protected readonly RequiredFieldCollection RequiredFields;
+        protected readonly Dictionary<string, PropertyInfo> _requiredFieldsPropertyInfo;
 
         public event EventHandler Initialized;
         public event EventHandler<IViewModel> ChildCreated;
@@ -141,6 +145,10 @@ namespace Coddee.WPF
             return Task.Run(() =>
             {
                 OnInitialization().Wait();
+
+                SetRequiredFields(RequiredFields);
+                GetRequiredPropertiesInfo();
+
                 IsInitialized = true;
                 IsBusy = false;
                 Initialized?.Invoke(this, EventArgs.Empty);
@@ -234,6 +242,46 @@ namespace Coddee.WPF
                 child.Dispose();
             }
         }
+
+        protected virtual void SetRequiredFields(RequiredFieldCollection requiredFields)
+        {
+        }
+
+        private void GetRequiredPropertiesInfo()
+        {
+            var type = GetType();
+            foreach (var requiredField in RequiredFields)
+            {
+                if (requiredField.Item == null)
+                    _requiredFieldsPropertyInfo[requiredField.FieldName] = type.GetProperty(requiredField.FieldName);
+                else
+                    _requiredFieldsPropertyInfo[requiredField.FieldName] = requiredField.Item.GetType()
+                        .GetProperty(requiredField.FieldName);
+            }
+        }
+
+        public string this[string columnName]
+        {
+            get { return CheckField(columnName); }
+        }
+
+        protected string CheckField(string fieldName)
+        {
+            var field = RequiredFields?.FirstOrDefault(e => e.FieldName == fieldName);
+            if (field != null && _requiredFieldsPropertyInfo.ContainsKey(field.FieldName))
+            {
+                var property = _requiredFieldsPropertyInfo[field.FieldName];
+                if (property != null && field.ValidateField != null)
+                {
+                    if (field.Item == null)
+                        return field.ValidateField(property.GetValue(this)) ? null : field.ErrorMessage;
+                    return field.ValidateField(property.GetValue(field.Item)) ? null : field.ErrorMessage;
+                }
+            }
+            return null;
+        }
+
+        public string Error { get; }
     }
 
     /// <summary>
@@ -288,11 +336,14 @@ namespace Coddee.WPF
         }
     }
 
-    public abstract class EditorViewModel<TView, TModel> : ViewModelBase<TView>, IEditorViewModel<TView, TModel>
+    public abstract class EditorViewModel<TEditor, TView, TModel> : ViewModelBase<TView>,
+        IEditorViewModel<TView, TModel>
         where TView : UIElement, new() where TModel : new()
 
     {
-        public EditorViewModel()
+        private const string _eventsSource = "EditorBase";
+
+        protected EditorViewModel()
         {
             Saved += OnSave;
             Canceled += OnCanceled;
@@ -315,6 +366,8 @@ namespace Coddee.WPF
             get { return _editedItem; }
             set { SetProperty(ref this._editedItem, value); }
         }
+
+
         private bool _fillingValues;
         public bool FillingValues
         {
@@ -332,7 +385,7 @@ namespace Coddee.WPF
         public virtual void Edit(TModel item)
         {
             FillingValues = true;
-               OperationType = OperationType.Edit;
+            OperationType = OperationType.Edit;
             EditedItem = _mapper.Map<TModel>(item);
             OnEdit(item);
             FillingValues = false;
@@ -343,6 +396,7 @@ namespace Coddee.WPF
             await base.OnInitialization();
             _mapper = Resolve<IObjectMapper>();
             _mapper.RegisterMap<TModel, TModel>();
+            _mapper.RegisterMap<TEditor, TModel>();
         }
 
         protected virtual void OnAdd()
@@ -351,6 +405,7 @@ namespace Coddee.WPF
 
         protected virtual void OnEdit(TModel item)
         {
+            _mapper.MapInstance(item,this);
         }
 
         public void Cancel()
@@ -360,20 +415,34 @@ namespace Coddee.WPF
 
         public virtual void PreSave()
         {
+            _mapper.MapInstance(this, EditedItem);
         }
 
-        public virtual Task<bool> Save()
+        public virtual async Task<bool> Save()
         {
-            var errors = Validate();
-            if (errors != null && errors.Any())
+            try
             {
-                ShowErrors(errors);
-                return Task.FromResult(false);
-            }
+                var errors = Validate();
+                if (errors != null && errors.Any())
+                {
+                    ShowErrors(errors);
+                    return false;
+                }
 
-            PreSave();
-            Saved?.Invoke(this, new EditorSaveArgs<TModel>(OperationType, EditedItem));
-            return Task.FromResult(true);
+                PreSave();
+                Saved?.Invoke(this, new EditorSaveArgs<TModel>(OperationType, await SaveItem()));
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger?.Log(_eventsSource, ex);
+                return false;
+            }
+        }
+
+        protected virtual Task<TModel> SaveItem()
+        {
+            return Task.FromResult(EditedItem);
         }
 
         protected virtual void ShowErrors(IEnumerable<string> errors)
@@ -398,17 +467,23 @@ namespace Coddee.WPF
 
         public virtual IEnumerable<string> Validate()
         {
-            return null;
+            var res = new List<string>();
+            foreach (var required in RequiredFields)
+            {
+                var error = CheckField(required.FieldName);
+                if (!string.IsNullOrEmpty(error))
+                    res.Add(error);
+            }
+            return res.Any() ? res : null;
         }
     }
 
-    public class EditorViewModel<TView, TRepository, TModel, TKey> : EditorViewModel<TView, TModel>
+    public class EditorViewModel<TEditor, TView, TRepository, TModel, TKey> : EditorViewModel<TEditor, TView, TModel>
         where TView : UIElement, new()
         where TModel : class, IUniqueObject<TKey>, new()
         where TRepository : class, ICRUDRepository<TModel, TKey>
     {
         protected TRepository _repository;
-        public new event EventHandler<EditorSaveArgs<TModel>> Saved;
 
         protected override async Task OnInitialization()
         {
@@ -416,19 +491,9 @@ namespace Coddee.WPF
             _repository = Resolve<TRepository>();
         }
 
-        public override async Task<bool> Save()
+        protected override async Task<TModel> SaveItem()
         {
-            PreSave();
-            var errors = Validate();
-            if (errors != null && errors.Any())
-            {
-                ShowErrors(errors);
-                return false;
-            }
-            Saved?.Invoke(this,
-                          new EditorSaveArgs<TModel>(OperationType,
-                                                     await _repository.Update(OperationType, EditedItem)));
-            return true;
+            return await _repository.Update(OperationType, EditedItem);
         }
     }
 }

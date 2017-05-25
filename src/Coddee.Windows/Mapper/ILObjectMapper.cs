@@ -51,6 +51,7 @@ namespace Coddee.Windows.Mapper
             _mappings[sourceType][targetType] = mappingInfo;
         }
 
+
         /// <summary>
         /// Register mapping information from source to target
         /// </summary>

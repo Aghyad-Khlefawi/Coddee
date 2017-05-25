@@ -7,12 +7,13 @@ using Coddee;
 using Coddee.Collections;
 using Coddee.Data;
 using Coddee.WPF;
+using Coddee.WPF.Validation;
 using HR.Data.Models;
 using HR.Data.Repositories;
 
 namespace HR.Clients.WPF.Companies.Editors
 {
-    public class CompanyEditorViewModel : EditorViewModel<CompanyEditorView,ICompanyRepository,Company, Guid>
+    public class CompanyEditorViewModel : EditorViewModel<CompanyEditorViewModel,CompanyEditorView, ICompanyRepository,Company, Guid>
     {
        
         private AsyncObservableCollection<State> _states;
@@ -21,15 +22,24 @@ namespace HR.Clients.WPF.Companies.Editors
             get { return _states; }
             set { SetProperty(ref this._states, value); }
         }
-
+        private string _name;
+        public string Name
+        {
+            get { return _name; }
+            set { SetProperty(ref this._name, value); }
+        }
         public override void PreSave()
         {
             EditedItem.StateID = States.SelectedItem.ID;
             EditedItem.StateName = States.SelectedItem.Name;
             base.PreSave();
         }
-        
 
+        protected override void SetRequiredFields(RequiredFieldCollection requiredFields)
+        {
+            base.SetRequiredFields(requiredFields);
+            requiredFields.Add(RequiredField.Create(EditedItem,e=>e.Name,RequiredFieldValidators.StringValidator));
+        }
 
         protected override async Task OnInitialization()
         {

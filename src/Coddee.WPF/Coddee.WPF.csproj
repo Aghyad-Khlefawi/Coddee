@@ -109,8 +109,6 @@
     <Compile Include="IEditorViewModel.cs" />
     <Compile Include="IViewModel.cs" />
     <Compile Include="Localize.cs" />
-    <Compile Include="Modules\Configuration\ConfigurationManager.cs" />
-    <Compile Include="Modules\Configuration\ConfigurationManagerModule.cs" />
     <Compile Include="Modules\Console\ApplicationConsoleModule.cs" />
     <Compile Include="Modules\Console\ApplicationConsoleView.xaml.cs">
       <DependentUpon>ApplicationConsoleView.xaml</DependentUpon>
@@ -149,14 +147,11 @@
     <Compile Include="Modules\Dialogs\MessageDialogView.xaml.cs">
       <DependentUpon>MessageDialogView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Modules\GlobalVariables\GlobalVariablesService.cs" />
-    <Compile Include="Modules\GlobalVariables\GlobalVariablesServiceModule.cs" />
     <Compile Include="Modules\IApplicationModulesManager.cs" />
     <Compile Include="Modules\Interfaces\IDebugTool.cs" />
     <Compile Include="Modules\Interfaces\IDialogService.cs" />
     <Compile Include="Modules\Interfaces\INavigationService.cs" />
     <Compile Include="Modules\Interfaces\IApplicationConsole.cs" />
-    <Compile Include="Modules\Interfaces\IConfigurationManager.cs" />
     <Compile Include="Modules\ModuleException.cs" />
     <Compile Include="Modules\ApplicationModulesManager.cs" />
     <Compile Include="Modules\Navigation\NavigationModule.cs" />
@@ -164,7 +159,7 @@
     <Compile Include="Modules\Navigation\NavigationServiceView.xaml.cs">
       <DependentUpon>NavigationServiceView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Modules\SQLBrowser\ISQLDBBrowser.cs" />
+    <Compile Include="Modules\Interfaces\ISQLDBBrowser.cs" />
     <Compile Include="Modules\SQLBrowser\SQLDBBrowser.cs" />
     <Compile Include="Modules\SQLBrowser\SQLDBBrowserModule.cs" />
     <Compile Include="Modules\SQLBrowser\SQLDBBrowserView.xaml.cs">
@@ -199,7 +194,10 @@
     <Compile Include="Regions\RegionManager.cs" />
     <Compile Include="Security\ILoginViewModel.cs" />
     <Compile Include="UpdatableMarkupExtension.cs" />
+    <Compile Include="Validation\RequiredField.cs" />
+    <Compile Include="Validation\RequiredFieldValidators.cs" />
     <Compile Include="ViewModelBase.cs" />
+    <Compile Include="WPFModulesDefnitions.cs" />
     <Compile Include="XamlHelpers\FocusOnLoad.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
