@@ -9,6 +9,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Markup;
 using System.Windows.Media;
 
@@ -28,9 +29,28 @@ namespace Coddee.WPF.Controls
             Fields = new FormFieldsCollection();
             Fields.CollectionChanged += Fields_CollectionChanged;
             LayoutUpdated += Form_LayoutUpdated;
+            GotFocus += Form_GotFocus;
         }
 
-
+        private void Form_GotFocus(object sender, RoutedEventArgs e)
+        {
+            Keyboard.ClearFocus();
+            if (Fields.Any())
+            {
+                var first = Fields.FirstOrDefault();
+                if (first != null)
+                {
+                    if (first.Content is FrameworkElement elem)
+                    {
+                        elem.Focus();
+                    }
+                    if (first.Content is IInputElement input)
+                    {
+                        Keyboard.Focus(input);
+                    }
+                }
+            }
+        }
 
         public static readonly DependencyProperty FieldsProperty = DependencyProperty.Register(
             "Fields", typeof(FormFieldsCollection), typeof(Form), new PropertyMetadata(new FormFieldsCollection()/*, FieldsSet*/));

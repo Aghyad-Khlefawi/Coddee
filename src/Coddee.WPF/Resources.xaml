@@ -11,6 +11,7 @@
                      Color="#D91D1D" />
     
     <!--#region Converters-->
+    <converters:BoolReverseConverter x:Key="BoolReverseConverter" />
     <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
     <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
     <converters:NullToBoolConverter x:Key="NullToBoolConverter" />

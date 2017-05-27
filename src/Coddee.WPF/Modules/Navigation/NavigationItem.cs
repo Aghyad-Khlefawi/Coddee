@@ -116,13 +116,14 @@ namespace Coddee.WPF.Navigation
             set { SetProperty(ref this._icon, value); }
         }
         public ICommand NavigateCommand => new RelayCommand(Navigate);
-
-        protected virtual async void Navigate()
+        private bool vmInitialized ;
+        protected virtual void Navigate()
         {
             var vm = _destination as ViewModelBase;
-            if (vm != null && !vm.IsInitialized)
+            if (vm != null && !vm.IsInitialized && !vmInitialized)
             {
-                await vm.Initialize();
+                vmInitialized = true;
+                vm.Initialize();
             }
 
             NavigationRequested?.Invoke(this, _destination);
@@ -138,6 +139,8 @@ namespace Coddee.WPF.Navigation
         {
             if (_localizedTitle)
                 Title = _localization.BindValue(this, e => e.Title, Title);
+            if (IsSelected)
+                Navigate();
             return base.OnInitialization();
         }
     }

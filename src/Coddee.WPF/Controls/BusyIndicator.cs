@@ -5,6 +5,7 @@ using System;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Markup;
 using System.Windows.Media;
 
@@ -22,6 +23,11 @@ namespace Coddee.WPF.Controls
         public BusyIndicator()
         {
             Background = new SolidColorBrush(Colors.WhiteSmoke);
+            GotFocus += (sender,args)=>
+            {
+                Keyboard.ClearFocus();
+                args.Handled = true;
+            };
         }
 
         public static readonly DependencyProperty ContentItemProperty = DependencyProperty.Register("ContentItem", typeof(object), typeof(BusyIndicator));

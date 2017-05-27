@@ -89,11 +89,16 @@ namespace Coddee.WPF
         public IViewModel CreateViewModel(Type viewModelType)
         {
             IViewModel vm = (IViewModel) Resolve(viewModelType);
+            AddChildViewModel(vm);
+            return vm;
+        }
+
+        protected virtual void AddChildViewModel(IViewModel vm)
+        {
             vm.ParentViewModel = this;
             ChildViewModels.Add(vm);
             ChildCreated?.Invoke(this, vm);
             vm.ChildCreated += ChildCreated;
-            return vm;
         }
 
         public TResult CreateViewModel<TResult>() where TResult : IViewModel
@@ -202,12 +207,15 @@ namespace Coddee.WPF
 
         protected object Resolve(Type type)
         {
-            return _container.Resolve(type);
+            var result = _container.Resolve(type);
+            if (result is IViewModel vm && vm.ParentViewModel == null)
+                AddChildViewModel(vm);
+            return result;
         }
 
         protected T Resolve<T>()
         {
-            return _container.Resolve<T>();
+            return (T) Resolve(typeof(T));
         }
 
         protected void LogError(string EventSource, Exception ex)
@@ -405,7 +413,7 @@ namespace Coddee.WPF
 
         protected virtual void OnEdit(TModel item)
         {
-            _mapper.MapInstance(item,this);
+            _mapper.MapInstance(item, this);
         }
 
         public void Cancel()
