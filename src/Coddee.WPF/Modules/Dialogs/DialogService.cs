@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 
 namespace Coddee.WPF.Modules.Dialogs
@@ -17,7 +18,7 @@ namespace Coddee.WPF.Modules.Dialogs
         }
 
         private Region _dialogsRegion;
-        private Dictionary<IDialog, UIElement> _dialogs;
+        private readonly Dictionary<IDialog, UIElement> _dialogs;
         private SolidColorBrush _dialogBorderBrush;
 
         public void Initialize(Region dialogsRegion, SolidColorBrush dialogBorderBrush)
@@ -86,17 +87,20 @@ namespace Coddee.WPF.Modules.Dialogs
 
         public TType CreateDialog<TType>() where TType : IDialog
         {
-            var dialog = Resolve<TType>();
-            dialog.CloseRequested += CloseDialog;
             var container = new DialogContainer
             {
-                DialogBorder = {Background = _dialogBorderBrush},
-                Presenter = {Content = dialog.GetView()}
+                DialogBorder = {Background = _dialogBorderBrush}
             };
+            return CreateDialog<TType>(container,container.Presenter);
+        }
+        public TType CreateDialog<TType>(UserControl container,ContentPresenter presenter) where TType : IDialog
+        {
+            var dialog = Resolve<TType>();
+            dialog.CloseRequested += CloseDialog;
+            presenter.Content = dialog.GetView();
             dialog.Container = container;
             return dialog;
         }
-
         public void CloseDialog(IDialog dialog)
         {
             _view.DialogsContainer.Children.Remove(_dialogs[dialog]);

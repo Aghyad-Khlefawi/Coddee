@@ -26,11 +26,12 @@ namespace Coddee.Data.MongoDB
         public virtual void Initialize(IMongoDBManager dbManager,
                                        IRepositoryManager repositoryManager,
                                        IObjectMapper mapper,
-                                       Type implementedInterface)
+                                       Type implementedInterface,
+                                       RepositoryConfigurations config = null)
         {
             _dbManager = dbManager;
             _database = _dbManager.GetDatabase();
-            Initialize(repositoryManager, mapper, implementedInterface);
+            Initialize(repositoryManager, mapper, implementedInterface,config);
         }
 
         protected virtual void ConfigureDetaultTableMappings<TType, TKey>(
@@ -81,9 +82,10 @@ namespace Coddee.Data.MongoDB
         public override void Initialize(IMongoDBManager dbManager,
                                         IRepositoryManager repositoryManager,
                                         IObjectMapper mapper,
-                                        Type implementedInterface)
+                                        Type implementedInterface,
+                                        RepositoryConfigurations config = null)
         {
-            base.Initialize(dbManager, repositoryManager, mapper, implementedInterface);
+            base.Initialize(dbManager, repositoryManager, mapper, implementedInterface,config);
             RegisterTableMappings();
             _collection = _database.GetCollection<TModel>(_collectionName);
         }
@@ -162,26 +164,33 @@ namespace Coddee.Data.MongoDB
         {
         }
 
+        public event EventHandler<RepositoryChangeEventArgs<TModel>> ItemsChanged;
+
         public virtual async Task<TModel> UpdateItem(TModel item)
         {
             await _collection.ReplaceOneAsync(new BsonDocument("_id", BsonValue.Create(item.GetKey)), item);
+            ItemsChanged?.Invoke(this,new RepositoryChangeEventArgs<TModel>(OperationType.Edit, item));
             return item;
         }
 
         public virtual async Task<TModel> InsertItem(TModel item)
         {
             await _collection.InsertOneAsync(item);
+            ItemsChanged?.Invoke(this,new RepositoryChangeEventArgs<TModel>(OperationType.Add, item));
             return item;
         }
 
-        public virtual Task DeleteItem(TKey ID)
+        public virtual async Task DeleteItem(TKey ID)
         {
-            return _collection.DeleteOneAsync(new BsonDocument("_id", BsonValue.Create(ID)));
+            var item = await this[ID];
+            await _collection.DeleteOneAsync(new BsonDocument("_id", BsonValue.Create(ID)));
+            ItemsChanged?.Invoke(this,new RepositoryChangeEventArgs<TModel>(OperationType.Edit, item));
         }
 
-        public virtual Task DeleteItem(TModel item)
+        public  virtual async Task DeleteItem(TModel item)
         {
-            return DeleteItem(item.GetKey);
+            await DeleteItem(item.GetKey);
+            ItemsChanged?.Invoke(this,new RepositoryChangeEventArgs<TModel>(OperationType.Edit, item));
         }
     }
 }

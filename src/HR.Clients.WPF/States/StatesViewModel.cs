@@ -3,6 +3,7 @@
 
 using System.Threading;
 using System.Threading.Tasks;
+using Coddee.Data;
 using Coddee.WPF;
 using Coddee.WPF.Collections;
 using HR.Data.Models;
@@ -61,6 +62,7 @@ namespace HR.Clients.WPF.States
                 AsyncObservableCollectionView<State>.Create((item, searchText) => item.Name.ToLower()
                                                                 .Contains(searchText),
                                                             await statesRepo.GetItems());
+
         }
     }
 }

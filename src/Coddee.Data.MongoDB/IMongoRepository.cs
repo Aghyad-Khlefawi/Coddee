@@ -17,6 +17,7 @@ namespace Coddee.Data.MongoDB
         void Initialize(IMongoDBManager dbManager,
                         IRepositoryManager repositoryManager,
                         IObjectMapper mapper,
-                        Type implementedInterface);
+                        Type implementedInterface,
+                        RepositoryConfigurations config = null);
     }
 }

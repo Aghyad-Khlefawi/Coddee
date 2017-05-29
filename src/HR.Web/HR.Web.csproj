@@ -1,18 +1,21 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
-
+﻿<Project Sdk="Microsoft.NET.Sdk.Web" ToolsVersion="15.0">
   <PropertyGroup>
     <TargetFramework>net452</TargetFramework>
     <RuntimeIdentifier>win7-x86</RuntimeIdentifier>
     <UserSecretsId>d87f9641-d1c1-4022-943e-3290294fa7d4</UserSecretsId>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>2.0</OldToolsVersion>
   </PropertyGroup>
-
   <ItemGroup>
     <Compile Remove="bin\**" />
     <Content Remove="bin\**" />
     <EmbeddedResource Remove="bin\**" />
     <None Remove="bin\**" />
   </ItemGroup>
-
   <ItemGroup>
     <Content Include="DB\HRDatabase.mdf">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
@@ -22,7 +25,6 @@
       <DependentUpon>HRDatabase.mdf</DependentUpon>
     </Content>
   </ItemGroup>
-
   <ItemGroup>
     <Folder Include="wwwroot\" />
   </ItemGroup>
@@ -40,5 +42,4 @@
     <ProjectReference Include="..\Coddee.Security\Coddee.Security.csproj" />
     <ProjectReference Include="..\HR.Data.LinqToSQL\HR.Data.LinqToSQL.csproj" />
   </ItemGroup>
-
 </Project>

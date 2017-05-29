@@ -98,6 +98,7 @@ namespace Coddee
             else if (operationType == OperationType.Delete)
                 collection.Remove(item);
         }
+        
 
         /// <summary>
         /// Removes item from collection and insert the new item
@@ -117,6 +118,7 @@ namespace Coddee
                 collection.Insert(oldIndex, item);
             }
         }
+
 
         /// <summary>
         /// Register and instance by using the container to resolve it

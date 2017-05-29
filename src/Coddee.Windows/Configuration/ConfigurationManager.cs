@@ -113,7 +113,7 @@ namespace Coddee.Services.Configuration
                 value = JsonConvert.DeserializeObject<TResult>(_configurations[key]);
                 return true;
             }
-            if (_defaultValues.ContainsKey(key))
+            if (_defaultValues!=null && _defaultValues.ContainsKey(key))
             {
                 value = (TResult) _defaultValues[key];
                 return true;

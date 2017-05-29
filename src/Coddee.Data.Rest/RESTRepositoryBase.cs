@@ -24,11 +24,12 @@ namespace Coddee.Data.REST
                                Action unauthorizedRequestHandler,
                                IRepositoryManager repositoryManager,
                                IObjectMapper mapper,
-                               Type implementedInterface)
+                               Type implementedInterface,
+                               RepositoryConfigurations config = null)
         {
             _httpClient = httpClient;
             _unauthorizedRequestHandler = unauthorizedRequestHandler;
-            Initialize(repositoryManager, mapper, implementedInterface);
+            Initialize(repositoryManager, mapper, implementedInterface, config);
         }
 
 
@@ -313,7 +314,7 @@ namespace Coddee.Data.REST
             ControllerName = controllerName;
         }
 
-        public string ControllerName { get; private set; }
+        public string ControllerName { get; }
 
         /// <summary>
         /// Return the name of the targeted controller
@@ -384,24 +385,32 @@ namespace Coddee.Data.REST
         }
 
 
-        public Task<TModel> UpdateItem(TModel item)
+        public event EventHandler<RepositoryChangeEventArgs<TModel>> ItemsChanged;
+
+        public async Task<TModel> UpdateItem(TModel item)
         {
-            return PutToController<TModel>(ApiCommonActions.UpdateItem, item);
+            var res = await PutToController<TModel>(ApiCommonActions.UpdateItem, item);
+            ItemsChanged?.Invoke(this, new RepositoryChangeEventArgs<TModel>(OperationType.Edit, res));
+            return res;
         }
 
-        public Task<TModel> InsertItem(TModel item)
+        public async Task<TModel> InsertItem(TModel item)
         {
-            return PostToController<TModel>(ApiCommonActions.InsertItem, item);
+            var res = await PostToController<TModel>(ApiCommonActions.InsertItem, item);
+            ItemsChanged?.Invoke(this, new RepositoryChangeEventArgs<TModel>(OperationType.Add, res));
+            return res;
         }
 
-        public Task DeleteItem(TKey ID)
+        public async Task DeleteItem(TKey ID)
         {
-            return DeleteFromController(ApiCommonActions.DeleteItemByID, ID);
+            var res = await this[ID];
+            await DeleteFromController(ApiCommonActions.DeleteItemByID, ID);
+            ItemsChanged?.Invoke(this, new RepositoryChangeEventArgs<TModel>(OperationType.Edit, res));
         }
 
-        public Task DeleteItem(TModel item)
+        public async Task DeleteItem(TModel item)
         {
-            return DeleteItem(item.GetKey);
+            await DeleteItem(item.GetKey);
         }
     }
 }

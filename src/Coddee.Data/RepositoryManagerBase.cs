@@ -14,12 +14,16 @@ namespace Coddee.Data
     /// </summary>
     public abstract class RepositoryManagerBase : IRepositoryManager
     {
-        protected virtual void Initialize(IObjectMapper mapper)
+        
+        protected virtual void Initialize(IObjectMapper mapper,
+                                          RepositoryConfigurations config = null)
         {
             _repositories = new Dictionary<Type, IRepository>();
             _mapper = mapper;
+            _config = config;
         }
 
+        protected RepositoryConfigurations _config ;
         protected IObjectMapper _mapper;
         protected Dictionary<Type, IRepository> _repositories;
 
@@ -91,7 +95,7 @@ namespace Coddee.Data
 
         public virtual void InitializeRepository(IRepository repo,Type implementedInterface)
         {
-            repo.Initialize(this, _mapper, implementedInterface);
+            repo.Initialize(this, _mapper, implementedInterface, _config);
         }
     }
 }

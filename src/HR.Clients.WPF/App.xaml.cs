@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Windows;
 using System.Windows.Input;
+using Coddee.Data;
 using Coddee.Loggers;
 using Coddee.WPF;
 using Coddee.WPF.AppBuilder;
@@ -36,6 +37,7 @@ namespace HR.Clients.WPF
 
         public override void BuildApplication(IWPFApplicationFactory app)
         {
+            var config = new RepositoryConfigurations();
             var dbLocation = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"..\\","..\\","..\\","HR.Web","DB"));
             app.CreateWPFApplication("HR application", AppID)
                 .UseConfigurationFile(true)
@@ -54,7 +56,7 @@ namespace HR.Clients.WPF
                           dbLocation
                       }\HRDatabase.mdf;Integrated Security=True;Connect Timeout=30",
                   "HR.Data.LinqToSQL",
-                  true)
+                  true,config)
                 //.UseRESTRepositoryManager(config =>
                 //{
                 //    return new RESTRepositoryManagerConfig{};

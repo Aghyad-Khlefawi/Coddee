@@ -51,6 +51,7 @@ namespace HR.Clients.WPF.Main
             {
                 StatesViewModel = await InitializeViewModel<StatesViewModel>();
                 CompaniesViewModel = await InitializeViewModel<CompaniesViewModel>();
+                
                 var console = Resolve<IApplicationConsole>();
                 var treeCommand = new ConsoleCommand
                 {

@@ -146,7 +146,7 @@
       <Name>Coddee.Security</Name>
     </ProjectReference>
     <ProjectReference Include="..\Coddee.WPF\Coddee.WPF.csproj">
-      <Project>{340CE7F7-7E40-4A54-9DE6-968F46BF7D9A}</Project>
+      <Project>{340ce7f7-7e40-4a54-9de6-968f46bf7d9a}</Project>
       <Name>Coddee.WPF</Name>
     </ProjectReference>
     <ProjectReference Include="..\HR.Data.LinqToSQL\HR.Data.LinqToSQL.csproj">

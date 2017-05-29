@@ -15,6 +15,7 @@ namespace Coddee.Data.REST
                         Action unauthorizedRequestHandler,
                         IRepositoryManager repositoryManager,
                         IObjectMapper mapper,
-                        Type implementedInterface);
+                        Type implementedInterface,
+                        RepositoryConfigurations config = null);
     }
 }

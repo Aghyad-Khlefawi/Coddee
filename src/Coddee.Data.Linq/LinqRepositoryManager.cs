@@ -8,7 +8,8 @@ namespace Coddee.Data.LinqToSQL
 {
     public interface ILinqRepositoryManager: IRepositoryManager
     {
-        void Initialize(ILinqDBManager dbManager,IObjectMapper mapper);
+        void Initialize(ILinqDBManager dbManager,IObjectMapper mapper,
+                        RepositoryConfigurations config = null);
     }
 
     /// <summary>
@@ -22,13 +23,14 @@ namespace Coddee.Data.LinqToSQL
         
         public override void InitializeRepository(IRepository repo, Type implementedInterface)
         {
-            ((ILinqRepository<TDataContext>) repo).Initialize(_dbManager, this, _mapper, implementedInterface);
+            ((ILinqRepository<TDataContext>) repo).Initialize(_dbManager, this, _mapper, implementedInterface, _config);
         }
 
-        public void Initialize(ILinqDBManager dbManager, IObjectMapper mapper)
+        public void Initialize(ILinqDBManager dbManager, IObjectMapper mapper,
+                               RepositoryConfigurations config = null)
         {
             _dbManager = (LinqDBManager<TDataContext>) dbManager;
-            Initialize(mapper);
+            Initialize(mapper, config);
         }
     }
 }

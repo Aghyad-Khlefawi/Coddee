@@ -4,6 +4,7 @@
 using System;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 
 namespace Coddee.WPF.Modules.Dialogs
@@ -19,6 +20,7 @@ namespace Coddee.WPF.Modules.Dialogs
 
         IDialog ShowDialog(IDialog dialog);
         TType CreateDialog<TType>() where TType : IDialog;
+        TType CreateDialog<TType>(UserControl container, ContentPresenter presenter) where TType : IDialog;
 
         void CloseDialog(IDialog dialog);
     }

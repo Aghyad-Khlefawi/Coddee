@@ -18,6 +18,8 @@ namespace Coddee.Data.LinqToSQL
         void Initialize(
             LinqDBManager<TDataContext> dbManager,
             IRepositoryManager repositoryManager,
-            IObjectMapper mapper, Type implementedInterface);
+            IObjectMapper mapper,
+            Type implementedInterface,
+            RepositoryConfigurations config = null);
     }
 }

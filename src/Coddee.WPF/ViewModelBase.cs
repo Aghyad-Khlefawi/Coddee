@@ -344,9 +344,9 @@ namespace Coddee.WPF
         }
     }
 
-    public abstract class EditorViewModel<TEditor, TView, TModel> : ViewModelBase<TView>,
+    public class EditorViewModel<TEditor, TView, TModel> : ViewModelBase<TView>,
         IEditorViewModel<TView, TModel>
-        where TView : UIElement, new() where TModel : new()
+        where TView : UIElement, new() where TModel : new() where TEditor : EditorViewModel<TEditor, TView, TModel>,new()
 
     {
         private const string _eventsSource = "EditorBase";
@@ -404,7 +404,8 @@ namespace Coddee.WPF
             await base.OnInitialization();
             _mapper = Resolve<IObjectMapper>();
             _mapper.RegisterMap<TModel, TModel>();
-            _mapper.RegisterMap<TEditor, TModel>();
+            _mapper.RegisterTwoWayMap<TEditor, TModel>();
+            _mapper.RegisterTwoWayMap<TEditor, TModel>();
         }
 
         protected virtual void OnAdd()
@@ -413,7 +414,7 @@ namespace Coddee.WPF
 
         protected virtual void OnEdit(TModel item)
         {
-            _mapper.MapInstance(item, this);
+            _mapper.MapInstance(item, (TEditor)this);
         }
 
         public void Cancel()
@@ -490,6 +491,7 @@ namespace Coddee.WPF
         where TView : UIElement, new()
         where TModel : class, IUniqueObject<TKey>, new()
         where TRepository : class, ICRUDRepository<TModel, TKey>
+        where TEditor : EditorViewModel<TEditor, TView, TModel>,new()
     {
         protected TRepository _repository;
 

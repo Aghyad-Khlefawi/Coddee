@@ -7,14 +7,25 @@ using System.Linq;
 using System.Threading.Tasks;
 using Coddee;
 using Coddee.Data;
-using HR.Data.Models;
+using Coddee.Data.LinqToSQL;
+using HR.Data.LinqToSQL.DB;
 using HR.Data.Repositories;
+using Employee = HR.Data.Models.Employee;
 
 namespace HR.Data.LinqToSQL.Repositories
 {
     [Repository(typeof(IEmployeeRepository))]
     public class EmployeeRepository:CRUDHRRepositoryBase<DB.Employee,Models.Employee,Guid>, IEmployeeRepository
     {
+        public override void Initialize(LinqDBManager<HRDataClassesDataContext> dbManager,
+                                        IRepositoryManager repositoryManager,
+                                        IObjectMapper mapper,
+                                        Type implementedInterface,
+                                        RepositoryConfigurations config = null)
+        {
+            base.Initialize(dbManager, repositoryManager, mapper, implementedInterface, config);
+        }
+
         public override void RegisterMappings(IObjectMapper mapper)
         {
             base.RegisterMappings(mapper);

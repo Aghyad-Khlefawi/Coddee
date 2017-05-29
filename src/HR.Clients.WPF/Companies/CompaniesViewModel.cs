@@ -5,6 +5,7 @@ using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Coddee;
+using Coddee.Data;
 using Coddee.WPF;
 using Coddee.WPF.Collections;
 using Coddee.WPF.Commands;
@@ -99,6 +100,7 @@ namespace HR.Clients.WPF.Companies
 
             _employeeEditor = await InitializeViewModel<EmployeeEditorViewModel>();
             _employeeEditor.Saved += EmployeeSaved;
+
         }
 
         private bool EmployeeSearch(Employee item, string search)

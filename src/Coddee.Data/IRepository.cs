@@ -7,6 +7,12 @@ using System.Threading.Tasks;
 
 namespace Coddee.Data
 {
+    public class RepositoryConfigurations
+    {
+        public string EncrpyionKey { get; set; }
+
+    }
+
     /// <summary>
     /// A data repository
     /// </summary>
@@ -18,7 +24,10 @@ namespace Coddee.Data
         /// <summary>
         /// Do any required initialization
         /// </summary>
-        void Initialize(IRepositoryManager repositoryManager, IObjectMapper mapper, Type implementedInterface);
+        void Initialize(IRepositoryManager repositoryManager,
+                        IObjectMapper mapper,
+                        Type implementedInterface,
+                        RepositoryConfigurations config=null);
     }
 
     /// <summary>
@@ -27,7 +36,7 @@ namespace Coddee.Data
     /// <typeparam name="TModel">The model type</typeparam>
     /// <typeparam name="TKey">The Key(ID) Type</typeparam>
     public interface IIndexedRepository<TModel, TKey> : IRepository
-        where TModel:IUniqueObject<TKey>
+        where TModel : IUniqueObject<TKey>
     {
         /// <summary>
         /// Return the item by its key(ID)
@@ -62,6 +71,8 @@ namespace Coddee.Data
         where TModel : IUniqueObject<TKey>
 
     {
+        event EventHandler<RepositoryChangeEventArgs<TModel>> ItemsChanged;
+
         /// <summary>
         /// Updates and items in the repository
         /// </summary>

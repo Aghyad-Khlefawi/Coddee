@@ -14,5 +14,7 @@ namespace Coddee.WPF.Modules.Dialogs
         {
             InitializeComponent();
         }
+
+
     }
 }

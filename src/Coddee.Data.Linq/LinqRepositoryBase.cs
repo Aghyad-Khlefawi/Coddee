@@ -23,14 +23,15 @@ namespace Coddee.Data.LinqToSQL
         /// <summary>
         /// Initialize the repository
         /// </summary>
-        public void Initialize(
+        public virtual void Initialize(
             LinqDBManager<TDataContext> dbManager,
             IRepositoryManager repositoryManager,
             IObjectMapper mapper,
-            Type implementedInterface)
+            Type implementedInterface,
+            RepositoryConfigurations config = null)
         {
             _dbManager = dbManager;
-            Initialize(repositoryManager, mapper, implementedInterface);
+            Initialize(repositoryManager, mapper, implementedInterface, config);
         }
 
 
@@ -58,7 +59,7 @@ namespace Coddee.Data.LinqToSQL
             {
                 using (var context = _dbManager.CreateContext())
                 {
-                    var res=  action(context);
+                    var res = action(context);
                     context.SubmitChanges();
                     return res;
                 }
@@ -318,6 +319,18 @@ namespace Coddee.Data.LinqToSQL
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
+        protected TModel TableToModelMapping(TTable source)
+        {
+            return MapItemToModel(source);
+        }
+
+       
+
+        /// <summary>
+        /// Calls the MapItemToModel function to convert an item to the model type
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
         protected IEnumerable<TModel> TableToModelMapping(List<TTable> source)
         {
             return MapItemToModel(source);
@@ -330,6 +343,14 @@ namespace Coddee.Data.LinqToSQL
         protected virtual IEnumerable<TModel> MapItemToModel(List<TTable> source)
         {
             return _mapper.MapCollection<TModel>(source);
+        }
+        /// <summary>
+        /// Maps the item from the table type to the model type
+        /// The default behavior is using the Object mapper but can be overridden to alter the behavior
+        /// </summary>
+        protected virtual TModel MapItemToModel(TTable source)
+        {
+            return _mapper.Map<TModel>(source);
         }
     }
 
@@ -345,6 +366,8 @@ namespace Coddee.Data.LinqToSQL
         ReadOnlyLinqRepositoryBase<TDataContext, TTable, TModel, TKey>, ICRUDRepository<TModel, TKey>
         where TDataContext : DataContext where TTable : class, new() where TModel : IUniqueObject<TKey>, new()
     {
+        public event EventHandler<RepositoryChangeEventArgs<TModel>> ItemsChanged;
+
         /// <summary>
         /// Updates and items in the repository
         /// </summary>
@@ -356,6 +379,7 @@ namespace Coddee.Data.LinqToSQL
                 _mapper.MapInstance(item, temp);
                 db.SubmitChanges();
                 _mapper.MapInstance(temp, item);
+                ItemsChanged?.Invoke(this,new RepositoryChangeEventArgs<TModel>(OperationType.Edit, item));
                 return item;
             });
         }
@@ -372,6 +396,7 @@ namespace Coddee.Data.LinqToSQL
                 db.GetTable<TTable>().InsertOnSubmit(tableitem);
                 db.SubmitChanges();
                 _mapper.MapInstance(tableitem, item);
+                ItemsChanged?.Invoke(this, new RepositoryChangeEventArgs<TModel>(OperationType.Add, item));
                 return item;
             });
         }
@@ -384,8 +409,10 @@ namespace Coddee.Data.LinqToSQL
             return Execute((db, table) =>
             {
                 var oldItem = GetItemByPrimaryKey(db, ID);
+                var item = TableToModelMapping(oldItem);
                 db.GetTable<TTable>().DeleteOnSubmit(oldItem);
                 db.SubmitChanges();
+                ItemsChanged?.Invoke(this, new RepositoryChangeEventArgs<TModel>(OperationType.Delete, item));
             });
         }
 

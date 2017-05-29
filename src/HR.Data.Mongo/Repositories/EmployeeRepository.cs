@@ -21,9 +21,10 @@ namespace HR.Data.Mongo.Repositories
         public override void Initialize(IMongoDBManager dbManager,
                                         IRepositoryManager repositoryManager,
                                         IObjectMapper mapper,
-                                        Type implementedInterface)
+                                        Type implementedInterface,
+                                        RepositoryConfigurations config =null)
         {
-            base.Initialize(dbManager, repositoryManager, mapper, implementedInterface);
+            base.Initialize(dbManager, repositoryManager, mapper, implementedInterface, config);
 
             BsonClassMap.RegisterClassMap<Employee>(c =>
             {
@@ -63,6 +64,8 @@ namespace HR.Data.Mongo.Repositories
                 .SelectMany(e => e)
                 .AsEnumerable();
         }
+
+        public event EventHandler<RepositoryChangeEventArgs<Employee>> ItemsChanged;
 
         public async Task<Employee> UpdateItem(Employee item)
         {

@@ -11,6 +11,7 @@ namespace Coddee.Data
     public class RepositoryBase:IRepository
     {
         protected IObjectMapper _mapper;
+        protected RepositoryConfigurations _config;
         protected IRepositoryManager _repositoryManager;
 
         public bool Initialized { get; protected set; }
@@ -19,8 +20,10 @@ namespace Coddee.Data
         /// <summary>
         /// Do any required initialization
         /// </summary>
-        public void Initialize(IRepositoryManager repositoryManager, IObjectMapper mapper,Type implementedInterface)
+        public void Initialize(IRepositoryManager repositoryManager, IObjectMapper mapper,Type implementedInterface,
+        RepositoryConfigurations config = null)
         {
+            _config = config;
             _repositoryManager = repositoryManager;
             ImplementedInterface = implementedInterface;
             _mapper = mapper;

@@ -17,6 +17,12 @@
             <controls:FormField Title="Name">
                 <TextBox Text="{Binding Name,UpdateSourceTrigger=PropertyChanged,ValidatesOnDataErrors=True,NotifyOnValidationError=True}"/>
             </controls:FormField>
+            <controls:FormField Title="Name">
+                <TextBox Text="{Binding Name,UpdateSourceTrigger=PropertyChanged,ValidatesOnDataErrors=True,NotifyOnValidationError=True}" />
+            </controls:FormField>
+            <controls:FormField Title="Name">
+                <TextBox Text="{Binding Name,UpdateSourceTrigger=PropertyChanged,ValidatesOnDataErrors=True,NotifyOnValidationError=True}" />
+            </controls:FormField>
             <controls:FormField Title="State">
                 <ComboBox ItemsSource="{Binding States}"
                           SelectedItem="{Binding States.SelectedItem}"
