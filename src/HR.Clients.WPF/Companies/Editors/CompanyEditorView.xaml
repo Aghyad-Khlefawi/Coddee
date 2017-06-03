@@ -15,13 +15,16 @@
     <Grid d:DataContext="{StaticResource designData}">
         <controls:Form>
             <controls:FormField Title="Name">
-                <TextBox Text="{Binding Name,UpdateSourceTrigger=PropertyChanged,ValidatesOnDataErrors=True,NotifyOnValidationError=True}"/>
+                <TextBox Text="{Binding Name,UpdateSourceTrigger=PropertyChanged}"
+                         controls:Validate.FieldName="Name"/>
+            </controls:FormField>
+            <controls:FormField Title="Name">   
+                <TextBox Text="{Binding Name,UpdateSourceTrigger=PropertyChanged}"
+                         controls:Validate.FieldName="Name"/>
             </controls:FormField>
             <controls:FormField Title="Name">
-                <TextBox Text="{Binding Name,UpdateSourceTrigger=PropertyChanged,ValidatesOnDataErrors=True,NotifyOnValidationError=True}" />
-            </controls:FormField>
-            <controls:FormField Title="Name">
-                <TextBox Text="{Binding Name,UpdateSourceTrigger=PropertyChanged,ValidatesOnDataErrors=True,NotifyOnValidationError=True}" />
+                <TextBox Text="{Binding Name,UpdateSourceTrigger=PropertyChanged}"
+                         controls:Validate.FieldName="Name"/>
             </controls:FormField>
             <controls:FormField Title="State">
                 <ComboBox ItemsSource="{Binding States}"

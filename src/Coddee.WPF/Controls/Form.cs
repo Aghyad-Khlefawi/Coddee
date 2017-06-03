@@ -29,6 +29,7 @@ namespace Coddee.WPF.Controls
             Fields = new FormFieldsCollection();
             Fields.CollectionChanged += Fields_CollectionChanged;
             LayoutUpdated += Form_LayoutUpdated;
+            Focusable = false;
         }
 
         

@@ -59,6 +59,9 @@
     <Compile Include="Services\GlobalVariables\GlobalVariablesService.cs" />
     <Compile Include="Services\GlobalVariables\GlobalVariablesServiceModule.cs" />
     <Compile Include="Services\IGlobalEventsService.cs" />
+    <Compile Include="Validation\RequiredField.cs" />
+    <Compile Include="Validation\RequiredFieldValidators.cs" />
+    <Compile Include="Validation\Validator.cs" />
     <Compile Include="ValueChangedEventArgs.cs" />
     <Compile Include="EditorSaveArgs.cs" />
     <Compile Include="Services\ILocalizationManager.cs" />

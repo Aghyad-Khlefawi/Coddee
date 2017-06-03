@@ -17,11 +17,12 @@ namespace Coddee.Loggers
                 _file.Create().Dispose();
         }
 
-        protected override async void CommitLog(LogRecord record)
+        protected override void CommitLog(LogRecord record)
         {
+            lock(_file)
             using (var sw= _file.AppendText())
             {
-                await sw.WriteAsync(BuildEvent(record));
+                sw.Write(BuildEvent(record));
             }
         }
     }

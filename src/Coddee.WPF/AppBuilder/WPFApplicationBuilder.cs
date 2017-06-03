@@ -73,7 +73,7 @@ namespace Coddee.WPF
             _buildActions[actionName] = action;
         }
 
-        Action GetBuildAction(string actionName)
+        public Action GetBuildAction(string actionName)
         {
             return _buildActions.ContainsKey(actionName) ? _buildActions[actionName] : null;
         }

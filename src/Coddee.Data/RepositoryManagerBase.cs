@@ -85,12 +85,17 @@ namespace Coddee.Data
                             $"The type {repository.Value.FullName} doesn't implements '{repository.Key.FullName}' interface");
                     var repo = (IRepository) Activator.CreateInstance(repository.Value);
                     InitializeRepository(repo,repository.Key);
-                    _repositories[repository.Key]= repo;
+                    AddRepository(repo, repository.Key);
                 }
                 else
                     throw new ArgumentException(
                         $"The type {repository.Value.FullName} doesn't implements 'ILinqRepository<TDataContext>' interface");
             }
+        }
+
+        public void AddRepository(IRepository repository, Type implementedRepository)
+        {
+            _repositories[implementedRepository] = repository;
         }
 
         public virtual void InitializeRepository(IRepository repo,Type implementedInterface)

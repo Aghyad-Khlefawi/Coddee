@@ -17,142 +17,148 @@
     <Window.Resources>
         <ResourceDictionary Source="../../Resources.xaml" />
     </Window.Resources>
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="auto" />
-            <ColumnDefinition Width="1" />
-            <ColumnDefinition />
-        </Grid.ColumnDefinitions>
-        <DockPanel>
-            <DockPanel.Resources>
-                <Style TargetType="TextBox">
-                    <Setter Property="Width" Value="120" />
-                    <Setter Property="Height" Value="25" />
-                    <Setter Property="VerticalContentAlignment" Value="Center" />
-                </Style>
-                <Style TargetType="PasswordBox">
-                    <Setter Property="Width"
-                            Value="120" />
-                    <Setter Property="Height"
-                            Value="25" />
-                    <Setter Property="VerticalContentAlignment"
-                            Value="Center" />
-                </Style>
-                <Style TargetType="Button">
-                    <Setter Property="Width"
-                            Value="120" />
-                    <Setter Property="Height"
-                            Value="25" />
-                </Style>
-            </DockPanel.Resources>
-            <StackPanel DockPanel.Dock="Top">
-                <Label FontSize="24">Server</Label>
-                <Separator
-                    Margin="5" />
-            </StackPanel>
-            <Border
-                DockPanel.Dock="Top"
-                Background="LightGray"
-                Margin="5 0 5 5"
-                Padding="5">
-                <StackPanel Margin="5">
-                    <controls:Form>
-                        <controls:FormField Title="Server">
-                            <TextBox Text="{Binding CustomServer.Name,UpdateSourceTrigger=PropertyChanged}" />
-                        </controls:FormField>
-                        <controls:FormField Title="Integrated secutiry">
-                            <CheckBox IsChecked="{Binding CustomServer.IntegratedSecurity}"
-                                      Style="{x:Null}"
-                                      VerticalAlignment="Center" />
-                        </controls:FormField>
-                        <controls:FormField Title="Username"
-                                            Visibility="{Binding CustomServer.IntegratedSecurity,Converter={StaticResource BoolToVisibilityConverter},ConverterParameter=R}">
-                            <TextBox Text="{Binding CustomServer.Username,UpdateSourceTrigger=PropertyChanged}" />
-                        </controls:FormField>
-                        <controls:FormField Title="Password"
-                                            Visibility="{Binding CustomServer.IntegratedSecurity,Converter={StaticResource BoolToVisibilityConverter},ConverterParameter=R}">
-                            <PasswordBox
-                                wpf:PasswordBoxText.Password="{Binding CustomServer.Password,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}"
-                                wpf:PasswordBoxText.Attach="True" />
-                        </controls:FormField>
-                        <controls:FormField>
-                            <Button 
-                                Command="{Binding CustomServer.ConnectCommand}">Connect</Button>
-                        </controls:FormField>
-                    </controls:Form>
-
+    <DockPanel>
+        <Label DockPanel.Dock="Top"
+               Content="{Binding Message}"
+               FontSize="16"
+               HorizontalContentAlignment="Center"
+               BorderThickness="0 0 0 1"
+               BorderBrush="LightGray"/>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="1" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <DockPanel>
+                <DockPanel.Resources>
+                    <Style TargetType="TextBox">
+                        <Setter Property="Width"
+                                Value="120" />
+                        <Setter Property="Height"
+                                Value="25" />
+                        <Setter Property="VerticalContentAlignment"
+                                Value="Center" />
+                    </Style>
+                    <Style TargetType="PasswordBox">
+                        <Setter Property="Width"
+                                Value="120" />
+                        <Setter Property="Height"
+                                Value="25" />
+                        <Setter Property="VerticalContentAlignment"
+                                Value="Center" />
+                    </Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Width"
+                                Value="120" />
+                        <Setter Property="Height"
+                                Value="25" />
+                    </Style>
+                </DockPanel.Resources>
+                <StackPanel DockPanel.Dock="Top">
+                    <Label FontSize="24">Server</Label>
+                    <Separator Margin="5" />
                 </StackPanel>
-            </Border>
-            <controls:BusyIndicator IsBusy="{Binding IsBusy}"
-                                    Text="Searching network servers..."
-                                    Margin="5 0 5 5">
-                <ScrollViewer VerticalScrollBarVisibility="Auto">
-                    <ItemsControl ItemsSource="{Binding ServersList}">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <Border Background="LightGray"
-                                        Margin="0 0 0 5"
-                                        Padding="5">
-                                    <StackPanel Margin="5">
-                                        <controls:Form>
-                                            <controls:FormField Title="Server">
-                                                <Label Content="{Binding Name}" />
-                                            </controls:FormField>
-                                            <controls:FormField Title="Integrated secutiry">
-                                                <CheckBox IsChecked="{Binding IntegratedSecurity}"
-                                                          VerticalAlignment="Center" />
-                                            </controls:FormField>
-                                            <controls:FormField Title="Username"
-                                                                Visibility="{Binding IntegratedSecurity,Converter={StaticResource BoolToVisibilityConverter},ConverterParameter=R}">
-                                                <TextBox Text="{Binding Username,UpdateSourceTrigger=PropertyChanged}" />
-                                            </controls:FormField>
-                                            <controls:FormField Title="Password"
-                                                                Visibility="{Binding IntegratedSecurity,Converter={StaticResource BoolToVisibilityConverter},ConverterParameter=R}">
-                                                <PasswordBox
-                                                    wpf:PasswordBoxText.Password="{Binding Password,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}"
-                                                    wpf:PasswordBoxText.Attach="True" />
-                                            </controls:FormField>
-                                            <controls:FormField>
-                                                <Button Command="{Binding ConnectCommand}">Connect</Button>
-                                            </controls:FormField>
-                                        </controls:Form>
+                <Border DockPanel.Dock="Top"
+                        Background="LightGray"
+                        Margin="5 0 5 5"
+                        Padding="5">
+                    <StackPanel Margin="5">
+                        <controls:Form>
+                            <controls:FormField Title="Server">
+                                <TextBox Text="{Binding CustomServer.Name,UpdateSourceTrigger=PropertyChanged}" />
+                            </controls:FormField>
+                            <controls:FormField Title="Integrated secutiry">
+                                <CheckBox IsChecked="{Binding CustomServer.IntegratedSecurity}"
+                                          Style="{x:Null}"
+                                          VerticalAlignment="Center" />
+                            </controls:FormField>
+                            <controls:FormField Title="Username"
+                                                Visibility="{Binding CustomServer.IntegratedSecurity,Converter={StaticResource BoolToVisibilityConverter},ConverterParameter=R}">
+                                <TextBox Text="{Binding CustomServer.Username,UpdateSourceTrigger=PropertyChanged}" />
+                            </controls:FormField>
+                            <controls:FormField Title="Password"
+                                                Visibility="{Binding CustomServer.IntegratedSecurity,Converter={StaticResource BoolToVisibilityConverter},ConverterParameter=R}">
+                                <PasswordBox wpf:PasswordBoxText.Password="{Binding CustomServer.Password,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}"
+                                             wpf:PasswordBoxText.Attach="True" />
+                            </controls:FormField>
+                            <controls:FormField>
+                                <Button Command="{Binding CustomServer.ConnectCommand}">Connect</Button>
+                            </controls:FormField>
+                        </controls:Form>
 
-                                    </StackPanel>
-                                </Border>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </ScrollViewer>
+                    </StackPanel>
+                </Border>
+                <controls:BusyIndicator IsBusy="{Binding IsBusy}"
+                                        Text="Searching network servers..."
+                                        Margin="5 0 5 5">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <ItemsControl ItemsSource="{Binding ServersList}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Background="LightGray"
+                                            Margin="0 0 0 5"
+                                            Padding="5">
+                                        <StackPanel Margin="5">
+                                            <controls:Form>
+                                                <controls:FormField Title="Server">
+                                                    <Label Content="{Binding Name}" />
+                                                </controls:FormField>
+                                                <controls:FormField Title="Integrated secutiry">
+                                                    <CheckBox IsChecked="{Binding IntegratedSecurity}"
+                                                              VerticalAlignment="Center" />
+                                                </controls:FormField>
+                                                <controls:FormField Title="Username"
+                                                                    Visibility="{Binding IntegratedSecurity,Converter={StaticResource BoolToVisibilityConverter},ConverterParameter=R}">
+                                                    <TextBox Text="{Binding Username,UpdateSourceTrigger=PropertyChanged}" />
+                                                </controls:FormField>
+                                                <controls:FormField Title="Password"
+                                                                    Visibility="{Binding IntegratedSecurity,Converter={StaticResource BoolToVisibilityConverter},ConverterParameter=R}">
+                                                    <PasswordBox wpf:PasswordBoxText.Password="{Binding Password,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}"
+                                                                 wpf:PasswordBoxText.Attach="True" />
+                                                </controls:FormField>
+                                                <controls:FormField>
+                                                    <Button Command="{Binding ConnectCommand}">Connect</Button>
+                                                </controls:FormField>
+                                            </controls:Form>
 
-            </controls:BusyIndicator>
-        </DockPanel>
-        <Border Grid.Column="1"
-                Background="#FFA0A0A0"
-                Height="auto" />
-        <DockPanel Grid.Column="2">
-            <StackPanel DockPanel.Dock="Top">
-                <Label FontSize="24">Database</Label>
-                <Separator Margin="5" />
-            </StackPanel>
-            <Button DockPanel.Dock="Bottom"
-                    Margin="5 0"
-                    Style="{StaticResource HighlightButton}"
-                    Command="{Binding UseDatabaseCommand}"
-                    Height="25">
-                Use selected database
-            </Button>
-            <controls:WaterMarkTextBox DockPanel.Dock="Top"
-                                       WaterMarkContent="Filter"
-                                       Margin="5 0"
-                                       Background="White"
-                                       Height="25"
-                                       VerticalContentAlignment="Center"
-                                       Text="{Binding SearchValue,UpdateSourceTrigger=PropertyChanged}" />
-            <ListBox ItemsSource="{Binding Databases}"
-                     Margin="5 0"
-                     ItemContainerStyle="{x:Null}"
-                     Style="{x:Null}"
-                     SelectedItem="{Binding Databases.SelectedItem}" />
-        </DockPanel>
-    </Grid>
+                                        </StackPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+
+                </controls:BusyIndicator>
+            </DockPanel>
+            <Border Grid.Column="1"
+                    Background="#FFA0A0A0"
+                    Height="auto" />
+            <DockPanel Grid.Column="2">
+                <StackPanel DockPanel.Dock="Top">
+                    <Label FontSize="24">Database</Label>
+                    <Separator Margin="5" />
+                </StackPanel>
+                <Button DockPanel.Dock="Bottom"
+                        Margin="5 0"
+                        Style="{StaticResource HighlightButton}"
+                        Command="{Binding UseDatabaseCommand}"
+                        Height="25">
+                    Use selected database
+                </Button>
+                <controls:WaterMarkTextBox DockPanel.Dock="Top"
+                                           WaterMarkContent="Filter"
+                                           Margin="5 0"
+                                           Background="White"
+                                           Height="25"
+                                           VerticalContentAlignment="Center"
+                                           Text="{Binding SearchValue,UpdateSourceTrigger=PropertyChanged}" />
+                <ListBox ItemsSource="{Binding Databases}"
+                         Margin="5 0"
+                         ItemContainerStyle="{x:Null}"
+                         Style="{x:Null}"
+                         SelectedItem="{Binding Databases.SelectedItem}" />
+            </DockPanel>
+        </Grid>
+    </DockPanel>
 </Window>

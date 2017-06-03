@@ -99,6 +99,7 @@
     <Compile Include="Converters\BoolReverseConverter.cs" />
     <Compile Include="Converters\NullToBoolConverter.cs" />
     <Compile Include="Converters\NullToVisibilityConverter.cs" />
+    <Compile Include="Converters\RequiredBrushConverter.cs" />
     <Compile Include="DebugTool\DebugToolModule.cs" />
     <Compile Include="DebugTool\DebugToolViewModel.cs" />
     <Compile Include="DebugTool\DebugToolView.xaml.cs">
@@ -195,8 +196,7 @@
     <Compile Include="Regions\RegionManager.cs" />
     <Compile Include="Security\ILoginViewModel.cs" />
     <Compile Include="UpdatableMarkupExtension.cs" />
-    <Compile Include="Validation\RequiredField.cs" />
-    <Compile Include="Validation\RequiredFieldValidators.cs" />
+    <Compile Include="Validate.cs" />
     <Compile Include="ViewModelBase.cs" />
     <Compile Include="WPFModulesDefnitions.cs" />
     <Compile Include="XamlHelpers\FocusOnLoad.cs" />

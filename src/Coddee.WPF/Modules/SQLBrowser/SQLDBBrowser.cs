@@ -36,12 +36,11 @@ namespace Coddee.SQL
             get { return _customServer; }
             set { SetProperty(ref this._customServer, value); }
         }
-
-        private bool _isBusy;
-        public bool IsBusy
+        private string _message = "Select application database";
+        public string Message
         {
-            get { return _isBusy; }
-            set { SetProperty(ref this._isBusy, value); }
+            get { return _message; }
+            set { SetProperty(ref this._message, value); }
         }
 
         private AsyncObservableCollection<SQLServer> _serversList;
@@ -113,8 +112,10 @@ namespace Coddee.SQL
         /// <summary>
         /// Show the GUI to select a new database
         /// </summary>
-        public string GetDatabaseConnectionString()
+        public string GetDatabaseConnectionString(string message = null)
         {
+            if(!string.IsNullOrEmpty(message))
+            Message = message;
             IsBusy = true;
 
             Databases = AsyncObservableCollection<string>.Create();

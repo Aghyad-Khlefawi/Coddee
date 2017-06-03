@@ -5,6 +5,6 @@ namespace Coddee.SQL
 {
     public interface ISQLDBBrowser
     {
-        string GetDatabaseConnectionString();
+        string GetDatabaseConnectionString(string message = null);
     }
 }

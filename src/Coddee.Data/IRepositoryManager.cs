@@ -33,6 +33,8 @@ namespace Coddee.Data
         /// <param name="assemblies">The assemblies to search for the repositories</param>
         /// <returns></returns>
         void RegisterRepositories(params string[] assemblies);
+        
+        
 
         /// <summary>
         /// Register the provided repositories
@@ -40,5 +42,11 @@ namespace Coddee.Data
         /// <param name="repositories">The repositories to register</param>
         /// <returns></returns>
         void RegisterRepositories(params KeyValuePair<Type, Type>[] repositories);
+        
+
+        /// <summary>
+        /// Add an already initialized repository
+        /// </summary>
+        void AddRepository(IRepository repository,Type implementedRepository);
     }
 }

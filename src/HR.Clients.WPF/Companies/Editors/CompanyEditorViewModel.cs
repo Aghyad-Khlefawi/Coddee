@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 using Coddee;
 using Coddee.Collections;
 using Coddee.Data;
+using Coddee.Validation;
 using Coddee.WPF;
-using Coddee.WPF.Validation;
 using HR.Data.Models;
 using HR.Data.Repositories;
 

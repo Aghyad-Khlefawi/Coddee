@@ -14,7 +14,7 @@ using Coddee.Data;
 using Coddee.Loggers;
 using Coddee.Services;
 using Coddee.WPF.Modules;
-using Coddee.WPF.Validation;
+using Coddee.Validation;
 using Microsoft.Practices.Unity;
 
 namespace Coddee.WPF
@@ -45,7 +45,8 @@ namespace Coddee.WPF
                 OnDesignMode();
         }
 
-        protected readonly RequiredFieldCollection RequiredFields;
+        public RequiredFieldCollection RequiredFields { get; }
+
         protected readonly Dictionary<string, PropertyInfo> _requiredFieldsPropertyInfo;
 
         public event EventHandler Initialized;
@@ -151,13 +152,19 @@ namespace Coddee.WPF
             {
                 OnInitialization().Wait();
 
-                SetRequiredFields(RequiredFields);
-                GetRequiredPropertiesInfo();
+                RefreshRequiredFields();
 
                 IsInitialized = true;
                 IsBusy = false;
                 Initialized?.Invoke(this, EventArgs.Empty);
             });
+        }
+
+        protected virtual void RefreshRequiredFields()
+        {
+            RequiredFields.Clear();
+            SetRequiredFields(RequiredFields);
+            GetRequiredPropertiesInfo();
         }
 
         protected virtual void OnInitialized(object sender, EventArgs e)
@@ -255,7 +262,7 @@ namespace Coddee.WPF
         {
         }
 
-        private void GetRequiredPropertiesInfo()
+        protected virtual void GetRequiredPropertiesInfo()
         {
             var type = GetType();
             foreach (var requiredField in RequiredFields)
@@ -273,7 +280,7 @@ namespace Coddee.WPF
             get { return CheckField(columnName); }
         }
 
-        protected string CheckField(string fieldName)
+        protected virtual string CheckField(string fieldName)
         {
             var field = RequiredFields?.FirstOrDefault(e => e.FieldName == fieldName);
             if (field != null && _requiredFieldsPropertyInfo.ContainsKey(field.FieldName))
@@ -289,7 +296,24 @@ namespace Coddee.WPF
             return null;
         }
 
-        public string Error { get; }
+        public virtual IEnumerable<string> Validate()
+        {
+            var errors = new List<string>();
+            if (RequiredFields != null)
+            {
+                foreach (var requiredField in RequiredFields)
+                {
+                    var error = CheckField(requiredField.FieldName);
+                    if(!string.IsNullOrEmpty(error))
+                        errors.Add(error);
+                }
+            }
+            if (errors.Any())
+                return errors;
+                return null;
+        }
+
+        public string Error => null;
     }
 
     /// <summary>
@@ -338,7 +362,8 @@ namespace Coddee.WPF
                 // set the DataContext to this ViewModel
                 var frameworkElement = _view as FrameworkElement;
                 if (frameworkElement != null)
-                    frameworkElement.DataContext = this;
+                    frameworkElement.Loaded += delegate { frameworkElement.DataContext = this; }
+                        ;
                 ViewCreate?.Invoke(this, _view);
             });
         }
@@ -346,7 +371,9 @@ namespace Coddee.WPF
 
     public class EditorViewModel<TEditor, TView, TModel> : ViewModelBase<TView>,
         IEditorViewModel<TView, TModel>
-        where TView : UIElement, new() where TModel : new() where TEditor : EditorViewModel<TEditor, TView, TModel>,new()
+        where TView : UIElement, new()
+        where TModel : new()
+        where TEditor : EditorViewModel<TEditor, TView, TModel>, new()
 
     {
         private const string _eventsSource = "EditorBase";
@@ -414,7 +441,7 @@ namespace Coddee.WPF
 
         protected virtual void OnEdit(TModel item)
         {
-            _mapper.MapInstance(item, (TEditor)this);
+            _mapper.MapInstance(item, (TEditor) this);
         }
 
         public void Cancel()
@@ -491,7 +518,7 @@ namespace Coddee.WPF
         where TView : UIElement, new()
         where TModel : class, IUniqueObject<TKey>, new()
         where TRepository : class, ICRUDRepository<TModel, TKey>
-        where TEditor : EditorViewModel<TEditor, TView, TModel>,new()
+        where TEditor : EditorViewModel<TEditor, TView, TModel>, new()
     {
         protected TRepository _repository;
 

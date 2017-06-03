@@ -23,11 +23,7 @@ namespace Coddee.WPF.Controls
         public BusyIndicator()
         {
             Background = new SolidColorBrush(Colors.WhiteSmoke);
-            GotFocus += (sender,args)=>
-            {
-                Keyboard.ClearFocus();
-                args.Handled = true;
-            };
+            Focusable = false;
         }
 
         public static readonly DependencyProperty ContentItemProperty = DependencyProperty.Register("ContentItem", typeof(object), typeof(BusyIndicator));
