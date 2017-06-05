@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Blend for Visual Studio 15
+# Visual Studio 15
 VisualStudioVersion = 15.0.26430.6
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Coddee.Core", "Coddee.Core\Coddee.Core.csproj", "{200805C2-E25C-4D1B-AC1E-0DBB5869AEB9}"
@@ -47,6 +47,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Coddee.Data.MongoDB", "Coddee.Data.MongoDB\Coddee.Data.MongoDB.csproj", "{8750B71C-E3ED-440D-9D2F-7BAA6A30ACD1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HR.Data.Mongo", "HR.Data.Mongo\HR.Data.Mongo.csproj", "{70C08F57-4641-427F-AD33-1A280EFDD39F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Coddee.SignalR", "Coddee.SignalR\Coddee.SignalR.csproj", "{CC93B50A-1D84-4D65-8412-7C4E96D5118C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -151,6 +153,12 @@ Global
 		{70C08F57-4641-427F-AD33-1A280EFDD39F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{70C08F57-4641-427F-AD33-1A280EFDD39F}.REST|Any CPU.ActiveCfg = Release|Any CPU
 		{70C08F57-4641-427F-AD33-1A280EFDD39F}.REST|Any CPU.Build.0 = Release|Any CPU
+		{CC93B50A-1D84-4D65-8412-7C4E96D5118C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC93B50A-1D84-4D65-8412-7C4E96D5118C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC93B50A-1D84-4D65-8412-7C4E96D5118C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC93B50A-1D84-4D65-8412-7C4E96D5118C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CC93B50A-1D84-4D65-8412-7C4E96D5118C}.REST|Any CPU.ActiveCfg = Release|Any CPU
+		{CC93B50A-1D84-4D65-8412-7C4E96D5118C}.REST|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -174,5 +182,6 @@ Global
 		{E228F0E4-D7AA-4D9C-B38D-FB245FF287ED} = {06E26F1F-7F64-4A9B-865F-3D5FD8F3C41F}
 		{8750B71C-E3ED-440D-9D2F-7BAA6A30ACD1} = {20EB72E0-4414-4165-AA0F-2CCF60C02188}
 		{70C08F57-4641-427F-AD33-1A280EFDD39F} = {796678F0-69D7-4FEC-894A-4342F7460EB8}
+		{CC93B50A-1D84-4D65-8412-7C4E96D5118C} = {06E26F1F-7F64-4A9B-865F-3D5FD8F3C41F}
 	EndGlobalSection
 EndGlobal

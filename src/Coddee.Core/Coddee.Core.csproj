@@ -54,6 +54,7 @@
     <Compile Include="ConfigKeys.cs" />
     <Compile Include="CoreModulesDefnitions.cs" />
     <Compile Include="GlobalEvent.cs" />
+    <Compile Include="Network\NetworkService.cs" />
     <Compile Include="Services\GlobalEvents\GlobalEventsService.cs" />
     <Compile Include="Services\GlobalEvents\GlobalEventsServiceModule.cs" />
     <Compile Include="Services\GlobalVariables\GlobalVariablesService.cs" />

@@ -48,5 +48,10 @@ namespace Coddee.Data
         /// Add an already initialized repository
         /// </summary>
         void AddRepository(IRepository repository,Type implementedRepository);
+
+
+        void SetSyncService(IRepositorySyncService syncService);
     }
+
+
 }

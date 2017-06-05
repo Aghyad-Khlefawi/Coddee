@@ -13,6 +13,7 @@ namespace Coddee.Data
         protected IObjectMapper _mapper;
         protected RepositoryConfigurations _config;
         protected IRepositoryManager _repositoryManager;
+        private IRepositorySyncService _syncService;
 
         public bool Initialized { get; protected set; }
         public Type ImplementedInterface { get; protected set; }
@@ -29,6 +30,17 @@ namespace Coddee.Data
             _mapper = mapper;
             RegisterMappings(_mapper);
             Initialized = true;
+        }
+
+        public void SetSyncService(IRepositorySyncService syncService)
+        {
+            _syncService = syncService;
+            syncService.SyncReceived += SyncServiceSyncReceived;
+        }
+
+        public virtual void SyncServiceSyncReceived(string identifier, RepositorySyncEventArgs args)
+        {
+
         }
 
         /// <summary>

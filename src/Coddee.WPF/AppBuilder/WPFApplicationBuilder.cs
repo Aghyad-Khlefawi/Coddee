@@ -53,6 +53,8 @@ namespace Coddee.WPF
         private LoggerTypes _loggerType;
         private ILoginViewModel _loginViewModel;
 
+        public event EventHandler ApplicationStarted;
+
         public WPFApplicationBuilder(WPFApplication app, IUnityContainer container)
         {
             _app = app;
@@ -170,6 +172,7 @@ namespace Coddee.WPF
                     {
                         ShowMain();
                         loginView.Close();
+                        ApplicationStarted?.Invoke(this, EventArgs.Empty);
                     };
                     loginView.Show();
                 }
@@ -213,8 +216,8 @@ namespace Coddee.WPF
 
                 var shell = _container.Resolve<IShell>();
                 ((Window) shell).DataContext = shellViewModel;
+                ApplicationStarted?.Invoke(this, EventArgs.Empty);
             }
-            ;
         }
 
         /// <summary>

@@ -60,6 +60,7 @@
     <Reference Include="System.Data.Linq" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -82,6 +83,10 @@
     <Compile Include="AppBuilder\RESTRepositoryExtenstion.cs" />
     <Compile Include="AppBuilder\WPFApplication.cs" />
     <Compile Include="AppBuilder\WPFApplicationBuilder.cs" />
+    <Compile Include="Behaviors\BubbleScrollEvent.cs" />
+    <Compile Include="Behaviors\EmptyOnZeroBehavior.cs" />
+    <Compile Include="Behaviors\InputAlphabetMaskBehavior.cs" />
+    <Compile Include="Behaviors\InputNumbersMaskBehavior.cs" />
     <Compile Include="BindableBase.cs" />
     <Compile Include="Collections\AsyncObservableDictionaryView.cs" />
     <Compile Include="Collections\AsyncObservableCollectionView.cs" />
@@ -109,6 +114,7 @@
     <Compile Include="Extensions.cs" />
     <Compile Include="Globals.cs" />
     <Compile Include="IEditorViewModel.cs" />
+    <Compile Include="InputMask.cs" />
     <Compile Include="IViewModel.cs" />
     <Compile Include="Localize.cs" />
     <Compile Include="Modules\Console\ApplicationConsoleModule.cs" />

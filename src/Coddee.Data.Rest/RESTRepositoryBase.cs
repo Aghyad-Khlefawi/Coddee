@@ -301,12 +301,39 @@ namespace Coddee.Data.REST
         }
     }
 
+    public abstract class RESTRepositoryBase<TModel, TKey> : RESTRepositoryBase
+        where TModel : IUniqueObject<TKey>
+    {
+        private readonly string _identifier;
+
+        protected RESTRepositoryBase()
+        {
+            _identifier = GetType().Name;
+        }
+
+        public override void SyncServiceSyncReceived(string identifier, RepositorySyncEventArgs args)
+        {
+            base.SyncServiceSyncReceived(identifier, args);
+            if (identifier == _identifier)
+                RaiseItemsChanged(this,
+                                  new RepositoryChangeEventArgs<TModel>(args.OperationType, (TModel)args.Item));
+        }
+
+        protected void RaiseItemsChanged(object sender, RepositoryChangeEventArgs<TModel> args)
+        {
+            ItemsChanged?.Invoke(this,
+                                 new RepositoryChangeEventArgs<TModel>(args.OperationType, args.Item));
+        }
+
+        public event EventHandler<RepositoryChangeEventArgs<TModel>> ItemsChanged;
+    }
+
     /// <summary>
     /// Base implementation for a REST repository that provides ReadOnly functionality
     /// </summary>
     /// <typeparam name="TModel">The model type</typeparam>
     /// <typeparam name="TKey">The table key(ID) type</typeparam>
-    public abstract class ReadOnlyRESTRepositoryBase<TModel, TKey> : RESTRepositoryBase,
+    public abstract class ReadOnlyRESTRepositoryBase<TModel, TKey> : RESTRepositoryBase<TModel,TKey>,
         IReadOnlyRepository<TModel, TKey> where TModel : IUniqueObject<TKey>
     {
         protected ReadOnlyRESTRepositoryBase(string controllerName)
@@ -340,6 +367,7 @@ namespace Coddee.Data.REST
         {
             return GetFromController<IEnumerable<TModel>>(ApiCommonActions.GetItems);
         }
+        
     }
 
     /// <summary>
@@ -384,20 +412,18 @@ namespace Coddee.Data.REST
             return Delete(ControllerName, action, id.ToString());
         }
 
-
-        public event EventHandler<RepositoryChangeEventArgs<TModel>> ItemsChanged;
-
+        
         public async Task<TModel> UpdateItem(TModel item)
         {
             var res = await PutToController<TModel>(ApiCommonActions.UpdateItem, item);
-            ItemsChanged?.Invoke(this, new RepositoryChangeEventArgs<TModel>(OperationType.Edit, res));
+            RaiseItemsChanged(this, new RepositoryChangeEventArgs<TModel>(OperationType.Edit, res));
             return res;
         }
 
         public async Task<TModel> InsertItem(TModel item)
         {
             var res = await PostToController<TModel>(ApiCommonActions.InsertItem, item);
-            ItemsChanged?.Invoke(this, new RepositoryChangeEventArgs<TModel>(OperationType.Add, res));
+            RaiseItemsChanged(this, new RepositoryChangeEventArgs<TModel>(OperationType.Add, res));
             return res;
         }
 
@@ -405,7 +431,7 @@ namespace Coddee.Data.REST
         {
             var res = await this[ID];
             await DeleteFromController(ApiCommonActions.DeleteItemByID, ID);
-            ItemsChanged?.Invoke(this, new RepositoryChangeEventArgs<TModel>(OperationType.Edit, res));
+            RaiseItemsChanged(this, new RepositoryChangeEventArgs<TModel>(OperationType.Edit, res));
         }
 
         public async Task DeleteItem(TModel item)

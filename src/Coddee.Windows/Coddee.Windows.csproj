@@ -69,6 +69,7 @@
   <ItemGroup>
     <Compile Include="Configuration\ConfigurationManager.cs" />
     <Compile Include="Configuration\ConfigurationManagerModule.cs" />
+    <Compile Include="Network\NetworkServicesLocator.cs" />
     <Compile Include="WindowsModulesDefnitions.cs" />
     <Compile Include="Loggers\FileLogger.cs" />
     <Compile Include="Mapper\ILObjectMapper.cs" />

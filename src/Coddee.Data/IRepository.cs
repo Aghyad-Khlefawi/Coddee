@@ -28,6 +28,17 @@ namespace Coddee.Data
                         IObjectMapper mapper,
                         Type implementedInterface,
                         RepositoryConfigurations config=null);
+
+        void SetSyncService(IRepositorySyncService syncService);
+    }
+
+    /// <summary>
+    /// A data repository
+    /// </summary>
+    public interface IRepository<TModel, TKey>
+        where TModel : IUniqueObject<TKey>
+    {
+        event EventHandler<RepositoryChangeEventArgs<TModel>> ItemsChanged;
     }
 
     /// <summary>
@@ -35,9 +46,11 @@ namespace Coddee.Data
     /// </summary>
     /// <typeparam name="TModel">The model type</typeparam>
     /// <typeparam name="TKey">The Key(ID) Type</typeparam>
-    public interface IIndexedRepository<TModel, TKey> : IRepository
+    public interface IIndexedRepository<TModel, TKey> : IRepository<TModel, TKey>
         where TModel : IUniqueObject<TKey>
     {
+
+
         /// <summary>
         /// Return the item by its key(ID)
         /// </summary>
@@ -71,7 +84,6 @@ namespace Coddee.Data
         where TModel : IUniqueObject<TKey>
 
     {
-        event EventHandler<RepositoryChangeEventArgs<TModel>> ItemsChanged;
 
         /// <summary>
         /// Updates and items in the repository

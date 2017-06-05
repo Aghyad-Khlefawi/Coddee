@@ -49,6 +49,7 @@
     <Compile Include="Extensions.cs" />
     <Compile Include="IRepository.cs" />
     <Compile Include="IRepositoryManager.cs" />
+    <Compile Include="IRepositorySyncService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RepositoryChangeEventArgs.cs" />
     <Compile Include="RepositoryManagerBase.cs" />

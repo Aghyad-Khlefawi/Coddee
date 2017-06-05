@@ -267,6 +267,35 @@ namespace Coddee.Data.LinqToSQL
         }
     }
 
+    public class LinqRepositoryBase<TDataContext, TTable, TModel, TKey> :
+        LinqRepositoryBase<TDataContext, TTable> where TDataContext : DataContext
+        where TTable : class, new()
+        where TModel : IUniqueObject<TKey>, new()
+    {
+        private readonly string _identifier;
+
+        public LinqRepositoryBase()
+        {
+            _identifier = GetType().Name;
+        }
+
+        public override void SyncServiceSyncReceived(string identifier, RepositorySyncEventArgs args)
+        {
+            base.SyncServiceSyncReceived(identifier, args);
+            if (identifier == _identifier)
+                RaiseItemsChanged(this,
+                                  new RepositoryChangeEventArgs<TModel>(args.OperationType, (TModel) args.Item));
+        }
+
+        protected void RaiseItemsChanged(object sender, RepositoryChangeEventArgs<TModel> args)
+        {
+            ItemsChanged?.Invoke(this,
+                                 new RepositoryChangeEventArgs<TModel>(args.OperationType, args.Item));
+        }
+
+        public event EventHandler<RepositoryChangeEventArgs<TModel>> ItemsChanged;
+    }
+
     /// <summary>
     /// Base implementation for a LinqToSQL repository that interact with a specific SQL table
     /// Implements the ReadOnly functionality
@@ -276,8 +305,10 @@ namespace Coddee.Data.LinqToSQL
     /// <typeparam name="TModel">The model type</typeparam>
     /// <typeparam name="TKey">The table key(ID) type</typeparam>
     public class ReadOnlyLinqRepositoryBase<TDataContext, TTable, TModel, TKey> :
-        LinqRepositoryBase<TDataContext, TTable>, IReadOnlyRepository<TModel, TKey>
-        where TDataContext : DataContext where TTable : class, new() where TModel : IUniqueObject<TKey>, new()
+        LinqRepositoryBase<TDataContext, TTable, TModel, TKey>, IReadOnlyRepository<TModel, TKey>
+        where TDataContext : DataContext
+        where TTable : class, new()
+        where TModel : IUniqueObject<TKey>, new()
     {
         /// <summary>
         /// Register mapping for the table and the model type
@@ -324,7 +355,6 @@ namespace Coddee.Data.LinqToSQL
             return MapItemToModel(source);
         }
 
-       
 
         /// <summary>
         /// Calls the MapItemToModel function to convert an item to the model type
@@ -344,6 +374,7 @@ namespace Coddee.Data.LinqToSQL
         {
             return _mapper.MapCollection<TModel>(source);
         }
+
         /// <summary>
         /// Maps the item from the table type to the model type
         /// The default behavior is using the Object mapper but can be overridden to alter the behavior
@@ -366,8 +397,6 @@ namespace Coddee.Data.LinqToSQL
         ReadOnlyLinqRepositoryBase<TDataContext, TTable, TModel, TKey>, ICRUDRepository<TModel, TKey>
         where TDataContext : DataContext where TTable : class, new() where TModel : IUniqueObject<TKey>, new()
     {
-        public event EventHandler<RepositoryChangeEventArgs<TModel>> ItemsChanged;
-
         /// <summary>
         /// Updates and items in the repository
         /// </summary>
@@ -379,7 +408,7 @@ namespace Coddee.Data.LinqToSQL
                 _mapper.MapInstance(item, temp);
                 db.SubmitChanges();
                 _mapper.MapInstance(temp, item);
-                ItemsChanged?.Invoke(this,new RepositoryChangeEventArgs<TModel>(OperationType.Edit, item));
+                RaiseItemsChanged(this, new RepositoryChangeEventArgs<TModel>(OperationType.Edit, item));
                 return item;
             });
         }
@@ -396,7 +425,7 @@ namespace Coddee.Data.LinqToSQL
                 db.GetTable<TTable>().InsertOnSubmit(tableitem);
                 db.SubmitChanges();
                 _mapper.MapInstance(tableitem, item);
-                ItemsChanged?.Invoke(this, new RepositoryChangeEventArgs<TModel>(OperationType.Add, item));
+                RaiseItemsChanged(this, new RepositoryChangeEventArgs<TModel>(OperationType.Add, item));
                 return item;
             });
         }
@@ -412,7 +441,7 @@ namespace Coddee.Data.LinqToSQL
                 var item = TableToModelMapping(oldItem);
                 db.GetTable<TTable>().DeleteOnSubmit(oldItem);
                 db.SubmitChanges();
-                ItemsChanged?.Invoke(this, new RepositoryChangeEventArgs<TModel>(OperationType.Delete, item));
+                RaiseItemsChanged(this, new RepositoryChangeEventArgs<TModel>(OperationType.Delete, item));
             });
         }
 

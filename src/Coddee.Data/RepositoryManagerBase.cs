@@ -23,6 +23,7 @@ namespace Coddee.Data
             _config = config;
         }
 
+        private IRepositorySyncService _syncService;
         protected RepositoryConfigurations _config ;
         protected IObjectMapper _mapper;
         protected Dictionary<Type, IRepository> _repositories;
@@ -96,6 +97,17 @@ namespace Coddee.Data
         public void AddRepository(IRepository repository, Type implementedRepository)
         {
             _repositories[implementedRepository] = repository;
+            if(_syncService!=null)
+                repository.SetSyncService(_syncService);
+        }
+
+        public void SetSyncService(IRepositorySyncService syncService)
+        {
+            _syncService = syncService;
+            foreach (var repo in _repositories.Values)
+            {
+                repo.SetSyncService(_syncService);
+            }
         }
 
         public virtual void InitializeRepository(IRepository repo,Type implementedInterface)
