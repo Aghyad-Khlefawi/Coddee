@@ -63,10 +63,14 @@ namespace Coddee.Data.MongoDB
         protected IMongoCollection<TModel> _collection;
         protected readonly Expression<Func<TModel, TKey>> _idProperty;
         protected readonly string _collectionName;
+        public event EventHandler<RepositoryChangeEventArgs<TModel>> ItemsChanged;
+
+        private readonly string _identifier;
 
         protected MongoRepositoryBase(string collectionName)
         {
             _collectionName = collectionName;
+            _identifier = typeof(TModel).Name;
         }
 
         protected MongoRepositoryBase(string collectionName, Expression<Func<TModel, TKey>> idProperty)
@@ -113,6 +117,29 @@ namespace Coddee.Data.MongoDB
         protected virtual void ConfigureTableMappings(BsonClassMap<TModel> bsonClassMap)
         {
         }
+        public override void SyncServiceSyncReceived(string identifier, RepositorySyncEventArgs args)
+        {
+            base.SyncServiceSyncReceived(identifier, args);
+            if (identifier == _identifier)
+                RaiseItemsChanged(this,
+                                  new RepositoryChangeEventArgs<TModel>(args.OperationType, (TModel)args.Item));
+        }
+
+        protected void RaiseItemsChanged(object sender, RepositoryChangeEventArgs<TModel> args)
+        {
+            ItemsChanged?.Invoke(this,
+                                 new RepositoryChangeEventArgs<TModel>(args.OperationType, args.Item));
+        }
+
+        public override void SetSyncService(IRepositorySyncService syncService)
+        {
+            base.SetSyncService(syncService);
+            ItemsChanged += OnItemsChanged;
+        }
+        private void OnItemsChanged(object sender, RepositoryChangeEventArgs<TModel> e)
+        {
+            _syncService?.SyncItem(_identifier, new RepositorySyncEventArgs { Item = e.Item, OperationType = e.OperationType });
+        }
     }
 
     /// <summary>
@@ -143,6 +170,7 @@ namespace Coddee.Data.MongoDB
         {
             return (await _collection.Find(e => true).ToListAsync()).AsEnumerable();
         }
+
     }
 
 
@@ -163,20 +191,19 @@ namespace Coddee.Data.MongoDB
                                           Expression<Func<TModel, TKey>> idProperty) : base(collectionName, idProperty)
         {
         }
-
-        public event EventHandler<RepositoryChangeEventArgs<TModel>> ItemsChanged;
+        
 
         public virtual async Task<TModel> UpdateItem(TModel item)
         {
             await _collection.ReplaceOneAsync(new BsonDocument("_id", BsonValue.Create(item.GetKey)), item);
-            ItemsChanged?.Invoke(this,new RepositoryChangeEventArgs<TModel>(OperationType.Edit, item));
+            RaiseItemsChanged(this,new RepositoryChangeEventArgs<TModel>(OperationType.Edit, item));
             return item;
         }
 
         public virtual async Task<TModel> InsertItem(TModel item)
         {
             await _collection.InsertOneAsync(item);
-            ItemsChanged?.Invoke(this,new RepositoryChangeEventArgs<TModel>(OperationType.Add, item));
+            RaiseItemsChanged(this,new RepositoryChangeEventArgs<TModel>(OperationType.Add, item));
             return item;
         }
 
@@ -184,13 +211,13 @@ namespace Coddee.Data.MongoDB
         {
             var item = await this[ID];
             await _collection.DeleteOneAsync(new BsonDocument("_id", BsonValue.Create(ID)));
-            ItemsChanged?.Invoke(this,new RepositoryChangeEventArgs<TModel>(OperationType.Edit, item));
+            RaiseItemsChanged(this,new RepositoryChangeEventArgs<TModel>(OperationType.Edit, item));
         }
 
         public  virtual async Task DeleteItem(TModel item)
         {
             await DeleteItem(item.GetKey);
-            ItemsChanged?.Invoke(this,new RepositoryChangeEventArgs<TModel>(OperationType.Edit, item));
+            RaiseItemsChanged(this,new RepositoryChangeEventArgs<TModel>(OperationType.Edit, item));
         }
     }
 }

@@ -25,6 +25,9 @@ namespace Coddee.WPF
     /// </summary>
     public class ViewModelBase : BindableBase, IViewModel, IDataErrorInfo
     {
+        private const string _eventsSource = "VMBase";
+
+
         protected static readonly Task completedTask = Task.FromResult(false);
         protected static WPFApplication _app;
         protected static IUnityContainer _container;
@@ -32,6 +35,14 @@ namespace Coddee.WPF
         protected static IToastService _toast;
         protected static ILocalizationManager _localization;
         protected static ILogger _logger;
+
+        protected virtual string _vmName { get; set; }
+        public string vmName
+        {
+            get { return _vmName ?? GetType().Name; }
+            set { _vmName = value; }
+        }
+
 
         public ViewModelBase()
         {
@@ -90,6 +101,7 @@ namespace Coddee.WPF
         public IViewModel CreateViewModel(Type viewModelType)
         {
             IViewModel vm = (IViewModel) Resolve(viewModelType);
+            _logger?.Log(_eventsSource, $"ViewModelCreated {vmName}", LogRecordTypes.Debug);
             AddChildViewModel(vm);
             return vm;
         }
@@ -102,6 +114,16 @@ namespace Coddee.WPF
             vm.ChildCreated += ChildCreated;
         }
 
+        protected virtual void AddChildViewModels(params object[] vms)
+        {
+            foreach (var obj in vms)
+            {
+                var vm = obj as IViewModel;
+                if (vm != null)
+                    AddChildViewModel(vm);
+            }
+        }
+
         public TResult CreateViewModel<TResult>() where TResult : IViewModel
         {
             return (TResult) CreateViewModel(typeof(TResult));
@@ -109,6 +131,7 @@ namespace Coddee.WPF
 
         protected virtual void OnChildCreated(object sender, IViewModel e)
         {
+            _logger?.Log(_eventsSource, $"Child view model added {vmName}", LogRecordTypes.Debug);
         }
 
         /// <summary>
@@ -148,6 +171,7 @@ namespace Coddee.WPF
         /// <returns></returns>
         public Task Initialize()
         {
+            _logger?.Log(_eventsSource, $"ViewModel initializing {vmName}", LogRecordTypes.Debug);
             return Task.Run(() =>
             {
                 OnInitialization().Wait();
@@ -169,6 +193,7 @@ namespace Coddee.WPF
 
         protected virtual void OnInitialized(object sender, EventArgs e)
         {
+            _logger?.Log(_eventsSource, $"ViewModel initialized {vmName}", LogRecordTypes.Debug);
         }
 
         /// <summary>
@@ -232,7 +257,7 @@ namespace Coddee.WPF
 
         protected void LogError(Exception ex)
         {
-            LogError(GetType().Name, ex);
+            LogError(vmName, ex);
         }
 
         protected void RegisterInstance<T>(T instance)
@@ -304,13 +329,13 @@ namespace Coddee.WPF
                 foreach (var requiredField in RequiredFields)
                 {
                     var error = CheckField(requiredField.FieldName);
-                    if(!string.IsNullOrEmpty(error))
+                    if (!string.IsNullOrEmpty(error))
                         errors.Add(error);
                 }
             }
             if (errors.Any())
                 return errors;
-                return null;
+            return null;
         }
 
         public string Error => null;
@@ -324,6 +349,8 @@ namespace Coddee.WPF
     public class ViewModelBase<TView> : ViewModelBase, IPresentable<TView>, IPresentableViewModel
         where TView : UIElement, new()
     {
+        private const string _eventsSource = "VMBase";
+
         public ViewModelBase()
         {
             ViewCreate += OnViewCreated;
@@ -331,6 +358,7 @@ namespace Coddee.WPF
 
         protected virtual void OnViewCreated(object sender, TView e)
         {
+            _logger?.Log(_eventsSource, $"View created {e.GetType().Name} for {vmName}", LogRecordTypes.Debug);
         }
 
         /// <summary>
@@ -362,29 +390,29 @@ namespace Coddee.WPF
                 // set the DataContext to this ViewModel
                 var frameworkElement = _view as FrameworkElement;
                 if (frameworkElement != null)
-                    frameworkElement.Loaded += delegate { frameworkElement.DataContext = this; }
-                        ;
+                    frameworkElement.Loaded += delegate { frameworkElement.DataContext = this; };
                 ViewCreate?.Invoke(this, _view);
             });
         }
     }
 
-    public class EditorViewModel<TEditor, TView, TModel> : ViewModelBase<TView>,
+    public abstract class EditorViewModel<TEditor,TView, TModel> : ViewModelBase<TView>,
         IEditorViewModel<TView, TModel>
         where TView : UIElement, new()
         where TModel : new()
-        where TEditor : EditorViewModel<TEditor, TView, TModel>, new()
+        where TEditor : EditorViewModel<TEditor, TView, TModel>
 
     {
         private const string _eventsSource = "EditorBase";
 
-        protected EditorViewModel()
+        protected EditorViewModel(IObjectMapper mapper)
         {
+            _mapper = mapper;
             Saved += OnSave;
             Canceled += OnCanceled;
         }
 
-        private IObjectMapper _mapper;
+        protected readonly IObjectMapper _mapper;
         public event EventHandler<EditorSaveArgs<TModel>> Saved;
         public event EventHandler<EditorSaveArgs<TModel>> Canceled;
 
@@ -413,14 +441,20 @@ namespace Coddee.WPF
         public virtual void Add()
         {
             OperationType = OperationType.Add;
-            EditedItem = new TModel();
+            Clear();
             OnAdd();
+        }
+
+        public virtual void Clear()
+        {
+            EditedItem = new TModel();
         }
 
         public virtual void Edit(TModel item)
         {
             FillingValues = true;
             OperationType = OperationType.Edit;
+            Clear();
             EditedItem = _mapper.Map<TModel>(item);
             OnEdit(item);
             FillingValues = false;
@@ -429,9 +463,7 @@ namespace Coddee.WPF
         protected override async Task OnInitialization()
         {
             await base.OnInitialization();
-            _mapper = Resolve<IObjectMapper>();
             _mapper.RegisterMap<TModel, TModel>();
-            _mapper.RegisterTwoWayMap<TEditor, TModel>();
             _mapper.RegisterTwoWayMap<TEditor, TModel>();
         }
 
@@ -441,7 +473,17 @@ namespace Coddee.WPF
 
         protected virtual void OnEdit(TModel item)
         {
-            _mapper.MapInstance(item, (TEditor) this);
+            MapEditedItemToEditor(item);
+        }
+
+        public virtual void MapEditedItemToEditor(TModel item)
+        {
+            _mapper.MapInstance(item, this);
+        }
+
+        public virtual void MapEditorToEditedItem(TModel item)
+        {
+            _mapper.MapInstance(this, item);
         }
 
         public void Cancel()
@@ -451,14 +493,14 @@ namespace Coddee.WPF
 
         public virtual void PreSave()
         {
-            _mapper.MapInstance(this, EditedItem);
+            MapEditorToEditedItem(EditedItem);
         }
 
         public virtual async Task<bool> Save()
         {
             try
             {
-                var errors = Validate();
+                var errors = Validate();    
                 if (errors != null && errors.Any())
                 {
                     ShowErrors(errors);
@@ -501,7 +543,7 @@ namespace Coddee.WPF
         {
         }
 
-        public virtual IEnumerable<string> Validate()
+        public override IEnumerable<string> Validate()
         {
             var res = new List<string>();
             foreach (var required in RequiredFields)
@@ -514,18 +556,17 @@ namespace Coddee.WPF
         }
     }
 
-    public class EditorViewModel<TEditor, TView, TRepository, TModel, TKey> : EditorViewModel<TEditor, TView, TModel>
+    public abstract class EditorViewModel<TEditor,TView, TRepository, TModel, TKey> : EditorViewModel<TEditor,TView, TModel>
         where TView : UIElement, new()
         where TModel : class, IUniqueObject<TKey>, new()
         where TRepository : class, ICRUDRepository<TModel, TKey>
-        where TEditor : EditorViewModel<TEditor, TView, TModel>, new()
+        where TEditor : EditorViewModel<TEditor, TView, TModel>
     {
         protected TRepository _repository;
 
-        protected override async Task OnInitialization()
+        protected EditorViewModel(IObjectMapper mapper, TRepository repository) : base(mapper)
         {
-            await base.OnInitialization();
-            _repository = Resolve<TRepository>();
+            _repository = repository;
         }
 
         protected override async Task<TModel> SaveItem()

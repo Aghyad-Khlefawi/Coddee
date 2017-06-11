@@ -35,7 +35,7 @@ namespace Coddee.Data
     /// <summary>
     /// A data repository
     /// </summary>
-    public interface IRepository<TModel, TKey>
+    public interface IRepository<TModel, TKey>: IRepository
         where TModel : IUniqueObject<TKey>
     {
         event EventHandler<RepositoryChangeEventArgs<TModel>> ItemsChanged;

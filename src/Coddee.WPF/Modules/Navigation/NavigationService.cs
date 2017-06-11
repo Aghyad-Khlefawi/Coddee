@@ -2,6 +2,7 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Coddee.Collections;
@@ -33,7 +34,7 @@ namespace Coddee.WPF.Modules.Navigation
                 };
             }
         }
-        
+
 
         private bool _showTitles;
         public bool ShowTitles
@@ -55,6 +56,13 @@ namespace Coddee.WPF.Modules.Navigation
             _navigationRegion = navigationRegion;
             NavigationItems = AsyncObservableCollection<INavigationItem>.Create();
             navigationItems.ForEach(AddNavigationItem);
+            if (navigationItems.Any())
+            {
+                var first = navigationItems.First();
+                first.IsSelected = true;
+                if (first is NavigationItem nav)
+                    nav.IsFirstItem = true;
+            }
             navbarRegion.View(this);
         }
 

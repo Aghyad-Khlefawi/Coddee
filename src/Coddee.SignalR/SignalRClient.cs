@@ -11,7 +11,7 @@ namespace Coddee.SignalR
         public virtual async Task Connect(string serverIp, string servicePort)
         {
             _connection = new HubConnection($"http://{serverIp}:{servicePort}/");
-            _proxy = _connection.CreateHubProxy("syncHub");
+            _proxy = _connection.CreateHubProxy("repositorySyncHub");
 
             SubscribeToEvents();
 

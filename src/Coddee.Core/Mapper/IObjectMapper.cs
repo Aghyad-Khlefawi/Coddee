@@ -18,21 +18,21 @@ namespace Coddee
         /// </summary>
         /// <typeparam name="TSource">Source type</typeparam>
         /// <typeparam name="TTarget">Target type</typeparam>
-        void RegisterMap<TSource, TTarget>(Action<TSource, TTarget> convert) where TTarget : new();
+        void RegisterMap<TSource, TTarget>(Action<TSource, TTarget> convert);
 
         /// <summary>
         /// Register mapping information from source to target
         /// </summary>
         /// <typeparam name="TSource">Source type</typeparam>
         /// <typeparam name="TTarget">Target type</typeparam>
-        void RegisterMap<TSource, TTarget>() where TTarget : new();
+        void RegisterMap<TSource, TTarget>();
 
         /// <summary>
         /// Register mapping information between two types
         /// </summary>
         /// <typeparam name="TType1">Type1</typeparam>
         /// <typeparam name="TType2">Type2</typeparam>
-        void RegisterTwoWayMap<TType1, TType2>() where TType1 : new() where TType2 : new();
+        void RegisterTwoWayMap<TType1, TType2>();
 
         /// <summary>
         /// Map an object to a specific type

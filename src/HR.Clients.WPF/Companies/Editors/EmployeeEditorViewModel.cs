@@ -34,5 +34,9 @@ namespace HR.Clients.WPF.Companies.Editors
             EditedItem.StateName = _selectedCompany.StateName;
             base.PreSave();
         }
+
+        public EmployeeEditorViewModel(IObjectMapper mapper, IEmployeeRepository repository) : base(mapper, repository)
+        {
+        }
     }
 }

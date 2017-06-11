@@ -25,6 +25,7 @@ namespace Coddee.WPF.Navigation
         bool IsInitialized { get; }
         bool IsVisible { get; set; }
 
+        void Navigate();
         Task Initialize();
         void SetDestination(IPresentable destination);
         event EventHandler<IPresentable> NavigationRequested;
@@ -117,16 +118,15 @@ namespace Coddee.WPF.Navigation
         }
         public ICommand NavigateCommand => new RelayCommand(Navigate);
         private bool vmInitialized ;
-        protected virtual void Navigate()
+        public virtual void Navigate()
         {
+            NavigationRequested?.Invoke(this, _destination);
             var vm = _destination as ViewModelBase;
             if (vm != null && !vm.IsInitialized && !vmInitialized)
             {
                 vmInitialized = true;
                 vm.Initialize();
             }
-
-            NavigationRequested?.Invoke(this, _destination);
         }
 
         public virtual void SetDestination(IPresentable destination)

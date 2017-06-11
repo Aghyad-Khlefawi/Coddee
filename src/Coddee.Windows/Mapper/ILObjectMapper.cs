@@ -34,7 +34,7 @@ namespace Coddee.Windows.Mapper
         /// </summary>
         /// <typeparam name="TSource">Source type</typeparam>
         /// <typeparam name="TTarget">Target type</typeparam>
-        public void RegisterMap<TSource, TTarget>(Action<TSource, TTarget> convert) where TTarget : new()
+        public void RegisterMap<TSource, TTarget>(Action<TSource, TTarget> convert)
         {
             var sourceType = typeof(TSource);
             var targetType = typeof(TTarget);
@@ -46,8 +46,8 @@ namespace Coddee.Windows.Mapper
                 ? _mappings[sourceType][targetType]
                 : new MappingInfo();
 
-            mappingInfo.ManualMapper = (s, t) => convert((TSource) s, (TTarget) t);
-            mappingInfo.InstanceMapper = (s, t) => convert((TSource) s, (TTarget) t);
+            mappingInfo.ManualMapper = (s, t) => convert((TSource)s, (TTarget)t);
+            mappingInfo.InstanceMapper = (s, t) => convert((TSource)s, (TTarget)t);
             _mappings[sourceType][targetType] = mappingInfo;
         }
 
@@ -57,7 +57,7 @@ namespace Coddee.Windows.Mapper
         /// </summary>
         /// <typeparam name="TSource">Source type</typeparam>
         /// <typeparam name="TTarget">Target type</typeparam>
-        public void RegisterMap<TSource, TTarget>() where TTarget : new()
+        public void RegisterMap<TSource, TTarget>()
         {
             var sourceType = typeof(TSource);
             var targetType = typeof(TTarget);
@@ -78,8 +78,17 @@ namespace Coddee.Windows.Mapper
                     availableProperties[targetPoperty] = sourceProperty;
             }
 
-            var singleItemDelegate = GenerateSingleItemDelegate<TSource, TTarget>(availableProperties);
-            var collectionDelegate = GenerateCollectionDelegate<TSource, TTarget>(availableProperties);
+            var targetConstrucotr = targetType.GetConstructor(Type.EmptyTypes);
+
+            Func<TSource, TTarget> singleItemDelegate=null;
+            Func<IList<TSource>, TTarget[]> collectionDelegate = null;
+
+            if (targetConstrucotr != null)
+            {
+                singleItemDelegate = GenerateSingleItemDelegate<TSource, TTarget>(availableProperties);
+                collectionDelegate = GenerateCollectionDelegate<TSource, TTarget>(availableProperties);
+            }
+
             var instanfceDelegate = GenerateInstanceDelegate<TSource, TTarget>(availableProperties);
 
             if (!_mappings.ContainsKey(sourceType))
@@ -89,9 +98,12 @@ namespace Coddee.Windows.Mapper
                 ? _mappings[sourceType][targetType]
                 : new MappingInfo();
 
-            mappingInfo.SingleMapper = s => singleItemDelegate((TSource) s);
-            mappingInfo.CollectionMapper = s => collectionDelegate((IList<TSource>) s);
-            mappingInfo.InstanceMapper = (s, t) => instanfceDelegate((TSource) s, (TTarget) t);
+            if (targetConstrucotr != null)
+            {
+                mappingInfo.SingleMapper = s => singleItemDelegate((TSource) s);
+                mappingInfo.CollectionMapper = s => collectionDelegate((IList<TSource>) s);
+            }
+            mappingInfo.InstanceMapper = (s, t) => instanfceDelegate((TSource)s, (TTarget)t);
             _mappings[sourceType][targetType] = mappingInfo;
         }
 
@@ -100,7 +112,7 @@ namespace Coddee.Windows.Mapper
         /// </summary>
         /// <typeparam name="TType1">Type1</typeparam>
         /// <typeparam name="TType2">Type2</typeparam>
-        public void RegisterTwoWayMap<TType1, TType2>() where TType1 : new() where TType2 : new()
+        public void RegisterTwoWayMap<TType1, TType2>()
         {
             RegisterMap<TType1, TType2>();
             RegisterMap<TType2, TType1>();
@@ -118,7 +130,7 @@ namespace Coddee.Windows.Mapper
             var targetType = typeof(TTarget);
             if (!_mappings.ContainsKey(sourceType) || !_mappings[sourceType].ContainsKey(targetType))
                 throw new
-                    InvalidOperationException($"The mapping from {sourceType.Name} to {targetType.Name} was not defined ");
+                    InvalidOperationException($"The mapping from {sourceType.Name} to {targetType.Name} was not defined or the target type doesn't have a parameterless constructor");
 
             var mappings = _mappings[sourceType][targetType];
             if (mappings.ManualMapper != null)
@@ -129,10 +141,10 @@ namespace Coddee.Windows.Mapper
             }
             if (mappings.SingleMapper != null)
             {
-                return (TTarget) mappings.SingleMapper(source);
+                return (TTarget)mappings.SingleMapper(source);
             }
             throw new
-                InvalidOperationException($"The mapping from {sourceType.Name} to {targetType.Name} was not defined ");
+                InvalidOperationException($"The mapping from {sourceType.Name} to {targetType.Name} was not defined or the target type doesn't have a parameterless constructor");
         }
 
         /// <summary>
@@ -149,7 +161,7 @@ namespace Coddee.Windows.Mapper
                 var targetType = typeof(TTarget);
                 if (!_mappings.ContainsKey(sourceType) || !_mappings[sourceType].ContainsKey(targetType))
                     throw new
-                        InvalidOperationException($"The mapping from {sourceType.Name} to {targetType.Name} was not defined ");
+                        InvalidOperationException($"The mapping from {sourceType.Name} to {targetType.Name} was not defined or the target type doesn't have a parameterless constructor");
 
                 var mappings = _mappings[sourceType][targetType];
                 if (mappings.ManualMapper != null)
@@ -165,10 +177,10 @@ namespace Coddee.Windows.Mapper
                 }
                 if (mappings.CollectionMapper != null)
                 {
-                    return (TTarget[]) mappings.CollectionMapper(source);
+                    return (TTarget[])mappings.CollectionMapper(source);
                 }
                 throw new
-                    InvalidOperationException($"The mapping from {sourceType.Name} to {targetType.Name} was not defined ");
+                    InvalidOperationException($"The mapping from {sourceType.Name} to {targetType.Name} was not defined or the target type doesn't have a parameterless constructor");
             }
             return new List<TTarget>();
         }
@@ -206,15 +218,10 @@ namespace Coddee.Windows.Mapper
         {
             var sourceType = typeof(TSource);
             var targetType = typeof(TTarget);
-            var targetConstrucotr = targetType.GetConstructor(Type.EmptyTypes);
-
-            if (targetConstrucotr == null)
-                throw new ArgumentException("Target type must have a parameterless constructor");
-
-
+        
             var dm = new DynamicMethod($"_MAP_{sourceType.Name}_{targetType.Name}",
                                        typeof(void),
-                                       new[] {sourceType, targetType},
+                                       new[] { sourceType, targetType },
                                        typeof(ILObjectsMapper).Module);
             var il = dm.GetILGenerator();
 
@@ -237,7 +244,7 @@ namespace Coddee.Windows.Mapper
 
             il.Emit(OpCodes.Ret);
 
-            return (Action<TSource, TTarget>) dm.CreateDelegate(typeof(Action<TSource, TTarget>));
+            return (Action<TSource, TTarget>)dm.CreateDelegate(typeof(Action<TSource, TTarget>));
         }
 
         /// <summary>
@@ -256,7 +263,7 @@ namespace Coddee.Windows.Mapper
 
             var dm = new DynamicMethod($"_MAP_{sourceType.Name}_{targetType.Name}",
                                        targetType,
-                                       new[] {sourceType},
+                                       new[] { sourceType },
                                        typeof(ILObjectsMapper).Module);
             var il = dm.GetILGenerator();
 
@@ -279,7 +286,7 @@ namespace Coddee.Windows.Mapper
             il.Emit(OpCodes.Ldloc_1);
             il.Emit(OpCodes.Ret);
 
-            return (Func<TSource, TTarget>) dm.CreateDelegate(typeof(Func<TSource, TTarget>));
+            return (Func<TSource, TTarget>)dm.CreateDelegate(typeof(Func<TSource, TTarget>));
         }
 
         /// <summary>
@@ -297,13 +304,13 @@ namespace Coddee.Windows.Mapper
                 throw new ArgumentException("Target type must have a parameterless constructor");
 
 
-            var targetCollectionConstrucotr = targetCollectionType.GetConstructor(new[] {typeof(int)});
+            var targetCollectionConstrucotr = targetCollectionType.GetConstructor(new[] { typeof(int) });
             if (targetCollectionConstrucotr == null)
                 throw new ArgumentException();
 
             var dm = new DynamicMethod($"_MAP_LIST_{sourceType.Name}_{targetType.Name}",
                                        typeof(TTarget[]),
-                                       new[] {typeof(IList<TSource>)},
+                                       new[] { typeof(IList<TSource>) },
                                        typeof(ILObjectsMapper).Module);
             var il = dm.GetILGenerator();
 
@@ -387,7 +394,7 @@ namespace Coddee.Windows.Mapper
             il.Emit(OpCodes.Ldloc, result);
             il.Emit(OpCodes.Ret);
 
-            return (Func<IList<TSource>, TTarget[]>) dm.CreateDelegate(typeof(Func<IList<TSource>, TTarget[]>));
+            return (Func<IList<TSource>, TTarget[]>)dm.CreateDelegate(typeof(Func<IList<TSource>, TTarget[]>));
         }
     }
 

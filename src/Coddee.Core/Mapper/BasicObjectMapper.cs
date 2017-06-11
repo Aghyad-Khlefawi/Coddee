@@ -30,7 +30,7 @@ namespace Coddee
         /// </summary>
         /// <typeparam name="TSource">Source type</typeparam>
         /// <typeparam name="TTarget">Target type</typeparam>
-        public void RegisterMap<TSource, TTarget>(Action<TSource, TTarget> convert) where TTarget : new()
+        public void RegisterMap<TSource, TTarget>(Action<TSource, TTarget> convert) 
         {
             var targetType = typeof(TTarget);
             var sourceType = typeof(TSource);
@@ -55,7 +55,7 @@ namespace Coddee
         /// </summary>
         /// <typeparam name="TSource">Source type</typeparam>
         /// <typeparam name="TTarget">Target type</typeparam>
-        public void RegisterMap<TSource, TTarget>() where TTarget : new()
+        public void RegisterMap<TSource, TTarget>() 
         {
             var targetType = typeof(TTarget);
             var sourceType = typeof(TSource);
@@ -99,7 +99,7 @@ namespace Coddee
         /// </summary>
         /// <typeparam name="TType1">Type1</typeparam>
         /// <typeparam name="TType2">Type2</typeparam>
-        public void RegisterTwoWayMap<TType1, TType2>() where TType1 : new() where TType2 : new()
+        public void RegisterTwoWayMap<TType1, TType2>() 
         {
             RegisterMap<TType1, TType2>();
             RegisterMap<TType2, TType1>();
@@ -141,10 +141,10 @@ namespace Coddee
         /// <param name="target">Target object</param>
         public void MapInstance<TSource, TTarget>(TSource source, TTarget target)
         {
-            var targetType = typeof(TTarget);
-            var sourceType = typeof(TSource);
+            var targetType = target.GetType();
+            var sourceType = source.GetType();
 
-            if (!_mappings.ContainsKey(targetType) || !_mappings[sourceType].ContainsKey(targetType))
+            if (!_mappings.ContainsKey(sourceType) || !_mappings[sourceType].ContainsKey(targetType))
                 throw new InvalidOperationException(
                     $"No mapping is defined between {sourceType.Name} and {targetType.Name}");
 

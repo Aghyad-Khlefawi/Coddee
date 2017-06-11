@@ -273,10 +273,11 @@ namespace Coddee.Data.LinqToSQL
         where TModel : IUniqueObject<TKey>, new()
     {
         private readonly string _identifier;
+        public event EventHandler<RepositoryChangeEventArgs<TModel>> ItemsChanged;
 
         public LinqRepositoryBase()
         {
-            _identifier = GetType().Name;
+            _identifier = typeof(TModel).Name;
         }
 
         public override void SyncServiceSyncReceived(string identifier, RepositorySyncEventArgs args)
@@ -293,7 +294,15 @@ namespace Coddee.Data.LinqToSQL
                                  new RepositoryChangeEventArgs<TModel>(args.OperationType, args.Item));
         }
 
-        public event EventHandler<RepositoryChangeEventArgs<TModel>> ItemsChanged;
+        public override void SetSyncService(IRepositorySyncService syncService)
+        {
+            base.SetSyncService(syncService);
+            ItemsChanged += OnItemsChanged;
+        }
+        private void OnItemsChanged(object sender, RepositoryChangeEventArgs<TModel> e)
+        {
+            _syncService?.SyncItem(_identifier, new RepositorySyncEventArgs { Item = e.Item, OperationType = e.OperationType });
+        }
     }
 
     /// <summary>
@@ -310,6 +319,7 @@ namespace Coddee.Data.LinqToSQL
         where TTable : class, new()
         where TModel : IUniqueObject<TKey>, new()
     {
+        
         /// <summary>
         /// Register mapping for the table and the model type
         /// </summary>
@@ -397,6 +407,8 @@ namespace Coddee.Data.LinqToSQL
         ReadOnlyLinqRepositoryBase<TDataContext, TTable, TModel, TKey>, ICRUDRepository<TModel, TKey>
         where TDataContext : DataContext where TTable : class, new() where TModel : IUniqueObject<TKey>, new()
     {
+        
+
         /// <summary>
         /// Updates and items in the repository
         /// </summary>

@@ -15,8 +15,7 @@ namespace HR.Clients.WPF.Companies.Editors
 {
     public class CompanyEditorViewModel : EditorViewModel<CompanyEditorViewModel,CompanyEditorView, ICompanyRepository,Company, Guid>
     {
-       
-        private AsyncObservableCollection<State> _states;
+       private AsyncObservableCollection<State> _states;
         public AsyncObservableCollection<State> States
         {
             get { return _states; }
@@ -28,6 +27,8 @@ namespace HR.Clients.WPF.Companies.Editors
             get { return _name; }
             set { SetProperty(ref this._name, value); }
         }
+       
+
         public override void PreSave()
         {
             EditedItem.StateID = States.SelectedItem.ID;
@@ -45,6 +46,10 @@ namespace HR.Clients.WPF.Companies.Editors
         {
             await base.OnInitialization();
             States = AsyncObservableCollection<State>.Create(await Resolve<IStateRepository>().GetItems());
+        }
+
+        public CompanyEditorViewModel(IObjectMapper mapper, ICompanyRepository repository) : base(mapper, repository)
+        {
         }
     }
 }

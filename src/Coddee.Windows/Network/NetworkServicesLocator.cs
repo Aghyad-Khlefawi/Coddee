@@ -77,7 +77,15 @@ namespace Coddee.Network
             {
                 var res = await _client.ReceiveAsync();
                 var resStr = Encoding.UTF8.GetString(res.Buffer);
+                
                 result.AddRange(JsonConvert.DeserializeObject<NetworkService[]>(resStr));
+                foreach (var item in result)
+                {
+                    if (item.AccessInfo == null)
+                        item.AccessInfo = new NetowkrServiceAccessInfo();
+
+                    item.AccessInfo.IP = res.RemoteEndPoint.Address.ToString();
+                }
                 OnServicesDescovered?.Invoke(this, result);
             }
             _completed = true;

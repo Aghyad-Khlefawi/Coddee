@@ -669,11 +669,7 @@ namespace Coddee.WPF
                                        {
                                            var homeNav = new NavigationItem(builder.WPFBuilder.GetDefaultPresentable(),
                                                                             "Home",
-                                                                            "M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z")
-                                           {
-                                               IsSelected = true,
-                                               IsFirstItem = true
-                                           };
+                                                                            "M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z");
 
                                            navs.Add(homeNav);
                                            navs.AddRange(navigationItems);

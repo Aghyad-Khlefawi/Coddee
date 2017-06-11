@@ -5,7 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Coddee;
 using Coddee.Collections;
+using Coddee.Windows.Mapper;
 using Coddee.WPF;
 using Coddee.WPF.Modules;
 using Coddee.WPF.Modules.Console;
@@ -21,7 +23,6 @@ namespace HR.Clients.WPF.Main
         {
             if (IsDesignMode())
             {
-                
             }
         }
 
@@ -51,7 +52,7 @@ namespace HR.Clients.WPF.Main
             {
                 StatesViewModel = await InitializeViewModel<StatesViewModel>();
                 CompaniesViewModel = await InitializeViewModel<CompaniesViewModel>();
-                
+
                 var console = Resolve<IApplicationConsole>();
                 var treeCommand = new ConsoleCommand
                 {

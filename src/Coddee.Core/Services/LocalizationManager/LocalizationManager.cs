@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using Coddee.Loggers;
@@ -12,10 +13,11 @@ namespace Coddee
     {
         public object Item { get; set; }
         public PropertyInfo PropertyInfo { get; set; }
+        public Dictionary<string, string> Values { get; set; }
 
         public void SetValue(object value)
         {
-            PropertyInfo.SetValue(Item,value);
+            PropertyInfo.SetValue(Item, value);
         }
     }
 
@@ -37,6 +39,7 @@ namespace Coddee
         {
             _localziationValues = new Dictionary<string, Dictionary<string, string>>();
             _boundObjects = new ConcurrentDictionary<string, List<BoundLocalizationObject>>();
+            _customBoundObjects = new ConcurrentBag<BoundLocalizationObject>();
         }
 
         private ILogger _logger;
@@ -49,6 +52,7 @@ namespace Coddee
 
         private readonly Dictionary<string, Dictionary<string, string>> _localziationValues;
         private readonly ConcurrentDictionary<string, List<BoundLocalizationObject>> _boundObjects;
+        private readonly ConcurrentBag<BoundLocalizationObject> _customBoundObjects;
 
 
         public void SetCulture(string newCulture)
@@ -68,12 +72,33 @@ namespace Coddee
                     boundLocalizationObject.SetValue(newValue);
                 }
             }
+            foreach (var boundObject in _customBoundObjects)
+            {
+                if (boundObject.Values != null)
+                {
+                    boundObject.SetValue(GetLocalValue(boundObject, DefaultCulture));
+                }
+            }
+        }
+
+        private string GetLocalValue(BoundLocalizationObject boundObject,string culture)
+        {
+            if (boundObject.Values != null)
+            {
+                return boundObject.Values.ContainsKey(culture)
+                    ? boundObject.Values[culture]
+                    : boundObject.Values.Values.FirstOrDefault();
+            }
+            _logger?.Log(nameof(LocalizationManager),
+                         $"Local localization values not found for '{boundObject.Item}'",
+                         LogRecordTypes.Debug);
+            return null;
         }
 
         public string BindValue<T>(T item, Expression<Func<T, object>> property, string key, string culture = null)
         {
             var currentValue = GetValue(key, culture);
-            var propertyName = ((MemberExpression)property.Body).Member.Name;
+            var propertyName = ((MemberExpression) property.Body).Member.Name;
             var boundValue = new BoundLocalizationObject
             {
                 Item = item,
@@ -85,6 +110,24 @@ namespace Coddee
             List<BoundLocalizationObject> objects;
             if (_boundObjects.TryGetValue(key, out objects))
                 objects.Add(boundValue);
+            boundValue.SetValue(currentValue);
+            return currentValue;
+        }
+
+        public string BindCustomValue<T>(T item,
+                                         string property,
+                                         Dictionary<string, string> values,
+                                         string culture = null)
+        {
+            culture = culture ?? DefaultCulture;
+            var boundValue = new BoundLocalizationObject
+            {
+                Item = item,
+                PropertyInfo = item.GetType().GetTypeInfo().GetProperty(property),
+                Values = values
+            };
+            var currentValue = GetLocalValue(boundValue, culture);
+            _customBoundObjects.Add(boundValue);
             boundValue.SetValue(currentValue);
             return currentValue;
         }
