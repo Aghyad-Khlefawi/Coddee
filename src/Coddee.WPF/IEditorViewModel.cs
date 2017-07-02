@@ -20,8 +20,7 @@ namespace Coddee.WPF
         IEnumerable<string> Validate();
     }
 
-    public interface IEditorViewModel<TView,TModel> : IEditorViewModel,IPresentable<TView> where TModel : new() 
-        where TView : UIElement
+    public interface IEditorViewModel<TModel> : IEditorViewModel where TModel : new()
     {
         TModel EditedItem { get; set; }
 
@@ -29,5 +28,11 @@ namespace Coddee.WPF
         event EventHandler<EditorSaveArgs<TModel>> Saved;
 
         void Edit(TModel item);
+    }
+
+    public interface IEditorViewModel<TView,TModel> : IEditorViewModel<TModel>,IPresentable<TView> where TModel : new() 
+        where TView : UIElement
+    {
+
     }
 }

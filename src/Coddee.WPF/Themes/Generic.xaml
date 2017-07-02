@@ -20,9 +20,10 @@
                     <Border Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}">
-                        <ContentPresenter Content="{Binding RelativeSource={RelativeSource TemplatedParent},Path=Region.Content}"
-                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" />
+                        <ContentPresenter
+                            Content="{Binding RelativeSource={RelativeSource TemplatedParent},Path=Region.Content}"
+                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" />
                     </Border>
                 </ControlTemplate>
             </Setter.Value>
@@ -45,10 +46,12 @@
                                     <Style.Triggers>
                                         <MultiDataTrigger>
                                             <MultiDataTrigger.Conditions>
-                                                <Condition Binding="{Binding RelativeSource={RelativeSource TemplatedParent},Path=IsBusy}"
-                                                           Value="true" />
-                                                <Condition Binding="{Binding RelativeSource={RelativeSource TemplatedParent},Path=HideContentOnBusy}"
-                                                           Value="true" />
+                                                <Condition
+                                                    Binding="{Binding RelativeSource={RelativeSource TemplatedParent},Path=IsBusy}"
+                                                    Value="true" />
+                                                <Condition
+                                                    Binding="{Binding RelativeSource={RelativeSource TemplatedParent},Path=HideContentOnBusy}"
+                                                    Value="true" />
                                             </MultiDataTrigger.Conditions>
                                             <MultiDataTrigger.Setters>
                                                 <Setter Property="Visibility"
@@ -91,9 +94,10 @@
                                                         <DataTrigger.EnterActions>
                                                             <BeginStoryboard>
                                                                 <Storyboard>
-                                                                    <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)"
-                                                                                                   RepeatBehavior="Forever"
-                                                                                                   SpeedRatio="4">
+                                                                    <DoubleAnimationUsingKeyFrames
+                                                                        Storyboard.TargetProperty="(UIElement.Opacity)"
+                                                                        RepeatBehavior="Forever"
+                                                                        SpeedRatio="4">
                                                                         <EasingDoubleKeyFrame KeyTime="0"
                                                                                               Value="0.6" />
                                                                         <EasingDoubleKeyFrame KeyTime="0:0:0.2"
@@ -147,9 +151,10 @@
                                                         <DataTrigger.EnterActions>
                                                             <BeginStoryboard>
                                                                 <Storyboard>
-                                                                    <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)"
-                                                                                                   RepeatBehavior="Forever"
-                                                                                                   SpeedRatio="4">
+                                                                    <DoubleAnimationUsingKeyFrames
+                                                                        Storyboard.TargetProperty="(UIElement.Opacity)"
+                                                                        RepeatBehavior="Forever"
+                                                                        SpeedRatio="4">
                                                                         <EasingDoubleKeyFrame KeyTime="0"
                                                                                               Value="0.4" />
                                                                         <EasingDoubleKeyFrame KeyTime="0:0:0.2"
@@ -203,9 +208,10 @@
                                                         <DataTrigger.EnterActions>
                                                             <BeginStoryboard>
                                                                 <Storyboard>
-                                                                    <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)"
-                                                                                                   RepeatBehavior="Forever"
-                                                                                                   SpeedRatio="4">
+                                                                    <DoubleAnimationUsingKeyFrames
+                                                                        Storyboard.TargetProperty="(UIElement.Opacity)"
+                                                                        RepeatBehavior="Forever"
+                                                                        SpeedRatio="4">
                                                                         <EasingDoubleKeyFrame KeyTime="0"
                                                                                               Value="0.5" />
                                                                         <EasingDoubleKeyFrame KeyTime="0:0:0.2"
@@ -259,9 +265,10 @@
                                                         <DataTrigger.EnterActions>
                                                             <BeginStoryboard>
                                                                 <Storyboard>
-                                                                    <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)"
-                                                                                                   RepeatBehavior="Forever"
-                                                                                                   SpeedRatio="4">
+                                                                    <DoubleAnimationUsingKeyFrames
+                                                                        Storyboard.TargetProperty="(UIElement.Opacity)"
+                                                                        RepeatBehavior="Forever"
+                                                                        SpeedRatio="4">
                                                                         <EasingDoubleKeyFrame KeyTime="0"
                                                                                               Value="0.6" />
                                                                         <EasingDoubleKeyFrame KeyTime="0:0:0.2"
@@ -315,9 +322,10 @@
                                                         <DataTrigger.EnterActions>
                                                             <BeginStoryboard>
                                                                 <Storyboard>
-                                                                    <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)"
-                                                                                                   RepeatBehavior="Forever"
-                                                                                                   SpeedRatio="4">
+                                                                    <DoubleAnimationUsingKeyFrames
+                                                                        Storyboard.TargetProperty="(UIElement.Opacity)"
+                                                                        RepeatBehavior="Forever"
+                                                                        SpeedRatio="4">
                                                                         <EasingDoubleKeyFrame KeyTime="0"
                                                                                               Value="0.7" />
                                                                         <EasingDoubleKeyFrame KeyTime="0:0:0.2"
@@ -371,9 +379,10 @@
                                                         <DataTrigger.EnterActions>
                                                             <BeginStoryboard>
                                                                 <Storyboard>
-                                                                    <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)"
-                                                                                                   RepeatBehavior="Forever"
-                                                                                                   SpeedRatio="4">
+                                                                    <DoubleAnimationUsingKeyFrames
+                                                                        Storyboard.TargetProperty="(UIElement.Opacity)"
+                                                                        RepeatBehavior="Forever"
+                                                                        SpeedRatio="4">
                                                                         <EasingDoubleKeyFrame KeyTime="0"
                                                                                               Value="0.8" />
                                                                         <EasingDoubleKeyFrame KeyTime="0:0:0.2"
@@ -426,9 +435,10 @@
                                                         <DataTrigger.EnterActions>
                                                             <BeginStoryboard>
                                                                 <Storyboard>
-                                                                    <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)"
-                                                                                                   RepeatBehavior="Forever"
-                                                                                                   SpeedRatio="4">
+                                                                    <DoubleAnimationUsingKeyFrames
+                                                                        Storyboard.TargetProperty="(UIElement.Opacity)"
+                                                                        RepeatBehavior="Forever"
+                                                                        SpeedRatio="4">
                                                                         <EasingDoubleKeyFrame KeyTime="0"
                                                                                               Value="0.9" />
                                                                         <EasingDoubleKeyFrame KeyTime="0:0:0.2"
@@ -480,9 +490,10 @@
                                                         <DataTrigger.EnterActions>
                                                             <BeginStoryboard>
                                                                 <Storyboard>
-                                                                    <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)"
-                                                                                                   RepeatBehavior="Forever"
-                                                                                                   SpeedRatio="4">
+                                                                    <DoubleAnimationUsingKeyFrames
+                                                                        Storyboard.TargetProperty="(UIElement.Opacity)"
+                                                                        RepeatBehavior="Forever"
+                                                                        SpeedRatio="4">
                                                                         <EasingDoubleKeyFrame KeyTime="0"
                                                                                               Value="1" />
                                                                         <EasingDoubleKeyFrame KeyTime="0:0:0.2"
@@ -536,19 +547,22 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:FormField}">
-                    <StackPanel Orientation="Horizontal">
-                        <Label x:Name="PART_TITLE"
-                               Content="{TemplateBinding Title}"
-                               Width="{TemplateBinding TitleWidth}" />
-                        <local:BusyIndicator IsBusy="{TemplateBinding IsBusy}"
-                                             IsTabStop="False"
-                                             Text=""
-                                             HideText="true"
-                                             HideContentOnBusy="True"
-                                             Background="Transparent">
-                            <ContentPresenter Content="{TemplateBinding Content}" />
-                        </local:BusyIndicator>
-                    </StackPanel>
+                    <Border BorderThickness="{TemplateBinding BorderThickness}"
+                            BorderBrush="{TemplateBinding BorderBrush}">
+                        <StackPanel Orientation="Horizontal">
+                            <Label x:Name="PART_TITLE"
+                                   Content="{TemplateBinding Title}"
+                                   Width="{TemplateBinding TitleWidth}" />
+                            <local:BusyIndicator IsBusy="{TemplateBinding IsBusy}"
+                                                 IsTabStop="False"
+                                                 Text=""
+                                                 HideText="true"
+                                                 HideContentOnBusy="True"
+                                                 Background="Transparent">
+                                <ContentPresenter Content="{TemplateBinding Content}" />
+                            </local:BusyIndicator>
+                        </StackPanel>
+                    </Border>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
@@ -559,6 +573,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:Form}">
                     <ItemsControl Background="Transparent"
+                                  IsTabStop="False"
                                   ItemsSource="{TemplateBinding Fields}"
                                   KeyboardNavigation.TabNavigation="Continue"
                                   BorderThickness="0" />
@@ -659,8 +674,9 @@
                                             <Setter Property="Background"
                                                     Value="{Binding RelativeSource={RelativeSource AncestorType=local:TabsPanel,Mode=FindAncestor},Path=ItemBackground}" />
                                             <Style.Triggers>
-                                                <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=local:TabsPanelItem,Mode=FindAncestor},Path=IsSelected}"
-                                                             Value="true">
+                                                <DataTrigger
+                                                    Binding="{Binding RelativeSource={RelativeSource AncestorType=local:TabsPanelItem,Mode=FindAncestor},Path=IsSelected}"
+                                                    Value="true">
                                                     <DataTrigger.Setters>
                                                         <Setter Property="Background"
                                                                 Value="{Binding RelativeSource={RelativeSource AncestorType=local:TabsPanel,Mode=FindAncestor},Path=HeaderForeground}" />
@@ -681,14 +697,17 @@
 
                                                     <MultiDataTrigger>
                                                         <MultiDataTrigger.Conditions>
-                                                            <Condition Binding="{Binding RelativeSource={RelativeSource AncestorType=Grid,Mode=FindAncestor},Path=IsMouseOver}"
-                                                                       Value="True" />
-                                                            <Condition Binding="{Binding RelativeSource={RelativeSource AncestorType=local:TabsPanelItem,Mode=FindAncestor},Path=IsSelected}"
-                                                                       Value="False" />
+                                                            <Condition
+                                                                Binding="{Binding RelativeSource={RelativeSource AncestorType=Grid,Mode=FindAncestor},Path=IsMouseOver}"
+                                                                Value="True" />
+                                                            <Condition
+                                                                Binding="{Binding RelativeSource={RelativeSource AncestorType=local:TabsPanelItem,Mode=FindAncestor},Path=IsSelected}"
+                                                                Value="False" />
                                                         </MultiDataTrigger.Conditions>
                                                         <MultiDataTrigger.EnterActions>
                                                             <BeginStoryboard>
-                                                                <Storyboard TargetProperty="(Button.Background).(SolidColorBrush.Color)">
+                                                                <Storyboard
+                                                                    TargetProperty="(Button.Background).(SolidColorBrush.Color)">
                                                                     <ColorAnimation From="Transparent"
                                                                                     To="#989898"
                                                                                     Duration="0:0:0.2" />
@@ -697,7 +716,8 @@
                                                         </MultiDataTrigger.EnterActions>
                                                         <MultiDataTrigger.ExitActions>
                                                             <BeginStoryboard>
-                                                                <Storyboard TargetProperty="(Button.Background).(SolidColorBrush.Color)">
+                                                                <Storyboard
+                                                                    TargetProperty="(Button.Background).(SolidColorBrush.Color)">
                                                                     <ColorAnimation From="#989898"
                                                                                     To="Transparent"
                                                                                     Duration="0:0:0.2" />
@@ -710,17 +730,20 @@
                                             </Style>
                                         </Border.Style>
                                     </Border>
-                                    <DockPanel Margin="{Binding RelativeSource={RelativeSource AncestorType=local:TabsPanel,Mode=FindAncestor},Path=ItemsMargin}"
-                                               VerticalAlignment="Center"
-                                               HorizontalAlignment="Center">
-                                        <TextBlock Text="{Binding RelativeSource={RelativeSource AncestorType=local:TabsPanelItem,Mode=FindAncestor},Path=Header}">
+                                    <DockPanel
+                                        Margin="{Binding RelativeSource={RelativeSource AncestorType=local:TabsPanel,Mode=FindAncestor},Path=ItemsMargin}"
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Center">
+                                        <TextBlock
+                                            Text="{Binding RelativeSource={RelativeSource AncestorType=local:TabsPanelItem,Mode=FindAncestor},Path=Header}">
                                             <TextBlock.Style>
                                                 <Style TargetType="TextBlock">
                                                     <Setter Property="Foreground"
                                                             Value="{Binding RelativeSource={RelativeSource AncestorType=local:TabsPanel,Mode=FindAncestor},Path=HeaderForeground}" />
                                                     <Style.Triggers>
-                                                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=local:TabsPanelItem,Mode=FindAncestor},Path=IsSelected}"
-                                                                     Value="true">
+                                                        <DataTrigger
+                                                            Binding="{Binding RelativeSource={RelativeSource AncestorType=local:TabsPanelItem,Mode=FindAncestor},Path=IsSelected}"
+                                                            Value="true">
                                                             <DataTrigger.Setters>
                                                                 <Setter Property="Foreground"
                                                                         Value="{Binding RelativeSource={RelativeSource AncestorType=local:TabsPanel,Mode=FindAncestor},Path=ItemBackground}" />
@@ -757,10 +780,11 @@
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}">
                         <DockPanel>
-                            <ItemsControl Height="{Binding RelativeSource={RelativeSource TemplatedParent},Path=TabsBarHeight}"
-                                          DockPanel.Dock="Top"
-                                          ItemsSource="{Binding RelativeSource={RelativeSource TemplatedParent},Path=Items}"
-                                          ScrollViewer.VerticalScrollBarVisibility="Hidden">
+                            <ItemsControl
+                                Height="{Binding RelativeSource={RelativeSource TemplatedParent},Path=TabsBarHeight}"
+                                DockPanel.Dock="Top"
+                                ItemsSource="{Binding RelativeSource={RelativeSource TemplatedParent},Path=Items}"
+                                ScrollViewer.VerticalScrollBarVisibility="Hidden">
                                 <ItemsControl.ItemsPanel>
                                     <ItemsPanelTemplate>
                                         <StackPanel Orientation="Horizontal" />
@@ -772,9 +796,10 @@
                                         Margin="0 -1 0 5"
                                         Background="LightGray" />
                             <Border />
-                            <ContentPresenter MaxHeight="{Binding RelativeSource={RelativeSource TemplatedParent},Path=MaxContentHeight}"
-                                              Margin="{Binding RelativeSource={RelativeSource AncestorType=local:TabsPanel,Mode=FindAncestor},Path=Padding}"
-                                              Content="{Binding RelativeSource={RelativeSource AncestorType=local:TabsPanel,Mode=FindAncestor},Path=CurrentTab.Content}" />
+                            <ContentPresenter
+                                MaxHeight="{Binding RelativeSource={RelativeSource TemplatedParent},Path=MaxContentHeight}"
+                                Margin="{Binding RelativeSource={RelativeSource AncestorType=local:TabsPanel,Mode=FindAncestor},Path=Padding}"
+                                Content="{Binding RelativeSource={RelativeSource AncestorType=local:TabsPanel,Mode=FindAncestor},Path=CurrentTab.Content}" />
                         </DockPanel>
                     </Border>
                 </ControlTemplate>

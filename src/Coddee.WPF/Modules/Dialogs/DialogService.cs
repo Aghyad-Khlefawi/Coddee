@@ -53,9 +53,10 @@ namespace Coddee.WPF.Modules.Dialogs
             return ShowDialog(dialog);
         }
 
-        public IDialog ShowEditorDialog(UIElement content, Func<Task<bool>> OnSave, Action OnCancel = null)
+        public IDialog ShowEditorDialog(UIElement content, Func<Task<bool>> OnSave, Action OnCancel = null, HorizontalAlignment horizontalAlignment = HorizontalAlignment.Center)
         {
-            var dialog = CreateDialog<EditorDialogViewModel>();
+            var dialog = CreateDialog<EditorDialogViewModel>(horizontalAlignment);
+            dialog.View.Presenter.HorizontalAlignment = horizontalAlignment;
             dialog.Content = content;
             dialog.OnSave += async () =>
             {
@@ -70,9 +71,9 @@ namespace Coddee.WPF.Modules.Dialogs
             return ShowDialog(dialog);
         }
 
-        public IDialog ShowEditorDialog(IEditorViewModel editor)
+        public IDialog ShowEditorDialog(IEditorViewModel editor, HorizontalAlignment horizontalAlignment = HorizontalAlignment.Center)
         {
-            return ShowEditorDialog(editor.GetView(), editor.Save, editor.Cancel);
+            return ShowEditorDialog(editor.GetView(), editor.Save, editor.Cancel, horizontalAlignment);
         }
 
 
@@ -85,12 +86,13 @@ namespace Coddee.WPF.Modules.Dialogs
         }
 
 
-        public TType CreateDialog<TType>() where TType : IDialog
+        public TType CreateDialog<TType>(HorizontalAlignment horizontalAlignment = HorizontalAlignment.Center) where TType : IDialog
         {
             var container = new DialogContainer
             {
                 DialogBorder = {Background = _dialogBorderBrush}
             };
+            container.Presenter.HorizontalAlignment = horizontalAlignment;
             return CreateDialog<TType>(container,container.Presenter);
         }
         public TType CreateDialog<TType>(UserControl container,ContentPresenter presenter) where TType : IDialog

@@ -7,7 +7,7 @@ using Coddee.Data;
 using Coddee.Loggers;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Coddee.AspTest.Controllers
+namespace Coddee.AspNet.Controllers
 {
     public class ApiControllerBase : Controller
     {
@@ -21,6 +21,12 @@ namespace Coddee.AspTest.Controllers
 
         protected readonly ILogger _logger;
         protected readonly IRepositoryManager _repositoryManager;
+
+        public IActionResult Error(Exception ex)
+        {
+            _logger?.Log(EventsSource, ex);
+            return BadRequest("An error occurred.");
+        }
     }
 
     public class ApiControllerBase<TRepository> : ApiControllerBase where TRepository : IRepository
@@ -30,12 +36,6 @@ namespace Coddee.AspTest.Controllers
         public ApiControllerBase(IRepositoryManager repoManager, ILogger logger) : base(repoManager, logger)
         {
             _repository = _repositoryManager.GetRepository<TRepository>();
-        }
-
-        public IActionResult Error(Exception ex)
-        {
-            _logger?.Log(EventsSource, ex);
-            return BadRequest("An error occurred.");
         }
     }
 

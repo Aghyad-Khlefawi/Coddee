@@ -15,11 +15,11 @@ namespace Coddee.WPF.Modules.Dialogs
 
         IDialog ShowMessage(string message);
         IDialog ShowConfirmation(string message,Action OnYes,Action OnNo = null);
-        IDialog ShowEditorDialog(UIElement content, Func<Task<bool>> OnSave, Action OnCancel = null);
-        IDialog ShowEditorDialog(IEditorViewModel editor);
+        IDialog ShowEditorDialog(UIElement content, Func<Task<bool>> OnSave, Action OnCancel = null, HorizontalAlignment horizontalAlignment = HorizontalAlignment.Center);
+        IDialog ShowEditorDialog(IEditorViewModel editor, HorizontalAlignment horizontalAlignment = HorizontalAlignment.Center);
 
         IDialog ShowDialog(IDialog dialog);
-        TType CreateDialog<TType>() where TType : IDialog;
+        TType CreateDialog<TType>(HorizontalAlignment horizontalAlignment = HorizontalAlignment.Center) where TType : IDialog;
         TType CreateDialog<TType>(UserControl container, ContentPresenter presenter) where TType : IDialog;
 
         void CloseDialog(IDialog dialog);

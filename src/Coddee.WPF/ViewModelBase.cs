@@ -333,11 +333,9 @@ namespace Coddee.WPF
                         errors.Add(error);
                 }
             }
-            if (errors.Any())
-                return errors;
-            return null;
+            return errors;
         }
-
+       
         public string Error => null;
     }
 
@@ -390,13 +388,14 @@ namespace Coddee.WPF
                 // set the DataContext to this ViewModel
                 var frameworkElement = _view as FrameworkElement;
                 if (frameworkElement != null)
-                    frameworkElement.Loaded += delegate { frameworkElement.DataContext = this; };
+                    frameworkElement.DataContext = this;
+                //frameworkElement.Loaded += delegate { };
                 ViewCreate?.Invoke(this, _view);
             });
         }
     }
 
-    public abstract class EditorViewModel<TEditor,TView, TModel> : ViewModelBase<TView>,
+    public abstract class EditorViewModel<TEditor, TView, TModel> : ViewModelBase<TView>,
         IEditorViewModel<TView, TModel>
         where TView : UIElement, new()
         where TModel : new()
@@ -478,12 +477,12 @@ namespace Coddee.WPF
 
         public virtual void MapEditedItemToEditor(TModel item)
         {
-            _mapper.MapInstance(item, this);
+            _mapper.MapInstance(item, (TEditor)this);
         }
 
         public virtual void MapEditorToEditedItem(TModel item)
         {
-            _mapper.MapInstance(this, item);
+            _mapper.MapInstance((TEditor)this, item);
         }
 
         public void Cancel()
@@ -500,7 +499,7 @@ namespace Coddee.WPF
         {
             try
             {
-                var errors = Validate();    
+                var errors = Validate();
                 if (errors != null && errors.Any())
                 {
                     ShowErrors(errors);
@@ -542,21 +541,10 @@ namespace Coddee.WPF
         public virtual void OnCanceled(object sender, EditorSaveArgs<TModel> e)
         {
         }
-
-        public override IEnumerable<string> Validate()
-        {
-            var res = new List<string>();
-            foreach (var required in RequiredFields)
-            {
-                var error = CheckField(required.FieldName);
-                if (!string.IsNullOrEmpty(error))
-                    res.Add(error);
-            }
-            return res.Any() ? res : null;
-        }
     }
 
-    public abstract class EditorViewModel<TEditor,TView, TRepository, TModel, TKey> : EditorViewModel<TEditor,TView, TModel>
+    public abstract class EditorViewModel<TEditor, TView, TRepository, TModel,
+        TKey> : EditorViewModel<TEditor, TView, TModel>
         where TView : UIElement, new()
         where TModel : class, IUniqueObject<TKey>, new()
         where TRepository : class, ICRUDRepository<TModel, TKey>

@@ -81,13 +81,14 @@ namespace Coddee
             }
         }
 
-        private string GetLocalValue(BoundLocalizationObject boundObject,string culture)
+        private string GetLocalValue(BoundLocalizationObject boundObject, string culture)
         {
             if (boundObject.Values != null)
             {
-                return boundObject.Values.ContainsKey(culture)
-                    ? boundObject.Values[culture]
-                    : boundObject.Values.Values.FirstOrDefault();
+                if (boundObject.Values.ContainsKey(culture))
+                    return boundObject.Values[culture];
+                if (boundObject.Values.Values != null && boundObject.Values.Values.Any())
+                    return boundObject.Values.Values.FirstOrDefault();
             }
             _logger?.Log(nameof(LocalizationManager),
                          $"Local localization values not found for '{boundObject.Item}'",

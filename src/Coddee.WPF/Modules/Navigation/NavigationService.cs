@@ -62,6 +62,7 @@ namespace Coddee.WPF.Modules.Navigation
                 first.IsSelected = true;
                 if (first is NavigationItem nav)
                     nav.IsFirstItem = true;
+                first.Navigate();
             }
             navbarRegion.View(this);
         }

@@ -38,6 +38,7 @@
             <ContentPresenter
                 VerticalAlignment="Center"
                 HorizontalAlignment="Center"
+                x:Name="Presenter"
                 Content="{Binding Content}"/>
         </DockPanel>
     </Grid>

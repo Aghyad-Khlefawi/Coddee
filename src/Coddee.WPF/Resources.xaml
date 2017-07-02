@@ -9,7 +9,7 @@
 
     <SolidColorBrush x:Key="ErrorColor"
                      Color="#D91D1D" />
-    
+
     <!--#region Converters-->
     <converters:BoolReverseConverter x:Key="BoolReverseConverter" />
     <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
@@ -18,7 +18,9 @@
     <!--#endregion-->
 
     <!--#region Shapes-->
-    
+    <Style TargetType="ItemsControl">
+        <Setter Property="IsTabStop" Value="False" />
+    </Style>
     <Style x:Key="ShapeBase"
            TargetType="{x:Type Path}">
         <Setter Property="FlowDirection"
@@ -117,8 +119,8 @@
     <!--#region Converters-->
     <Style x:Key="HighlightButton"
            TargetType="{x:Type Button}">
-        <Setter Property="HorizontalContentAlignment" Value="Center"/>
-        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="Background"
                 Value="{DynamicResource ApplicationAccentColor}" />
         <Setter Property="Foreground" Value="White" />

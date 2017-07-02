@@ -5,7 +5,6 @@ using System;
 using System.Threading.Tasks;
 using Coddee;
 using Coddee.Collections;
-using Coddee.Data;
 using Coddee.Validation;
 using Coddee.WPF;
 using HR.Data.Models;
@@ -50,6 +49,7 @@ namespace HR.Clients.WPF.Companies.Editors
 
         public CompanyEditorViewModel(IObjectMapper mapper, ICompanyRepository repository) : base(mapper, repository)
         {
+
         }
     }
 }
