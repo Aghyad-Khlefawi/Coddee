@@ -106,12 +106,20 @@ namespace Coddee.WPF
             return vm;
         }
 
+        protected virtual Task IntitilzieChildViewModels()
+        {
+            return Task.WhenAll(ChildViewModels.Select(e => e.Initialize()));
+        }
+
         protected virtual void AddChildViewModel(IViewModel vm)
         {
-            vm.ParentViewModel = this;
-            ChildViewModels.Add(vm);
-            ChildCreated?.Invoke(this, vm);
-            vm.ChildCreated += ChildCreated;
+            if (!ChildViewModels.Contains(vm))
+            {
+                vm.ParentViewModel = this;
+                ChildViewModels.Add(vm);
+                ChildCreated?.Invoke(this, vm);
+                vm.ChildCreated += ChildCreated;
+            }
         }
 
         protected virtual void AddChildViewModels(params object[] vms)

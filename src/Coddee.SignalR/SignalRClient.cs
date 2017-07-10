@@ -8,10 +8,10 @@ namespace Coddee.SignalR
         protected IHubProxy _proxy;
         protected HubConnection _connection;
 
-        public virtual async Task Connect(string serverIp, string servicePort)
+        public virtual async Task Connect(string serverIp, string servicePort,string hubname = "repositorySyncHub")
         {
             _connection = new HubConnection($"http://{serverIp}:{servicePort}/");
-            _proxy = _connection.CreateHubProxy("repositorySyncHub");
+            _proxy = _connection.CreateHubProxy(hubname);
 
             SubscribeToEvents();
 

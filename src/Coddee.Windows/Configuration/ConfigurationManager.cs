@@ -33,7 +33,7 @@ namespace Coddee.Services.Configuration
         /// <param name="defaultValues"></param>
         public void Initialize(string configFile = "config", Dictionary<string, object> defaultValues = null)
         {
-            _file = new FileInfo(configFile + ".cfg");
+            _file = new FileInfo(Path.Combine(AppDomain.CurrentDomain.BaseDirectory,configFile) + ".cfg");
             _defaultValues = defaultValues;
         }
 

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
+  <Metadata>
+    <Identity Id="81a59e35-9cfb-4cf0-9e93-0e4101b90ec3" Version="1.0" Language="en-US" Publisher="Aghyad khlefawi" />
+    <DisplayName>CoddeeVM_VSPackage</DisplayName>
+    <Description xml:space="preserve">CoddeeVM Visual Studio Package</Description>
+    <MoreInfo>https://github.com/Aghyad-Khlefawi/Coddee</MoreInfo>
+    <License>https://opensource.org/licenses/MIT</License>
+    <Icon>CoddeeVMTemplates.ico</Icon>
+    <PreviewImage>CoddeeVMTemplates.ico</PreviewImage>
+  </Metadata>
+  <Installation>
+    <InstallationTarget Version="[14.0,15.0)" Id="Microsoft.VisualStudio.Community" />
+  </Installation>
+  <Dependencies>
+    <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="[4.5,)" />
+    <Dependency Id="Microsoft.VisualStudio.MPF.15.0" DisplayName="Visual Studio MPF 15.0" d:Source="Installed" Version="[15.0]" />
+  </Dependencies>
+  <Assets>
+    <Asset Type="Microsoft.VisualStudio.ItemTemplate" d:Source="File" Path="ItemTemplates" d:TargetPath="ItemTemplates\CoddeeVMTemplates.zip" />
+  </Assets>
+</PackageManifest>

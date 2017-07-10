@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
+  <Metadata>
+    <Identity Id="Coddee.VSExtension.Aghyad Khlefawi.4f494b9e-dc46-49c8-bc24-dbc64b17b738" Version="1.0" Language="en-US" Publisher="Aghyad Khlefawi" />
+    <DisplayName>Coddee.VSExtension</DisplayName>
+    <Description xml:space="preserve">Coddee visual studio extension</Description>
+    <MoreInfo>https://github.com/Aghyad-Khlefawi/Coddee</MoreInfo>
+    <License>LICENSE.txt</License>
+    <Icon>Coddee.ico</Icon>
+    <PreviewImage>Coddee.ico</PreviewImage>
+  </Metadata>
+  <Installation>
+    <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[14.0,15.0]" />
+  </Installation>
+  <Dependencies>
+    <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="[4.5,)" />
+  </Dependencies>
+  <Assets>
+    <Asset Type="Microsoft.VisualStudio.ItemTemplate" d:Source="Project" d:ProjectName="Coddee.VMTemplate" d:TargetPath="|Coddee.VMTemplate;TemplateProjectOutputGroup|" Path="ItemTemplates" d:VsixSubPath="ItemTemplates" />
+  </Assets>
+  <Prerequisites>
+    <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[15.0,16.0)" DisplayName="Visual Studio core editor" />
+  </Prerequisites>
+</PackageManifest>
