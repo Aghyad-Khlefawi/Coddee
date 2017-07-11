@@ -13,6 +13,7 @@ namespace Coddee.WPF.Modules.Dialogs
     {
         void Initialize(Region dialogsRegion, SolidColorBrush dialogBorderBrush);
 
+        IDialog ShowContent(UIElement content);
         IDialog ShowMessage(string message);
         IDialog ShowConfirmation(string message,Action OnYes,Action OnNo = null);
         IDialog ShowEditorDialog(UIElement content, Func<Task<bool>> OnSave, Action OnCancel = null, HorizontalAlignment horizontalAlignment = HorizontalAlignment.Center);

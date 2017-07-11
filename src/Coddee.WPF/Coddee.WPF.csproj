@@ -136,6 +136,10 @@
     <Compile Include="Modules\Dialogs\ConfirmationDialogView.xaml.cs">
       <DependentUpon>ConfirmationDialogView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Modules\Dialogs\ContentDialogView.xaml.cs">
+      <DependentUpon>ContentDialogView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Dialogs\ContentDialogViewModel.cs" />
     <Compile Include="Modules\Dialogs\EditorDialogView.xaml.cs">
       <DependentUpon>EditorDialogView.xaml</DependentUpon>
     </Compile>
@@ -256,6 +260,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Modules\Dialogs\ConfirmationDialogView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Modules\Dialogs\ContentDialogView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

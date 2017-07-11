@@ -28,6 +28,13 @@ namespace Coddee.WPF.Modules.Dialogs
             _dialogsRegion.View(this);
         }
 
+        public IDialog ShowContent(UIElement content)
+        {
+            var dialog = CreateDialog<ContentDialogViewModel>();
+            dialog.Content = content;
+            return ShowDialog(dialog);
+        }
+
         public IDialog ShowMessage(string message)
         {
             var dialog = CreateDialog<MessageDialog>();
