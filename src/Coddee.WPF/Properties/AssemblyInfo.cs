@@ -13,7 +13,7 @@ using System.Windows.Markup;
 [assembly: AssemblyDescription("Coddee WPF assembly")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Coddee")]
-[assembly: AssemblyProduct("Coddee.WPF")]
+[assembly: AssemblyProduct("Coddee.WPF")]Extensions
 [assembly: AssemblyCopyright("Copyright ©  2017 Aghyad khlefawi")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
