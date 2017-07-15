@@ -1,15 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿// Copyright (c) Aghyad khlefawi. All rights reserved.  
+// Licensed under the MIT License. See LICENSE file in the project root for full license information.  
+
+using System;
 using System.Reflection;
-using System.Resources;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Markup;
 
 namespace Coddee.WPF
 {
+    /// <summary>
+    /// A XAML Markup extension that can update its value
+    /// </summary>
     public abstract class UpdatableMarkupExtension : MarkupExtension
     {
         private object _targetObject;

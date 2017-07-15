@@ -26,6 +26,7 @@ namespace HR.Web.Controllers
         }
         public UserController(IRepositoryManager repoManager, ILogger logger) : base(repoManager, logger)
         {
+            
         }
 
 

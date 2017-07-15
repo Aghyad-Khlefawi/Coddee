@@ -27,5 +27,7 @@ namespace Coddee.Loggers
         void Log(string source,string content,LogRecordTypes type,DateTime date);
         void Log(string source,Exception exception);
         void Log(string source,Exception exception,DateTime date);
+
+        event EventHandler<LogRecord> LogRecieved;
     }
 }

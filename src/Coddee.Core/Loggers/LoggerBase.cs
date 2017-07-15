@@ -24,7 +24,10 @@ namespace Coddee.Loggers
         public virtual void Log(LogRecord record)
         {
             if (record.Type >= _minimumLevel)
+            { 
                 CommitLog(record);
+                LogRecieved?.Invoke(this,record);
+            }
         }
 
         public void Log(string source, string content)
@@ -69,6 +72,8 @@ namespace Coddee.Loggers
                 Exception = exception
             });
         }
+
+        public event EventHandler<LogRecord> LogRecieved;
 
         /// <summary>
         /// Build a string that represent the event

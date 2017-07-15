@@ -8,6 +8,9 @@ using Concord.HIS1.UI.Converters;
 
 namespace Coddee.WPF
 {
+    /// <summary>
+    /// A XAML helper for the validation of input elements
+    /// </summary>
     public class Validate
     {
         public static readonly DependencyProperty FieldNameProperty = DependencyProperty.RegisterAttached(
