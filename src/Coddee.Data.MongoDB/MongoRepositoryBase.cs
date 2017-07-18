@@ -122,13 +122,12 @@ namespace Coddee.Data.MongoDB
             base.SyncServiceSyncReceived(identifier, args);
             if (identifier == _identifier)
                 RaiseItemsChanged(this,
-                                  new RepositoryChangeEventArgs<TModel>(args.OperationType, (TModel)args.Item));
+                                  new RepositoryChangeEventArgs<TModel>(args.OperationType, (TModel)args.Item,true));
         }
 
         protected void RaiseItemsChanged(object sender, RepositoryChangeEventArgs<TModel> args)
         {
-            ItemsChanged?.Invoke(this,
-                                 new RepositoryChangeEventArgs<TModel>(args.OperationType, args.Item));
+            ItemsChanged?.Invoke(this,args);
         }
 
         public override void SetSyncService(IRepositorySyncService syncService)
@@ -196,14 +195,14 @@ namespace Coddee.Data.MongoDB
         public virtual async Task<TModel> UpdateItem(TModel item)
         {
             await _collection.ReplaceOneAsync(new BsonDocument("_id", BsonValue.Create(item.GetKey)), item);
-            RaiseItemsChanged(this,new RepositoryChangeEventArgs<TModel>(OperationType.Edit, item));
+            RaiseItemsChanged(this,new RepositoryChangeEventArgs<TModel>(OperationType.Edit, item, false));
             return item;
         }
 
         public virtual async Task<TModel> InsertItem(TModel item)
         {
             await _collection.InsertOneAsync(item);
-            RaiseItemsChanged(this,new RepositoryChangeEventArgs<TModel>(OperationType.Add, item));
+            RaiseItemsChanged(this,new RepositoryChangeEventArgs<TModel>(OperationType.Add, item, false));
             return item;
         }
 
@@ -211,13 +210,13 @@ namespace Coddee.Data.MongoDB
         {
             var item = await this[ID];
             await _collection.DeleteOneAsync(new BsonDocument("_id", BsonValue.Create(ID)));
-            RaiseItemsChanged(this,new RepositoryChangeEventArgs<TModel>(OperationType.Edit, item));
+            RaiseItemsChanged(this,new RepositoryChangeEventArgs<TModel>(OperationType.Edit, item, false));
         }
 
         public  virtual async Task DeleteItem(TModel item)
         {
             await DeleteItem(item.GetKey);
-            RaiseItemsChanged(this,new RepositoryChangeEventArgs<TModel>(OperationType.Edit, item));
+            RaiseItemsChanged(this,new RepositoryChangeEventArgs<TModel>(OperationType.Edit, item,false));
         }
     }
 }

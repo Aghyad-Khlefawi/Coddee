@@ -26,6 +26,13 @@ namespace HR.Clients.WPF.Main
             }
         }
 
+        private string _text = "Text";
+        public string Text
+        {
+            get { return _text; }
+            set { SetProperty(ref this._text, value); }
+        }
+
         private StatesViewModel _statesViewModel;
         public StatesViewModel StatesViewModel
         {
@@ -61,6 +68,7 @@ namespace HR.Clients.WPF.Main
                 };
                 console.AddCommands(treeCommand);
                 console.AddCommandHandler(treeCommand.Name, OnTreeCommand);
+                Text = null;
             }
             catch (Exception e)
             {

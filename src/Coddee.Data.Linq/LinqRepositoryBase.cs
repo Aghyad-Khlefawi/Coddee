@@ -285,13 +285,12 @@ namespace Coddee.Data.LinqToSQL
             base.SyncServiceSyncReceived(identifier, args);
             if (identifier == _identifier)
                 RaiseItemsChanged(this,
-                                  new RepositoryChangeEventArgs<TModel>(args.OperationType, (TModel) args.Item));
+                                  new RepositoryChangeEventArgs<TModel>(args.OperationType, (TModel)args.Item, true));
         }
 
         protected void RaiseItemsChanged(object sender, RepositoryChangeEventArgs<TModel> args)
         {
-            ItemsChanged?.Invoke(this,
-                                 new RepositoryChangeEventArgs<TModel>(args.OperationType, args.Item));
+            ItemsChanged?.Invoke(this, args);
         }
 
         public override void SetSyncService(IRepositorySyncService syncService)
@@ -301,7 +300,8 @@ namespace Coddee.Data.LinqToSQL
         }
         private void OnItemsChanged(object sender, RepositoryChangeEventArgs<TModel> e)
         {
-            _syncService?.SyncItem(_identifier, new RepositorySyncEventArgs { Item = e.Item, OperationType = e.OperationType });
+            if (!e.FromSync)
+                _syncService?.SyncItem(_identifier, new RepositorySyncEventArgs { Item = e.Item, OperationType = e.OperationType });
         }
     }
 
@@ -319,7 +319,7 @@ namespace Coddee.Data.LinqToSQL
         where TTable : class, new()
         where TModel : IUniqueObject<TKey>, new()
     {
-        
+
         /// <summary>
         /// Register mapping for the table and the model type
         /// </summary>
@@ -393,6 +393,15 @@ namespace Coddee.Data.LinqToSQL
         {
             return _mapper.Map<TModel>(source);
         }
+
+        /// <summary>
+        /// Maps the item from the table type to the model type
+        /// The default behavior is using the Object mapper but can be overridden to alter the behavior
+        /// </summary>
+        protected virtual void MapItemToModel(TTable source,TModel target)
+        {
+            _mapper.MapInstance(source,target);
+        }
     }
 
     /// <summary>
@@ -407,7 +416,7 @@ namespace Coddee.Data.LinqToSQL
         ReadOnlyLinqRepositoryBase<TDataContext, TTable, TModel, TKey>, ICRUDRepository<TModel, TKey>
         where TDataContext : DataContext where TTable : class, new() where TModel : IUniqueObject<TKey>, new()
     {
-        
+
 
         /// <summary>
         /// Updates and items in the repository
@@ -417,10 +426,10 @@ namespace Coddee.Data.LinqToSQL
             return Execute((db, table) =>
             {
                 var temp = GetItemByPrimaryKey(db, item.GetKey);
-                _mapper.MapInstance(item, temp);
+                MapItemToTable(item, temp);
                 db.SubmitChanges();
-                _mapper.MapInstance(temp, item);
-                RaiseItemsChanged(this, new RepositoryChangeEventArgs<TModel>(OperationType.Edit, item));
+                MapItemToModel(temp, item);
+                RaiseItemsChanged(this, new RepositoryChangeEventArgs<TModel>(OperationType.Edit, item, false));
                 return item;
             });
         }
@@ -436,8 +445,8 @@ namespace Coddee.Data.LinqToSQL
                 MapItemToTable(item, tableitem);
                 db.GetTable<TTable>().InsertOnSubmit(tableitem);
                 db.SubmitChanges();
-                _mapper.MapInstance(tableitem, item);
-                RaiseItemsChanged(this, new RepositoryChangeEventArgs<TModel>(OperationType.Add, item));
+                MapItemToModel(tableitem, item);
+                RaiseItemsChanged(this, new RepositoryChangeEventArgs<TModel>(OperationType.Add, item, false));
                 return item;
             });
         }
@@ -453,7 +462,7 @@ namespace Coddee.Data.LinqToSQL
                 var item = TableToModelMapping(oldItem);
                 db.GetTable<TTable>().DeleteOnSubmit(oldItem);
                 db.SubmitChanges();
-                RaiseItemsChanged(this, new RepositoryChangeEventArgs<TModel>(OperationType.Delete, item));
+                RaiseItemsChanged(this, new RepositoryChangeEventArgs<TModel>(OperationType.Delete, item, false));
             });
         }
 

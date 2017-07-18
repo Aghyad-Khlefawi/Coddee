@@ -24,6 +24,7 @@ using Coddee.Services;
 using Coddee.SQL;
 using Coddee.Windows.Mapper;
 using Coddee.WPF.DefaultShell;
+using Coddee.WPF.Events;
 using Coddee.WPF.Modules;
 using Coddee.WPF.Modules.Dialogs;
 using Coddee.WPF.Navigation;
@@ -217,6 +218,7 @@ namespace Coddee.WPF
                 var shell = _container.Resolve<IShell>();
                 ((Window) shell).DataContext = shellViewModel;
                 ApplicationStarted?.Invoke(this, EventArgs.Empty);
+                _container.Resolve<IGlobalEventsService>().GetEvent<ApplicationStartedEvent>().Invoke(_app);
             }
         }
 

@@ -25,7 +25,7 @@ namespace Coddee.WPF.Controls
             set { SetValue(WaterMarkContentProperty, value); }
         }
 
-
+        
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
@@ -37,20 +37,14 @@ namespace Coddee.WPF.Controls
             {
                 FocusBox(textBox);
             };
-            textBox.TextChanged += delegate
+            TextChanged += delegate
             {
-                if (!string.IsNullOrEmpty(textBox.Text))
+                if (!string.IsNullOrEmpty(Text) && !string.IsNullOrWhiteSpace(Text))
                     waterMark.Visibility = Visibility.Collapsed;
-            };
-            textBox.LostFocus += delegate
-            {
-                if (string.IsNullOrEmpty(textBox.Text))
+                else
                     waterMark.Visibility = Visibility.Visible;
             };
-            textBox.GotFocus += delegate
-            {
-                waterMark.Visibility = Visibility.Collapsed;
-            };
+           
             waterMark.MouseDown += delegate
             {
                 FocusBox(textBox);

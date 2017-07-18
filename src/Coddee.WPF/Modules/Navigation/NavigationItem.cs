@@ -23,12 +23,16 @@ namespace Coddee.WPF.Navigation
         bool IsSelected { get; set; }
         bool ShowTitle { get; set; }
         bool IsInitialized { get; }
+        bool IsContentInitialized { get; }
         bool IsVisible { get; set; }
 
         void Navigate();
         Task Initialize();
+        void InitializeContent();
+
         void SetDestination(IPresentable destination);
         event EventHandler<IPresentable> NavigationRequested;
+        event EventHandler ContentInitialized;
     }
 
     public class NavigationItem : ViewModelBase, INavigationItem
@@ -58,7 +62,7 @@ namespace Coddee.WPF.Navigation
             get { return _isVisible; }
             set { SetProperty(ref this._isVisible, value); }
         }
-
+        public event EventHandler ContentInitialized ;
         public Type DestinationType { get; protected set; }
         public bool DestinationResolved { get; protected set; }
 
@@ -117,15 +121,21 @@ namespace Coddee.WPF.Navigation
             set { SetProperty(ref this._icon, value); }
         }
         public ICommand NavigateCommand => new RelayCommand(Navigate);
-        private bool vmInitialized ;
+        public bool IsContentInitialized { get; private set; }
+
+        public void InitializeContent()
+        {
+            var vm = _destination as ViewModelBase;
+            IsContentInitialized = true;
+            vm.Initialize().ContinueWith(t => ContentInitialized?.Invoke(this, EventArgs.Empty));
+        }
         public virtual void Navigate()
         {
             NavigationRequested?.Invoke(this, _destination);
             var vm = _destination as ViewModelBase;
-            if (vm != null && !vm.IsInitialized && !vmInitialized)
+            if (vm != null && !vm.IsInitialized && !IsContentInitialized)
             {
-                vmInitialized = true;
-                vm.Initialize();
+                InitializeContent();
             }
         }
 

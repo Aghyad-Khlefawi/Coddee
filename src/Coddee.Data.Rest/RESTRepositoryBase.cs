@@ -9,6 +9,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Coddee.Data.REST
 {
@@ -305,7 +306,6 @@ namespace Coddee.Data.REST
         where TModel : IUniqueObject<TKey>
     {
         private readonly string _identifier;
-
         protected RESTRepositoryBase()
         {
             _identifier = GetType().Name;
@@ -315,14 +315,28 @@ namespace Coddee.Data.REST
         {
             base.SyncServiceSyncReceived(identifier, args);
             if (identifier == _identifier)
+            {
                 RaiseItemsChanged(this,
-                                  new RepositoryChangeEventArgs<TModel>(args.OperationType, (TModel)args.Item));
+                                  new RepositoryChangeEventArgs<TModel>(args.OperationType,
+                                                                        ((JObject)args.Item).ToObject<TModel>(), true));
+            }
         }
 
         protected void RaiseItemsChanged(object sender, RepositoryChangeEventArgs<TModel> args)
         {
-            ItemsChanged?.Invoke(this,
-                                 new RepositoryChangeEventArgs<TModel>(args.OperationType, args.Item));
+            ItemsChanged?.Invoke(this, args);
+        }
+
+        public override void SetSyncService(IRepositorySyncService syncService)
+        {
+            base.SetSyncService(syncService);
+            ItemsChanged += OnItemsChanged;
+        }
+
+        private void OnItemsChanged(object sender, RepositoryChangeEventArgs<TModel> e)
+        {
+            if (!e.FromSync)
+                _syncService?.SyncItem(_identifier, new RepositorySyncEventArgs { Item = e.Item, OperationType = e.OperationType });
         }
 
         public event EventHandler<RepositoryChangeEventArgs<TModel>> ItemsChanged;
@@ -333,7 +347,7 @@ namespace Coddee.Data.REST
     /// </summary>
     /// <typeparam name="TModel">The model type</typeparam>
     /// <typeparam name="TKey">The table key(ID) type</typeparam>
-    public abstract class ReadOnlyRESTRepositoryBase<TModel, TKey> : RESTRepositoryBase<TModel,TKey>,
+    public abstract class ReadOnlyRESTRepositoryBase<TModel, TKey> : RESTRepositoryBase<TModel, TKey>,
         IReadOnlyRepository<TModel, TKey> where TModel : IUniqueObject<TKey>
     {
         protected ReadOnlyRESTRepositoryBase(string controllerName)
@@ -367,7 +381,7 @@ namespace Coddee.Data.REST
         {
             return GetFromController<IEnumerable<TModel>>(ApiCommonActions.GetItems);
         }
-        
+
     }
 
     /// <summary>
@@ -412,18 +426,18 @@ namespace Coddee.Data.REST
             return Delete(ControllerName, action, id.ToString());
         }
 
-        
+
         public async Task<TModel> UpdateItem(TModel item)
         {
             var res = await PutToController<TModel>(ApiCommonActions.UpdateItem, item);
-            RaiseItemsChanged(this, new RepositoryChangeEventArgs<TModel>(OperationType.Edit, res));
+            RaiseItemsChanged(this, new RepositoryChangeEventArgs<TModel>(OperationType.Edit, res, false));
             return res;
         }
 
         public async Task<TModel> InsertItem(TModel item)
         {
             var res = await PostToController<TModel>(ApiCommonActions.InsertItem, item);
-            RaiseItemsChanged(this, new RepositoryChangeEventArgs<TModel>(OperationType.Add, res));
+            RaiseItemsChanged(this, new RepositoryChangeEventArgs<TModel>(OperationType.Add, res,false));
             return res;
         }
 
@@ -431,7 +445,7 @@ namespace Coddee.Data.REST
         {
             var res = await this[ID];
             await DeleteFromController(ApiCommonActions.DeleteItemByID, ID);
-            RaiseItemsChanged(this, new RepositoryChangeEventArgs<TModel>(OperationType.Edit, res));
+            RaiseItemsChanged(this, new RepositoryChangeEventArgs<TModel>(OperationType.Edit, res, false));
         }
 
         public async Task DeleteItem(TModel item)

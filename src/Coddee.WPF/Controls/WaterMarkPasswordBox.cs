@@ -54,12 +54,14 @@ namespace Coddee.WPF.Controls
             passwordBox.PasswordChanged += delegate
             {
                 SetValue(TextProperty, passwordBox.Password);
-                if (!string.IsNullOrEmpty(passwordBox.Password))
+                if (!string.IsNullOrEmpty(Text))
                     waterMark.Visibility = Visibility.Collapsed;
+                else 
+                    waterMark.Visibility = Visibility.Visible;
             };
             passwordBox.LostFocus += delegate
             {
-                if (string.IsNullOrEmpty(passwordBox.Password))
+                if (string.IsNullOrEmpty(Text))
                     waterMark.Visibility = Visibility.Visible;
             };
             passwordBox.GotFocus += delegate { waterMark.Visibility = Visibility.Collapsed; };
