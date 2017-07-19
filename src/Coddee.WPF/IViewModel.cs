@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
+using Coddee.Validation;
 
 namespace Coddee.WPF
 {
@@ -18,6 +19,8 @@ namespace Coddee.WPF
 
         bool IsInitialized { get; }
         Task Initialize();
+
+        RequiredFieldCollection RequiredFields { get; }
     }
 
     public interface IPresentableViewModel : IViewModel, IPresentable

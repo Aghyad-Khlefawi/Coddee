@@ -12,6 +12,7 @@ using Coddee.Validation;
 
 namespace Coddee.WPF.Commands
 {
+
     /// <summary>
     /// A property information that will cause the ReactiveCommand to update the CanExecute.
     /// </summary>
@@ -55,19 +56,29 @@ namespace Coddee.WPF.Commands
         public Validator Validator { get; }
     }
 
+
+    public interface IReactiveCommand : ICommand
+    {
+        IReactiveCommand ObserveProperty(string propertyName, Validator validator);
+        void UpdateCanExecute();
+        bool CanExecute();
+    }
+
+
     /// <summary>
     /// A command that updates the CanExecute property based on properties changes.
     /// </summary>
     /// <typeparam name="TObserved">The observed object(ViewModel) Type</typeparam>
-    public abstract class ReactiveCommandBase<TObserved> : ICommand
+    public abstract class ReactiveCommandBase<TObserved> : IReactiveCommand
     {
         protected ReactiveCommandBase(TObserved observedObject)
         {
-            _observedObject = observedObject;
+            ObservedObject = observedObject;
             _observedProperties = new List<ObservedProperty<TObserved>>();
         }
 
-        protected readonly TObserved _observedObject;
+        public TObserved ObservedObject { get; }
+
         protected readonly List<ObservedProperty<TObserved>> _observedProperties;
 
         protected bool _canExecute = true;
@@ -81,6 +92,16 @@ namespace Coddee.WPF.Commands
                     UpdateCanExecute();
                 }
             };
+        }
+
+
+      
+
+        public IReactiveCommand ObserveProperty(string propertyName, Validator validator)
+        {
+            _observedProperties.Add(new ObservedProperty<TObserved>(ObservedObject, propertyName, validator));
+            UpdateCanExecute();
+            return this;
         }
 
         public virtual void UpdateCanExecute()
@@ -101,10 +122,16 @@ namespace Coddee.WPF.Commands
             }
         }
 
+        public bool CanExecute()
+        {
+            return _canExecute;
+        }
+
         public virtual bool CanExecute(object parameter)
         {
             return _canExecute;
         }
+
 
         public abstract void Execute(object parameter);
 
@@ -132,16 +159,9 @@ namespace Coddee.WPF.Commands
                 reactiveCommand.AttachNotifyHandler(notify);
             return reactiveCommand;
         }
-
-        public ReactiveCommand<TObserved> ObserveProperty(Expression<Func<TObserved, object>> propertyName, Validator validator)
+        public IReactiveCommand ObserveProperty(Expression<Func<TObserved, object>> propertyName, Validator validator)
         {
             return ObserveProperty(((MemberExpression)propertyName.Body).Member.Name, validator);
-        }
-        public ReactiveCommand<TObserved> ObserveProperty(string propertyName, Validator validator)
-        {
-            _observedProperties.Add(new ObservedProperty<TObserved>(_observedObject, propertyName, validator));
-            UpdateCanExecute();
-            return this;
         }
 
         public override void Execute(object parameter)
@@ -172,16 +192,6 @@ namespace Coddee.WPF.Commands
             if (observedObject is INotifyPropertyChanged notify)
                 reactiveCommand.AttachNotifyHandler(notify);
             return reactiveCommand;
-        }
-        public ReactiveCommand<TObserved, TParam> ObserveProperty(Expression<Func<TObserved, object>> propertyName, Validator validator)
-        {
-            return ObserveProperty(((MemberExpression)propertyName.Body).Member.Name, validator);
-        }
-        public ReactiveCommand<TObserved, TParam> ObserveProperty(string propertyName, Validator validator)
-        {
-            _observedProperties.Add(new ObservedProperty<TObserved>(_observedObject, propertyName, validator));
-            UpdateCanExecute();
-            return this;
         }
 
         public override void Execute(object parameter)

@@ -15,6 +15,7 @@ using Coddee.Loggers;
 using Coddee.Services;
 using Coddee.WPF.Modules;
 using Coddee.Validation;
+using Coddee.WPF.Commands;
 using Microsoft.Practices.Unity;
 
 namespace Coddee.WPF
@@ -23,7 +24,7 @@ namespace Coddee.WPF
     /// The base class for all ViewModels of the application
     /// Contains the property changed handlers and UI execute method
     /// </summary>
-    public class ViewModelBase : BindableBase, IViewModel, IDataErrorInfo
+    public abstract class ViewModelBase : BindableBase, IViewModel, IDataErrorInfo
     {
         private const string _eventsSource = "VMBase";
 
@@ -95,12 +96,12 @@ namespace Coddee.WPF
 
         protected async Task<TResult> InitializeViewModel<TResult>() where TResult : IViewModel
         {
-            return (TResult) await InitializeViewModel(typeof(TResult));
+            return (TResult)await InitializeViewModel(typeof(TResult));
         }
 
         public IViewModel CreateViewModel(Type viewModelType)
         {
-            IViewModel vm = (IViewModel) Resolve(viewModelType);
+            IViewModel vm = (IViewModel)Resolve(viewModelType);
             _logger?.Log(_eventsSource, $"ViewModelCreated {vmName}", LogRecordTypes.Debug);
             AddChildViewModel(vm);
             return vm;
@@ -134,7 +135,7 @@ namespace Coddee.WPF
 
         public TResult CreateViewModel<TResult>() where TResult : IViewModel
         {
-            return (TResult) CreateViewModel(typeof(TResult));
+            return (TResult)CreateViewModel(typeof(TResult));
         }
 
         protected virtual void OnChildCreated(object sender, IViewModel e)
@@ -255,7 +256,7 @@ namespace Coddee.WPF
 
         protected T Resolve<T>()
         {
-            return (T) Resolve(typeof(T));
+            return (T)Resolve(typeof(T));
         }
 
         protected void LogError(string EventSource, Exception ex)
@@ -280,7 +281,7 @@ namespace Coddee.WPF
 
         protected T FindResource<T>(string ResourceName)
         {
-            return (T) Application.Current.TryFindResource(ResourceName);
+            return (T)Application.Current.TryFindResource(ResourceName);
         }
 
         public virtual void Dispose()
@@ -343,8 +344,17 @@ namespace Coddee.WPF
             }
             return errors;
         }
-       
+
         public string Error => null;
+
+        public ReactiveCommand<T> CreateReactiveCommand<T>(T obj,Action handler)
+        {
+            return ReactiveCommand<T>.Create(obj, handler);
+        }
+        public ReactiveCommand<T,TParam> CreateReactiveCommand<T, TParam>(T obj, Action<TParam >handler)
+        {
+            return ReactiveCommand<T, TParam>.Create(obj, handler);
+        }
     }
 
     /// <summary>
@@ -371,7 +381,7 @@ namespace Coddee.WPF
         /// The view object
         /// </summary>
         protected TView _view;
-        public TView View => (TView) GetView();
+        public TView View => (TView)GetView();
 
         public event EventHandler<TView> ViewCreate;
 
