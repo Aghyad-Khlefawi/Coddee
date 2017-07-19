@@ -18,8 +18,6 @@
     <controls:BusyIndicator IsBusy="{Binding IsBusy}" >
         <DockPanel d:DataContext="{StaticResource designData}"
                    Background="WhiteSmoke">
-            <controls:WaterMarkTextBox WaterMarkContent="water" DockPanel.Dock="Top"
-                                       Text="{Binding Text}"/>
             <controls:TabsPanel Padding="5"
                                 HeaderForeground="{StaticResource ApplicationAccentColor}"
                                 Margin="5">

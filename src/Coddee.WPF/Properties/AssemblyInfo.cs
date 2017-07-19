@@ -1,4 +1,4 @@
-﻿// Copyright (c) Aghyad khlefawi. All rights reserved.  
+// Copyright (c) Aghyad khlefawi. All rights reserved.  
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
 using System.Reflection;
@@ -26,5 +26,5 @@ using System.Windows.Markup;
 
 [assembly: ThemeInfo(ResourceDictionaryLocation.None, ResourceDictionaryLocation.SourceAssembly)]
 
-[assembly: AssemblyVersion("1.0.160.0")]
-[assembly: AssemblyFileVersion("1.0.160.0")]
+[assembly: AssemblyVersion("1.0.162.0")]
+[assembly: AssemblyFileVersion("1.0.162.0")]
