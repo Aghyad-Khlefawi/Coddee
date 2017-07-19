@@ -92,6 +92,7 @@
     <Compile Include="Collections\AsyncObservableCollectionView.cs" />
     <Compile Include="Commands\KeyDownCommand.cs" />
     <Compile Include="Commands\OnEnterCommand.cs" />
+    <Compile Include="Commands\ReactiveCommand.cs" />
     <Compile Include="Commands\RelayCommand.cs" />
     <Compile Include="Controls\BusyIndicator.cs" />
     <Compile Include="Controls\Form.cs" />

@@ -3,11 +3,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Threading.Tasks;
 
 namespace Coddee.WPF
 {
-    public interface IViewModel:IDisposable
+    public interface IViewModel:IDisposable,INotifyPropertyChanged
     {
         event EventHandler Initialized;
         event EventHandler<IViewModel> ChildCreated;
