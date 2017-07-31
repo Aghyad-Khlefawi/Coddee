@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
+using Newtonsoft.Json.Linq;
 
 namespace Coddee.Data.MongoDB
 {
@@ -122,7 +123,7 @@ namespace Coddee.Data.MongoDB
             base.SyncServiceSyncReceived(identifier, args);
             if (identifier == _identifier)
                 RaiseItemsChanged(this,
-                                  new RepositoryChangeEventArgs<TModel>(args.OperationType, (TModel)args.Item,true));
+                                  new RepositoryChangeEventArgs<TModel>(args.OperationType, ((JObject)args.Item).ToObject<TModel>(), true));
         }
 
         protected void RaiseItemsChanged(object sender, RepositoryChangeEventArgs<TModel> args)

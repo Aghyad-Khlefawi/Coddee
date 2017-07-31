@@ -442,7 +442,7 @@ namespace Coddee.WPF
                     foreach (DictionaryEntry val in
                         res.GetResourceSet(new CultureInfo(culture), true, true))
                     {
-                        if (!values.ContainsKey(val.Key.ToString()))
+                        if (!values.ContainsKey(val.Key.ToString()))    
                             values[val.Key.ToString()] = new Dictionary<string, string>();
                         values[val.Key.ToString()][culture] = val.Value.ToString();
                     }

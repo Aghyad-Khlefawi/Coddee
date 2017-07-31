@@ -207,6 +207,7 @@
     <Compile Include="Regions\Region.cs" />
     <Compile Include="Regions\RegionManager.cs" />
     <Compile Include="Security\ILoginViewModel.cs" />
+    <Compile Include="SelectableItem.cs" />
     <Compile Include="UpdatableMarkupExtension.cs" />
     <Compile Include="Validate.cs" />
     <Compile Include="ViewModelBase.cs" />

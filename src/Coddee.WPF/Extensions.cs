@@ -1,12 +1,9 @@
 ﻿// Copyright (c) Aghyad khlefawi. All rights reserved.  
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
-using Coddee.Validation;
 using Coddee.WPF.Commands;
 
 namespace Coddee.WPF
@@ -27,6 +24,26 @@ namespace Coddee.WPF
                 }
             }
             return command;
+        }
+        public static IEnumerable<SelectableItem<T>> AsSelectable<T>(this IEnumerable<T> collection)
+        {
+            return collection.Select(e => new SelectableItem<T>(e));
+        }
+        public static async Task<IEnumerable<SelectableItem<T>>> AsSelectable<T>(this Task<IEnumerable<T>> collection)
+        {
+            return (await collection).AsSelectable();
+        }
+        public static IEnumerable<T> GetSelected<T>(this IEnumerable<SelectableItem<T>> collection)
+        {
+            return collection.Where(e => e.IsSelected).Select(e => e.Item);
+        }
+        public static void UnSelectAll<T>(this IEnumerable<SelectableItem<T>> collection)
+        {
+            collection.ForEach(e => e.IsSelected = false);
+        }
+        public static List<TKey> GetSelectedKeys<TKey, T>(this IEnumerable<SelectableItem<T>> collection) where T : IUniqueObject<TKey>
+        {
+            return collection.Where(e => e.IsSelected).Select(e => e.Item.GetKey).ToList();
         }
     }
 }

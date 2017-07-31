@@ -9,6 +9,7 @@ using System.Data.Linq;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
 
 namespace Coddee.Data.LinqToSQL
 {
@@ -285,7 +286,7 @@ namespace Coddee.Data.LinqToSQL
             base.SyncServiceSyncReceived(identifier, args);
             if (identifier == _identifier)
                 RaiseItemsChanged(this,
-                                  new RepositoryChangeEventArgs<TModel>(args.OperationType, (TModel)args.Item, true));
+                                  new RepositoryChangeEventArgs<TModel>(args.OperationType, ((JObject)args.Item).ToObject<TModel>(), true));
         }
 
         protected void RaiseItemsChanged(object sender, RepositoryChangeEventArgs<TModel> args)

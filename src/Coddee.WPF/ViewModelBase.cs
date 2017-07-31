@@ -123,14 +123,19 @@ namespace Coddee.WPF
             }
         }
 
-        protected virtual void AddChildViewModels(params object[] vms)
+        protected virtual IList<IViewModel> AddChildViewModels(params object[] vms)
         {
+            var res = new List<IViewModel>();
             foreach (var obj in vms)
             {
                 var vm = obj as IViewModel;
                 if (vm != null)
+                {
                     AddChildViewModel(vm);
+                    res.Add(vm);
+                }
             }
+            return res;
         }
 
         public TResult CreateViewModel<TResult>() where TResult : IViewModel
@@ -347,11 +352,11 @@ namespace Coddee.WPF
 
         public string Error => null;
 
-        public ReactiveCommand<T> CreateReactiveCommand<T>(T obj,Action handler)
+        public ReactiveCommand<T> CreateReactiveCommand<T>(T obj, Action handler)
         {
             return ReactiveCommand<T>.Create(obj, handler);
         }
-        public ReactiveCommand<T,TParam> CreateReactiveCommand<T, TParam>(T obj, Action<TParam >handler)
+        public ReactiveCommand<T, TParam> CreateReactiveCommand<T, TParam>(T obj, Action<TParam> handler)
         {
             return ReactiveCommand<T, TParam>.Create(obj, handler);
         }

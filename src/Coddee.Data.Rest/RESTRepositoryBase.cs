@@ -333,7 +333,7 @@ namespace Coddee.Data.REST
             ItemsChanged += OnItemsChanged;
         }
 
-        private void OnItemsChanged(object sender, RepositoryChangeEventArgs<TModel> e)
+        protected virtual void OnItemsChanged(object sender, RepositoryChangeEventArgs<TModel> e)
         {
             if (!e.FromSync)
                 _syncService?.SyncItem(_identifier, new RepositorySyncEventArgs { Item = e.Item, OperationType = e.OperationType });
@@ -397,58 +397,58 @@ namespace Coddee.Data.REST
         {
         }
 
-        protected Task PostToController(string action,
+        protected virtual Task PostToController(string action,
                                         object param = null)
         {
             return Post(ControllerName, action, param);
         }
 
-        protected Task<T> PostToController<T>(string action,
+        protected virtual Task<T> PostToController<T>(string action,
                                               object param = null)
         {
             return Post<T>(ControllerName, action, param);
         }
 
-        protected Task PutToController(string action,
+        protected virtual Task PutToController(string action,
                                        object param = null)
         {
             return Put(ControllerName, action, param);
         }
 
-        protected Task<T> PutToController<T>(string action,
+        protected virtual Task<T> PutToController<T>(string action,
                                              object param = null)
         {
             return Put<T>(ControllerName, action, param);
         }
 
-        protected Task DeleteFromController(string action, TKey id)
+        protected virtual Task DeleteFromController(string action, TKey id)
         {
             return Delete(ControllerName, action, id.ToString());
         }
 
 
-        public async Task<TModel> UpdateItem(TModel item)
+        public virtual async Task<TModel> UpdateItem(TModel item)
         {
             var res = await PutToController<TModel>(ApiCommonActions.UpdateItem, item);
             RaiseItemsChanged(this, new RepositoryChangeEventArgs<TModel>(OperationType.Edit, res, false));
             return res;
         }
 
-        public async Task<TModel> InsertItem(TModel item)
+        public virtual async Task<TModel> InsertItem(TModel item)
         {
             var res = await PostToController<TModel>(ApiCommonActions.InsertItem, item);
             RaiseItemsChanged(this, new RepositoryChangeEventArgs<TModel>(OperationType.Add, res,false));
             return res;
         }
 
-        public async Task DeleteItem(TKey ID)
+        public virtual async Task DeleteItem(TKey ID)
         {
             var res = await this[ID];
             await DeleteFromController(ApiCommonActions.DeleteItemByID, ID);
-            RaiseItemsChanged(this, new RepositoryChangeEventArgs<TModel>(OperationType.Edit, res, false));
+            RaiseItemsChanged(this, new RepositoryChangeEventArgs<TModel>(OperationType.Delete, res, false));
         }
 
-        public async Task DeleteItem(TModel item)
+        public virtual async Task DeleteItem(TModel item)
         {
             await DeleteItem(item.GetKey);
         }
