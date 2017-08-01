@@ -20,13 +20,12 @@ namespace HR.Data.Mongo.Repositories
         public CompanyRepository() : base(HRMongoCollections.Companies)
         {
         }
-
-
+        
         protected override void ConfigureTableMappings(BsonClassMap<Company> bsonClassMap)
         {
             bsonClassMap.UnmapProperty(e => e.StateName);
         }
-
+         
         public override Task<Company> InsertItem(Company item)
         {
             item.ID = Guid.NewGuid();

@@ -111,6 +111,7 @@
     <Compile Include="DebugTool\DebugToolView.xaml.cs">
       <DependentUpon>DebugToolView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="DefaultNavigations.cs" />
     <Compile Include="DefaultShell\DefaultRegions.cs" />
     <Compile Include="Events\ApplicationStartedEvent.cs" />
     <Compile Include="Extensions.cs" />
@@ -168,6 +169,7 @@
     <Compile Include="Modules\Interfaces\IApplicationConsole.cs" />
     <Compile Include="Modules\ModuleException.cs" />
     <Compile Include="Modules\ApplicationModulesManager.cs" />
+    <Compile Include="Modules\Navigation\NavigationEventArgs.cs" />
     <Compile Include="Modules\Navigation\NavigationModule.cs" />
     <Compile Include="Modules\Navigation\NavigationService.cs" />
     <Compile Include="Modules\Navigation\NavigationServiceView.xaml.cs">

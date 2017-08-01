@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Aghyad khlefawi. All rights reserved.  
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -49,6 +50,8 @@ namespace Coddee.WPF.Modules.Navigation
 
         private Region _navigationRegion;
 
+        public event EventHandler<NavigationEventArgs> Navigated;
+        private INavigationItem _currentNavligationItem;
         public void Initialize(Region navbarRegion,
                                Region navigationRegion,
                                IEnumerable<INavigationItem> navigationItems)
@@ -71,7 +74,7 @@ namespace Coddee.WPF.Modules.Navigation
         {
             NavigationItems.Add(navigationItem);
             if (!navigationItem.DestinationResolved)
-                navigationItem.SetDestination((IPresentable) Resolve<IShellViewModel>()
+                navigationItem.SetDestination((IPresentable)Resolve<IShellViewModel>()
                                                   .CreateViewModel(navigationItem.DestinationType));
             navigationItem.NavigationRequested += NavigationItem_NavigationRequested;
             navigationItem.Initialize();
@@ -97,7 +100,9 @@ namespace Coddee.WPF.Modules.Navigation
             {
                 navigationItem.IsSelected = false;
             }
+            Navigated?.Invoke(this, new NavigationEventArgs { OldLocation = _currentNavligationItem, NewLocation = nav });
             _navigationRegion.View(e);
+            _currentNavligationItem = nav;
             ShowTitles = false;
             nav.IsSelected = true;
         }
