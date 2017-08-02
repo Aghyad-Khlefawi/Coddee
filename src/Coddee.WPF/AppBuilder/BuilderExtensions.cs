@@ -5,9 +5,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Reflection;
 using System.Resources;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Media;
 using Coddee.AppBuilder;
 using Coddee.Loggers;
@@ -100,22 +102,16 @@ namespace Coddee.WPF.AppBuilder
         /// <summary>
         /// Initialize the configuration manager
         /// </summary>
-        /// <param name="encryptFile">If set to true the configuration manager will use encrypted configuration file</param>
-        /// <param name="configFile">The file path without the extension</param>
+        /// <param name="defaultFile">The default configurations file.</param>
         public static IWPFApplicationBuilder UseConfigurationFile(
             this IWPFApplicationBuilder builder,
-            bool encryptFile = false,
-            string configFile = "config",
-            Dictionary<string, object> defaultValues = null)
+           IConfigurationFile defaultFile)
         {
             builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.ConfigFileBuildAction(
                                                                                                 (container) =>
                                                                                                 {
                                                                                                     var config = container.Resolve<IConfigurationManager>();
-                                                                                                    config.Initialize(configFile, defaultValues);
-                                                                                                    if (encryptFile)
-                                                                                                        config.SetEncrpytion(builder.WPFBuilder.GetApp().ApplicationID.ToString());
-                                                                                                    config.ReadFile();
+                                                                                                    config.Initialize(defaultFile);
                                                                                                 }));
             return builder;
         }
@@ -221,7 +217,7 @@ namespace Coddee.WPF.AppBuilder
         {
             builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.ShellBuildAction((container) =>
             {
-                var wpfApplication = builder.WPFBuilder.GetApp();
+                var wpfApplication = container.Resolve<WPFApplication>();
                 var shellViewModel = BuildDefaultShell<TContent>(builder, state, config, container);
                 shellViewModel.Initialize().ContinueWith((t) =>
                 {
@@ -247,7 +243,7 @@ namespace Coddee.WPF.AppBuilder
         {
             builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.ShellBuildAction((container) =>
             {
-                var wpfApplication = builder.WPFBuilder.GetApp();
+                var wpfApplication = container.Resolve<WPFApplication>();
                 var shellViewModel = BuildDefaultShell<TContent>(builder, state, config, container);
                 var loginViewModel = container.Resolve<TLogin>();
                 BuildLogin(container, wpfApplication, shellViewModel, loginViewModel);
@@ -268,7 +264,7 @@ namespace Coddee.WPF.AppBuilder
         {
             builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.ShellBuildAction((container) =>
             {
-                var wpfApplication = builder.WPFBuilder.GetApp();
+                var wpfApplication = container.Resolve<WPFApplication>();
                 var shellViewModel = BuildCustomShell<TShellViewModel>(builder, config, container);
                 shellViewModel.Initialize().ContinueWith((t) =>
                 {
@@ -291,7 +287,7 @@ namespace Coddee.WPF.AppBuilder
         {
             builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.ShellBuildAction((container) =>
             {
-                var wpfApplication = builder.WPFBuilder.GetApp();
+                var wpfApplication = container.Resolve<WPFApplication>();
                 var shellViewModel = BuildCustomShell<TShellViewModel>(builder, config, container);
                 var loginViewModel = container.Resolve<TLogin>();
                 BuildLogin(container, wpfApplication, shellViewModel, loginViewModel);
@@ -336,7 +332,7 @@ namespace Coddee.WPF.AppBuilder
             var shellViewModel = container.Resolve<TShellViewModel>();
             container.RegisterInstance<IShellViewModel>(shellViewModel);
 
-            var wpfApplication = builder.WPFBuilder.GetApp();
+            var wpfApplication = container.Resolve<WPFApplication>();
             var systemApplication = wpfApplication.GetSystemApplication();
 
             var shell = (IShell)shellViewModel.GetView();
@@ -356,7 +352,7 @@ namespace Coddee.WPF.AppBuilder
             container.RegisterInstance<IDefaultShellViewModel, DefaultShellViewModel>();
 
 
-            var wpfApplication = builder.WPFBuilder.GetApp();
+            var wpfApplication = container.Resolve<WPFApplication>();
             var systemApplication = wpfApplication.GetSystemApplication();
 
             var shellViewModel = container.Resolve<IDefaultShellViewModel>();

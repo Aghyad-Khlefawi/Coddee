@@ -4,144 +4,70 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Coddee.Crypto;
-using Newtonsoft.Json;
 
 namespace Coddee.Services.Configuration
 {
-   
+
     /// <summary>
     /// service for storing application configurations in a file
     /// </summary>
     public class ConfigurationManager : IConfigurationManager
     {
-        private FileInfo _file;
-        private Dictionary<string, string> _configurations;
-        private bool _encrpyt;
-        private string _key;
-        private Dictionary<string, object> _defaultValues;
-
-        public event EventHandler Loaded;
-
-        public event EventHandler<ValueChangedEventArgs> ConfigurationChanged;
-
-        /// <summary>
-        /// Initialize the configurations manager
-        /// On calling this method the configurations will be created or loaded if it exists
-        /// </summary>
-        /// <param name="configFile">The file path without the extension</param>
-        /// <param name="defaultValues"></param>
-        public void Initialize(string configFile = "config", Dictionary<string, object> defaultValues = null)
+        public ConfigurationManager()
         {
-            _file = new FileInfo(Path.Combine(AppDomain.CurrentDomain.BaseDirectory,configFile) + ".cfg");
-            _defaultValues = defaultValues;
+            _configurationFiles = new Dictionary<string, IConfigurationFile>();
         }
 
-        /// <summary>
-        /// Read the configuration file values
-        /// </summary>
-        public void ReadFile()
-        {
-            if (!_file.Exists)
-            {
-                _configurations = new Dictionary<string, string>();
-                _file.Create().Dispose();
-                if (_defaultValues != null)
-                {
-                    foreach (var defaultValue in _defaultValues)
-                    {
-                        SetValue(defaultValue.Key, defaultValue.Value);
-                    }
-                }
-                UpdateFile();
-                Loaded?.Invoke(this, EventArgs.Empty);
-            }
-            using (var fs = _file.OpenRead())
-            {
-                try
-                {
-                    using (var sr = new StreamReader(fs))
-                    {
-                        var configString = sr.ReadToEnd();
-                        _configurations =
-                            JsonConvert.DeserializeObject<Dictionary<string, string>>(!_encrpyt
-                                                                                          ? configString
-                                                                                          : EncryptionHelper
-                                                                                              .Decrypt(configString,
-                                                                                                       _key));
-                    }
+        private const string _defaultConfigFile = "config";
 
-                    Loaded?.Invoke(this, EventArgs.Empty);
-                }
-                catch (Exception e)
-                {
-                    throw new FormatException("Couldn't read the configurations file", e);
-                }
-            }
+        private readonly Dictionary<string, IConfigurationFile> _configurationFiles;
+
+        public void Initialize(IConfigurationFile defaultConfigurationFile)
+        {
+            if (defaultConfigurationFile == null)
+                defaultConfigurationFile =
+                    new ConfigurationFile(_defaultConfigFile,
+                                          Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
+                                                       $"{_defaultConfigFile}.config"));
+            AddConfigurationFile(defaultConfigurationFile);
         }
 
-        /// <summary>
-        /// Upsert a configuration value
-        /// </summary>
-        /// <param name="key">The configuration key</param>
-        /// <param name="value">The new value</param>
-        public void SetValue(string key, object value)
+        public void AddConfigurationFile(IConfigurationFile configFile)
         {
-            object oldValue;
-            TryGetValue(key, out oldValue);
-            ConfigurationChanged?.Invoke(this,
-                                         new ValueChangedEventArgs
-                                         {
-                                             Key = key,
-                                             OldValue = oldValue,
-                                             NewValue = value
-                                         });
-            _configurations[key] = JsonConvert.SerializeObject(value);
-            UpdateFile();
+            if (_configurationFiles.ContainsKey(configFile.Name))
+                throw new ConfigurationException($"There is already a configuration file with the same name '{configFile.Name}'");
+
+            _configurationFiles.Add(configFile.Name, configFile);
         }
 
-        /// <summary>
-        /// Try to read configuration value
-        /// </summary>
-        /// <typeparam name="TResult">The result value type</typeparam>
-        /// <param name="key">The configuration key</param>
-        /// <param name="value">The new value</param>
-        public bool TryGetValue<TResult>(string key, out TResult value)
+        public TValue GetValue<TValue>(string key, string fileName = null)
         {
-            if (_configurations.ContainsKey(key))
-            {
-                value = JsonConvert.DeserializeObject<TResult>(_configurations[key]);
-                return true;
-            }
-            if (_defaultValues!=null && _defaultValues.ContainsKey(key))
-            {
-                value = (TResult) _defaultValues[key];
-                return true;
-            }
-            value = default(TResult);
-            return false;
+            fileName = string.IsNullOrWhiteSpace(fileName) ? _defaultConfigFile : fileName;
+
+            if (!string.IsNullOrWhiteSpace(fileName) && !_configurationFiles.ContainsKey(fileName))
+                throw new ConfigurationException($"There is no configuration file with the name '{fileName}'");
+
+            return _configurationFiles[fileName].GetValue<TValue>(key);
         }
 
-        /// <summary>
-        /// When called the configuration manager will use encrpyted configuration file
-        /// </summary>
-        /// <param name="key">Encrpytion key</param>
-        public void SetEncrpytion(string key)
+        public bool TryGetValue<TValue>(string key, out TValue value, string fileName = null)
         {
-            _encrpyt = true;
-            _key = key;
+            fileName = string.IsNullOrWhiteSpace(fileName) ? _defaultConfigFile : fileName;
+
+            if (!string.IsNullOrWhiteSpace(fileName) && !_configurationFiles.ContainsKey(fileName))
+                throw new ConfigurationException($"There is no configuration file with the name '{fileName}'");
+
+            return _configurationFiles[fileName].TryGetValue(key, out value);
         }
 
-        /// <summary>
-        /// Update the configuration files with the new values
-        /// </summary>
-        private void UpdateFile()
+        public void SetValue<TValue>(string key, TValue value, string fileName = null)
         {
-            var configString = JsonConvert.SerializeObject(_configurations);
-            if (!_encrpyt)
-                File.WriteAllText(_file.FullName, configString);
-            else
-                File.WriteAllText(_file.FullName, EncryptionHelper.EncryptStringAsBase64(configString, _key));
+            fileName = string.IsNullOrWhiteSpace(fileName) ? _defaultConfigFile : fileName;
+
+            if (!string.IsNullOrWhiteSpace(fileName) && !_configurationFiles.ContainsKey(fileName))
+                throw new ConfigurationException($"There is no configuration file with the name '{fileName}'");
+
+            _configurationFiles[fileName].SetValue(key,value);
         }
     }
 }

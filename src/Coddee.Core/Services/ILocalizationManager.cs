@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using Microsoft.Practices.Unity;
 
-namespace Coddee
+namespace Coddee.Services
 {
     public interface ILocalizationManager
     {

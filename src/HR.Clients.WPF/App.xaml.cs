@@ -2,7 +2,6 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Windows;
 using System.Windows.Input;
@@ -10,10 +9,8 @@ using Coddee.Data;
 using Coddee.Loggers;
 using Coddee.WPF;
 using Coddee.WPF.AppBuilder;
-using Coddee.WPF.Navigation;
 using HR.Clients.WPF.Login;
 using HR.Clients.WPF.Main;
-using HR.Clients.WPF.Settings;
 using HR.Data.LinqToSQL;
 
 namespace HR.Clients.WPF
@@ -40,7 +37,6 @@ namespace HR.Clients.WPF
             var config = new RepositoryConfigurations();
             var dbLocation = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"..\\","..\\","..\\","HR.Web","DB"));
             app.CreateWPFApplication("HR application", AppID)
-                .UseConfigurationFile(true)
                 .UseLogger(LoggerTypes.ApplicationConsole | LoggerTypes.DebugOutput, LogRecordTypes.Debug)
                 .UseApplicationConsole(e => e.Key == Key.F12)
                 .UseCoddeeDebugTool(e => e.Key == Key.F11)

@@ -3,7 +3,9 @@
 
 using System;
 using Coddee.AppBuilder;
+using Coddee.Data;
 using Coddee.Data.REST;
+using Coddee.Loggers;
 using Coddee.Services;
 using Microsoft.Practices.Unity;
 
@@ -26,6 +28,7 @@ namespace Coddee.WPF.AppBuilder
     }
     public static class RESTRepositoryExtenstion
     {
+        private const string EventsSource = "WPFApplicationBuilder";
         public static IWPFApplicationBuilder UseRESTRepositoryManager(
             this IWPFApplicationBuilder builder,
             Func<IConfigurationManager, RESTRepositoryManagerConfig> config)
@@ -44,7 +47,17 @@ namespace Coddee.WPF.AppBuilder
                 var configRes = config(container.Resolve<IConfigurationManager>());
                 repositoryManager.Initialize(configRes.ApiUrl, configRes.UnauthorizedRequestHandler, container.Resolve<IObjectMapper>());
                 repositoryManager.RegisterRepositories(configRes.RepositoriesAssembly);
-                builder.WPFBuilder.SetRepositoryManager(repositoryManager, configRes.RegisterTheRepositoresInContainer);
+
+                var logger = container.Resolve<ILogger>();
+                container.RegisterInstance<IRepositoryManager>(repositoryManager);
+                if (configRes.RegisterTheRepositoresInContainer)
+                    foreach (var repository in repositoryManager.GetRepositories())
+                    {
+                        logger.Log(EventsSource,
+                                   $"Registering repository of type {repository.GetType().Name}",
+                                   LogRecordTypes.Debug);
+                        container.RegisterInstance(repository.ImplementedInterface, repository);
+                    }
             }));
             return builder;
         }

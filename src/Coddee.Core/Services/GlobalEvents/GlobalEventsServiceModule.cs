@@ -2,9 +2,10 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
 using System.Threading.Tasks;
+using Coddee.Services;
 using Microsoft.Practices.Unity;
 
-namespace Coddee.Services.GlobalEvents
+namespace Coddee.Modules
 {
     [Module(BuiltInModules.GlobalEventsService)]
     public class GlobalEventsServiceModule : IModule

@@ -7,7 +7,7 @@ using System.Reflection;
 using Coddee.Loggers;
 using Microsoft.Practices.Unity;
 
-namespace Coddee
+namespace Coddee.Services
 {
     class BoundLocalizationObject
     {

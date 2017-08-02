@@ -20,7 +20,7 @@ namespace Coddee.WPF
 {
     public interface IWPFApplicationBuilder : IApplicationBuilder
     {
-        WPFApplicationBuilder WPFBuilder { get; } 
+
     }
 
     public class WPFApplicationBuilder : IWPFApplicationFactory, IWPFApplicationBuilder
@@ -32,7 +32,7 @@ namespace Coddee.WPF
         private readonly IUnityContainer _container;
         private readonly LogAggregator _logger;
         private IApplicationModulesManager _modulesManager;
-        
+
 
         public WPFApplicationBuilder(WPFApplication app, IUnityContainer container)
         {
@@ -47,7 +47,7 @@ namespace Coddee.WPF
 
 
         //Build Actions
-        
+
         public BuildActionsCoordinator BuildActionsCoordinator { get; }
 
 
@@ -121,6 +121,8 @@ namespace Coddee.WPF
             if (!BuildActionsCoordinator.BuildActionExists(BuildActionsKeys.DiscoverModules))
                 ConfigureAutoModuleDiscovery();
 
+            if (!BuildActionsCoordinator.BuildActionExists(BuildActionsKeys.ConfigFile))
+                this.UseConfigurationFile(null);
         }
 
         private void ConfigureGlobalVariables()
@@ -153,67 +155,5 @@ namespace Coddee.WPF
             ViewModelBase.SetContainer(_container);
         }
 
-        
-
-        /// <summary>
-        /// Register the repository manager in the container
-        /// </summary>
-        public void SetRepositoryManager(IRepositoryManager repositoryManager, bool registerTheRepositoresInContainer)
-        {
-            _logger.Log(EventsSource,
-                        $"Registering repository manager of type {repositoryManager.GetType().Name}",
-                        LogRecordTypes.Debug);
-            _container.RegisterInstance<IRepositoryManager>(repositoryManager);
-            _app.OnRepositoryManagerSet();
-            if (registerTheRepositoresInContainer)
-                foreach (var repository in repositoryManager.GetRepositories())
-                {
-                    _logger.Log(EventsSource,
-                                $"Registering repository of type {repository.GetType().Name}",
-                                LogRecordTypes.Debug);
-                    _container.RegisterInstance(repository.ImplementedInterface, repository);
-                }
-        }
-
-        /// <summary>
-        /// Uses SQLDBBrowser to let the use select an SQL Server database
-        /// </summary>
-        /// <returns></returns>
-        public string GetSQLDBConnection()
-        {
-            if (!_container.IsRegistered<IConfigurationManager>())
-            {
-                //TODO using configurations.
-                //this.UseConfigurationFile(true);
-                //InvokeBuildAction(BuildActions.ConfigFile);
-            }
-            var config = _container.Resolve<IConfigurationManager>();
-            string connection = null;
-            if (config.TryGetValue(BuiltInConfigurationKeys.SQLDBConnection, out connection) &&
-                !string.IsNullOrEmpty(connection))
-            {
-                return connection;
-            }
-            var browser = _container.Resolve<ISQLDBBrowser>();
-            connection = browser.GetDatabaseConnectionString();
-            config.SetValue(BuiltInConfigurationKeys.SQLDBConnection, connection);
-            return connection;
-        }
-
-        /// <summary>
-        /// Returns the application builder as a WPFApplicationBuilder
-        /// </summary>
-        /// <value></value>
-        public WPFApplicationBuilder WPFBuilder => this;
-
-
-        /// <summary>
-        /// Returns the WPFApplication instance
-        /// </summary>
-        /// <returns></returns>
-        public WPFApplication GetApp()
-        {
-            return _app;
-        }
     }
 }

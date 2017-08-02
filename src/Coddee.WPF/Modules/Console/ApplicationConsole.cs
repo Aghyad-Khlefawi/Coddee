@@ -15,6 +15,7 @@ using Coddee.WPF.Modules.Console;
 using System.Diagnostics;
 using System.Reflection;
 using System.Windows.Forms;
+using Coddee.Services;
 using KeyEventArgs = System.Windows.Input.KeyEventArgs;
 
 namespace Coddee.WPF.Console
