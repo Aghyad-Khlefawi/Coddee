@@ -17,9 +17,7 @@ using Coddee.Services;
 using Coddee.Windows.Mapper;
 using Coddee.WPF.DefaultShell;
 using Coddee.WPF.Events;
-using Coddee.WPF.Modules;
-using Coddee.WPF.Modules.Dialogs;
-using Coddee.WPF.Navigation;
+using Coddee.Services.Navigation;
 using Coddee.WPF.Security;
 using Microsoft.Practices.Unity;
 
@@ -33,11 +31,11 @@ namespace Coddee.WPF.AppBuilder
         {
             builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.LocalizationBuildAction(
                                                                                                   (container) =>
-                                                                                                  {
-                                                                                                      var localizationManager = container.Resolve<ILocalizationManager>();
-                                                                                                      localizationManager.SetCulture(defaultCluture);
-                                                                                                      container.RegisterInstance<IObjectMapper, ILObjectsMapper>();
-                                                                                                  }));
+                    {
+                        var localizationManager = container.Resolve<ILocalizationManager>();
+                        localizationManager.SetCulture(defaultCluture);
+                        container.RegisterInstance<IObjectMapper, ILObjectsMapper>();
+                    }));
             return builder;
         }
 
@@ -77,11 +75,10 @@ namespace Coddee.WPF.AppBuilder
         /// </summary>
         public static IWPFApplicationBuilder UseILMapper(this IWPFApplicationBuilder builder)
         {
-            builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.MapperBuildAction(
-                                                                                            (container) =>
-                                                                                            {
-                                                                                                container.RegisterInstance<IObjectMapper, ILObjectsMapper>();
-                                                                                            }));
+            builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.MapperBuildAction((container) =>
+                   {
+                       container.RegisterInstance<IObjectMapper, ILObjectsMapper>();
+                   }));
             return builder;
         }
 
@@ -90,11 +87,10 @@ namespace Coddee.WPF.AppBuilder
         /// </summary>
         public static IWPFApplicationBuilder UseBasicMapper(this IWPFApplicationBuilder builder)
         {
-            builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.MapperBuildAction(
-                                                                                            (container) =>
-                                                                                            {
-                                                                                                container.RegisterInstance<IObjectMapper, BasicObjectMapper>();
-                                                                                            }));
+            builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.MapperBuildAction((container) =>
+                  {
+                      container.RegisterInstance<IObjectMapper, BasicObjectMapper>();
+                  }));
             return builder;
         }
 
@@ -107,12 +103,11 @@ namespace Coddee.WPF.AppBuilder
             this IWPFApplicationBuilder builder,
            IConfigurationFile defaultFile)
         {
-            builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.ConfigFileBuildAction(
-                                                                                                (container) =>
-                                                                                                {
-                                                                                                    var config = container.Resolve<IConfigurationManager>();
-                                                                                                    config.Initialize(defaultFile);
-                                                                                                }));
+            builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.ConfigFileBuildAction((container) =>
+                  {
+                      var config = container.Resolve<IConfigurationManager>();
+                      config.Initialize(defaultFile);
+                  }));
             return builder;
         }
 
@@ -124,24 +119,23 @@ namespace Coddee.WPF.AppBuilder
         public static IWPFApplicationBuilder UseApplicationConsole(this IWPFApplicationBuilder builder,
                                                                    Func<KeyEventArgs, bool> toggleCondition)
         {
-            builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.AppConsoleBuildAction(
-                                                                                                (container) =>
-                                                                                                {
-                                                                                                    var shell = container.Resolve<IShell>();
-                                                                                                    if (shell == null)
-                                                                                                        throw new ApplicationBuildException("The method must be called after the UseShell method");
+            builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.AppConsoleBuildAction((container) =>
+                  {
+                      var shell = container.Resolve<IShell>();
+                      if (shell == null)
+                          throw new ApplicationBuildException("The method must be called after the UseShell method");
 
-                                                                                                    var applicationConsole = container.Resolve<IApplicationConsole>();
-                                                                                                    var logger = (LogAggregator)container.Resolve<ILogger>();
-                                                                                                    applicationConsole.Initialize(shell, logger.MinimumLevel);
+                      var applicationConsole = container.Resolve<IApplicationConsole>();
+                      var logger = (LogAggregator)container.Resolve<ILogger>();
+                      applicationConsole.Initialize(shell, logger.MinimumLevel);
 
-                                                                                                    //Add the console logger to loggers collection
-                                                                                                    logger.AddLogger(applicationConsole.GetLogger(), LoggerTypes.ApplicationConsole);
+                      //Add the console logger to loggers collection
+                      logger.AddLogger(applicationConsole.GetLogger(), LoggerTypes.ApplicationConsole);
 
-                                                                                                    //Sets the Shell KeyDown event handler to toggle the console visibility
-                                                                                                    //when Ctrl+F12 are pressed
-                                                                                                    applicationConsole.SetToggleCondition(toggleCondition);
-                                                                                                }));
+                      //Sets the Shell KeyDown event handler to toggle the console visibility
+                      //when Ctrl+F12 are pressed
+                      applicationConsole.SetToggleCondition(toggleCondition);
+                  }));
             return builder;
         }
 
@@ -153,19 +147,18 @@ namespace Coddee.WPF.AppBuilder
         public static IWPFApplicationBuilder UseCoddeeDebugTool(this IWPFApplicationBuilder builder,
                                                                 Func<KeyEventArgs, bool> toggleCondition)
         {
-            builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.DebugToolBuildAction(
-                                                                                               async (container) =>
-                                                                                               {
-                                                                                                   var shell = container.Resolve<IShell>();
-                                                                                                   if (shell == null)
-                                                                                                       throw new
-                                                                                                           ApplicationBuildException("The method must be called after the UseShell method");
-                                                                                                   var debugTool = container.Resolve<IDebugTool>();
+            builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.DebugToolBuildAction(async (container) =>
+                {
+                    var shell = container.Resolve<IShell>();
+                    if (shell == null)
+                        throw new
+                            ApplicationBuildException("The method must be called after the UseShell method");
+                    var debugTool = container.Resolve<IDebugTool>();
 
-                                                                                                   await debugTool.Initialize();
+                    await debugTool.Initialize();
 
-                                                                                                   debugTool.SetToggleCondition(toggleCondition);
-                                                                                               }));
+                    debugTool.SetToggleCondition(toggleCondition);
+                }));
             return builder;
         }
 
@@ -181,26 +174,25 @@ namespace Coddee.WPF.AppBuilder
                                                        LoggerTypes loggerType,
                                                        LogRecordTypes level)
         {
-            builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.LoggerBuildAction(
-                                                                                            (container) =>
-                                                                                            {
-                                                                                                var logger = (LogAggregator)container.Resolve<ILogger>();
-                                                                                                logger.SetLogLevel(level);
-                                                                                                logger.AllowedTypes = loggerType;
+            builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.LoggerBuildAction((container) =>
+                {
+                    var logger = (LogAggregator)container.Resolve<ILogger>();
+                    logger.SetLogLevel(level);
+                    logger.AllowedTypes = loggerType;
 
-                                                                                                if (loggerType.HasFlag(LoggerTypes.DebugOutput))
-                                                                                                {
-                                                                                                    var debugLogger = container.Resolve<DebugOuputLogger>();
-                                                                                                    debugLogger.Initialize(level);
-                                                                                                    logger.AddLogger(debugLogger, LoggerTypes.DebugOutput);
-                                                                                                }
-                                                                                                if (loggerType.HasFlag(LoggerTypes.File))
-                                                                                                {
-                                                                                                    var fileLogger = container.Resolve<FileLogger>();
-                                                                                                    fileLogger.Initialize(level, "log.txt");
-                                                                                                    logger.AddLogger(fileLogger, LoggerTypes.File);
-                                                                                                }
-                                                                                            }));
+                    if (loggerType.HasFlag(LoggerTypes.DebugOutput))
+                    {
+                        var debugLogger = container.Resolve<DebugOuputLogger>();
+                        debugLogger.Initialize(level);
+                        logger.AddLogger(debugLogger, LoggerTypes.DebugOutput);
+                    }
+                    if (loggerType.HasFlag(LoggerTypes.File))
+                    {
+                        var fileLogger = container.Resolve<FileLogger>();
+                        fileLogger.Initialize(level, "log.txt");
+                        logger.AddLogger(fileLogger, LoggerTypes.File);
+                    }
+                }));
             return builder;
         }
 
@@ -302,11 +294,20 @@ namespace Coddee.WPF.AppBuilder
             loginViewModel.Initialize()
                 .ContinueWith(lt =>
                 {
+                    var loggedIn = false;
                     var loginView = loginViewModel.GetView() as Window;
+
                     if (loginView == null)
                         throw new ApplicationBuildException("The login view muse be of type Window");
+
+                    loginView.Closed += delegate
+                    {
+                        if (!loggedIn)
+                            wpfApplication.GetSystemApplication().Shutdown();
+                    };
                     loginViewModel.LoggedIn += (s, args) =>
                     {
+                        loggedIn = true;
                         shellViewModel.Initialize().ContinueWith((t) =>
                         {
                             container.Resolve<IGlobalEventsService>().GetEvent<ApplicationStartedEvent>().Invoke(wpfApplication);
@@ -328,8 +329,9 @@ namespace Coddee.WPF.AppBuilder
             where TShellViewModel : IShellViewModel
         {
             container.Resolve<IGlobalVariablesService>().SetValue(Globals.UsingDefaultShell, true);
+            var vmManager = container.Resolve<IViewModelsManager>();
 
-            var shellViewModel = container.Resolve<TShellViewModel>();
+            var shellViewModel = vmManager.CreateViewModel<TShellViewModel>(null);
             container.RegisterInstance<IShellViewModel>(shellViewModel);
 
             var wpfApplication = container.Resolve<WPFApplication>();
@@ -348,14 +350,17 @@ namespace Coddee.WPF.AppBuilder
         private static IDefaultShellViewModel BuildDefaultShell<TContent>(IWPFApplicationBuilder builder, WindowState state, Action<Window> config, IUnityContainer container) where TContent : IPresentable
         {
             container.Resolve<IGlobalVariablesService>().SetValue(Globals.UsingDefaultShell, true);
-            container.RegisterInstance<IShellViewModel, DefaultShellViewModel>();
-            container.RegisterInstance<IDefaultShellViewModel, DefaultShellViewModel>();
+
+            var vmManager = container.Resolve<IViewModelsManager>();
+            var shellViewModel = vmManager.CreateViewModel<DefaultShellViewModel>(null);
+
+            container.RegisterInstance<IShellViewModel>(shellViewModel);
+            container.RegisterInstance<IDefaultShellViewModel>(shellViewModel);
 
 
             var wpfApplication = container.Resolve<WPFApplication>();
             var systemApplication = wpfApplication.GetSystemApplication();
 
-            var shellViewModel = container.Resolve<IDefaultShellViewModel>();
             var shell = (DefaultShellView)shellViewModel.GetView();
             shell.SetState(state);
             config?.Invoke(shell);
@@ -420,9 +425,9 @@ namespace Coddee.WPF.AppBuilder
         {
             builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.DialogServiceBuildAction(
                                                                                                    (container) =>
-                                                                                                   {
-                                                                                                       container.Resolve<IDialogService>().Initialize(dialogRegion, dialogBorderBrush);
-                                                                                                   }));
+                     {
+                         container.Resolve<IDialogService>().Initialize(dialogRegion, dialogBorderBrush);
+                     }));
             return builder;
         }
 

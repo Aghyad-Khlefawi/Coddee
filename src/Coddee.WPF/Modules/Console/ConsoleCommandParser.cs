@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-namespace Coddee.WPF.Modules.Console
+namespace Coddee.Services.ApplicationConsole
 {
     /// <summary>
     /// The command parsing result

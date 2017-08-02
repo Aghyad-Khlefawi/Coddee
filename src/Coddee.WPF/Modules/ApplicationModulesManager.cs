@@ -141,7 +141,14 @@ namespace Coddee.WPF.Modules
             _logger.Log(EventsSource, $"Initializing auto modules", LogRecordTypes.Debug);
             foreach (var module in _modules.Values.Where(e => e.InitializationType == ModuleInitializationTypes.Auto))
             {
-                await InitializeModuleWithDependincies(module, null);
+                try
+                {
+                    await InitializeModuleWithDependincies(module, null);
+                }
+                catch (Exception ex)
+                {
+                    _logger?.Log(EventsSource, ex);
+                }
             }
         }
 

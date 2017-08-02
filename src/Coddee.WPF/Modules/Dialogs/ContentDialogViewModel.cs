@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿// Copyright (c) Aghyad khlefawi. All rights reserved.  
+// Licensed under the MIT License. See LICENSE file in the project root for full license information.  
+
 using System.Windows;
-using Coddee.WPF;
 using Coddee.WPF.Dialogs;
 
-namespace Coddee.WPF.Modules.Dialogs
+namespace Coddee.Services.Dialogs
 {
     public class ContentDialogViewModel : DialogViewModelBase<ContentDialogView>
     {

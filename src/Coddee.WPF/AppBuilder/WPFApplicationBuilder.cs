@@ -10,10 +10,8 @@ using Microsoft.Practices.Unity;
 using Coddee.Loggers;
 using Coddee.WPF.AppBuilder;
 using Coddee.AppBuilder;
-using Coddee.Data;
 using Coddee.ModuleDefinitions;
 using Coddee.Services;
-using Coddee.SQL;
 using Coddee.WPF.Modules;
 
 namespace Coddee.WPF
@@ -47,7 +45,6 @@ namespace Coddee.WPF
 
 
         //Build Actions
-
         public BuildActionsCoordinator BuildActionsCoordinator { get; }
 
 
@@ -142,9 +139,7 @@ namespace Coddee.WPF
                                                                   _modulesManager.RegisterModule(CoreModuleDefinitions.Modules);
                                                                   _modulesManager.RegisterModule(WindowsModuleDefinitions.Modules);
                                                                   _modulesManager.RegisterModule(WPFModuleDefinitions.Modules);
-
                                                                   _modulesManager.InitializeAutoModules();
-                                                                  _app.OnAutoModulesInitialized();
                                                               }));
         }
 

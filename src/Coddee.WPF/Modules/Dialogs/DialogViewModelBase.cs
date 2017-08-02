@@ -3,7 +3,7 @@
 
 using System;
 using System.Windows;
-using Coddee.WPF.Modules.Dialogs;
+using Coddee.Services.Dialogs;
 
 namespace Coddee.WPF.Dialogs
 {

@@ -3,7 +3,7 @@
 
 using System.Windows.Controls;
 
-namespace Coddee.WPF.Modules.Dialogs
+namespace Coddee.Services.Dialogs
 {
     /// <summary>
     /// Interaction logic for DialogContainer.xaml

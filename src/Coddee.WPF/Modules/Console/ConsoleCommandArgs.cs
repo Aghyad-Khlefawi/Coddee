@@ -4,7 +4,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Coddee.WPF.Modules.Console
+namespace Coddee.Services.ApplicationConsole
 {
    /// <summary>
    /// The console command handler arguments

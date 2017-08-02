@@ -9,23 +9,21 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Coddee.Loggers;
+using Coddee.WPF;
 using Coddee.WPF.Commands;
-using Coddee.WPF.Modules;
-using Coddee.WPF.Modules.Console;
 using System.Diagnostics;
 using System.Reflection;
 using System.Windows.Forms;
-using Coddee.Services;
 using KeyEventArgs = System.Windows.Input.KeyEventArgs;
 
-namespace Coddee.WPF.Console
+namespace Coddee.Services.ApplicationConsole
 {
     /// <summary>
     /// The ViewModel of the ApplicationConsole
     /// </summary>
-    public class ApplicationConsole : ViewModelBase<ApplicationConsoleView>, IApplicationConsole
+    public class ApplicationConsoleService : ViewModelBase<ApplicationConsoleView>, IApplicationConsole
     {
-        public ApplicationConsole()
+        public ApplicationConsoleService()
         {
             _logger = new StringLogger();
             _logger.AppendString += LoggerAppendString;

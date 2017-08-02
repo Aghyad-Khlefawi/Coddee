@@ -1,11 +1,9 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
+﻿// Copyright (c) Aghyad khlefawi. All rights reserved.  
+// Licensed under the MIT License. See LICENSE file in the project root for full license information.  
+
+using System;
 using Coddee;
-using Coddee.Collections;
-using Coddee.Data;
 using Coddee.WPF;
-using Coddee.WPF.Modules.Dialogs;
 using HR.Data.Models;
 using HR.Data.Repositories;
 

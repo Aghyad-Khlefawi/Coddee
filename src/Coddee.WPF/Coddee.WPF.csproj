@@ -120,6 +120,7 @@
     <Compile Include="IEditorViewModel.cs" />
     <Compile Include="InputMask.cs" />
     <Compile Include="IViewModel.cs" />
+    <Compile Include="Modules\Interfaces\IViewModelsManager.cs" />
     <Compile Include="Localize.cs" />
     <Compile Include="Modules\Console\ApplicationConsoleModule.cs" />
     <Compile Include="Modules\Console\ApplicationConsoleView.xaml.cs">
@@ -193,6 +194,8 @@
     </Compile>
     <Compile Include="Modules\Toast\ToastTemplateSelector.cs" />
     <Compile Include="Modules\Navigation\NavigationItem.cs" />
+    <Compile Include="Modules\ViewModelManager\ViewModelInfo.cs" />
+    <Compile Include="Modules\ViewModelManager\ViewModelManagerModule.cs" />
     <Compile Include="PasswordBoxText.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
@@ -214,6 +217,7 @@
     <Compile Include="UpdatableMarkupExtension.cs" />
     <Compile Include="Validate.cs" />
     <Compile Include="ViewModelBase.cs" />
+    <Compile Include="Modules\ViewModelManager\ViewModelsManager.cs" />
     <Compile Include="WPFModulesDefnitions.cs" />
     <Compile Include="XamlHelpers\FocusOnLoad.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">

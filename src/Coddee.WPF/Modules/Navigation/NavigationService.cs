@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Coddee.Collections;
 using Coddee.Services;
+using Coddee.WPF;
 using Coddee.WPF.Commands;
 using Coddee.WPF.Events;
-using Coddee.WPF.Navigation;
 
-namespace Coddee.WPF.Modules.Navigation
+namespace Coddee.Services.Navigation
 {
     public class NavigationService : ViewModelBase<NavigationServiceView>, INavigationService
     {
@@ -21,10 +21,10 @@ namespace Coddee.WPF.Modules.Navigation
             
         }
 
-        public NavigationService(IGlobalEventsService globalEvents)
+        public NavigationService(IGlobalEventsService globalEvents,IViewModelsManager viewModelsManager)
         {
             _globalEvents = globalEvents;
-          
+            _viewModelsManager = viewModelsManager;
         }
 
 
@@ -68,14 +68,14 @@ namespace Coddee.WPF.Modules.Navigation
         {
             NavigationItems.Add(navigationItem);
             if (!navigationItem.DestinationResolved)
-                navigationItem.SetDestination((IPresentable)Resolve<IShellViewModel>()
-                                                  .CreateViewModel(navigationItem.DestinationType));
+                navigationItem.SetDestination((IPresentable)_viewModelsManager.CreateViewModel(navigationItem.DestinationType,null));
             navigationItem.NavigationRequested += NavigationItem_NavigationRequested;
             navigationItem.Initialize();
         }
 
         private AsyncObservableCollection<INavigationItem> _navigationItems;
-        private IGlobalEventsService _globalEvents;
+        private readonly IGlobalEventsService _globalEvents;
+        private readonly IViewModelsManager _viewModelsManager;
         public AsyncObservableCollection<INavigationItem> NavigationItems
         {
             get { return _navigationItems; }

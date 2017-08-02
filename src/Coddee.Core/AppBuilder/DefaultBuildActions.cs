@@ -53,6 +53,7 @@ namespace Coddee.WPF.AppBuilder
         {
             return new BuildAction(BuildActionsKeys.Shell, action, 9);
         }
+
         public static BuildAction AppConsoleBuildAction(Action<IUnityContainer> action)
         {
             return new BuildAction(BuildActionsKeys.AppConsole, action, 10);

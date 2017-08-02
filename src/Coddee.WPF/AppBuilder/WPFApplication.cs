@@ -11,6 +11,7 @@ using Microsoft.Practices.Unity;
 
 namespace Coddee.WPF
 {
+
     /// <summary>
     /// The WPF application wrapper
     /// Extend the functionality of the regular WPF Application class
@@ -18,6 +19,7 @@ namespace Coddee.WPF
     public abstract class WPFApplication : IApplication
     {
         public static WPFApplication Current { get; protected set; }
+
         public void Run()
         {
             Current = this;
@@ -60,11 +62,7 @@ namespace Coddee.WPF
 
         public abstract void BuildApplication(IWPFApplicationFactory app);
 
-        public virtual void OnAutoModulesInitialized()
-        {
-            
-        }
-
+        
         /// <summary>
         /// Setter for the application name called by the application identifier
         /// </summary>
@@ -100,9 +98,7 @@ namespace Coddee.WPF
         {
             return _systemApplication;
         }
-
         
-
         /// <summary>
         /// Shows the application mainwindow
         /// </summary>
@@ -112,9 +108,6 @@ namespace Coddee.WPF
             _container.Resolve<IGlobalEventsService>().GetEvent<ApplicationStartedEvent>().Invoke(this);
         }
 
-        public virtual void OnRepositoryManagerSet()
-        {
-            
-        }
+        
     }
 }

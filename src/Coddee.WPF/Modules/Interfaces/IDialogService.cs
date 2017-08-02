@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using Coddee.Services.Dialogs;
+using Coddee.WPF;
 
-namespace Coddee.WPF.Modules.Dialogs
+namespace Coddee.Services
 {
     public interface IDialogService
     {

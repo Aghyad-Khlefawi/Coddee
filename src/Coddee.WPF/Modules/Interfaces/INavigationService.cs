@@ -3,10 +3,10 @@
 
 using System;
 using System.Collections.Generic;
-using Coddee.WPF.Modules.Navigation;
-using Coddee.WPF.Navigation;
+using Coddee.WPF;
+using Coddee.Services.Navigation;
 
-namespace Coddee.WPF.Modules
+namespace Coddee.Services
 {
     public interface INavigationService
     {

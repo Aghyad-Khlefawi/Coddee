@@ -5,10 +5,7 @@ using System;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-using System.Windows.Media;
-using Coddee.Collections;
 using Coddee.WPF.Commands;
-using Coddee.WPF.Navigation;
 
 namespace Coddee.WPF.DefaultShell
 {
@@ -103,16 +100,6 @@ namespace Coddee.WPF.DefaultShell
         public IPresentableViewModel GetMainContent()
         {
             return _mainViewModel;
-        }
-
-        public new IViewModel CreateViewModel(Type viewModelType)
-        {
-            return base.CreateViewModel(viewModelType);
-        }
-
-        public new TViewModel CreateViewModel<TViewModel>() where TViewModel : IViewModel
-        {
-            return base.CreateViewModel<TViewModel>();
         }
     }
 }

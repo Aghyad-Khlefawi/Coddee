@@ -4,7 +4,7 @@
 using System.Threading.Tasks;
 using Microsoft.Practices.Unity;
 
-namespace Coddee.WPF.Modules.Dialogs
+namespace Coddee.Services.Dialogs
 {
     [Module(BuiltInModules.DialogService)]
     public class DialogServicsModule : IModule

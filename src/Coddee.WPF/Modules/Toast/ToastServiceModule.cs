@@ -4,7 +4,7 @@
 using System.Threading.Tasks;
 using Microsoft.Practices.Unity;
 
-namespace Coddee.WPF.Modules.Toast
+namespace Coddee.Services.Toast
 {
     [Module(BuiltInModules.ToastService)]
     public class ToastServiceModule : IModule

@@ -4,9 +4,10 @@
 using System;
 using System.Windows.Input;
 using Coddee.Loggers;
-using Coddee.WPF.Modules.Console;
+using Coddee.Services.ApplicationConsole;
+using Coddee.WPF;
 
-namespace Coddee.WPF.Modules
+namespace Coddee.Services
 {
     public interface IApplicationConsole:IPresentable
     {

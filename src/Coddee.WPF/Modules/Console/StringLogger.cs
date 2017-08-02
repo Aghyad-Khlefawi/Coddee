@@ -4,7 +4,7 @@
 using System;
 using Coddee.Loggers;
 
-namespace Coddee.WPF.Console
+namespace Coddee.Services.ApplicationConsole
 {
     public class StringLogger : LoggerBase
     {

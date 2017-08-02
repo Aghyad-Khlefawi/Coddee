@@ -12,8 +12,7 @@ namespace Coddee.WPF
     /// </summary>
     public interface IShellViewModel:IPresentableViewModel
     {
-        IViewModel CreateViewModel(Type viewModelType);
-        TViewModel CreateViewModel<TViewModel>() where TViewModel : IViewModel;
+
     }
 
     /// <summary>

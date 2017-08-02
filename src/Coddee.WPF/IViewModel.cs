@@ -12,11 +12,7 @@ namespace Coddee.WPF
     public interface IViewModel:IDisposable,INotifyPropertyChanged
     {
         event EventHandler Initialized;
-        event EventHandler<IViewModel> ChildCreated;
-
-        IViewModel ParentViewModel { get; set; }
-        IList<IViewModel> ChildViewModels { get; }
-
+        
         bool IsInitialized { get; }
         Task Initialize();
 
