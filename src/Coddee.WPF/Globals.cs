@@ -5,8 +5,9 @@ namespace Coddee.WPF
 {
     public class Globals
     {
-        //HRAuthenticationResponse
         public const string Username = nameof(Username);
         public const string ApplicationName = nameof(ApplicationName);
+
+        public const string UsingDefaultShell = nameof(UsingDefaultShell);
     }
 }

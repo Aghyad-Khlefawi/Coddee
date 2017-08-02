@@ -16,7 +16,7 @@ namespace Coddee.WPF.DefaultShell
     /// The default shell viewModel
     /// this viewModel will be used if you don't specify a custom shell at the application build
     /// </summary>
-    public class DefaultShellViewModel : ViewModelBase, IDefaultShellViewModel
+    public class DefaultShellViewModel : ViewModelBase<DefaultShellView>, IDefaultShellViewModel
     {
         /// <summary>
         /// Design time constructor
@@ -28,14 +28,6 @@ namespace Coddee.WPF.DefaultShell
                 ApplicationName = "HR application";
             }
         }
-
-        public DefaultShellViewModel(IShell shell)
-        {
-            _shell = shell;
-        }
-
-
-        protected readonly IShell _shell;
 
         #region ToolBar properties
 
@@ -86,21 +78,30 @@ namespace Coddee.WPF.DefaultShell
         /// </summary>
         protected virtual void Minimize()
         {
-            ((Window) _shell).WindowState = WindowState.Minimized;
+            View.WindowState = WindowState.Minimized;
         }
 
-        private IViewModel _mainViewModel;
+        private IPresentableViewModel _mainViewModel;
 
-        public IViewModel SetMainContent(Type defaultPresentable, bool useNavigation)
+        protected override async Task OnInitialization()
+        {
+            await base.OnInitialization();
+            await _mainViewModel.Initialize();
+        }
+        public IPresentableViewModel SetMainContent(Type defaultPresentable, bool useNavigation)
         {
             _globalVariables.TryGetValue(Globals.Username, out _username);
             _applicationName = _globalVariables.GetValue<string>(Globals.ApplicationName);
 
 
             UseNavigation = useNavigation;
-            _mainViewModel = CreateViewModel(defaultPresentable);
-            _mainViewModel.Initialize();
-            DefaultRegions.ApplicationMainRegion.View((IPresentable) _mainViewModel);
+            _mainViewModel = (IPresentableViewModel)CreateViewModel(defaultPresentable);
+            DefaultRegions.ApplicationMainRegion.View((IPresentable)_mainViewModel);
+            return _mainViewModel;
+        }
+
+        public IPresentableViewModel GetMainContent()
+        {
             return _mainViewModel;
         }
 

@@ -47,7 +47,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppBuilder\ApplicationTypes.cs" />
+    <Compile Include="AppBuilder\BuildAction.cs" />
     <Compile Include="AppBuilder\BuildActions.cs" />
+    <Compile Include="AppBuilder\BuildActionsCoordinator.cs" />
+    <Compile Include="AppBuilder\DefaultBuildActions.cs" />
     <Compile Include="AppBuilder\IApplication.cs" />
     <Compile Include="AppBuilder\IApplicationBuilder.cs" />
     <Compile Include="AppBuilder\IApplicationIdentifier.cs" />

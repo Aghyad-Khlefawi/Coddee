@@ -4,7 +4,9 @@
 using System;
 using System.Windows;
 using Coddee.AppBuilder;
+using Coddee.Services;
 using Coddee.WPF.AppBuilder;
+using Coddee.WPF.Events;
 using Microsoft.Practices.Unity;
 
 namespace Coddee.WPF
@@ -50,7 +52,10 @@ namespace Coddee.WPF
         /// </summary>
         private void Start()
         {
-            BuildApplication(new WPFApplicationBuilder(this, _container));
+            _container.RegisterInstance<IApplication>(this);
+            _container.RegisterInstance(this);
+            var factory = _container.Resolve<WPFApplicationBuilder>();
+            BuildApplication(factory);
         }
 
         public abstract void BuildApplication(IWPFApplicationFactory app);
@@ -104,6 +109,7 @@ namespace Coddee.WPF
         public void ShowWindow()
         {
             _systemApplication.MainWindow.Show();
+            _container.Resolve<IGlobalEventsService>().GetEvent<ApplicationStartedEvent>().Invoke(this);
         }
 
         public virtual void OnRepositoryManagerSet()

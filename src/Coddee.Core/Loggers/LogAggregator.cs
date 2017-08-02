@@ -16,13 +16,13 @@ namespace Coddee.Loggers
     {
         private readonly IList<ILogger> _loggers;
         private readonly IList<LogRecord> _records;
-
+        public LoggerTypes AllowedTypes { get; set; }
         public LogAggregator()
         {
             _loggers = new List<ILogger>();
             _records = new List<LogRecord>();
         }
-        
+
         protected override void CommitLog(LogRecord record)
         {
             _records.Add(record);
@@ -33,10 +33,12 @@ namespace Coddee.Loggers
         /// <summary>
         /// Adds a logger to the loggers collection
         /// </summary>
-        public void AddLogger(ILogger logger)
+        public void AddLogger(ILogger logger, LoggerTypes type)
         {
+            if (!AllowedTypes.HasFlag(type))
+                return;
             foreach (var log in _records)
-                if (log.Type >= _minimumLevel)
+                if (log.Type >= MinimumLevel)
                     logger.Log(log);
             _loggers.Add(logger);
         }

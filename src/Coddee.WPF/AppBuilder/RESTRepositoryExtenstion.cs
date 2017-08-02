@@ -28,7 +28,7 @@ namespace Coddee.WPF.AppBuilder
     {
         public static IWPFApplicationBuilder UseRESTRepositoryManager(
             this IWPFApplicationBuilder builder,
-            Func<IConfigurationManager,RESTRepositoryManagerConfig> config)
+            Func<IConfigurationManager, RESTRepositoryManagerConfig> config)
         {
             return builder.UseRESTRepositoryManager<RESTRepositoryManager>(config);
         }
@@ -38,14 +38,14 @@ namespace Coddee.WPF.AppBuilder
             Func<IConfigurationManager, RESTRepositoryManagerConfig> config)
             where TRepositoryManager : IRESTRepositoryManager, new()
         {
-            builder.SetBuildAction(BuildActions.Repository, () =>
+            builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.RepositoryBuildAction((container) =>
             {
                 var repositoryManager = new TRepositoryManager();
-                var configRes = config(builder.WPFBuilder.GetContainer().Resolve<IConfigurationManager>());
-                repositoryManager.Initialize(configRes.ApiUrl, configRes.UnauthorizedRequestHandler, builder.WPFBuilder.GetMapper());
+                var configRes = config(container.Resolve<IConfigurationManager>());
+                repositoryManager.Initialize(configRes.ApiUrl, configRes.UnauthorizedRequestHandler, container.Resolve<IObjectMapper>());
                 repositoryManager.RegisterRepositories(configRes.RepositoriesAssembly);
                 builder.WPFBuilder.SetRepositoryManager(repositoryManager, configRes.RegisterTheRepositoresInContainer);
-            });
+            }));
             return builder;
         }
     }

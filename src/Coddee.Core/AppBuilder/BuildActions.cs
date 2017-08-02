@@ -3,7 +3,7 @@
 
 namespace Coddee.AppBuilder
 {
-   public class BuildActions
+   public class BuildActionsKeys
     {
         public const string Logger = nameof(Logger);
         public const string ConfigFile = nameof(ConfigFile);
@@ -16,6 +16,10 @@ namespace Coddee.AppBuilder
         public const string Navigation = nameof(Navigation);
         public const string DialogService = nameof(DialogService);
         public const string DebugTool = nameof(DebugTool);
+        public const string SetupViewModelBase = nameof(SetupViewModelBase);
         public const string Localization = nameof(Localization);
+
+        public const string DiscoverModules = nameof(DiscoverModules);
+        public const string ConfigureGlobalVariabls = nameof(ConfigureGlobalVariabls);
     }
 }

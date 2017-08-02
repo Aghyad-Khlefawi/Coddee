@@ -218,9 +218,12 @@ namespace Coddee.WPF
         {
             _container = container;
             _globalVariables = _container.Resolve<IGlobalVariablesService>();
-            _toast = _container.Resolve<IToastService>();
             _logger = _container.Resolve<ILogger>();
             _localization = _container.Resolve<ILocalizationManager>();
+
+            if (_container.IsRegistered<IToastService>())
+                _toast = _container.Resolve<IToastService>();
+
         }
 
         protected void ToastError(string message = "An error occurred.")

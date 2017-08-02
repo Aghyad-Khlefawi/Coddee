@@ -43,26 +43,29 @@ namespace HR.Clients.WPF
                 .UseConfigurationFile(true)
                 .UseLogger(LoggerTypes.ApplicationConsole | LoggerTypes.DebugOutput, LogRecordTypes.Debug)
                 .UseApplicationConsole(e => e.Key == Key.F12)
-                .UseCoddeeDebugTool(e=>e.Key == Key.F11)
+                .UseCoddeeDebugTool(e => e.Key == Key.F11)
                 .UseILMapper()
-                .UseLogin<LoginViewModel>()
-                .UseDefaultShell<MainViewModel>()
+                //.UseLogin<LoginViewModel>()
+                .UseDefaultShellWithLogin<MainViewModel, LoginViewModel>()
                 .UseNavigation(HRNavigation.Navigations)
                 .UseToast()
                 .UseDialogs()
-                .UseLocalization("HR.Clients.WPF.Properties.Resources", "HR.Clients.WPF.exe",new []{"ar-SY","en-US"}, "ar-SY")
+                .UseLocalization("HR.Clients.WPF.Properties.Resources",
+                                 "HR.Clients.WPF.exe",
+                                 new[] {"ar-SY", "en-US"},
+                                 "ar-SY")
                 .UseLinqRepositoryManager<HRDBManager, HRRepositoryManager
                 >($@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename={
                           dbLocation
                       }\HRDatabase.mdf;Integrated Security=True;Connect Timeout=30",
                   "HR.Data.LinqToSQL",
-                  true,config)
-                //.UseRESTRepositoryManager(config =>
-                //{
-                //    return new RESTRepositoryManagerConfig{};
-                //})
-                //.UseMongoDBRepository("mongodb://192.168.1.160:27017", "HR","HR.Data.Mongo",true)
-                .Start();
+                  true,
+                  config);
+            //.UseRESTRepositoryManager(config =>
+            //{
+            //    return new RESTRepositoryManagerConfig{};
+            //})
+            //.UseMongoDBRepository("mongodb://192.168.1.160:27017", "HR","HR.Data.Mongo",true)
         }
 
         private void OnUnauthorizedRequest()

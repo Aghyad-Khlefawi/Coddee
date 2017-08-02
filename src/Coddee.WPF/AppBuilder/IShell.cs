@@ -8,6 +8,6 @@ namespace Coddee.WPF
     /// </summary>
     public interface IShell
     {
-
+       
     }
 }

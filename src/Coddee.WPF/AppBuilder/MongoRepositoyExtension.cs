@@ -1,8 +1,8 @@
 ﻿// Copyright (c) Aghyad khlefawi. All rights reserved.  
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
-using Coddee.AppBuilder;
 using Coddee.Data.MongoDB;
+using Microsoft.Practices.Unity;
 
 namespace Coddee.WPF.AppBuilder
 {
@@ -16,14 +16,14 @@ namespace Coddee.WPF.AppBuilder
             bool registerTheRepositoresInContainer)
             where TRepositoryManager : IMongoRepositoryManager, new()
         {
-            builder.SetBuildAction(BuildActions.Repository,
-                                   () =>
-                                   {
-                                       IMongoRepositoryManager repositoryManager = new TRepositoryManager();
-                                       repositoryManager.Initialize(new MongoDBManager(connection, databaseName),builder.WPFBuilder.GetMapper());
-                                       repositoryManager.RegisterRepositories(repositoriesAssembly);
-                                       builder.WPFBuilder.SetRepositoryManager(repositoryManager,registerTheRepositoresInContainer);
-                                   });
+            builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.RepositoryBuildAction((container) =>
+            {
+
+                IMongoRepositoryManager repositoryManager = new TRepositoryManager();
+                repositoryManager.Initialize(new MongoDBManager(connection, databaseName), container.Resolve<IObjectMapper>());
+                repositoryManager.RegisterRepositories(repositoriesAssembly);
+                builder.WPFBuilder.SetRepositoryManager(repositoryManager, registerTheRepositoresInContainer);
+            }));
             return builder;
         }
 

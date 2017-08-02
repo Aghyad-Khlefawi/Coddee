@@ -2,10 +2,6 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Coddee.Loggers
 {
@@ -14,6 +10,8 @@ namespace Coddee.Loggers
     /// </summary>
     public interface ILogger
     {
+        LogRecordTypes MinimumLevel { get; }
+
         /// <summary>
         /// Initialize the logger
         /// </summary>
@@ -29,5 +27,6 @@ namespace Coddee.Loggers
         void Log(string source,Exception exception,DateTime date);
 
         event EventHandler<LogRecord> LogRecieved;
+        void SetLogLevel(LogRecordTypes logLevel);
     }
 }

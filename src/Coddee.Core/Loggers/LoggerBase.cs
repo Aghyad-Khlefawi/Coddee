@@ -8,11 +8,11 @@ namespace Coddee.Loggers
 {
     public abstract class LoggerBase : ILogger
     {
-        protected LogRecordTypes _minimumLevel;
+        public LogRecordTypes MinimumLevel { get; protected set; }
 
         public virtual void Initialize(LogRecordTypes type)
         {
-            _minimumLevel = type;
+            MinimumLevel = type;
         }
 
         /// <summary>
@@ -23,7 +23,7 @@ namespace Coddee.Loggers
 
         public virtual void Log(LogRecord record)
         {
-            if (record.Type >= _minimumLevel)
+            if (record.Type >= MinimumLevel)
             { 
                 CommitLog(record);
                 LogRecieved?.Invoke(this,record);
@@ -65,7 +65,7 @@ namespace Coddee.Loggers
         {
             Log(new LogRecord
             {
-                Content = BuildExceptionString(exception, 0, _minimumLevel == LogRecordTypes.Debug),
+                Content = BuildExceptionString(exception, 0, MinimumLevel == LogRecordTypes.Debug),
                 Source = source,
                 Type = LogRecordTypes.Error,
                 Date = date,
@@ -74,6 +74,11 @@ namespace Coddee.Loggers
         }
 
         public event EventHandler<LogRecord> LogRecieved;
+        public void SetLogLevel(LogRecordTypes logLevel)
+        {
+
+            MinimumLevel = logLevel;
+        }
 
         /// <summary>
         /// Build a string that represent the event
