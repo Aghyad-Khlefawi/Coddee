@@ -7,9 +7,6 @@ Features and thier documentation is available in the [Wiki](https://github.com/A
 # Examples
 An example project is included in the source folder
 
-# Current status
-[![Build status](https://ci.appveyor.com/api/projects/status/03fxfd4jx6ey8w5q?svg=true)](https://ci.appveyor.com/project/Aghyad-Khlefawi/coddee)
-
 # Nuget
 [Coddee.Core](https://www.nuget.org/packages/Coddee.Core/1.0.0)
 
