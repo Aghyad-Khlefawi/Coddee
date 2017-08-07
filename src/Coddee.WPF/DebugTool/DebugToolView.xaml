@@ -9,44 +9,86 @@
         mc:Ignorable="d"
         Title="DebugToolWindow" Height="500" Width="600">
     <Window.Resources>
-        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
-        <local:DebugToolViewModel x:Key="designData" />
-        <DataTemplate x:Key="PropertiesTemplate">
-            <DataGrid AutoGenerateColumns="False"
-                      ItemsSource="{Binding Properties}">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="Property"
-                                        Binding="{Binding Name}" />
-                    <DataGridTextColumn Header="Value"
-                                        Visibility="{Binding IsPremitive,Converter={StaticResource BoolToVisibilityConverter}}"
-                                        Binding="{Binding Value}" />
-                    <DataGridTemplateColumn  Header="Value"
-                                             CellTemplate="{DynamicResource PropertiesTemplate}"
-                                             Visibility="{Binding IsPremitive,Converter={StaticResource BoolToVisibilityConverter},ConverterParameter=R}"/>
-                </DataGrid.Columns>
-            </DataGrid>
-        </DataTemplate>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/Coddee.WPF;component/Resources.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <local:DebugToolViewModel x:Key="designData" />
+
+        </ResourceDictionary>
     </Window.Resources>
-    <DockPanel>
-        <Button DockPanel.Dock="Bottom" HorizontalAlignment="Right"
-                Command="{Binding RefreshCommand}"
-                Margin="0 5 0 5" Content="Refresh"/>
-        <Grid d:DataContext="{StaticResource designData}">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition />
-                <ColumnDefinition />
-            </Grid.ColumnDefinitions>
-            <TreeView x:Name="VMTree"
-                      ItemsSource="{Binding ViewModels}">
-                <TreeView.ItemTemplate>
-                    <HierarchicalDataTemplate ItemsSource="{Binding ViewModels}">
-                        <Label Content="{Binding Name}" />
-                    </HierarchicalDataTemplate>
-                </TreeView.ItemTemplate>
-            </TreeView>
-            <ContentPresenter Content="{Binding}"
-                              ContentTemplate="{StaticResource PropertiesTemplate}"
-                              Grid.Column="1" />
-        </Grid>
+    <DockPanel d:DataContext="{StaticResource designData}">
+        <Button Style="{StaticResource HighlightButton}" 
+                    DockPanel.Dock="Bottom"
+                    Command="{Binding LoadCommand}">
+            <StackPanel Orientation="Horizontal">
+                <Path Style="{StaticResource Shape_Refresh}" Height="20"/>
+                <Label Content="Refresh" Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button,Mode=FindAncestor},Path=Foreground}"/>
+            </StackPanel>
+        </Button>
+        <ScrollViewer DockPanel.Dock="Top"  
+                      VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Auto">
+            <ItemsControl ItemsSource="{Binding NavigationStack}" >
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Button Command="{Binding NavigateCommand}" 
+                                Cursor="Hand">
+                            <Button.Template>
+                                <ControlTemplate>
+                                    <Border>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Label Content="{Binding Name}" VerticalContentAlignment="Center"/>
+                                            <Label Content="&gt;" FontSize="14" Padding="0 3 3 3"/>
+                                        </StackPanel>
+                                    </Border>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer >
+        <Border BorderThickness="0 2 0 0" BorderBrush="LightGray" Margin="0 2 0 0">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="200"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Border BorderThickness="0 0 2 0"
+                        BorderBrush="LightGray">
+                    <DockPanel>
+                        <Label DockPanel.Dock="Top" Content="Child view models" HorizontalAlignment="Center"/>
+                        <ItemsControl ItemsSource="{Binding ViewModels}" >
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border BorderThickness="0 1"
+                                    BorderBrush="LightGray">
+                                        <Button Style="{StaticResource HighlightButton}"
+                                    Foreground="Black"
+                                            Command="{Binding NavigateCommand}" Cursor="Hand"
+                                    Background="WhiteSmoke"
+                                    Content="{Binding Name}"/>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </DockPanel>
+                </Border>
+                <DockPanel Grid.Column="1">
+                    <StackPanel DockPanel.Dock="Top">
+                        <Label Content="{Binding CurrentViewModel.ViewModel.__Name}" FontSize="20"/>
+                        <TextBlock Text="{Binding CurrentViewModel.ID,StringFormat={}ID : {0}}" FontSize="12" Padding="5 0 5 5"/>
+                    </StackPanel>
+                    <Border Height="1" Background="LightGray" Margin="10" DockPanel.Dock="Top"/>
+                    <ContentPresenter Content="{Binding ViewModelManipulatorContent}"/>
+                </DockPanel>
+            </Grid>
+        </Border>
     </DockPanel>
 </Window>

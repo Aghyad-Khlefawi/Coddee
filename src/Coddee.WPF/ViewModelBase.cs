@@ -24,11 +24,11 @@ namespace Coddee.WPF
     /// The base class for all ViewModels of the application
     /// Contains the property changed handlers and UI execute method
     /// </summary>
-    public abstract class ViewModelBase : BindableBase, IViewModel, IDataErrorInfo
+    public abstract class ViewModelBase : BindableBase, IViewModel
     {
         private const string _eventsSource = "VMBase";
 
-
+        
         protected static readonly Task completedTask = Task.FromResult(false);
         protected static WPFApplication _app;
         protected static IUnityContainer _container;
@@ -37,9 +37,9 @@ namespace Coddee.WPF
         protected static ILocalizationManager _localization;
         protected static ILogger _logger;
 
-        protected static IViewModelsManager VmManager ;
+        private static IViewModelsManager VmManager;
 
-        public string vmName => GetType().Name;
+        public string __Name { get; protected set; }
 
 
         protected ViewModelBase()
@@ -47,7 +47,7 @@ namespace Coddee.WPF
             Initialized += OnInitialized;
             RequiredFields = new RequiredFieldCollection();
             _requiredFieldsPropertyInfo = new Dictionary<string, PropertyInfo>();
-
+            __Name = GetType().Name;
             if (IsDesignMode())
                 OnDesignMode();
         }
@@ -57,7 +57,7 @@ namespace Coddee.WPF
         protected readonly Dictionary<string, PropertyInfo> _requiredFieldsPropertyInfo;
 
         public event EventHandler Initialized;
-        
+
 
         private bool _isInitialized;
         public bool IsInitialized
@@ -99,7 +99,7 @@ namespace Coddee.WPF
         }
         protected IViewModel CreateViewModel(Type viewModelType)
         {
-            return VmManager.CreateViewModel(viewModelType,this);
+            return VmManager.CreateViewModel(viewModelType, this);
         }
 
         protected TResult CreateViewModel<TResult>() where TResult : IViewModel
@@ -138,20 +138,24 @@ namespace Coddee.WPF
             return completedTask;
         }
 
+        private readonly object _initializationLock = new object(); 
+
         /// <summary>
         /// Called when the ViewModel is ready to be presented
         /// </summary>
         /// <returns></returns>
         public Task Initialize()
         {
-            _logger?.Log(_eventsSource, $"ViewModel initializing {vmName}", LogRecordTypes.Debug);
+            lock (_initializationLock)
+                IsInitialized = true;
+
+            _logger?.Log(_eventsSource, $"ViewModel initializing {__Name}", LogRecordTypes.Debug);
             return Task.Run(() =>
             {
                 OnInitialization().Wait();
 
                 RefreshRequiredFields();
 
-                IsInitialized = true;
                 IsBusy = false;
                 Initialized?.Invoke(this, EventArgs.Empty);
             });
@@ -166,7 +170,7 @@ namespace Coddee.WPF
 
         protected virtual void OnInitialized(object sender, EventArgs e)
         {
-            _logger?.Log(_eventsSource, $"ViewModel initialized {vmName}", LogRecordTypes.Debug);
+            _logger?.Log(_eventsSource, $"ViewModel initialized {__Name}", LogRecordTypes.Debug);
         }
 
         /// <summary>
@@ -231,7 +235,7 @@ namespace Coddee.WPF
 
         protected void LogError(Exception ex)
         {
-            LogError(vmName, ex);
+            LogError(__Name, ex);
         }
 
         protected void RegisterInstance<T>(T instance)
@@ -274,11 +278,6 @@ namespace Coddee.WPF
             }
         }
 
-        public string this[string columnName]
-        {
-            get { return CheckField(columnName); }
-        }
-
         protected virtual string CheckField(string fieldName)
         {
             var field = RequiredFields?.FirstOrDefault(e => e.FieldName == fieldName);
@@ -310,7 +309,6 @@ namespace Coddee.WPF
             return errors;
         }
 
-        public string Error => null;
 
         public ReactiveCommand<T> CreateReactiveCommand<T>(T obj, Action handler)
         {
@@ -339,7 +337,7 @@ namespace Coddee.WPF
 
         protected virtual void OnViewCreated(object sender, TView e)
         {
-            _logger?.Log(_eventsSource, $"View created {e.GetType().Name} for {vmName}", LogRecordTypes.Debug);
+            _logger?.Log(_eventsSource, $"View created {e.GetType().Name} for {__Name}", LogRecordTypes.Debug);
         }
 
         /// <summary>

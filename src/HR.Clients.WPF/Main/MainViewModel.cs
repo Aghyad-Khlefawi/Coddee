@@ -3,6 +3,7 @@
 
 using System;
 using System.Threading.Tasks;
+using Coddee.Services;
 using Coddee.WPF;
 using HR.Clients.WPF.Companies;
 using HR.Clients.WPF.States;
@@ -11,7 +12,7 @@ namespace HR.Clients.WPF.Main
 {
     public class MainViewModel : ViewModelBase<MainView>
     {
-        public MainViewModel()
+        public MainViewModel(IConfigurationManager conf)
         {
             if (IsDesignMode())
             {
@@ -31,6 +32,7 @@ namespace HR.Clients.WPF.Main
             get { return _statesViewModel; }
             set { SetProperty(ref this._statesViewModel, value); }
         }
+
         private CompaniesViewModel _companiesViewModel;
         public CompaniesViewModel CompaniesViewModel
         {

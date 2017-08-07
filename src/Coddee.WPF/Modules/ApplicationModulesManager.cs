@@ -128,7 +128,7 @@ namespace Coddee.WPF.Modules
         {
             foreach (var module in modules)
             {
-               await InitializeModuleWithDependincies(module, null);
+                await InitializeModuleWithDependincies(module, null);
             }
         }
 
@@ -159,9 +159,13 @@ namespace Coddee.WPF.Modules
         /// <param name="dependencyStack"></param>
         public async Task InitializeModuleWithDependincies(Module module, List<string> dependencyStack)
         {
+            if (module.Initialized)
+            {
+                return;
+            }
             if (module.Dependencies == null || !module.Dependencies.Any())
             {
-               await InitializeModule(module);
+                await InitializeModule(module);
             }
             else
             {
@@ -202,19 +206,20 @@ namespace Coddee.WPF.Modules
         {
             if (!_modules.ContainsKey(moduleName))
                 throw new ModuleException($"Module initialization failed because the module {moduleName} not found.");
-           return InitializeModuleWithDependincies(_modules[moduleName], null);
+            return InitializeModuleWithDependincies(_modules[moduleName], null);
         }
 
         /// <summary>
         /// Initialize a module
         /// </summary>
         /// <exception cref="ModuleException"></exception>
-        private Task InitializeModule(Module module)
+        private async Task InitializeModule(Module module)
         {
             if (module.Instance == null)
-                module.Instance = (IModule) Activator.CreateInstance(module.Type);
+                module.Instance = (IModule)Activator.CreateInstance(module.Type);
             _logger.Log(EventsSource, $"Initializing module [{module.Name}]", LogRecordTypes.Debug);
-            return module.Instance.Initialize(_container);
+            await module.Instance.Initialize(_container);
+            module.Initialized = true;
         }
     }
 }

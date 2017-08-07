@@ -2,7 +2,6 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
 using System;
-using System.Diagnostics;
 using System.IO;
 using System.Windows;
 using System.Windows.Input;
@@ -36,38 +35,26 @@ namespace HR.Clients.WPF
         public override void BuildApplication(IWPFApplicationFactory app)
         {
             var config = new RepositoryConfigurations();
-            var dbLocation = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"..\\","..\\","..\\","HR.Web","DB"));
+            var dbLocation = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..\\", "..\\", "..\\", "HR.Web", "DB"));
+
+            var connection = $@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename={dbLocation}\HRDatabase.mdf;Integrated Security=True;Connect Timeout=30";
+
+
             app.CreateWPFApplication("HR application", AppID)
                 .UseLogger(LoggerTypes.ApplicationConsole | LoggerTypes.DebugOutput, LogRecordTypes.Debug)
                 .UseApplicationConsole(e => e.Key == Key.F12)
                 .UseCoddeeDebugTool(e => e.Key == Key.F11)
                 .UseILMapper()
-                //.UseLogin<LoginViewModel>()
                 .UseDefaultShellWithLogin<MainViewModel, LoginViewModel>()
                 .UseNavigation(HRNavigation.Navigations)
                 .UseToast()
                 .UseDialogs()
                 .UseLocalization("HR.Clients.WPF.Properties.Resources",
                                  "HR.Clients.WPF.exe",
-                                 new[] {"ar-SY", "en-US"},
+                                 new[] { "ar-SY", "en-US" },
                                  "ar-SY")
-                .UseLinqRepositoryManager<HRDBManager, HRRepositoryManager
-                >($@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename={
-                          dbLocation
-                      }\HRDatabase.mdf;Integrated Security=True;Connect Timeout=30",
-                  "HR.Data.LinqToSQL",
-                  true,
-                  config);
-            //.UseRESTRepositoryManager(config =>
-            //{
-            //    return new RESTRepositoryManagerConfig{};
-            //})
-            //.UseMongoDBRepository("mongodb://192.168.1.160:27017", "HR","HR.Data.Mongo",true)
-        }
-
-        private void OnUnauthorizedRequest()
-        {
-            MessageBox.Show("Unauthorized request");
+                .UseLinqRepositoryManager<HRDBManager, HRRepositoryManager>(connection,
+                  "HR.Data.LinqToSQL",true,config);
         }
     }
 }

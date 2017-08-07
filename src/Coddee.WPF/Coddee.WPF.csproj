@@ -112,6 +112,11 @@
     <Compile Include="DebugTool\DebugToolView.xaml.cs">
       <DependentUpon>DebugToolView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="DebugTool\PropertyMainpulatorView.xaml.cs">
+      <DependentUpon>PropertyMainpulatorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DebugTool\PropertyMainpulatorViewModel.cs" />
+    <Compile Include="DebugTool\ViewModelPropertyTemplateSelector.cs" />
     <Compile Include="DefaultNavigations.cs" />
     <Compile Include="DefaultShell\DefaultRegions.cs" />
     <Compile Include="Events\ApplicationStartedEvent.cs" />
@@ -266,6 +271,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="DebugTool\DebugToolView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="DebugTool\PropertyMainpulatorView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -83,7 +83,8 @@ namespace Coddee.WPF.DefaultShell
         protected override async Task OnInitialization()
         {
             await base.OnInitialization();
-            await _mainViewModel.Initialize();
+            if (!_mainViewModel.IsInitialized)
+                await _mainViewModel.Initialize();
         }
         public IPresentableViewModel SetMainContent(Type defaultPresentable, bool useNavigation)
         {

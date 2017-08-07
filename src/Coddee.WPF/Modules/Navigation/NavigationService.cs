@@ -4,10 +4,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using Coddee.Collections;
-using Coddee.Services;
 using Coddee.WPF;
 using Coddee.WPF.Commands;
 using Coddee.WPF.Events;

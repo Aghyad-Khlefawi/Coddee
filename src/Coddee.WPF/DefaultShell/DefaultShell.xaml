@@ -58,13 +58,13 @@
                         </DockPanel.Resources>
                         <Button IsTabStop="False"
                                 Command="{Binding MinimizeCommand}">
-                            <Path Style="{StaticResource MinimizeShape}"
+                            <Path Style="{StaticResource Shape_Minimize}"
                                   Height="3"
                                   Width="15" />
                         </Button>
                         <Button x:Name="RestoreButton"
                                 Click="Restore">
-                            <Path Style="{StaticResource RestoreWindowShape}"
+                            <Path Style="{StaticResource Shape_RestoreWindow}"
                                   Stretch="Fill"
                                   Width="15"
                                   FlowDirection="RightToLeft"
@@ -73,7 +73,7 @@
 
                         <Button x:Name="MaximizeButton"
                                 Click="Maximaize">
-                            <Path Style="{StaticResource MaximaizeWindowShape}"
+                            <Path Style="{StaticResource Shape_MaximaizeWindow}"
                                   Stretch="Fill"
                                   Width="15"
                                   Height="15" />
@@ -81,7 +81,7 @@
 
                         <Button IsTabStop="False"
                                 Command="{Binding ExitCommand}">
-                            <Path Style="{StaticResource ExitShape}"
+                            <Path Style="{StaticResource Shape_Exit}"
                                   Height="15"
                                   Width="15" />
                         </Button>

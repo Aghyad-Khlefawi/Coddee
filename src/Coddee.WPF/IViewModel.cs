@@ -11,6 +11,8 @@ namespace Coddee.WPF
 {
     public interface IViewModel:IDisposable,INotifyPropertyChanged
     {
+        string __Name { get; }
+
         event EventHandler Initialized;
         
         bool IsInitialized { get; }

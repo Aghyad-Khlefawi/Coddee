@@ -399,7 +399,6 @@ namespace Coddee.WPF.AppBuilder
                     navs.Add(homeNav);
                     navs.AddRange(navigationItems);
 
-
                     nav.Initialize(DefaultRegions.NavbarRegion,
                                    DefaultRegions.ApplicationMainRegion,
                                    navs);
