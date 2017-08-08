@@ -1,0 +1,52 @@
+﻿<!-- Copyright (c) Aghyad khlefawi. All rights reserved.  
+     Licensed under the MIT License. See LICENSE file in the project root for full license information.-->
+<Window x:Class="HR.Clients.WPF.Login.LoginView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:local="clr-namespace:HR.Clients.WPF.Login"
+        xmlns:controls="http://schemas.Coddee.com/2017/WPF"
+        xmlns:xamlHelpers="clr-namespace:Coddee.WPF.XamlHelpers;assembly=Coddee.WPF"
+        mc:Ignorable="d"
+        SizeToContent="Height"
+        Title="Login"
+        Topmost="True"
+        WindowStyle="ToolWindow"
+        ShowInTaskbar="True"
+        WindowStartupLocation="CenterScreen"
+        Width="300"
+        xamlHelpers:FocusOnLoad.Element="{Binding ElementName=username}">
+    <Window.Resources>
+        <local:LoginViewModel x:Key="designData" />
+    </Window.Resources>
+    <Grid d:DataContext="{StaticResource designData}">
+        <StackPanel>
+            <Label Content="HR application" FontSize="24" />
+
+            <StackPanel HorizontalAlignment="Center"
+                        Width="125"
+                        Margin="0 0 0 10">
+                <controls:WaterMarkTextBox WaterMarkContent="{controls:Localize Username}"
+                                           x:Name="username"
+                                           Text="{Binding Username,UpdateSourceTrigger=PropertyChanged}"
+                                           controls:OnEnterCommand.Command="{Binding LoginCommand}"
+                                           Margin="0 0 0 5"
+                                           Height="25" />
+                <controls:WaterMarkPasswordBox WaterMarkContent="Password"
+                                               Text="{Binding Password,UpdateSourceTrigger=PropertyChanged}"
+                                               controls:OnEnterCommand.Command="{Binding LoginCommand}"
+                                               Margin="0 0 0 5"
+                                               Height="25" />
+                <Button Content="Login"
+                        Height="25"
+                        Command="{Binding LoginCommand}" />
+                <Label HorizontalContentAlignment="Center"
+                       Visibility="{Binding InvalidLogin,Converter={StaticResource BoolToVisibilityConverter}}"
+                       Content="Invalid login."
+                       Foreground="{StaticResource ErrorColor}" />
+
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Window>

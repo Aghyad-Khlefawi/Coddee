@@ -1,0 +1,107 @@
+﻿<!-- Copyright (c) Aghyad khlefawi. All rights reserved.  
+     Licensed under the MIT License. See LICENSE file in the project root for full license information.-->
+<UserControl x:Class="HR.Clients.WPF.Companies.CompaniesView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:HR.Clients.WPF.Companies"
+             xmlns:controls="http://schemas.Coddee.com/2017/WPF"
+             mc:Ignorable="d"
+             d:DesignHeight="400" d:DesignWidth="1366">
+    <UserControl.Resources>
+        <local:CompaniesViewModel x:Key="designData" />
+        <Style TargetType="Button" BasedOn="{StaticResource ButtonBase}">
+            <Setter Property="Width" Value="60" />
+            <Setter Property="Height" Value="30" />
+        </Style>
+    </UserControl.Resources>
+    <Grid d:DataContext="{StaticResource designData}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="2*" />
+        </Grid.ColumnDefinitions>
+        <DockPanel>
+            <Label Content="Companies"
+                   DockPanel.Dock="Top"
+                   FontSize="22" />
+            <StackPanel DockPanel.Dock="Top"
+                        Margin="0 5" Orientation="Horizontal">
+                <Button Content="Add"
+                        Command="{Binding AddCompanyCommand}" />
+                <Button Content="Edit" 
+                        Margin="10 0"
+                        IsEnabled="{Binding Companies.SelectedItem,Converter={StaticResource NullToBoolConverter}}"
+                        Command="{Binding EditCompanyCommand}"/>
+                <Button Content="Delete"
+                        IsEnabled="{Binding Companies.SelectedItem,Converter={StaticResource NullToBoolConverter}}"
+                        Command="{Binding DeleteCompanyCommand}"/>
+            </StackPanel>
+            <controls:WaterMarkTextBox Text="{Binding Companies.SearchText,UpdateSourceTrigger=PropertyChanged}"
+                                       WaterMarkContent="Search"
+                                       DockPanel.Dock="Top"
+                                       Height="25" />
+            <DataGrid ItemsSource="{Binding Companies.CollectionView}"
+                      SelectedItem="{Binding Companies.SelectedItem}"
+                      IsReadOnly="True"
+                      RowHeight="25"
+                      AutoGenerateColumns="False">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header=" State"
+                                        Width="*"
+                                        Binding="{Binding StateName}" />
+                    <DataGridTextColumn Header=" Name"
+                                        Width="*"
+                                        Binding="{Binding Name}" />
+                </DataGrid.Columns>
+            </DataGrid>
+
+        </DockPanel>
+        <DockPanel Grid.Column="1">
+            <Border Width="1"
+                    Background="Gray"
+                    Margin="5 0" />
+            <DockPanel>
+                <Label Content="Employees"
+                       DockPanel.Dock="Top"
+                       FontSize="22" />
+                <StackPanel DockPanel.Dock="Top"
+                            Margin="0 5"
+                            Orientation="Horizontal">
+                    <Button Content="Add"
+                            IsEnabled="{Binding Companies.SelectedItem,Converter={StaticResource NullToBoolConverter}}"
+                            Command="{Binding AddEmployeeCommand}" />
+                    <Button Content="Edit"
+                            Margin="10 0"
+                            IsEnabled="{Binding Employees.SelectedItem,Converter={StaticResource NullToBoolConverter}}"
+                            Command="{Binding EditEmployeeCommand}" />
+                    <Button Content="Delete"
+                            IsEnabled="{Binding Employees.SelectedItem,Converter={StaticResource NullToBoolConverter}}"
+                            Command="{Binding DeleteEmployeeCommand}" />
+                </StackPanel>
+
+                <controls:WaterMarkTextBox Text="{Binding Employees.SearchText,UpdateSourceTrigger=PropertyChanged}"
+                                           WaterMarkContent="Search"
+                                           DockPanel.Dock="Top"
+                                           Height="25" />
+                <DataGrid ItemsSource="{Binding Employees.CollectionView}"
+                          SelectedItem="{Binding Employees.SelectedItem}"
+                          IsReadOnly="True"
+                          RowHeight="25"
+                          AutoGenerateColumns="False">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header=" State"
+                                            Width="*"
+                                            Binding="{Binding StateName}" />
+                        <DataGridTextColumn Header=" Company"
+                                            Width="*"
+                                            Binding="{Binding CompanyName}" />
+                        <DataGridTextColumn Header=" Name"
+                                            Width="*"
+                                            Binding="{Binding FullName}" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </DockPanel>
+        </DockPanel>
+    </Grid>
+</UserControl>
