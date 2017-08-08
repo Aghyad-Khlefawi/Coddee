@@ -52,9 +52,7 @@ namespace HR.Clients.WPF
                 .UseToast()
                 .UseDialogs()
                 .UseLocalization("HR.Clients.WPF.Properties.Resources",
-                                 "HR.Clients.WPF.exe",
-                                 new[] { "ar-SY", "en-US" },
-                                 "ar-SY")
+                                 "HR.Clients.WPF.exe",new[] { "ar-SY", "en-US" },"ar-SY")
                 .UseLinqRepositoryManager<HRDBManager, HRRepositoryManager>(connection,
                   "HR.Data.LinqToSQL",true,config);
         }
