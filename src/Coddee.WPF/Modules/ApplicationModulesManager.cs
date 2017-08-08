@@ -8,7 +8,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Coddee.Loggers;
-using Microsoft.Practices.Unity;
+
 
 namespace Coddee.WPF.Modules
 {
@@ -19,10 +19,10 @@ namespace Coddee.WPF.Modules
     {
         private const string EventsSource = "ApplicationModulesManager";
 
-        private readonly IUnityContainer _container;
+        private readonly IContainer _container;
         private readonly ILogger _logger;
 
-        public ApplicationModulesManager(IUnityContainer container, ILogger logger)
+        public ApplicationModulesManager(IContainer container, ILogger logger)
         {
             _container = container;
             _container.RegisterInstance<IApplicationModulesManager>(this);

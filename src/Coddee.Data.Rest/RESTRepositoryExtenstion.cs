@@ -6,7 +6,7 @@ using Coddee.Data;
 using Coddee.Data.REST;
 using Coddee.Loggers;
 using Coddee.Services;
-using Microsoft.Practices.Unity;
+
 
 namespace Coddee.AppBuilder
 {
@@ -27,7 +27,7 @@ namespace Coddee.AppBuilder
     }
     public static class RESTRepositoryExtenstion
     {
-        private const string EventsSource = "WPFApplicationBuilder";
+        private const string EventsSource = "ApplicationBuilder";
         public static IApplicationBuilder UseRESTRepositoryManager(
             this IApplicationBuilder builder,
             Func<IConfigurationManager, RESTRepositoryManagerConfig> config)

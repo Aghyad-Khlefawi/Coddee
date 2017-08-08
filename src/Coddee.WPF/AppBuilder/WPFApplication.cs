@@ -7,7 +7,7 @@ using Coddee.AppBuilder;
 using Coddee.Services;
 using Coddee.WPF.AppBuilder;
 using Coddee.WPF.Events;
-using Microsoft.Practices.Unity;
+
 
 namespace Coddee.WPF
 {
@@ -20,11 +20,11 @@ namespace Coddee.WPF
     {
         public static WPFApplication Current { get; protected set; }
 
-        public void Run()
+        public void Run(IContainer container)
         {
             Current = this;
             _systemApplication = Application.Current;
-            _container = new UnityContainer();
+            _container = container;
             _systemApplication.ShutdownMode = ShutdownMode.OnExplicitShutdown;
             Start();
         }
@@ -32,7 +32,7 @@ namespace Coddee.WPF
         /// <summary>
         /// Dependency container
         /// </summary>
-        protected IUnityContainer _container;
+        protected IContainer _container;
 
         /// <summary>
         /// The base Application class instance
@@ -44,7 +44,7 @@ namespace Coddee.WPF
         public ApplicationTypes ApplicationType { get; private set; }
 
 
-        public IUnityContainer GetContainer()
+        public IContainer GetContainer()
         {
             return _container;
         }

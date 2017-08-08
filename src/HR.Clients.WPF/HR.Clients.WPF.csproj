@@ -150,6 +150,10 @@
       <Project>{86cfa30d-188c-485d-8df5-544313d445c7}</Project>
       <Name>Coddee.Security</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Coddee.Unity\Coddee.Unity.csproj">
+      <Project>{602298C6-5140-465B-835B-7B79551C84E5}</Project>
+      <Name>Coddee.Unity</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Coddee.Windows\Coddee.Windows.csproj">
       <Project>{91804c4a-4272-4736-8db9-61a0bbd21642}</Project>
       <Name>Coddee.Windows</Name>

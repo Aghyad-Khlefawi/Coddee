@@ -2,7 +2,7 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
 using System;
-using Microsoft.Practices.Unity;
+
 
 namespace Coddee.AppBuilder
 {
@@ -13,13 +13,13 @@ namespace Coddee.AppBuilder
         {
             Name = name;
         }
-        public BuildAction(string name, Action<IUnityContainer> action)
+        public BuildAction(string name, Action<IContainer> action)
             :this(name)
         {
             Action = action;
         }
 
-        public BuildAction(string name, Action<IUnityContainer> action, int defaultInvokeOrder)
+        public BuildAction(string name, Action<IContainer> action, int defaultInvokeOrder)
             :this(name,action)
         {
             DefaultInvokeOrder = defaultInvokeOrder;
@@ -27,14 +27,14 @@ namespace Coddee.AppBuilder
 
         
         public string Name { get; set; }
-        public Action<IUnityContainer> Action { get; set; }
+        public Action<IContainer> Action { get; set; }
 
         public int? DefaultInvokeOrder { get; set; }
         public int InvokeOrder { get; set; }
 
         public bool IsInvoked { get; private set; }
 
-        public void Invoke(IUnityContainer container)
+        public void Invoke(IContainer container)
         {
             Action?.Invoke(container);
             Invoked?.Invoke(this);

@@ -5,7 +5,7 @@ using System;
 using Coddee.Data;
 using Coddee.Data.LinqToSQL;
 using Coddee.Loggers;
-using Microsoft.Practices.Unity;
+
 
 namespace Coddee.AppBuilder
 {
@@ -17,7 +17,7 @@ namespace Coddee.AppBuilder
 
         public static IApplicationBuilder UseLinqRepositoryManager<TDBManager, TRepositoryManager>(
             this IApplicationBuilder builder,
-            Func<IUnityContainer,string> GetSQLDBConnection,
+            Func<IContainer,string> GetSQLDBConnection,
             string repositoriesAssembly,
             bool registerTheRepositoresInContainer,
             Action ConnectionStringNotFound = null,
@@ -55,7 +55,7 @@ namespace Coddee.AppBuilder
             return builder;
         }
 
-        private static void CreateRepositoryManager<TDBManager, TRepositoryManager>(IApplicationBuilder builder, IUnityContainer container, string connectionString, string repositoriesAssembly, bool registerTheRepositoresInContainer, RepositoryConfigurations config = null)
+        private static void CreateRepositoryManager<TDBManager, TRepositoryManager>(IApplicationBuilder builder, IContainer container, string connectionString, string repositoriesAssembly, bool registerTheRepositoresInContainer, RepositoryConfigurations config = null)
             where TDBManager : ILinqDBManager, new()
             where TRepositoryManager : ILinqRepositoryManager, new()
         {

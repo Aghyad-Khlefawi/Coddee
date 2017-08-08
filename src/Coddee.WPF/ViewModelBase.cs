@@ -16,7 +16,7 @@ using Coddee.Services;
 using Coddee.WPF.Modules;
 using Coddee.Validation;
 using Coddee.WPF.Commands;
-using Microsoft.Practices.Unity;
+
 
 namespace Coddee.WPF
 {
@@ -31,7 +31,7 @@ namespace Coddee.WPF
         
         protected static readonly Task completedTask = Task.FromResult(false);
         protected static WPFApplication _app;
-        protected static IUnityContainer _container;
+        protected static IContainer _container;
         protected static IGlobalVariablesService _globalVariables;
         protected static IToastService _toast;
         protected static ILocalizationManager _localization;
@@ -177,7 +177,7 @@ namespace Coddee.WPF
         /// Set the container on the view model and resolve the basic dependencies
         /// </summary>
         /// <param name="container"></param>
-        public static void SetContainer(IUnityContainer container)
+        public static void SetContainer(IContainer container)
         {
             _container = container;
             _globalVariables = _container.Resolve<IGlobalVariablesService>();

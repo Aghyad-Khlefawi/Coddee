@@ -6,7 +6,7 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Threading;
 using System.Windows;
-using Microsoft.Practices.Unity;
+
 using Coddee.Loggers;
 using Coddee.WPF.AppBuilder;
 using Coddee.AppBuilder;
@@ -27,12 +27,12 @@ namespace Coddee.WPF
 
         private readonly WPFApplication _app;
         private Application _systemApplication => _app.GetSystemApplication();
-        private readonly IUnityContainer _container;
+        private readonly IContainer _container;
         private readonly LogAggregator _logger;
         private IApplicationModulesManager _modulesManager;
 
 
-        public WPFApplicationBuilder(WPFApplication app, IUnityContainer container)
+        public WPFApplicationBuilder(WPFApplication app, IContainer container)
         {
             _app = app;
             _container = container;

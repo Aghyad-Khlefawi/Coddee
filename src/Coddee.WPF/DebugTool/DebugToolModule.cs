@@ -4,14 +4,14 @@
 using System.Threading.Tasks;
 using Coddee.Services;
 using Coddee.Services.ViewModelManager;
-using Microsoft.Practices.Unity;
+
 
 namespace Coddee.WPF.DebugTool
 {
     [Module(BuiltInModules.DebugTool,ModuleInitializationTypes.Auto,nameof(ViewModelManagerModule))]
     public class DebugToolModule:IModule
     {
-        public Task Initialize(IUnityContainer container)
+        public Task Initialize(IContainer container)
         {
             container.RegisterInstance<IDebugTool,DebugToolViewModel>();
             return Task.FromResult(true);

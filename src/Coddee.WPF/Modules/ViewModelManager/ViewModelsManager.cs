@@ -7,7 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Coddee.Loggers;
 using Coddee.WPF;
-using Microsoft.Practices.Unity;
+
 
 namespace Coddee.Services.ViewModelManager
 {
@@ -15,11 +15,11 @@ namespace Coddee.Services.ViewModelManager
     {
         private const string _eventsSource = "ViewModelsManager";
 
-        private readonly IUnityContainer _container;
+        private readonly IContainer _container;
         private readonly ILogger _logger;
         private int _lastID;
 
-        public ViewModelsManager(IUnityContainer container, ILogger logger)
+        public ViewModelsManager(IContainer container, ILogger logger)
         {
             _container = container;
             _logger = logger;

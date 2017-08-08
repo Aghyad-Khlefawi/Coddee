@@ -19,7 +19,7 @@ using Coddee.WPF.Events;
 using Coddee.Services.Navigation;
 using Coddee.WPF;
 using Coddee.WPF.Security;
-using Microsoft.Practices.Unity;
+
 
 namespace Coddee.AppBuilder
 {
@@ -287,7 +287,7 @@ namespace Coddee.AppBuilder
             return builder;
         }
 
-        private static void BuildLogin<TShellViewModel, TLogin>(IUnityContainer container, WPFApplication wpfApplication, TShellViewModel shellViewModel, TLogin loginViewModel)
+        private static void BuildLogin<TShellViewModel, TLogin>(IContainer container, WPFApplication wpfApplication, TShellViewModel shellViewModel, TLogin loginViewModel)
             where TShellViewModel : IShellViewModel
             where TLogin : ILoginViewModel
         {
@@ -325,7 +325,7 @@ namespace Coddee.AppBuilder
 
         private static TShellViewModel BuildCustomShell<TShellViewModel>(IApplicationBuilder builder,
                                                                          Action<Window> config,
-                                                                         IUnityContainer container)
+                                                                         IContainer container)
             where TShellViewModel : IShellViewModel
         {
             container.Resolve<IGlobalVariablesService>().SetValue(Globals.UsingDefaultShell, true);
@@ -347,7 +347,7 @@ namespace Coddee.AppBuilder
             return shellViewModel;
         }
 
-        private static IDefaultShellViewModel BuildDefaultShell<TContent>(IApplicationBuilder builder, WindowState state, Action<Window> config, IUnityContainer container) where TContent : IPresentable
+        private static IDefaultShellViewModel BuildDefaultShell<TContent>(IApplicationBuilder builder, WindowState state, Action<Window> config, IContainer container) where TContent : IPresentable
         {
             container.Resolve<IGlobalVariablesService>().SetValue(Globals.UsingDefaultShell, true);
 

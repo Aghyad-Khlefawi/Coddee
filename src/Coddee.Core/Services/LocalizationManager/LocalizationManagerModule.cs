@@ -3,14 +3,14 @@
 
 using System.Threading.Tasks;
 using Coddee.Services;
-using Microsoft.Practices.Unity;
+
 
 namespace Coddee.Modules
 {
     [Module(BuiltInModules.LocalizationManager)]
     public class LocalizationManagerModule:IModule
     {
-        public Task Initialize(IUnityContainer container)
+        public Task Initialize(IContainer container)
         {
             var manager = new LocalizationManager();
             manager.Initialize(container);

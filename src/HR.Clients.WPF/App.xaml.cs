@@ -8,6 +8,7 @@ using System.Windows.Input;
 using Coddee.AppBuilder;
 using Coddee.Data;
 using Coddee.Loggers;
+using Coddee.Unity;
 using Coddee.WPF;
 using Coddee.WPF.AppBuilder;
 using HR.Clients.WPF.Login;
@@ -23,7 +24,7 @@ namespace HR.Clients.WPF
     {
         protected override void OnStartup(StartupEventArgs e)
         {
-            new WPFApp().Run();
+            new WPFApp().Run(new CoddeeUnityContainer());
             base.OnStartup(e);
         }
     }

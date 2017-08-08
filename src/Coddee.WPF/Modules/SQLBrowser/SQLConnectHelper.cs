@@ -9,13 +9,13 @@ using Coddee.Security;
 using Coddee.Services;
 using Coddee.Services.Configuration;
 using Coddee.SQL;
-using Microsoft.Practices.Unity;
+
 
 namespace Coddee.WPF.Modules.SQLBrowser
 {
     public class SQLConnectHelper
     {
-        public static string GetSQLDBConnection(IUnityContainer container)
+        public static string GetSQLDBConnection(IContainer container)
         {
             var config = container.Resolve<IConfigurationManager>();
             var app = container.Resolve<IApplication>();

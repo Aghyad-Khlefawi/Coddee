@@ -3,14 +3,14 @@
 
 using System.Threading.Tasks;
 using Coddee.Services.ViewModelManager;
-using Microsoft.Practices.Unity;
+
 
 namespace Coddee.Services.Navigation
 {
     [Module(BuiltInModules.NavigationService, ModuleInitializationTypes.Auto, nameof(ViewModelManagerModule))]
     public class NavigationModule:IModule
     {
-        public Task Initialize(IUnityContainer container)
+        public Task Initialize(IContainer container)
         {
             container.RegisterInstance<INavigationService, NavigationService>();
             return Task.FromResult(true);

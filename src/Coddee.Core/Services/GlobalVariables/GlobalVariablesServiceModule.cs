@@ -3,14 +3,14 @@
 
 using System.Threading.Tasks;
 using Coddee.Services;
-using Microsoft.Practices.Unity;
+
 
 namespace Coddee.Modules
 {
     [Module(BuiltInModules.GlobalVariablesService)]
     public class GlobalVariablesServiceModule:IModule
     {
-        public Task Initialize(IUnityContainer container)
+        public Task Initialize(IContainer container)
         {
             container.RegisterInstance<IGlobalVariablesService,GlobalVariablesService>();
             return Task.FromResult(true);

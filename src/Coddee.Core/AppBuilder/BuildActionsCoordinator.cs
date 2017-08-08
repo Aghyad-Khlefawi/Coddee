@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Coddee.Loggers;
-using Microsoft.Practices.Unity;
+
 
 namespace Coddee.AppBuilder
 {
@@ -33,7 +33,7 @@ namespace Coddee.AppBuilder
             return _buildActions.FirstOrDefault(e => e.Name == actionName);
         }
 
-        public bool TryInvokeAction(string actionName, IUnityContainer container)
+        public bool TryInvokeAction(string actionName, IContainer container)
         {
             var action = GetAction(actionName);
             if (action == null)
@@ -80,7 +80,7 @@ namespace Coddee.AppBuilder
             AddAction(actionToAdd, action.InvokeOrder);
         }
 
-        public void InvokeAll(IUnityContainer container)
+        public void InvokeAll(IContainer container)
         {
             foreach (var buildAction in _buildActions.OrderBy(e => e.InvokeOrder))
             {

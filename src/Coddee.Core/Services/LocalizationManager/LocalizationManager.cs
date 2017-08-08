@@ -5,7 +5,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using Coddee.Loggers;
-using Microsoft.Practices.Unity;
+
 
 namespace Coddee.Services
 {
@@ -133,7 +133,7 @@ namespace Coddee.Services
             return currentValue;
         }
 
-        public void Initialize(IUnityContainer container)
+        public void Initialize(IContainer container)
         {
             if (container.IsRegistered<ILogger>())
                 _logger = container.Resolve<ILogger>();

@@ -3,7 +3,7 @@
 
 using Coddee.Collections;
 using Coddee.WPF;
-using Microsoft.Practices.Unity;
+
 
 namespace Coddee.Services.Toast
 {
