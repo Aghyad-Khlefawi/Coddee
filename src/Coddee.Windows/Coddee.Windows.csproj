@@ -48,10 +48,7 @@
     <Reference Include="System.DirectoryServices.AccountManagement" />
     <Reference Include="System.Management" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -78,10 +75,6 @@
     <ProjectReference Include="..\Coddee.Core\Coddee.Core.csproj">
       <Project>{200805C2-E25C-4D1B-AC1E-0DBB5869AEB9}</Project>
       <Name>Coddee.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Coddee.Crypto\Coddee.Crypto.csproj">
-      <Project>{8912baef-8ad3-4f8b-a36b-7350746893fa}</Project>
-      <Name>Coddee.Crypto</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

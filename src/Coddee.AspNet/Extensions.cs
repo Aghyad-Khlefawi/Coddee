@@ -32,13 +32,13 @@ namespace Coddee.AspNet
             {
                 var debugLogger = new DebugOuputLogger();
                 debugLogger.Initialize(level);
-                logger.AddLogger(debugLogger);
+                logger.AddLogger(debugLogger,LoggerTypes.DebugOutput);
             }
             if (loggerType.HasFlag(LoggerTypes.File))
             {
                 var fileLogger = new FileLogger();
                 fileLogger.Initialize(level, "log.txt");
-                logger.AddLogger(fileLogger);
+                logger.AddLogger(fileLogger,LoggerTypes.File);
             }
             services.AddSingleton<ILogger>(logger);
             return services;
