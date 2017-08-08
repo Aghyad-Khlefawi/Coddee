@@ -795,7 +795,6 @@
                                         DockPanel.Dock="Top"
                                         Margin="0 -1 0 5"
                                         Background="LightGray" />
-                            <Border />
                             <ContentPresenter
                                 MaxHeight="{Binding RelativeSource={RelativeSource TemplatedParent},Path=MaxContentHeight}"
                                 Margin="{Binding RelativeSource={RelativeSource AncestorType=local:TabsPanel,Mode=FindAncestor},Path=Padding}"

@@ -79,9 +79,6 @@
     <Compile Include="AppBuilder\IShell.cs" />
     <Compile Include="AppBuilder\IShellViewModel.cs" />
     <Compile Include="AppBuilder\IWPFApplicationFactory.cs" />
-    <Compile Include="AppBuilder\LiqnRepositoryExtension.cs" />
-    <Compile Include="AppBuilder\MongoRepositoyExtension.cs" />
-    <Compile Include="AppBuilder\RESTRepositoryExtenstion.cs" />
     <Compile Include="AppBuilder\WPFApplication.cs" />
     <Compile Include="AppBuilder\WPFApplicationBuilder.cs" />
     <Compile Include="Behaviors\BubbleScrollEvent.cs" />
@@ -112,11 +109,15 @@
     <Compile Include="DebugTool\DebugToolView.xaml.cs">
       <DependentUpon>DebugToolView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="DebugTool\PropertyMainpulatorView.xaml.cs">
+    <Compile Include="DebugTool\ViewModelExplorer\PropertyMainpulatorView.xaml.cs">
       <DependentUpon>PropertyMainpulatorView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="DebugTool\PropertyMainpulatorViewModel.cs" />
-    <Compile Include="DebugTool\ViewModelPropertyTemplateSelector.cs" />
+    <Compile Include="DebugTool\ViewModelExplorer\PropertyMainpulatorViewModel.cs" />
+    <Compile Include="DebugTool\ViewModelExplorer\ViewModelExplorerView.xaml.cs">
+      <DependentUpon>ViewModelExplorerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DebugTool\ViewModelExplorer\ViewModelExplorerViewModel.cs" />
+    <Compile Include="DebugTool\ViewModelExplorer\ViewModelPropertyTemplateSelector.cs" />
     <Compile Include="DefaultNavigations.cs" />
     <Compile Include="DefaultShell\DefaultRegions.cs" />
     <Compile Include="Events\ApplicationStartedEvent.cs" />
@@ -183,6 +184,7 @@
       <DependentUpon>NavigationServiceView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Modules\Interfaces\ISQLDBBrowser.cs" />
+    <Compile Include="Modules\SQLBrowser\SQLConnectHelper.cs" />
     <Compile Include="Modules\SQLBrowser\SQLDBBrowser.cs" />
     <Compile Include="Modules\SQLBrowser\SQLDBBrowserModule.cs" />
     <Compile Include="Modules\SQLBrowser\SQLDBBrowserView.xaml.cs">
@@ -240,18 +242,6 @@
       <Project>{200805c2-e25c-4d1b-ac1e-0dbb5869aeb9}</Project>
       <Name>Coddee.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Coddee.Data.Linq\Coddee.Data.LinqToSQL.csproj">
-      <Project>{B7F174A8-5037-4C30-9E8B-9896315AE855}</Project>
-      <Name>Coddee.Data.LinqToSQL</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Coddee.Data.MongoDB\Coddee.Data.MongoDB.csproj">
-      <Project>{8750B71C-E3ED-440D-9D2F-7BAA6A30ACD1}</Project>
-      <Name>Coddee.Data.MongoDB</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Coddee.Data.Rest\Coddee.Data.REST.csproj">
-      <Project>{D37A3BAF-2C12-4947-AA65-C737DACC5B54}</Project>
-      <Name>Coddee.Data.REST</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Coddee.Data\Coddee.Data.csproj">
       <Project>{9541018B-0CC1-4237-8370-DF8F20940EED}</Project>
       <Name>Coddee.Data</Name>
@@ -274,7 +264,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="DebugTool\PropertyMainpulatorView.xaml">
+    <Page Include="DebugTool\ViewModelExplorer\PropertyMainpulatorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="DebugTool\ViewModelExplorer\ViewModelExplorerView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -334,6 +328,5 @@
   <ItemGroup>
     <Resource Include="LICENSE.txt" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

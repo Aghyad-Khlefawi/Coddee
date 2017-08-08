@@ -1,0 +1,91 @@
+﻿<UserControl x:Class="Coddee.WPF.DebugTool.ViewModelExplorerView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Coddee.WPF.DebugTool"
+             xmlns:global="clr-namespace:"
+             xmlns:coddee="http://schemas.Coddee.com/2017/WPF"
+             mc:Ignorable="d" 
+             d:DesignHeight="3000" d:DesignWidth="300">
+    <UserControl.Resources>
+        <local:ViewModelExplorerViewModel x:Key="designData" />
+    </UserControl.Resources>
+    <Grid d:DataContext="{StaticResource designData}">
+        <DockPanel d:DataContext="{StaticResource designData}">
+            <Button Style="{StaticResource HighlightButton}" 
+                    DockPanel.Dock="Bottom"
+                    Command="{Binding LoadCommand}">
+                <StackPanel Orientation="Horizontal">
+                    <Path Style="{StaticResource Shape_Refresh}" Height="20"/>
+                    <Label Content="Refresh" Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button,Mode=FindAncestor},Path=Foreground}"/>
+                </StackPanel>
+            </Button>
+            <ScrollViewer DockPanel.Dock="Top"  
+                          VerticalScrollBarVisibility="Auto"
+                          HorizontalScrollBarVisibility="Auto">
+                <ItemsControl ItemsSource="{Binding NavigationStack}" >
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Button Command="{Binding NavigateCommand}" 
+                                    Cursor="Hand">
+                                <Button.Template>
+                                    <ControlTemplate>
+                                        <Border>
+                                            <StackPanel Orientation="Horizontal">
+                                                <Label Content="{Binding Name}" VerticalContentAlignment="Center"/>
+                                                <Label Content="&gt;" FontSize="14" Padding="0 3 3 3"/>
+                                            </StackPanel>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer >
+            <Border BorderThickness="0 2 0 0" BorderBrush="LightGray" Margin="0 2 0 0">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="200"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Border BorderThickness="0 0 2 0"
+                            BorderBrush="LightGray">
+                        <DockPanel>
+                            <Label DockPanel.Dock="Top" Content="Child view models" HorizontalAlignment="Center"/>
+                            <ItemsControl ItemsSource="{Binding ViewModels}" >
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border BorderThickness="0 1"
+                                                BorderBrush="LightGray">
+                                            <Button Style="{StaticResource HighlightButton}"
+                                                    Foreground="Black"
+                                                    Command="{Binding NavigateCommand}" Cursor="Hand"
+                                                    Background="WhiteSmoke"
+                                                    Content="{Binding Name}"/>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </DockPanel>
+                    </Border>
+                    <DockPanel Grid.Column="1">
+                        <StackPanel DockPanel.Dock="Top">
+                            <Label Content="{Binding CurrentViewModel.ViewModel.__Name}" FontSize="20"/>
+                            <TextBlock Text="{Binding CurrentViewModel.ID,StringFormat={}ID : {0}}" FontSize="12" Padding="5 0 5 5"/>
+                        </StackPanel>
+                        <Border Height="1" Background="LightGray" Margin="10" DockPanel.Dock="Top"/>
+                        <ContentPresenter Content="{Binding ViewModelManipulatorContent}"/>
+                    </DockPanel>
+                </Grid>
+            </Border>
+        </DockPanel>
+
+    </Grid>
+</UserControl>

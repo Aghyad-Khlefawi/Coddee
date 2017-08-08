@@ -11,22 +11,22 @@ using System.Resources;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
-using Coddee.AppBuilder;
 using Coddee.Loggers;
 using Coddee.Services;
 using Coddee.Windows.Mapper;
 using Coddee.WPF.DefaultShell;
 using Coddee.WPF.Events;
 using Coddee.Services.Navigation;
+using Coddee.WPF;
 using Coddee.WPF.Security;
 using Microsoft.Practices.Unity;
 
-namespace Coddee.WPF.AppBuilder
+namespace Coddee.AppBuilder
 {
     public static class BuilderExtensions
     {
-        public static IWPFApplicationBuilder UseLocalization(
-            this IWPFApplicationBuilder builder,
+        public static IApplicationBuilder UseLocalization(
+            this IApplicationBuilder builder,
             string defaultCluture = "en-US")
         {
             builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.LocalizationBuildAction(
@@ -39,8 +39,8 @@ namespace Coddee.WPF.AppBuilder
             return builder;
         }
 
-        public static IWPFApplicationBuilder UseLocalization(
-            this IWPFApplicationBuilder builder,
+        public static IApplicationBuilder UseLocalization(
+            this IApplicationBuilder builder,
             string resourceManagerFullPath,
             string resourceManagerAssembly,
             string[] supportedCultures,
@@ -73,7 +73,7 @@ namespace Coddee.WPF.AppBuilder
         /// <summary>
         /// Use the IL object mapper
         /// </summary>
-        public static IWPFApplicationBuilder UseILMapper(this IWPFApplicationBuilder builder)
+        public static IApplicationBuilder UseILMapper(this IApplicationBuilder builder)
         {
             builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.MapperBuildAction((container) =>
                    {
@@ -85,7 +85,7 @@ namespace Coddee.WPF.AppBuilder
         /// <summary>
         /// Use the basic object mapper
         /// </summary>
-        public static IWPFApplicationBuilder UseBasicMapper(this IWPFApplicationBuilder builder)
+        public static IApplicationBuilder UseBasicMapper(this IApplicationBuilder builder)
         {
             builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.MapperBuildAction((container) =>
                   {
@@ -99,8 +99,8 @@ namespace Coddee.WPF.AppBuilder
         /// Initialize the configuration manager
         /// </summary>
         /// <param name="defaultFile">The default configurations file.</param>
-        public static IWPFApplicationBuilder UseConfigurationFile(
-            this IWPFApplicationBuilder builder,
+        public static IApplicationBuilder UseConfigurationFile(
+            this IApplicationBuilder builder,
            IConfigurationFile defaultFile)
         {
             builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.ConfigFileBuildAction((container) =>
@@ -116,7 +116,7 @@ namespace Coddee.WPF.AppBuilder
         /// </summary>
         /// <param name="toggleCondition">A function that is executed on the shell KeyDown event show return true to toggle the console</param>
         /// <returns></returns>
-        public static IWPFApplicationBuilder UseApplicationConsole(this IWPFApplicationBuilder builder,
+        public static IApplicationBuilder UseApplicationConsole(this IApplicationBuilder builder,
                                                                    Func<KeyEventArgs, bool> toggleCondition)
         {
             builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.AppConsoleBuildAction((container) =>
@@ -144,7 +144,7 @@ namespace Coddee.WPF.AppBuilder
         /// </summary>
         /// <param name="toggleCondition">A function that is executed on the shell KeyDown event show return true to toggle the console</param>
         /// <returns></returns>
-        public static IWPFApplicationBuilder UseCoddeeDebugTool(this IWPFApplicationBuilder builder,
+        public static IApplicationBuilder UseCoddeeDebugTool(this IApplicationBuilder builder,
                                                                 Func<KeyEventArgs, bool> toggleCondition)
         {
             builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.DebugToolBuildAction(async (container) =>
@@ -170,7 +170,7 @@ namespace Coddee.WPF.AppBuilder
         /// <param name="loggerType">Specify which logger to use. Uses Enum flags to specify multiple values</param>
         /// <param name="level">The minimum log level</param>
         /// <returns></returns>
-        public static IWPFApplicationBuilder UseLogger(this IWPFApplicationBuilder builder,
+        public static IApplicationBuilder UseLogger(this IApplicationBuilder builder,
                                                        LoggerTypes loggerType,
                                                        LogRecordTypes level)
         {
@@ -201,8 +201,8 @@ namespace Coddee.WPF.AppBuilder
         /// </summary>
         /// <typeparam name="TContent">The main content type to be shown on startup</typeparam>
         /// <returns></returns>
-        public static IWPFApplicationBuilder UseDefaultShell<TContent>(
-            this IWPFApplicationBuilder builder,
+        public static IApplicationBuilder UseDefaultShell<TContent>(
+            this IApplicationBuilder builder,
             WindowState state = WindowState.Maximized,
             Action<Window> config = null)
             where TContent : IPresentable
@@ -226,8 +226,8 @@ namespace Coddee.WPF.AppBuilder
         /// <typeparam name="TContent">The main content type to be shown on startup</typeparam>
         /// <typeparam name="TLogin"></typeparam>
         /// <returns></returns>
-        public static IWPFApplicationBuilder UseDefaultShellWithLogin<TContent, TLogin>(
-            this IWPFApplicationBuilder builder,
+        public static IApplicationBuilder UseDefaultShellWithLogin<TContent, TLogin>(
+            this IApplicationBuilder builder,
             WindowState state = WindowState.Maximized,
             Action<Window> config = null)
             where TContent : IPresentable
@@ -250,7 +250,7 @@ namespace Coddee.WPF.AppBuilder
         /// </summary>
         /// <typeparam name="TShellViewModel"></typeparam>
         /// <returns></returns>
-        public static IWPFApplicationBuilder UseCustomShell<TShellViewModel>(this IWPFApplicationBuilder builder,
+        public static IApplicationBuilder UseCustomShell<TShellViewModel>(this IApplicationBuilder builder,
                                                                              Action<Window> config = null)
             where TShellViewModel : IShellViewModel
         {
@@ -272,7 +272,7 @@ namespace Coddee.WPF.AppBuilder
         /// </summary>
         /// <typeparam name="TShellViewModel"></typeparam>
         /// <returns></returns>
-        public static IWPFApplicationBuilder UseCustomShellWithLogin<TShellViewModel, TLogin>(this IWPFApplicationBuilder builder,
+        public static IApplicationBuilder UseCustomShellWithLogin<TShellViewModel, TLogin>(this IApplicationBuilder builder,
                                                                                               Action<Window> config = null)
             where TShellViewModel : IShellViewModel
             where TLogin : ILoginViewModel
@@ -323,7 +323,7 @@ namespace Coddee.WPF.AppBuilder
                 });
         }
 
-        private static TShellViewModel BuildCustomShell<TShellViewModel>(IWPFApplicationBuilder builder,
+        private static TShellViewModel BuildCustomShell<TShellViewModel>(IApplicationBuilder builder,
                                                                          Action<Window> config,
                                                                          IUnityContainer container)
             where TShellViewModel : IShellViewModel
@@ -347,7 +347,7 @@ namespace Coddee.WPF.AppBuilder
             return shellViewModel;
         }
 
-        private static IDefaultShellViewModel BuildDefaultShell<TContent>(IWPFApplicationBuilder builder, WindowState state, Action<Window> config, IUnityContainer container) where TContent : IPresentable
+        private static IDefaultShellViewModel BuildDefaultShell<TContent>(IApplicationBuilder builder, WindowState state, Action<Window> config, IUnityContainer container) where TContent : IPresentable
         {
             container.Resolve<IGlobalVariablesService>().SetValue(Globals.UsingDefaultShell, true);
 
@@ -381,8 +381,8 @@ namespace Coddee.WPF.AppBuilder
         /// Sets a default shell for the WPF application
         /// </summary>
         /// <returns></returns>
-        public static IWPFApplicationBuilder UseNavigation(
-            this IWPFApplicationBuilder builder,
+        public static IApplicationBuilder UseNavigation(
+            this IApplicationBuilder builder,
             params INavigationItem[] navigationItems)
         {
             builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.NavigationBuildAction((container) =>
@@ -418,7 +418,7 @@ namespace Coddee.WPF.AppBuilder
         /// Use Dialog service
         /// </summary>
         /// <returns></returns>
-        public static IWPFApplicationBuilder UseDialogs(this IWPFApplicationBuilder builder,
+        public static IApplicationBuilder UseDialogs(this IApplicationBuilder builder,
                                                         Region dialogRegion,
                                                         SolidColorBrush dialogBorderBrush)
         {
@@ -434,7 +434,7 @@ namespace Coddee.WPF.AppBuilder
         /// Use Dialog service
         /// </summary>
         /// <returns></returns>
-        public static IWPFApplicationBuilder UseDialogs(this IWPFApplicationBuilder builder)
+        public static IApplicationBuilder UseDialogs(this IApplicationBuilder builder)
         {
             return builder.UseDialogs(DefaultRegions.DialogRegion, new SolidColorBrush(Colors.WhiteSmoke));
         }
@@ -445,7 +445,7 @@ namespace Coddee.WPF.AppBuilder
         /// <param name="duration">The duration the toast will stay visible in milliseconds</param>
         /// <param name="builder">The application builder</param>
         /// <returns></returns>
-        public static IWPFApplicationBuilder UseToast(this IWPFApplicationBuilder builder, double duration = 3000)
+        public static IApplicationBuilder UseToast(this IApplicationBuilder builder, double duration = 3000)
         {
             return builder.UseToast(DefaultRegions.ToastRegion, duration);
         }
@@ -457,7 +457,7 @@ namespace Coddee.WPF.AppBuilder
         /// <param name="toastRegion">The region in which the toasts will be viewed</param>
         /// <param name="duration">The duration the toast will stay visible in milliseconds</param>
         /// <returns></returns>
-        public static IWPFApplicationBuilder UseToast(this IWPFApplicationBuilder builder,
+        public static IApplicationBuilder UseToast(this IApplicationBuilder builder,
                                                       Region toastRegion,
                                                       double duration = 3000)
         {

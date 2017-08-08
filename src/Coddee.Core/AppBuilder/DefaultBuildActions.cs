@@ -2,10 +2,9 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
 using System;
-using Coddee.AppBuilder;
 using Microsoft.Practices.Unity;
 
-namespace Coddee.WPF.AppBuilder
+namespace Coddee.AppBuilder
 {
     public class DefaultBuildActions
     {
