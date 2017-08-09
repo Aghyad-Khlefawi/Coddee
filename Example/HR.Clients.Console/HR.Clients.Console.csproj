@@ -48,15 +48,15 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\src\Coddee.Core\Coddee.Core.csproj">
+    <ProjectReference Include="..\..\src\Coddee.Core\Coddee.Core.csproj">
       <Project>{200805C2-E25C-4D1B-AC1E-0DBB5869AEB9}</Project>
       <Name>Coddee.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\src\Coddee.Unity\Coddee.Unity.csproj">
+    <ProjectReference Include="..\..\src\Coddee.Unity\Coddee.Unity.csproj">
       <Project>{602298C6-5140-465B-835B-7B79551C84E5}</Project>
       <Name>Coddee.Unity</Name>
     </ProjectReference>
-    <ProjectReference Include="..\src\Coddee.Windows\Coddee.Windows.csproj">
+    <ProjectReference Include="..\..\src\Coddee.Windows\Coddee.Windows.csproj">
       <Project>{91804C4A-4272-4736-8DB9-61A0BBD21642}</Project>
       <Name>Coddee.Windows</Name>
     </ProjectReference>

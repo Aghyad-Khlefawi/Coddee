@@ -1,7 +1,9 @@
-﻿using System;
+﻿// Copyright (c) Aghyad khlefawi. All rights reserved.  
+// Licensed under the MIT License. See LICENSE file in the project root for full license information.  
+
+using System;
 using System.Diagnostics;
 using System.Reflection;
-using Coddee.AppBuilder;
 using Coddee.Loggers;
 using Coddee.ModuleDefinitions;
 using Coddee.Services;

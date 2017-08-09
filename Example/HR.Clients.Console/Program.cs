@@ -15,7 +15,6 @@ namespace HR.Clients.Console
                      .UseILMapper()
                      .UseMain<HRApplication>();
              });
-            
         }
     }
 

@@ -56,7 +56,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Coddee.VSExtension", "src\C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Coddee.Unity", "src\Coddee.Unity\Coddee.Unity.csproj", "{602298C6-5140-465B-835B-7B79551C84E5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HR.Clients.Console", "HR.Clients.Console\HR.Clients.Console.csproj", "{77CC422F-B470-4389-B1DA-B26CC07FA100}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HR.Clients.Console", "Example\HR.Clients.Console\HR.Clients.Console.csproj", "{77CC422F-B470-4389-B1DA-B26CC07FA100}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

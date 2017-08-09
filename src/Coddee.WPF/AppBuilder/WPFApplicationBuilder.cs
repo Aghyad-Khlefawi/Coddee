@@ -8,7 +8,6 @@ using System.Windows;
 using Coddee.AppBuilder;
 using Coddee.ModuleDefinitions;
 using Coddee.Services;
-using Coddee.Windows.AppBuilder;
 
 namespace Coddee.WPF
 {
