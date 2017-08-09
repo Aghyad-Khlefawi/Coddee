@@ -40,6 +40,10 @@ namespace Coddee.AppBuilder
         {
             return new BuildAction(BuildActionsKeys.Repository, action, 6);
         }
+        public static BuildAction ConsoleMainBuildAction(Action<IContainer> action)
+        {
+            return new BuildAction(BuildActionsKeys.ConsoleMain, action, 7);
+        }
         public static BuildAction SetupViewModelBaseBuildAction(Action<IContainer> action)
         {
             return new BuildAction(BuildActionsKeys.SetupViewModelBase, action, 7);
@@ -52,7 +56,6 @@ namespace Coddee.AppBuilder
         {
             return new BuildAction(BuildActionsKeys.Shell, action, 9);
         }
-
         public static BuildAction AppConsoleBuildAction(Action<IContainer> action)
         {
             return new BuildAction(BuildActionsKeys.AppConsole, action, 10);

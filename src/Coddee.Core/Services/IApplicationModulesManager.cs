@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
 
-namespace Coddee.WPF.Modules
+namespace Coddee.Services
 {
     /// <summary>
     /// Responsible for discovering and initializing the application modules

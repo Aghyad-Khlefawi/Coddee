@@ -58,7 +58,6 @@
     <Compile Include="AppBuilder\BuilderExtensions.cs" />
     <Compile Include="AppBuilder\IShell.cs" />
     <Compile Include="AppBuilder\IShellViewModel.cs" />
-    <Compile Include="AppBuilder\IWPFApplicationFactory.cs" />
     <Compile Include="AppBuilder\WPFApplication.cs" />
     <Compile Include="AppBuilder\WPFApplicationBuilder.cs" />
     <Compile Include="Behaviors\BubbleScrollEvent.cs" />
@@ -102,7 +101,6 @@
     <Compile Include="DefaultShell\DefaultRegions.cs" />
     <Compile Include="Events\ApplicationStartedEvent.cs" />
     <Compile Include="Extensions.cs" />
-    <Compile Include="Globals.cs" />
     <Compile Include="IEditorViewModel.cs" />
     <Compile Include="InputMask.cs" />
     <Compile Include="IViewModel.cs" />
@@ -150,13 +148,10 @@
     <Compile Include="Modules\Dialogs\MessageDialogView.xaml.cs">
       <DependentUpon>MessageDialogView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Modules\IApplicationModulesManager.cs" />
     <Compile Include="Modules\Interfaces\IDebugTool.cs" />
     <Compile Include="Modules\Interfaces\IDialogService.cs" />
     <Compile Include="Modules\Interfaces\INavigationService.cs" />
     <Compile Include="Modules\Interfaces\IApplicationConsole.cs" />
-    <Compile Include="Modules\ModuleException.cs" />
-    <Compile Include="Modules\ApplicationModulesManager.cs" />
     <Compile Include="Modules\Navigation\NavigationEventArgs.cs" />
     <Compile Include="Modules\Navigation\NavigationModule.cs" />
     <Compile Include="Modules\Navigation\NavigationService.cs" />

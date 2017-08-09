@@ -10,6 +10,7 @@ using System.Reflection;
 using System.Resources;
 using Coddee.Loggers;
 using Coddee.Services;
+using Coddee.Windows.AppBuilder;
 using Coddee.Windows.Mapper;
 
 
@@ -18,12 +19,12 @@ namespace Coddee.AppBuilder
     public static class BuilderExtensions
     {
 
-        public static IApplicationBuilder UseLocalization(
-            this IApplicationBuilder builder,
+        public static T UseLocalization<T>(
+            this T builder,
             string resourceManagerFullPath,
             string resourceManagerAssembly,
             string[] supportedCultures,
-            string defaultCluture = "en-US")
+            string defaultCluture = "en-US") where T : IApplicationBuilder
         {
             builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.LocalizationBuildAction((container) =>
             {
@@ -52,7 +53,7 @@ namespace Coddee.AppBuilder
         /// <summary>
         /// Use the IL object mapper
         /// </summary>
-        public static IApplicationBuilder UseILMapper(this IApplicationBuilder builder)
+        public static T UseILMapper<T>(this T builder) where T : IApplicationBuilder
         {
             builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.MapperBuildAction((container) =>
             {
@@ -62,7 +63,7 @@ namespace Coddee.AppBuilder
         }
 
 
-     
+
 
 
 
@@ -72,9 +73,9 @@ namespace Coddee.AppBuilder
         /// <param name="loggerType">Specify which logger to use. Uses Enum flags to specify multiple values</param>
         /// <param name="level">The minimum log level</param>
         /// <returns></returns>
-        public static IApplicationBuilder UseLogger(this IApplicationBuilder builder,
+        public static T UseLogger<T>(this T builder,
                                                     LoggerTypes loggerType,
-                                                    LogRecordTypes level)
+                                                    LogRecordTypes level) where T : IApplicationBuilder
         {
             builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.LoggerBuildAction((container) =>
             {
@@ -94,6 +95,40 @@ namespace Coddee.AppBuilder
                     fileLogger.Initialize(level, "log.txt");
                     logger.AddLogger(fileLogger, LoggerTypes.File);
                 }
+                if (loggerType.HasFlag(LoggerTypes.ApplicationConsole))
+                {
+                    var consoleLogger = container.Resolve<ConsoleLogger>();
+                    consoleLogger.Initialize(level);
+                    logger.AddLogger(consoleLogger, LoggerTypes.ApplicationConsole);
+                }
+            }));
+            return builder;
+        }
+
+        public static IConsoleApplicationBuilder UseMain(this IConsoleApplicationBuilder builder,
+                                                    Action entryPoint)
+        {
+            builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.ConsoleMainBuildAction((container) =>
+            {
+                entryPoint();
+            }));
+            return builder;
+        }
+
+        public static IConsoleApplicationBuilder UseMain(this IConsoleApplicationBuilder builder,
+                                                         IEntryPointClass entryPoint)
+        {
+            builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.ConsoleMainBuildAction((container) =>
+            {
+                entryPoint.Start();
+            }));
+            return builder;
+        }
+        public static IConsoleApplicationBuilder UseMain<T>(this IConsoleApplicationBuilder builder) where T:IEntryPointClass
+        {
+            builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.ConsoleMainBuildAction((container) =>
+            {
+                container.Resolve<T>().Start();
             }));
             return builder;
         }

@@ -8,7 +8,6 @@ namespace Coddee.AppBuilder
     public interface IApplicationBuilder
     {
         BuildActionsCoordinator BuildActionsCoordinator { get; }
-
-
+        
     }
 }

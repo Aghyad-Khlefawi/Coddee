@@ -19,7 +19,6 @@ namespace Coddee.AppBuilder
 {
     public static class BuilderExtensions
     {
-       
         /// <summary>
         /// Add a console to the application
         /// </summary>
@@ -42,7 +41,6 @@ namespace Coddee.AppBuilder
                       logger.AddLogger(applicationConsole.GetLogger(), LoggerTypes.ApplicationConsole);
 
                       //Sets the Shell KeyDown event handler to toggle the console visibility
-                      //when Ctrl+F12 are pressed
                       applicationConsole.SetToggleCondition(toggleCondition);
                   }));
             return builder;
@@ -135,7 +133,7 @@ namespace Coddee.AppBuilder
             builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.ShellBuildAction((container) =>
             {
                 var wpfApplication = container.Resolve<WPFApplication>();
-                var shellViewModel = BuildCustomShell<TShellViewModel>(builder, config, container);
+                var shellViewModel = BuildCustomShell<TShellViewModel>(config, container);
                 shellViewModel.Initialize().ContinueWith((t) =>
                 {
                     container.Resolve<IGlobalEventsService>().GetEvent<ApplicationStartedEvent>().Invoke(wpfApplication);
@@ -158,7 +156,7 @@ namespace Coddee.AppBuilder
             builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.ShellBuildAction((container) =>
             {
                 var wpfApplication = container.Resolve<WPFApplication>();
-                var shellViewModel = BuildCustomShell<TShellViewModel>(builder, config, container);
+                var shellViewModel = BuildCustomShell<TShellViewModel>( config, container);
                 var loginViewModel = container.Resolve<TLogin>();
                 BuildLogin(container, wpfApplication, shellViewModel, loginViewModel);
             }));
@@ -201,8 +199,7 @@ namespace Coddee.AppBuilder
                 });
         }
 
-        private static TShellViewModel BuildCustomShell<TShellViewModel>(IApplicationBuilder builder,
-                                                                         Action<Window> config,
+        private static TShellViewModel BuildCustomShell<TShellViewModel>(Action<Window> config,
                                                                          IContainer container)
             where TShellViewModel : IShellViewModel
         {

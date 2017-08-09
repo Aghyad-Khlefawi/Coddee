@@ -53,10 +53,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppBuilder\BuilderExtensions.cs" />
+    <Compile Include="AppBuilder\ConsoleApplication.cs" />
+    <Compile Include="AppBuilder\ConsoleApplicationBuilder.cs" />
+    <Compile Include="AppBuilder\IConsoleApplicationBuilder.cs" />
+    <Compile Include="AppBuilder\IEntryPointClass.cs" />
+    <Compile Include="AppBuilder\WindowsApplicationBuilder.cs" />
     <Compile Include="Configuration\ConfigurationFile.cs" />
     <Compile Include="Configuration\ConfigurationManager.cs" />
     <Compile Include="Configuration\ConfigurationManagerModule.cs" />
+    <Compile Include="Loggers\ConsoleLogger.cs" />
     <Compile Include="Network\NetworkServicesLocator.cs" />
+    <Compile Include="Services\ApplicationModulesManager.cs" />
     <Compile Include="WindowsModulesDefnitions.cs" />
     <Compile Include="Loggers\FileLogger.cs" />
     <Compile Include="Mapper\ILObjectMapper.cs" />
@@ -81,5 +88,6 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
