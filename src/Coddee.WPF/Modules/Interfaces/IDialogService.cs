@@ -11,6 +11,9 @@ namespace Coddee.WPF.Modules.Dialogs
 {
     public interface IDialogService
     {
+        event EventHandler<IDialog> DialogDisplayed;
+        event EventHandler<IDialog> DialogClosed;
+
         void Initialize(Region dialogsRegion, SolidColorBrush dialogBorderBrush);
 
         IDialog ShowContent(UIElement content);
