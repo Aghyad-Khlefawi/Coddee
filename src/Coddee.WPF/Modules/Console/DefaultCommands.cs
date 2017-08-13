@@ -3,7 +3,7 @@
 
 using System.Collections.Generic;
 
-namespace Coddee.WPF.Modules.Console
+namespace Coddee.Services.ApplicationConsole
 {
     /// <summary>
     /// The default commands included in the library

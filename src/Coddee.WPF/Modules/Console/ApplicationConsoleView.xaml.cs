@@ -3,7 +3,7 @@
 
 using System.Windows.Controls;
 
-namespace Coddee.WPF.Console
+namespace Coddee.Services.ApplicationConsole
 {
     /// <summary>
     /// Interaction logic for ConsoleView.xaml

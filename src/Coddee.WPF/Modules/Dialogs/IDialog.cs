@@ -3,8 +3,9 @@
 
 using System;
 using System.Windows;
+using Coddee.WPF;
 
-namespace Coddee.WPF.Modules.Dialogs
+namespace Coddee.Services.Dialogs
 {
     public interface IDialog:IPresentable
     {

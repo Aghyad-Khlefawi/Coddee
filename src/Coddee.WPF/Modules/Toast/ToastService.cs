@@ -2,9 +2,10 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
 using Coddee.Collections;
-using Microsoft.Practices.Unity;
+using Coddee.WPF;
 
-namespace Coddee.WPF.Modules.Toast
+
+namespace Coddee.Services.Toast
 {
     public class ToastService : ViewModelBase<ToastServiceView>, IToastService
     {

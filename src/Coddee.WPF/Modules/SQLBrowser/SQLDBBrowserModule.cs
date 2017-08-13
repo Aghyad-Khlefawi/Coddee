@@ -4,7 +4,7 @@
 using System.Threading.Tasks;
 using Coddee.WPF;
 using Coddee.WPF.Modules;
-using Microsoft.Practices.Unity;
+
 
 namespace Coddee.SQL
 {
@@ -12,7 +12,7 @@ namespace Coddee.SQL
     ]
     public class SQLDBBrowserModule : IModule
     {
-        public Task Initialize(IUnityContainer container)
+        public Task Initialize(IContainer container)
         {
             container.RegisterInstance<ISQLDBBrowser, SQLDBBrowse>();
             return Task.FromResult(true);

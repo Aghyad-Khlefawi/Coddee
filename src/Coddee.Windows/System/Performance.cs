@@ -60,7 +60,7 @@ namespace Coddee.Windows
         }
         
         /// <summary>
-        /// Returns the amount of RAM used by the current proccess in MB
+        /// Returns the amount of RAM used by the current process in MB
         /// </summary>
         public static long GetCurrentProccessMemoryUsageInMB()
         {
@@ -69,7 +69,7 @@ namespace Coddee.Windows
         }
 
         /// <summary>
-        /// Return the Cpu usage percentage
+        /// Return the CPU usage percentage
         /// </summary>
         /// <returns></returns>
         public static string GetTotalCpuUsage()
@@ -79,7 +79,7 @@ namespace Coddee.Windows
 
             var a = cpuUsage.NextValue() + " %";
             Thread.Sleep(200);
-            return Math.Round(cpuUsage.NextValue(), 0) + " %";
+            return System.Math.Round(cpuUsage.NextValue(), 0) + " %";
         }
 
     }

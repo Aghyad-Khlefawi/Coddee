@@ -5,7 +5,7 @@ using System.Windows.Input;
 using Coddee.WPF.Commands;
 using Coddee.WPF.Dialogs;
 
-namespace Coddee.WPF.Modules.Dialogs
+namespace Coddee.Services.Dialogs
 {
     public class MessageDialog : DialogViewModelBase<MessageDialogView>
     {

@@ -1,13 +1,12 @@
 ﻿<!-- Copyright (c) Aghyad khlefawi. All rights reserved.  
      Licensed under the MIT License. See LICENSE file in the project root for full license information.-->
 
-<UserControl x:Class="Coddee.WPF.Console.ApplicationConsoleView"
+<UserControl x:Class="Coddee.Services.ApplicationConsole.ApplicationConsoleView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              FlowDirection="LeftToRight"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:local="clr-namespace:Coddee.WPF.Console"
              xmlns:converters="clr-namespace:Coddee.WPF.Converters"
              xmlns:commands="clr-namespace:Coddee.WPF.Commands"
              mc:Ignorable="d"

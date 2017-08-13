@@ -7,7 +7,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using Microsoft.Win32;
 
-namespace Coddee.Windows.System
+namespace Coddee.Windows
 {
     public static class RegistryHelper
     {

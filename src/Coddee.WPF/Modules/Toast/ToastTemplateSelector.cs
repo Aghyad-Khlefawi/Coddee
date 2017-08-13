@@ -4,7 +4,7 @@
 using System.Windows;
 using System.Windows.Controls;
 
-namespace Coddee.WPF.Modules.Toast
+namespace Coddee.Services.Toast
 {
     /// <summary>
     /// A template selector for the toast service

@@ -2,14 +2,14 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
 using System.Threading.Tasks;
-using Microsoft.Practices.Unity;
 
-namespace Coddee.WPF.Modules.Toast
+
+namespace Coddee.Services.Toast
 {
     [Module(BuiltInModules.ToastService)]
     public class ToastServiceModule : IModule
     {
-        public Task Initialize(IUnityContainer container)
+        public Task Initialize(IContainer container)
         {
             container.RegisterInstance<IToastService, ToastService>();
             return Task.FromResult(true);

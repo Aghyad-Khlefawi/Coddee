@@ -3,7 +3,7 @@
 
 using System.Windows.Controls;
 
-namespace Coddee.WPF.Modules.Navigation
+namespace Coddee.Services.Navigation
 {
     /// <summary>
     /// Interaction logic for NavigationServiceView.xaml

@@ -3,8 +3,9 @@
 
 using System;
 using System.Windows.Threading;
+using Coddee.WPF;
 
-namespace Coddee.WPF.Modules.Toast
+namespace Coddee.Services.Toast
 {
     /// <summary>
     /// Toast object

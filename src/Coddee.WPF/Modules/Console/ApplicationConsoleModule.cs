@@ -2,17 +2,16 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
 using System.Threading.Tasks;
-using Coddee.WPF.Console;
-using Microsoft.Practices.Unity;
 
-namespace Coddee.WPF.Modules.Console
+
+namespace Coddee.Services.ApplicationConsole
 {
     [Module(BuiltInModules.ApplicationConsole)]
     public class ApplicationConsoleModule : IModule
     {
-        public Task Initialize(IUnityContainer container)
+        public Task Initialize(IContainer container)
         {
-            container.RegisterInstance<IApplicationConsole, ApplicationConsole>();
+            container.RegisterInstance<IApplicationConsole, ApplicationConsoleService>();
             return Task.FromResult(true);
         }
     }

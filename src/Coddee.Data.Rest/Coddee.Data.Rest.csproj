@@ -50,6 +50,7 @@
     <Compile Include="IRESTRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RESTRepositoryBase.cs" />
+    <Compile Include="RESTRepositoryExtenstion.cs" />
     <Compile Include="RESTRepositoryManager.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -64,7 +65,7 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.10.0.1\lib\portable-net45+win8+wpa81+wp8\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\..\packages\Newtonsoft.Json.10.0.3\lib\portable-net45+win8+wp8+wpa81\Newtonsoft.Json.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

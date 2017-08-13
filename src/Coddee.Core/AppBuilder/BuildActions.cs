@@ -3,19 +3,25 @@
 
 namespace Coddee.AppBuilder
 {
-   public class BuildActions
+   public class BuildActionsKeys
     {
         public const string Logger = nameof(Logger);
         public const string ConfigFile = nameof(ConfigFile);
         public const string Mapper = nameof(Mapper);
         public const string Repository = nameof(Repository);
         public const string Shell = nameof(Shell);
+        public const string SetupViewModelManager = nameof(SetupViewModelManager);
         public const string AppConsole = nameof(AppConsole);
         public const string Login = nameof(Login);
         public const string Toast = nameof(Toast);
         public const string Navigation = nameof(Navigation);
         public const string DialogService = nameof(DialogService);
         public const string DebugTool = nameof(DebugTool);
+        public const string SetupViewModelBase = nameof(SetupViewModelBase);
         public const string Localization = nameof(Localization);
+
+        public const string DiscoverModules = nameof(DiscoverModules);
+        public const string ConfigureGlobalVariabls = nameof(ConfigureGlobalVariabls);
+        public const string ConsoleMain = nameof(ConsoleMain);
     }
 }

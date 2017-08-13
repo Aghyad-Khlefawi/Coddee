@@ -2,12 +2,13 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
 using System;
+using Coddee.Services.ApplicationConsole;
 using Coddee.SQL;
 using Coddee.WPF.DebugTool;
-using Coddee.WPF.Modules.Console;
-using Coddee.WPF.Modules.Dialogs;
-using Coddee.WPF.Modules.Navigation;
-using Coddee.WPF.Modules.Toast;
+using Coddee.Services.Dialogs;
+using Coddee.Services.Navigation;
+using Coddee.Services.Toast;
+using Coddee.Services.ViewModelManager;
 
 namespace Coddee.ModuleDefinitions
 {
@@ -20,6 +21,7 @@ namespace Coddee.ModuleDefinitions
            typeof(DialogServicsModule),
            typeof(NavigationModule),
            typeof(ToastServiceModule),
+           typeof(ViewModelManagerModule),
            typeof(SQLDBBrowserModule),
        };
    }

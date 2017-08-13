@@ -4,7 +4,7 @@
 using System;
 using System.Collections.Concurrent;
 
-namespace Coddee.Services.GlobalEvents
+namespace Coddee.Services
 {
     public class GlobalEventsService : IGlobalEventsService
     {

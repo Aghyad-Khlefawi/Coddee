@@ -5,9 +5,9 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using Coddee.Loggers;
-using Microsoft.Practices.Unity;
 
-namespace Coddee
+
+namespace Coddee.Services
 {
     class BoundLocalizationObject
     {
@@ -133,7 +133,7 @@ namespace Coddee
             return currentValue;
         }
 
-        public void Initialize(IUnityContainer container)
+        public void Initialize(IContainer container)
         {
             if (container.IsRegistered<ILogger>())
                 _logger = container.Resolve<ILogger>();

@@ -1,17 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿// Copyright (c) Aghyad khlefawi. All rights reserved.  
+// Licensed under the MIT License. See LICENSE file in the project root for full license information.  
+
 using System.Threading.Tasks;
-using Coddee.WPF.Modules;
-using Microsoft.Practices.Unity;
+using Coddee.Services;
+using Coddee.Services.ViewModelManager;
+
 
 namespace Coddee.WPF.DebugTool
 {
-    [Module(BuiltInModules.DebugTool)]
+    [Module(BuiltInModules.DebugTool,ModuleInitializationTypes.Auto,nameof(ViewModelManagerModule))]
     public class DebugToolModule:IModule
     {
-        public Task Initialize(IUnityContainer container)
+        public Task Initialize(IContainer container)
         {
             container.RegisterInstance<IDebugTool,DebugToolViewModel>();
             return Task.FromResult(true);

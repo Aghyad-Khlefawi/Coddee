@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿// Copyright (c) Aghyad khlefawi. All rights reserved.  
+// Licensed under the MIT License. See LICENSE file in the project root for full license information.  
+
+using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace Coddee.WPF.Modules
+namespace Coddee.Services
 {
     public interface IDebugTool
     {

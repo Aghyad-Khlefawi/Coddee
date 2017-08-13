@@ -2,14 +2,15 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
 using System.Threading.Tasks;
-using Microsoft.Practices.Unity;
+using Coddee.Services;
 
-namespace Coddee.Services.GlobalEvents
+
+namespace Coddee.Modules
 {
     [Module(BuiltInModules.GlobalEventsService)]
     public class GlobalEventsServiceModule : IModule
     {
-        public Task Initialize(IUnityContainer container)
+        public Task Initialize(IContainer container)
         {
             container.RegisterInstance<IGlobalEventsService, GlobalEventsService>();
             return Task.FromResult(true);

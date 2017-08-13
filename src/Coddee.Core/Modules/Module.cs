@@ -48,4 +48,5 @@ namespace Coddee
         public IModule Instance { get; set; }
         public bool Initialized { get; set; }
     }
+    
 }

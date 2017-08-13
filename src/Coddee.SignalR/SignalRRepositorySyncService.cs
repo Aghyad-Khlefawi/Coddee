@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Coddee.Loggers;
 using Coddee.Network;
-using Microsoft.Practices.Unity;
+
 
 namespace Coddee.SignalR
 {
@@ -10,11 +10,11 @@ namespace Coddee.SignalR
     {
         private const string _eventsSource = "SyncService";
 
-        private readonly IUnityContainer _container;
+        private readonly IContainer _container;
 
         public static Guid ServiceID = Guid.Parse("8d035347-6a5c-4644-8b82-faa5e7b0519d");
 
-        public SignalRRepositorySyncService(IUnityContainer container)
+        public SignalRRepositorySyncService(IContainer container)
         {
             _container = container;
             ID = ServiceID;

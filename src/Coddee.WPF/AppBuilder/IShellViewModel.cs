@@ -3,16 +3,16 @@
 
 using System;
 using System.Threading.Tasks;
+using Coddee.WPF.DefaultShell;
 
 namespace Coddee.WPF
 {
     /// <summary>
     /// This interface represent a WPF application shell ViewModel
     /// </summary>
-    public interface IShellViewModel:IViewModel
+    public interface IShellViewModel:IPresentableViewModel
     {
-        IViewModel CreateViewModel(Type viewModelType);
-        TViewModel CreateViewModel<TViewModel>() where TViewModel : IViewModel;
+
     }
 
     /// <summary>
@@ -20,6 +20,7 @@ namespace Coddee.WPF
     /// </summary>
     public interface IDefaultShellViewModel : IShellViewModel
     {
-        IViewModel SetMainContent(Type defaultPresentable, bool useNavigation);
+        IPresentableViewModel SetMainContent(Type defaultPresentable, bool useNavigation);
+        IPresentableViewModel GetMainContent();
     }
 }

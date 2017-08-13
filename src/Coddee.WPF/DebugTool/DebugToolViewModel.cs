@@ -1,67 +1,71 @@
-﻿using System;
+﻿// Copyright (c) Aghyad khlefawi. All rights reserved.  
+// Licensed under the MIT License. See LICENSE file in the project root for full license information.  
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Reflection.Emit;
-using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using Coddee.Collections;
+using Coddee.Services;
+using Coddee.Services.ViewModelManager;
 using Coddee.WPF.Commands;
-using Coddee.WPF.Controls;
-using Coddee.WPF.Modules;
 
 namespace Coddee.WPF.DebugTool
 {
     public class DebugToolViewModel : ViewModelBase<DebugToolView>, IDebugTool
     {
+
+        public DebugToolViewModel()
+        {
+
+        }
+
+        public DebugToolViewModel(ViewModelExplorerViewModel viewModelExplorer)
+        {
+            _viewModelExplorer = viewModelExplorer;
+        }
+
+        private ViewModelExplorerViewModel _viewModelExplorer;
+        public ViewModelExplorerViewModel ViewModelExplorer
+        {
+            get { return _viewModelExplorer; }
+            set { SetProperty(ref this._viewModelExplorer, value); }
+        }
+
+        protected override async Task OnInitialization()
+        {
+            await base.OnInitialization();
+            AttachWindowKeyDown();
+            await _viewModelExplorer.Initialize();
+        }
+
+        void Load()
+        {
+            _viewModelExplorer.Load();
+            _loaded = true;
+        }
+        #region Window visibility
         /// <summary>
         /// The condition to toggle the tool window
         /// </summary>
         private Func<KeyEventArgs, bool> _toggleCondition;
+
         private bool _windowVisible;
-
-        private AsyncObservableCollection<ViewModelItem> _viewModels;
-        public AsyncObservableCollection<ViewModelItem> ViewModels
-        {
-            get { return _viewModels; }
-            set { SetProperty(ref this._viewModels, value); }
-        }
+        private bool _loaded;
 
 
-        private AsyncObservableCollection<PropertyItem> _properties;
-        public AsyncObservableCollection<PropertyItem> Properties
+        private void AttachWindowKeyDown()
         {
-            get { return _properties; }
-            set { SetProperty(ref this._properties, value); }
-        }
-        public ICommand RefreshCommand => new RelayCommand(Refresh);
-
-        private void Refresh()
-        {
-            GetViewModels();
-        }
-        protected override Task OnInitialization()
-        {
-            var shellWindow = (Window) Resolve<IShell>();
+            var shellWindow = (Window)Resolve<IShell>();
             shellWindow.KeyDown += (sender, args) =>
             {
                 if (_toggleCondition(args))
                     ToggleWindow();
             };
-            return base.OnInitialization();
-        }
-
-        private void VMTree_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> args)
-        {
-            var item = args.NewValue as ViewModelItem;
-            Properties =
-                new AsyncObservableCollection<PropertyItem>(item.ViewModel.GetType()
-                                                                .GetProperties()
-                                                                .Select(e => new PropertyItem(e,
-                                                                                              item
-                                                                                                  .ViewModel)));
         }
 
         private void ToggleWindow()
@@ -69,59 +73,34 @@ namespace Coddee.WPF.DebugTool
             _windowVisible = !_windowVisible;
             if (_windowVisible)
             {
-                GetViewModels();
                 CreateView();
-                View.VMTree.SelectedItemChanged += VMTree_SelectedItemChanged;
                 View.Show();
+                if (!_loaded)
+                    Load();
             }
             else
                 View.Close();
-        }
-
-        private void GetViewModels()
-        {
-            var shellViewModel = Resolve<IShellViewModel>();
-            ViewModels = new AsyncObservableCollection<ViewModelItem>
-            {
-                new ViewModelItem(shellViewModel)
-            };
         }
 
         public void SetToggleCondition(Func<KeyEventArgs, bool> toggleCondition)
         {
             _toggleCondition = toggleCondition;
         }
+        #endregion
+
     }
 
-    public class PropertyItem : BindableBase
+   
+
+    public class ViewModelNavigationItem : BindableBase
     {
-        public PropertyItem(PropertyInfo property, object item)
+        public ViewModelNavigationItem(ViewModelInfo viewModelInfo)
         {
-            PropertyInfo = property;
-            Item = item;
-
-            Name = PropertyInfo.Name;
-            var val = PropertyInfo.GetValue(item);
-            Value = val?.ToString() ?? "NULL";
-
+            ViewModelInfo = viewModelInfo;
+            Name = viewModelInfo.ViewModel.__Name;
         }
 
-        public object Item { get; set; }
-        public PropertyInfo PropertyInfo { get; set; }
-
-        private AsyncObservableCollection<PropertyItem> _properties;
-        public AsyncObservableCollection<PropertyItem> Properties
-        {
-            get { return _properties; }
-            set { SetProperty(ref this._properties, value); }
-        }
-
-        private bool _isPremitive;
-        public bool IsPremitive
-        {
-            get { return _isPremitive; }
-            set { SetProperty(ref this._isPremitive, value); }
-        }
+        public ViewModelInfo ViewModelInfo { get; set; }
 
         private string _name;
         public string Name
@@ -130,32 +109,16 @@ namespace Coddee.WPF.DebugTool
             set { SetProperty(ref this._name, value); }
         }
 
-        private string _value;
-        public string Value
+        public event EventHandler<ViewModelNavigationItem> OnNavigate;
+        public ICommand NavigateCommand => new RelayCommand(Navigate);
+
+        private void Navigate()
         {
-            get { return _value; }
-            set { SetProperty(ref this._value, value); }
+            OnNavigate?.Invoke(this, this);
         }
+
     }
 
-    public class ViewModelItem : BindableBase
-    {
-        public ViewModelItem(IViewModel viewModel)
-        {
-            ViewModel = viewModel;
-            ViewModels =
-                new AsyncObservableCollection<ViewModelItem>(viewModel.ChildViewModels
-                                                                 .Select(e => new ViewModelItem(e)));
-        }
 
-        public string Name => ViewModel.GetType().Name;
-        public IViewModel ViewModel { get; set; }
 
-        private AsyncObservableCollection<ViewModelItem> _viewModels;
-        public AsyncObservableCollection<ViewModelItem> ViewModels
-        {
-            get { return _viewModels; }
-            set { SetProperty(ref this._viewModels, value); }
-        }
-    }
 }

@@ -3,7 +3,7 @@
 
 using System.Windows.Controls;
 
-namespace Coddee.WPF.Modules.Toast
+namespace Coddee.Services.Toast
 {
     /// <summary>
     /// Interaction logic for ToastServiceView.xaml

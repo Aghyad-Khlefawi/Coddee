@@ -16,7 +16,7 @@ using Coddee.Services;
 using Coddee.WPF.Modules;
 using Coddee.Validation;
 using Coddee.WPF.Commands;
-using Microsoft.Practices.Unity;
+
 
 namespace Coddee.WPF
 {
@@ -24,35 +24,30 @@ namespace Coddee.WPF
     /// The base class for all ViewModels of the application
     /// Contains the property changed handlers and UI execute method
     /// </summary>
-    public abstract class ViewModelBase : BindableBase, IViewModel, IDataErrorInfo
+    public abstract class ViewModelBase : BindableBase, IViewModel
     {
         private const string _eventsSource = "VMBase";
 
-
+        
         protected static readonly Task completedTask = Task.FromResult(false);
         protected static WPFApplication _app;
-        protected static IUnityContainer _container;
+        protected static IContainer _container;
         protected static IGlobalVariablesService _globalVariables;
         protected static IToastService _toast;
         protected static ILocalizationManager _localization;
         protected static ILogger _logger;
 
-        protected virtual string _vmName { get; set; }
-        public string vmName
-        {
-            get { return _vmName ?? GetType().Name; }
-            set { _vmName = value; }
-        }
+        private static IViewModelsManager VmManager;
+
+        public string __Name { get; protected set; }
 
 
-        public ViewModelBase()
+        protected ViewModelBase()
         {
             Initialized += OnInitialized;
-            ChildCreated += OnChildCreated;
-            ChildViewModels = new List<IViewModel>();
             RequiredFields = new RequiredFieldCollection();
             _requiredFieldsPropertyInfo = new Dictionary<string, PropertyInfo>();
-
+            __Name = GetType().Name;
             if (IsDesignMode())
                 OnDesignMode();
         }
@@ -62,11 +57,7 @@ namespace Coddee.WPF
         protected readonly Dictionary<string, PropertyInfo> _requiredFieldsPropertyInfo;
 
         public event EventHandler Initialized;
-        public event EventHandler<IViewModel> ChildCreated;
 
-        public IViewModel ParentViewModel { get; set; }
-
-        public IList<IViewModel> ChildViewModels { get; protected set; }
 
         private bool _isInitialized;
         public bool IsInitialized
@@ -82,11 +73,9 @@ namespace Coddee.WPF
             set { SetProperty(ref this._isBusy, value); }
         }
 
-        protected async Task<IViewModel> InitializeViewModel(Type viewModelType)
+        protected Task<IViewModel> InitializeViewModel(Type viewModelType)
         {
-            var vm = CreateViewModel(viewModelType);
-            await vm.Initialize();
-            return vm;
+            return VmManager.InitializeViewModel(viewModelType, this);
         }
 
         protected virtual void OnDesignMode()
@@ -94,58 +83,28 @@ namespace Coddee.WPF
             IsBusy = false;
         }
 
-        protected async Task<TResult> InitializeViewModel<TResult>() where TResult : IViewModel
+        protected Task<TResult> InitializeViewModel<TResult>() where TResult : IViewModel
         {
-            return (TResult)await InitializeViewModel(typeof(TResult));
-        }
-
-        public IViewModel CreateViewModel(Type viewModelType)
-        {
-            IViewModel vm = (IViewModel)Resolve(viewModelType);
-            _logger?.Log(_eventsSource, $"ViewModelCreated {vmName}", LogRecordTypes.Debug);
-            AddChildViewModel(vm);
-            return vm;
+            return VmManager.InitializeViewModel<TResult>(this);
         }
 
         protected virtual Task IntitilzieChildViewModels()
         {
-            return Task.WhenAll(ChildViewModels.Select(e => e.Initialize()));
+            return Task.WhenAll(VmManager.GetChildViewModels(this).Select(e => e.ViewModel.Initialize()));
         }
 
-        protected virtual void AddChildViewModel(IViewModel vm)
+        protected IEnumerable<IViewModel> GetChildViewModels()
         {
-            if (!ChildViewModels.Contains(vm))
-            {
-                vm.ParentViewModel = this;
-                ChildViewModels.Add(vm);
-                ChildCreated?.Invoke(this, vm);
-                vm.ChildCreated += ChildCreated;
-            }
+            return VmManager.GetChildViewModels(this).Select(e => e.ViewModel);
+        }
+        protected IViewModel CreateViewModel(Type viewModelType)
+        {
+            return VmManager.CreateViewModel(viewModelType, this);
         }
 
-        protected virtual IList<IViewModel> AddChildViewModels(params object[] vms)
+        protected TResult CreateViewModel<TResult>() where TResult : IViewModel
         {
-            var res = new List<IViewModel>();
-            foreach (var obj in vms)
-            {
-                var vm = obj as IViewModel;
-                if (vm != null)
-                {
-                    AddChildViewModel(vm);
-                    res.Add(vm);
-                }
-            }
-            return res;
-        }
-
-        public TResult CreateViewModel<TResult>() where TResult : IViewModel
-        {
-            return (TResult)CreateViewModel(typeof(TResult));
-        }
-
-        protected virtual void OnChildCreated(object sender, IViewModel e)
-        {
-            _logger?.Log(_eventsSource, $"Child view model added {vmName}", LogRecordTypes.Debug);
+            return VmManager.CreateViewModel<TResult>(this);
         }
 
         /// <summary>
@@ -179,20 +138,24 @@ namespace Coddee.WPF
             return completedTask;
         }
 
+        private readonly object _initializationLock = new object(); 
+
         /// <summary>
         /// Called when the ViewModel is ready to be presented
         /// </summary>
         /// <returns></returns>
         public Task Initialize()
         {
-            _logger?.Log(_eventsSource, $"ViewModel initializing {vmName}", LogRecordTypes.Debug);
+            lock (_initializationLock)
+                IsInitialized = true;
+
+            _logger?.Log(_eventsSource, $"ViewModel initializing {__Name}", LogRecordTypes.Debug);
             return Task.Run(() =>
             {
                 OnInitialization().Wait();
 
                 RefreshRequiredFields();
 
-                IsInitialized = true;
                 IsBusy = false;
                 Initialized?.Invoke(this, EventArgs.Empty);
             });
@@ -207,20 +170,24 @@ namespace Coddee.WPF
 
         protected virtual void OnInitialized(object sender, EventArgs e)
         {
-            _logger?.Log(_eventsSource, $"ViewModel initialized {vmName}", LogRecordTypes.Debug);
+            _logger?.Log(_eventsSource, $"ViewModel initialized {__Name}", LogRecordTypes.Debug);
         }
 
         /// <summary>
         /// Set the container on the view model and resolve the basic dependencies
         /// </summary>
         /// <param name="container"></param>
-        public static void SetContainer(IUnityContainer container)
+        public static void SetContainer(IContainer container)
         {
             _container = container;
             _globalVariables = _container.Resolve<IGlobalVariablesService>();
-            _toast = _container.Resolve<IToastService>();
             _logger = _container.Resolve<ILogger>();
             _localization = _container.Resolve<ILocalizationManager>();
+            VmManager = _container.Resolve<IViewModelsManager>();
+
+            if (_container.IsRegistered<IToastService>())
+                _toast = _container.Resolve<IToastService>();
+
         }
 
         protected void ToastError(string message = "An error occurred.")
@@ -253,10 +220,7 @@ namespace Coddee.WPF
 
         protected object Resolve(Type type)
         {
-            var result = _container.Resolve(type);
-            if (result is IViewModel vm && vm.ParentViewModel == null)
-                AddChildViewModel(vm);
-            return result;
+            return _container.Resolve(type);
         }
 
         protected T Resolve<T>()
@@ -271,7 +235,7 @@ namespace Coddee.WPF
 
         protected void LogError(Exception ex)
         {
-            LogError(vmName, ex);
+            LogError(__Name, ex);
         }
 
         protected void RegisterInstance<T>(T instance)
@@ -291,7 +255,7 @@ namespace Coddee.WPF
 
         public virtual void Dispose()
         {
-            foreach (var child in ChildViewModels)
+            foreach (var child in GetChildViewModels())
             {
                 child.Dispose();
             }
@@ -312,11 +276,6 @@ namespace Coddee.WPF
                     _requiredFieldsPropertyInfo[requiredField.FieldName] = requiredField.Item.GetType()
                         .GetProperty(requiredField.FieldName);
             }
-        }
-
-        public string this[string columnName]
-        {
-            get { return CheckField(columnName); }
         }
 
         protected virtual string CheckField(string fieldName)
@@ -350,7 +309,6 @@ namespace Coddee.WPF
             return errors;
         }
 
-        public string Error => null;
 
         public ReactiveCommand<T> CreateReactiveCommand<T>(T obj, Action handler)
         {
@@ -379,7 +337,7 @@ namespace Coddee.WPF
 
         protected virtual void OnViewCreated(object sender, TView e)
         {
-            _logger?.Log(_eventsSource, $"View created {e.GetType().Name} for {vmName}", LogRecordTypes.Debug);
+            _logger?.Log(_eventsSource, $"View created {e.GetType().Name} for {__Name}", LogRecordTypes.Debug);
         }
 
         /// <summary>
