@@ -101,9 +101,9 @@ namespace Coddee.WPF.Modules.Dialogs
         {
             var container = new DialogContainer
             {
-                DialogBorder = {Background = _dialogBorderBrush}
+                DialogBorder = {Background = _dialogBorderBrush},
+                Presenter = {HorizontalAlignment = horizontalAlignment}
             };
-            container.Presenter.HorizontalAlignment = horizontalAlignment;
             return CreateDialog<TType>(container,container.Presenter);
         }
         public TType CreateDialog<TType>(UserControl container,ContentPresenter presenter) where TType : IDialog
