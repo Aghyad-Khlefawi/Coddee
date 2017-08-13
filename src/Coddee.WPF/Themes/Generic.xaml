@@ -4,7 +4,8 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:Coddee.WPF.Controls"
-                    xmlns:converters="clr-namespace:Coddee.WPF.Converters">
+                    xmlns:converters="clr-namespace:Coddee.WPF.Converters"
+                    xmlns:system="clr-namespace:System;assembly=mscorlib">
     <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
 
     <Style TargetType="{x:Type local:RegionControl}">
@@ -765,6 +766,7 @@
     </Style>
 
     <Style TargetType="{x:Type local:TabsPanel}">
+        <Setter Property="MaxContentHeight" Value="{x:Static system:Double.MaxValue}"/>
         <Setter Property="ItemBackground"
                 Value="LightGray" />
         <Setter Property="ItemsMargin"

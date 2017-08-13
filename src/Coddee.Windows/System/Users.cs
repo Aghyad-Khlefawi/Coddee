@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.DirectoryServices;
 using System.DirectoryServices.AccountManagement;
 
-namespace Coddee.Windows.System
+namespace Coddee.Windows
 {
     public class Users
     {

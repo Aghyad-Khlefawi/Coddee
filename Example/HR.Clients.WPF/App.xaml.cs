@@ -20,13 +20,12 @@ namespace HR.Clients.WPF
     /// </summary>
     public partial class App : Application
     {
-        public static Guid AppID = new Guid("c1fae5da-5d56-4116-b574-82609a453ee0");
         protected override void OnStartup(StartupEventArgs args)
         {
             var dbLocation = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "DB"));
             var connection = $@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename={dbLocation}\HRDatabase.mdf;Integrated Security=True;Connect Timeout=30";
 
-            new WPFApplication("HR application", new CoddeeUnityContainer()).Run(app =>
+             new WPFApplication("HR application", new CoddeeUnityContainer()).Run(app =>
             {
                  app.UseLogger(LoggerTypes.ApplicationConsole | LoggerTypes.DebugOutput, LogRecordTypes.Debug)
                     .UseApplicationConsole(e => e.Key == Key.F12)
@@ -39,7 +38,6 @@ namespace HR.Clients.WPF
                     .UseLocalization("HR.Clients.WPF.Properties.Resources", "HR.Clients.WPF.exe", new[] { "ar-SY", "en-US" }, "ar-SY")
                     .UseLinqRepositoryManager<HRDBManager, HRRepositoryManager>(connection, "HR.Data.LinqToSQL", true);
             });
-
             base.OnStartup(args);
         }
     }
