@@ -203,7 +203,7 @@ namespace Coddee.AppBuilder
                                                                          IContainer container)
             where TShellViewModel : IShellViewModel
         {
-            container.Resolve<IGlobalVariablesService>().SetValue(Globals.UsingDefaultShell, true);
+            container.Resolve<IGlobalVariablesService>().SetValue(Globals.UsingDefaultShell, false);
             var vmManager = container.Resolve<IViewModelsManager>();
 
             var shellViewModel = vmManager.CreateViewModel<TShellViewModel>(null);

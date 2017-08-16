@@ -46,15 +46,20 @@
     <Content Include="LICENSE.txt" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BuilderExtensions.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="InMemoryRepository\InMemoryRepositoryBase.cs" />
+    <Compile Include="InMemoryRepository\InMemoryRepositoryInitializer.cs" />
     <Compile Include="IRepository.cs" />
+    <Compile Include="IRepositoryInitializer.cs" />
     <Compile Include="IRepositoryManager.cs" />
     <Compile Include="IRepositorySyncService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RepositoryChangeEventArgs.cs" />
-    <Compile Include="RepositoryManagerBase.cs" />
+    <Compile Include="RepositoryManager.cs" />
     <Compile Include="RepositoryAttribute.cs" />
     <Compile Include="RepositoryBase.cs" />
+    <Compile Include="RepositoryTypes.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Coddee.Core\Coddee.Core.csproj">

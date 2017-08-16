@@ -17,16 +17,7 @@ namespace HR.Data.LinqToSQL.Repositories
     [Repository(typeof(IEmployeeRepository))]
     public class EmployeeRepository:CRUDHRRepositoryBase<DB.Employee,Models.Employee,Guid>, IEmployeeRepository
     {
-        public override void Initialize(LinqDBManager<HRDataClassesDataContext> dbManager,
-                                        IRepositoryManager repositoryManager,
-                                        IObjectMapper mapper,
-                                        Type implementedInterface,
-                                        RepositoryConfigurations config = null)
-        {
-            base.Initialize(dbManager, repositoryManager, mapper, implementedInterface, config);
-        }
-
-        public override void RegisterMappings(IObjectMapper mapper)
+       public override void RegisterMappings(IObjectMapper mapper)
         {
             base.RegisterMappings(mapper);
             mapper.RegisterMap<DB.EmployeesView,Employee>();

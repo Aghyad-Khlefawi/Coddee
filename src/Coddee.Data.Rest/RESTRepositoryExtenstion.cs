@@ -28,23 +28,20 @@ namespace Coddee.AppBuilder
     public static class RESTRepositoryExtenstion
     {
         private const string EventsSource = "ApplicationBuilder";
+
         public static IApplicationBuilder UseRESTRepositoryManager(
             this IApplicationBuilder builder,
             Func<IConfigurationManager, RESTRepositoryManagerConfig> config)
         {
-            return builder.UseRESTRepositoryManager<RESTRepositoryManager>(config);
-        }
-
-        public static IApplicationBuilder UseRESTRepositoryManager<TRepositoryManager>(
-            this IApplicationBuilder builder,
-            Func<IConfigurationManager, RESTRepositoryManagerConfig> config)
-            where TRepositoryManager : IRESTRepositoryManager, new()
-        {
-            builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.RepositoryBuildAction((container) =>
+            builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.RESTRepositoryBuildAction((container) =>
             {
-                var repositoryManager = new TRepositoryManager();
+                if (!container.IsRegistered<IRepositoryManager>())
+                    container.RegisterInstance<IRepositoryManager, RepositoryManager>();
+
+                var repositoryManager = container.Resolve<IRepositoryManager>();
+
                 var configRes = config(container.Resolve<IConfigurationManager>());
-                repositoryManager.Initialize(configRes.ApiUrl, configRes.UnauthorizedRequestHandler, container.Resolve<IObjectMapper>());
+                repositoryManager.AddRepositoryInitializer(new RESTRepositoryInitializer(configRes.ApiUrl, configRes.UnauthorizedRequestHandler, container.Resolve<IObjectMapper>()), (int)RepositoryTypes.REST);
                 repositoryManager.RegisterRepositories(configRes.RepositoriesAssembly);
 
                 var logger = container.Resolve<ILogger>();

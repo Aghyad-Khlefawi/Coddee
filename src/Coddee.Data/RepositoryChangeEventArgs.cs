@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿// Copyright (c) Aghyad khlefawi. All rights reserved.  
+// Licensed under the MIT License. See LICENSE file in the project root for full license information.  
+
+using System;
 
 namespace Coddee.Data
 {
    public class RepositoryChangeEventArgs<T>:EventArgs
     {
-        public RepositoryChangeEventArgs(OperationType operationType, T item,bool fromSync)
+        public RepositoryChangeEventArgs(OperationType operationType, T item,bool fromSync=false)
         {
             OperationType = operationType;
             Item = item;

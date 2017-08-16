@@ -21,6 +21,9 @@ namespace Coddee.Data.MongoDB
         protected IMongoDBManager _dbManager;
         protected IMongoDatabase _database;
 
+        public override int RepositoryType { get; } = (int)RepositoryTypes.Mongo;
+
+
         /// <summary>
         /// Do any required initialization
         /// </summary>

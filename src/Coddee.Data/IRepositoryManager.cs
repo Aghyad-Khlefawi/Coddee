@@ -51,6 +51,7 @@ namespace Coddee.Data
 
 
         void SetSyncService(IRepositorySyncService syncService);
+        void AddRepositoryInitializer(IRepositoryInitializer initializer, int repositoryType);
     }
 
 

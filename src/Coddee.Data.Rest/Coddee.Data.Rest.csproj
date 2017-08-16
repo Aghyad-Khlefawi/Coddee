@@ -51,7 +51,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RESTRepositoryBase.cs" />
     <Compile Include="RESTRepositoryExtenstion.cs" />
-    <Compile Include="RESTRepositoryManager.cs" />
+    <Compile Include="RESTRepositoryInitializer.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Coddee.Core\Coddee.Core.csproj">

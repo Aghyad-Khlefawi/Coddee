@@ -5,28 +5,25 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 
 namespace Coddee.Data
 {
     /// <summary>
     /// Base implementation for a repository manager
     /// </summary>
-    public abstract class RepositoryManagerBase : IRepositoryManager
+    public class RepositoryManager : IRepositoryManager
     {
-        
-        protected virtual void Initialize(IObjectMapper mapper,
-                                          RepositoryConfigurations config = null)
+
+        public RepositoryManager()
         {
             _repositories = new Dictionary<Type, IRepository>();
-            _mapper = mapper;
-            _config = config;
+            _repositoryInitializers = new Dictionary<int, IRepositoryInitializer>();
         }
-
+        
         private IRepositorySyncService _syncService;
-        protected RepositoryConfigurations _config ;
-        protected IObjectMapper _mapper;
         protected Dictionary<Type, IRepository> _repositories;
+        protected Dictionary<int, IRepositoryInitializer> _repositoryInitializers;
+
 
         /// <summary>
         /// Gets a repository by its interface
@@ -38,7 +35,7 @@ namespace Coddee.Data
             if (!_repositories.ContainsKey(typeof(TInterface)))
                 throw new ArgumentException(
                     $"Repository of type {typeof(TInterface).Name} was not found, make sure that the repository is registered and marked with the RepositoryAttribute");
-            return (TInterface) _repositories[typeof(TInterface)];
+            return (TInterface)_repositories[typeof(TInterface)];
         }
 
         /// <summary>
@@ -84,8 +81,8 @@ namespace Coddee.Data
                     if (repository.Value.GetTypeInfo().ImplementedInterfaces.All(e => e != repository.Key))
                         throw new ArgumentException(
                             $"The type {repository.Value.FullName} doesn't implements '{repository.Key.FullName}' interface");
-                    var repo = (IRepository) Activator.CreateInstance(repository.Value);
-                    InitializeRepository(repo,repository.Key);
+                    var repo = (IRepository)Activator.CreateInstance(repository.Value);
+                    InitializeRepository(repo, repository.Key);
                     AddRepository(repo, repository.Key);
                 }
                 else
@@ -97,7 +94,7 @@ namespace Coddee.Data
         public void AddRepository(IRepository repository, Type implementedRepository)
         {
             _repositories[implementedRepository] = repository;
-            if(_syncService!=null)
+            if (_syncService != null)
                 repository.SetSyncService(_syncService);
         }
 
@@ -110,9 +107,17 @@ namespace Coddee.Data
             }
         }
 
-        public virtual void InitializeRepository(IRepository repo,Type implementedInterface)
+        public virtual void InitializeRepository(IRepository repo, Type implementedInterface)
         {
-            repo.Initialize(this, _mapper, implementedInterface, _config);
+            if (!_repositoryInitializers.ContainsKey(repo.RepositoryType))
+                throw new InvalidOperationException($"No initializer found for repository '{repo.GetType().FullName}'");
+
+            _repositoryInitializers[repo.RepositoryType].InitializeRepository(this, repo, implementedInterface);
+        }
+
+        public void AddRepositoryInitializer(IRepositoryInitializer initializer, int repositoryType)
+        {
+            _repositoryInitializers[repositoryType] = initializer;
         }
     }
 }

@@ -16,22 +16,23 @@ namespace Coddee.Data.LinqToSQL
     /// <summary>
     /// Base implementation for a LinqToSQL repository
     /// </summary>
-    public class LinqRepositoryBase<TDataContext> : RepositoryBase, ILinqRepository<TDataContext>
+    public class LinqRepositoryBase<TDataContext> : RepositoryBase, ILinqRepository
         where TDataContext : DataContext
     {
-        protected LinqDBManager<TDataContext> _dbManager;
+        public override int RepositoryType { get; } = (int)RepositoryTypes.Linq;
 
+        protected LinqDBManager<TDataContext> _dbManager;
         /// <summary>
         /// Initialize the repository
         /// </summary>
         public virtual void Initialize(
-            LinqDBManager<TDataContext> dbManager,
+            ILinqDBManager dbManager,
             IRepositoryManager repositoryManager,
             IObjectMapper mapper,
             Type implementedInterface,
             RepositoryConfigurations config = null)
         {
-            _dbManager = dbManager;
+            _dbManager = (LinqDBManager<TDataContext >)dbManager;
             Initialize(repositoryManager, mapper, implementedInterface, config);
         }
 

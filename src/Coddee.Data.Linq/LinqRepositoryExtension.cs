@@ -15,18 +15,16 @@ namespace Coddee.AppBuilder
 
        
 
-        public static IApplicationBuilder UseLinqRepositoryManager<TDBManager, TRepositoryManager>(
+        public static IApplicationBuilder UseLinqRepositoryManager<TDBManager>(
             this IApplicationBuilder builder,
             Func<IContainer,string> GetSQLDBConnection,
             string repositoriesAssembly,
-            bool registerTheRepositoresInContainer,
             Action ConnectionStringNotFound = null,
             RepositoryConfigurations config = null)
             where TDBManager : ILinqDBManager, new()
-            where TRepositoryManager : ILinqRepositoryManager, new()
         {
 
-            builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.RepositoryBuildAction((container) =>
+            builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.LinqRepositoryBuildAction((container) =>
             {
                 var connectionString = GetSQLDBConnection(container);
                 if (string.IsNullOrEmpty(connectionString))
@@ -34,41 +32,44 @@ namespace Coddee.AppBuilder
                     ConnectionStringNotFound();
                     return;
                 }
-                CreateRepositoryManager<TDBManager, TRepositoryManager>(builder, container, connectionString, repositoriesAssembly, registerTheRepositoresInContainer, config);
+                CreateRepositoryManager<TDBManager>( container, connectionString, repositoriesAssembly, config);
             }));
             return builder;
         }
 
-        public static IApplicationBuilder UseLinqRepositoryManager<TDBManager, TRepositoryManager>(
+        public static IApplicationBuilder UseLinqRepositoryManager<TDBManager>(
             this IApplicationBuilder builder,
             string connectionString,
             string repositoriesAssembly,
-            bool registerTheRepositoresInContainer,
             RepositoryConfigurations config = null)
             where TDBManager : ILinqDBManager, new()
-            where TRepositoryManager : ILinqRepositoryManager, new()
         {
-            builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.RepositoryBuildAction((container) =>
+            builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.LinqRepositoryBuildAction((container) =>
             {
-                CreateRepositoryManager<TDBManager, TRepositoryManager>(builder, container, connectionString, repositoriesAssembly, registerTheRepositoresInContainer, config);
+                CreateRepositoryManager<TDBManager>(container, connectionString, repositoriesAssembly, config);
             }));
             return builder;
         }
 
-        private static void CreateRepositoryManager<TDBManager, TRepositoryManager>(IApplicationBuilder builder, IContainer container, string connectionString, string repositoriesAssembly, bool registerTheRepositoresInContainer, RepositoryConfigurations config = null)
+        private static void CreateRepositoryManager<TDBManager>(IContainer container, string connectionString, string repositoriesAssembly, RepositoryConfigurations config = null)
             where TDBManager : ILinqDBManager, new()
-            where TRepositoryManager : ILinqRepositoryManager, new()
         {
+
+            if (!container.IsRegistered<IRepositoryManager>())
+                 container.RegisterInstance<IRepositoryManager,RepositoryManager>();
+
+            var repositoryManager = container.Resolve<IRepositoryManager>();
+
             var dbManager = new TDBManager();
             container.RegisterInstance<ILinqDBManager>(dbManager);
             dbManager.Initialize(connectionString);
-            var repositoryManager = new TRepositoryManager();
-            repositoryManager.Initialize(dbManager, container.Resolve<IObjectMapper>(), config);
+
+            repositoryManager.AddRepositoryInitializer(new LinqRepositoryInitializer(dbManager, container.Resolve<IObjectMapper>(), config), (int)RepositoryTypes.Linq);
             repositoryManager.RegisterRepositories(repositoriesAssembly);
 
             var logger = container.Resolve<ILogger>();
             container.RegisterInstance<IRepositoryManager>(repositoryManager);
-            if (registerTheRepositoresInContainer)
+            
                 foreach (var repository in repositoryManager.GetRepositories())
                 {
                     logger.Log(EventsSource,

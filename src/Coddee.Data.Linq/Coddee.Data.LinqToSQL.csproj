@@ -57,8 +57,8 @@
     <Compile Include="ILinqRepository.cs" />
     <Compile Include="LinqDBManager.cs" />
     <Compile Include="LinqRepositoryBase.cs" />
-    <Compile Include="LinqRepositoryManager.cs" />
-    <Compile Include="LiqnRepositoryExtension.cs" />
+    <Compile Include="LinqRepositoryInitializer.cs" />
+    <Compile Include="LinqRepositoryExtension.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

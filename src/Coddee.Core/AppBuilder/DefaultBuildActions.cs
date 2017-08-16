@@ -36,9 +36,21 @@ namespace Coddee.AppBuilder
         {
             return new BuildAction(BuildActionsKeys.ConfigFile, action, 5);
         }
-        public static BuildAction RepositoryBuildAction(Action<IContainer> action)
+        public static BuildAction LinqRepositoryBuildAction(Action<IContainer> action)
         {
-            return new BuildAction(BuildActionsKeys.Repository, action, 6);
+            return new BuildAction(BuildActionsKeys.LinqRepository, action, 6);
+        }
+        public static BuildAction RESTRepositoryBuildAction(Action<IContainer> action)
+        {
+            return new BuildAction(BuildActionsKeys.RESTRepository, action, 6);
+        }
+        public static BuildAction MongoRepositoryBuildAction(Action<IContainer> action)
+        {
+            return new BuildAction(BuildActionsKeys.MongoRepository, action, 6);
+        }
+        public static BuildAction InMemoryRepositoryBuildAction(Action<IContainer> action)
+        {
+            return new BuildAction(BuildActionsKeys.InMemoryRepository, action, 6);
         }
         public static BuildAction ConsoleMainBuildAction(Action<IContainer> action)
         {

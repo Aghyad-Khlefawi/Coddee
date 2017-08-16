@@ -56,7 +56,7 @@
     <Compile Include="IMongoRepository.cs" />
     <Compile Include="MongoDBManager.cs" />
     <Compile Include="MongoRepositoryBase.cs" />
-    <Compile Include="MongoRepositoryManager.cs" />
+    <Compile Include="MongoRepositoryInitializer.cs" />
     <Compile Include="MongoRepositoyExtension.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

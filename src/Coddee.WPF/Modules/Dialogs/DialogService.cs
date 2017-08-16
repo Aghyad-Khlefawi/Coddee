@@ -107,14 +107,21 @@ namespace Coddee.Services.Dialogs
             };
             return CreateDialog<TType>(container,container.Presenter);
         }
+
         public TType CreateDialog<TType>(UserControl container,ContentPresenter presenter) where TType : IDialog
         {
             var dialog = Resolve<TType>();
-            dialog.CloseRequested += CloseDialog;
-            presenter.Content = dialog.GetView();
-            dialog.Container = container;
-            return dialog;
+            return CreateDialog(dialog, container, presenter);
         }
+
+        public TType CreateDialog<TType>(TType content, UserControl container, ContentPresenter presenter) where TType : IDialog
+        {
+            content.CloseRequested += CloseDialog;
+            presenter.Content = content.GetView();
+            content.Container = container;
+            return content;
+        }
+
         public void CloseDialog(IDialog dialog)
         {
             _view.DialogsContainer.Children.Remove(_dialogs[dialog]);

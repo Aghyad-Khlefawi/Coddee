@@ -12,19 +12,22 @@ namespace Coddee.AppBuilder
     {
         private const string EventsSource = "ApplicationBuilder";
 
-        public static IApplicationBuilder UseMongoDBRepository<TRepositoryManager>(
+        public static IApplicationBuilder UseMongoDBRepository(
             this IApplicationBuilder builder,
             string connection,
             string databaseName,
             string repositoriesAssembly,
             bool registerTheRepositoresInContainer)
-            where TRepositoryManager : IMongoRepositoryManager, new()
         {
-            builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.RepositoryBuildAction((container) =>
+            builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.MongoRepositoryBuildAction((container) =>
             {
 
-                IMongoRepositoryManager repositoryManager = new TRepositoryManager();
-                repositoryManager.Initialize(new MongoDBManager(connection, databaseName), container.Resolve<IObjectMapper>());
+                if (!container.IsRegistered<IRepositoryManager>())
+                    container.RegisterInstance<IRepositoryManager, RepositoryManager>();
+
+                var repositoryManager = container.Resolve<IRepositoryManager>();
+
+                repositoryManager.AddRepositoryInitializer(new  MongoRepositoryInitializer(new MongoDBManager(connection, databaseName), container.Resolve<IObjectMapper>()),(int)RepositoryTypes.Mongo);
                 repositoryManager.RegisterRepositories(repositoriesAssembly);
 
                 var logger = container.Resolve<ILogger>();
@@ -39,19 +42,6 @@ namespace Coddee.AppBuilder
                     }
             }));
             return builder;
-        }
-
-        public static IApplicationBuilder UseMongoDBRepository(
-            this IApplicationBuilder builder,
-            string connection,
-            string databaseName,
-            string repositoriesAssembly,
-            bool registerTheRepositoresInContainer)
-        {
-            return builder.UseMongoDBRepository<MongoRepositoryManager>(connection,
-                                                                        databaseName,
-                                                                        repositoriesAssembly,
-                                                                        registerTheRepositoresInContainer);
         }
     }
 }

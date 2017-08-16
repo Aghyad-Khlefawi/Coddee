@@ -1,12 +1,13 @@
 ﻿// Copyright (c) Aghyad khlefawi. All rights reserved.  
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
-using Coddee.Data.LinqToSQL;
-using HR.Data.LinqToSQL.DB;
-
-namespace HR.Data.LinqToSQL
+namespace Coddee.Data
 {
-    public class HRRepositoryManager : LinqRepositoryManager<HRDataClassesDataContext>
+    public enum RepositoryTypes
     {
+        InMemory,
+        Linq,
+        REST,
+        Mongo
     }
 }

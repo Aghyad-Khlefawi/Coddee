@@ -18,6 +18,8 @@ namespace Coddee.Data.REST
     /// </summary>
     public abstract class RESTRepositoryBase : RepositoryBase, IRESTRepository
     {
+        public override int RepositoryType { get; } = (int)RepositoryTypes.REST;
+
         protected HttpClient _httpClient;
         protected Action _unauthorizedRequestHandler;
 

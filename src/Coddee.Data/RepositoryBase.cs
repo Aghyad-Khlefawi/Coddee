@@ -8,13 +8,14 @@ namespace Coddee.Data
     /// <summary>
     /// Base implementation for a data repository
     /// </summary>
-    public class RepositoryBase:IRepository
+    public abstract class RepositoryBase:IRepository
     {
         protected IObjectMapper _mapper;
         protected RepositoryConfigurations _config;
         protected IRepositoryManager _repositoryManager;
         protected IRepositorySyncService _syncService;
 
+        public abstract int RepositoryType { get; }
         public bool Initialized { get; protected set; }
         public Type ImplementedInterface { get; protected set; }
 

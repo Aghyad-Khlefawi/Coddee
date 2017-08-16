@@ -8,7 +8,10 @@ namespace Coddee.AppBuilder
         public const string Logger = nameof(Logger);
         public const string ConfigFile = nameof(ConfigFile);
         public const string Mapper = nameof(Mapper);
-        public const string Repository = nameof(Repository);
+        public const string LinqRepository = nameof(LinqRepository);
+        public const string RESTRepository = nameof(RESTRepository);
+        public const string MongoRepository = nameof(MongoRepository);
+        public const string InMemoryRepository = nameof(InMemoryRepository);
         public const string Shell = nameof(Shell);
         public const string SetupViewModelManager = nameof(SetupViewModelManager);
         public const string AppConsole = nameof(AppConsole);

@@ -18,6 +18,8 @@ namespace Coddee.Data
     /// </summary>
     public interface IRepository
     {
+        int RepositoryType { get; }
+
         bool Initialized { get; }
         Type ImplementedInterface { get; }
 
