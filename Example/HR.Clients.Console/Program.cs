@@ -18,11 +18,13 @@ namespace HR.Clients.Console
         }
     }
 
+   
     public class HRApplication:IEntryPointClass
     {
-        public void Start()
+      public void Start()
         {
             System.Console.WriteLine("Hello console");
+            System.Console.Read();
         }
     }
 }

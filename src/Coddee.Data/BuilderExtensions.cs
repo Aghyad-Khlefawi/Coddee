@@ -1,17 +1,17 @@
 ﻿// Copyright (c) Aghyad khlefawi. All rights reserved.  
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
-using Coddee.AppBuilder;
+using Coddee.Data;
 using Coddee.Loggers;
 
-namespace Coddee.Data
+namespace Coddee.AppBuilder
 {
     public static class BuilderExtensions
     {
         private const string EventsSource = "ApplicationBuilder";
 
-        public static IApplicationBuilder UseInMemoryRepositories(this IApplicationBuilder builder, string repositoriesAssembly,
-                                                                  RepositoryConfigurations config = null)
+        public static T UseInMemoryRepositories<T>(this T builder, string repositoriesAssembly,
+                                                                  RepositoryConfigurations config = null) where T :IApplicationBuilder
         {
             builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.InMemoryRepositoryBuildAction((container) =>
             {
@@ -22,7 +22,7 @@ namespace Coddee.Data
 
                 repositoryManager
                     .AddRepositoryInitializer(new InMemoryRepositoryInitializer(container.Resolve<IObjectMapper>(),
-                                                                                config),(int)RepositoryTypes.Linq);
+                                                                                config),(int)RepositoryTypes.InMemory);
                 repositoryManager.RegisterRepositories(repositoriesAssembly);
 
                 var logger = container.Resolve<ILogger>();

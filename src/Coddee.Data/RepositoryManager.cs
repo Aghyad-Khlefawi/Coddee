@@ -60,8 +60,7 @@ namespace Coddee.Data
                     Assembly.Load(new AssemblyName(assembly))
                         .DefinedTypes
                         .Where(e => e.GetCustomAttribute<RepositoryAttribute>() != null && e.GetCustomAttribute<RepositoryAttribute>().Discoverable)
-                        .Select(e => new KeyValuePair<Type, Type>(
-                            e.GetCustomAttribute<RepositoryAttribute>().ImplementedRepository, e.AsType()))
+                        .Select(e => new KeyValuePair<Type, Type>(e.GetCustomAttribute<RepositoryAttribute>().ImplementedRepository, e.AsType()))
                         .ToArray();
                 RegisterRepositories(repositories);
             }

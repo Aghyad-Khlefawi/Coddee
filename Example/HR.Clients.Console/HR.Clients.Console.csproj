@@ -31,6 +31,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Accessibility" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -52,6 +53,10 @@
       <Project>{200805C2-E25C-4D1B-AC1E-0DBB5869AEB9}</Project>
       <Name>Coddee.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\src\Coddee.Data\Coddee.Data.csproj">
+      <Project>{9541018b-0cc1-4237-8370-df8f20940eed}</Project>
+      <Name>Coddee.Data</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\src\Coddee.Unity\Coddee.Unity.csproj">
       <Project>{602298C6-5140-465B-835B-7B79551C84E5}</Project>
       <Name>Coddee.Unity</Name>
@@ -59,6 +64,10 @@
     <ProjectReference Include="..\..\src\Coddee.Windows\Coddee.Windows.csproj">
       <Project>{91804C4A-4272-4736-8DB9-61A0BBD21642}</Project>
       <Name>Coddee.Windows</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HR.Data\HR.Data.csproj">
+      <Project>{218ff723-ceb7-4beb-834c-538b713839e3}</Project>
+      <Name>HR.Data</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

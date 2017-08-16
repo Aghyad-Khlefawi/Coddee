@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Coddee.Data
@@ -15,10 +14,11 @@ namespace Coddee.Data
 
         public InMemoryRepositoryBase()
         {
-            _collection = new ConcurrentDictionary<TKey, TModel>();
+            _dictionary = new ConcurrentDictionary<TKey, TModel>();
         }
 
-        protected ConcurrentDictionary<TKey, TModel> _collection;
+        protected ConcurrentDictionary<TKey, TModel> _dictionary;
+        protected IEnumerable<TModel> _collection => _dictionary.Values;
 
         protected void RaiseItemsChanged(object sender, RepositoryChangeEventArgs<TModel> args)
         {
@@ -35,7 +35,7 @@ namespace Coddee.Data
         {
             get
             {
-                _collection.TryGetValue(index, out TModel item);
+                _dictionary.TryGetValue(index, out TModel item);
                 return Task.FromResult(item);
             }
         }
@@ -45,7 +45,7 @@ namespace Coddee.Data
     {
         public virtual Task<IEnumerable<TModel>> GetItems()
         {
-            return Task.FromResult(_collection.Values.ToList().AsEnumerable());
+            return Task.FromResult(_collection);
         }
     }
 
@@ -53,22 +53,22 @@ namespace Coddee.Data
     {
         public virtual Task<TModel> UpdateItem(TModel item)
         {
-            _collection.TryRemove(item.GetKey, out TModel _);
-            _collection.TryAdd(item.GetKey, item);
+            _dictionary.TryRemove(item.GetKey, out TModel _);
+            _dictionary.TryAdd(item.GetKey, item);
             RaiseItemsChanged(this, new RepositoryChangeEventArgs<TModel>(OperationType.Edit, item));
             return Task.FromResult(item);
         }
 
         public virtual Task<TModel> InsertItem(TModel item)
         {
-            _collection.TryAdd(item.GetKey, item);
+            _dictionary.TryAdd(item.GetKey, item);
             RaiseItemsChanged(this, new RepositoryChangeEventArgs<TModel>(OperationType.Add, item));
             return Task.FromResult(item);
         }
 
         public virtual Task DeleteItem(TKey ID)
         {
-            _collection.TryRemove(ID, out TModel removed);
+            _dictionary.TryRemove(ID, out TModel removed);
             RaiseItemsChanged(this, new RepositoryChangeEventArgs<TModel>(OperationType.Delete, removed));
             return Task.FromResult(removed);
         }

@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Aghyad khlefawi. All rights reserved.  
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
+using System.Linq;
 using Coddee.Data;
 using Coddee.Data.LinqToSQL;
 using Coddee.Data.MongoDB;
@@ -32,54 +33,67 @@ namespace Coddee.AspNet
             {
                 var debugLogger = new DebugOuputLogger();
                 debugLogger.Initialize(level);
-                logger.AddLogger(debugLogger,LoggerTypes.DebugOutput);
+                logger.AddLogger(debugLogger, LoggerTypes.DebugOutput);
             }
             if (loggerType.HasFlag(LoggerTypes.File))
             {
                 var fileLogger = new FileLogger();
                 fileLogger.Initialize(level, "log.txt");
-                logger.AddLogger(fileLogger,LoggerTypes.File);
+                logger.AddLogger(fileLogger, LoggerTypes.File);
             }
             services.AddSingleton<ILogger>(logger);
             return services;
         }
 
-        public static IServiceCollection AddLinqRepositoryManager<TDBManager, TRepositoryManager>(
+        public static IServiceCollection AddLinqRepositoryManager<TDBManager>(
             this IServiceCollection services,
             string connectionString,
             string repositoriesAssembly,
-            bool registerTheRepositoresInContainer = true)
+            RepositoryConfigurations config = null)
             where TDBManager : ILinqDBManager, new()
-            where TRepositoryManager : ILinqRepositoryManager, new()
         {
-            var mapper = services.BuildServiceProvider().GetService<IObjectMapper>();
+            if (services.All(e => e.ServiceType != typeof(IRepositoryManager)))
+                services.AddSingleton<IRepositoryManager>(new RepositoryManager());
+
+            var serviceProvider = services.BuildServiceProvider();
+            var mapper = serviceProvider.GetService<IObjectMapper>();
             var dbManager = new TDBManager();
             dbManager.Initialize(connectionString);
-            var repositoryManager = new TRepositoryManager();
+
+            var repositoryManager = serviceProvider.GetService<IRepositoryManager>();
+
             services.AddSingleton<ILinqDBManager>(dbManager);
             services.AddSingleton<IRepositoryManager>(repositoryManager);
-            repositoryManager.Initialize(dbManager, mapper);
+
+            repositoryManager.AddRepositoryInitializer(new LinqRepositoryInitializer(dbManager, mapper, config), (int)RepositoryTypes.Linq);
+
             repositoryManager.RegisterRepositories(repositoriesAssembly);
-            if (registerTheRepositoresInContainer)
-                foreach (var repository in repositoryManager.GetRepositories())
-                {
-                    services.AddSingleton(repository.ImplementedInterface, repository);
-                }
+            foreach (var repository in repositoryManager.GetRepositories())
+            {
+                services.AddSingleton(repository.ImplementedInterface, repository);
+            }
             return services;
         }
 
-        public static IServiceCollection AddMongoRepositoryManager<TRepositoryManager>(
+        public static IServiceCollection AddMongoRepositoryManager(
             this IServiceCollection services,
             string connectionString,
             string dbName,
             string repositoriesAssembly,
             bool registerTheRepositoresInContainer = true)
-            where TRepositoryManager : IMongoRepositoryManager, new()
         {
-            var mapper = services.BuildServiceProvider().GetService<IObjectMapper>();
-            IMongoRepositoryManager repositoryManager = new TRepositoryManager();
+            if (services.All(e => e.ServiceType != typeof(IRepositoryManager)))
+                services.AddSingleton<IRepositoryManager>(new RepositoryManager());
+
+            var serviceProvider = services.BuildServiceProvider();
+            var repositoryManager = serviceProvider.GetService<IRepositoryManager>();
+            var mapper = serviceProvider.GetService<IObjectMapper>();
+
+
+
+
             var dbManager = new MongoDBManager(connectionString, dbName);
-            repositoryManager.Initialize(dbManager, mapper);
+            repositoryManager.AddRepositoryInitializer(new MongoRepositoryInitializer(dbManager, mapper), (int)RepositoryTypes.Mongo);
             repositoryManager.RegisterRepositories(repositoriesAssembly);
             services.AddSingleton<IMongoDBManager>(dbManager);
             services.AddSingleton<IRepositoryManager>(repositoryManager);
@@ -89,18 +103,6 @@ namespace Coddee.AspNet
                     services.AddSingleton(repository.ImplementedInterface, repository);
                 }
             return services;
-        }
-        public static IServiceCollection AddMongoRepositoryManager(
-            this IServiceCollection services,
-            string connectionString,
-            string dbName,
-            string repositoriesAssembly,
-            bool registerTheRepositoresInContainer = true)
-        {
-            return services.AddMongoRepositoryManager<MongoRepositoryManager>(connectionString,
-                                                                              dbName,
-                                                                              repositoriesAssembly,
-                                                                              registerTheRepositoresInContainer);
         }
 
         public static IApplicationBuilder UseMVCWithCoddeeRoutes(this IApplicationBuilder app)
