@@ -9,6 +9,7 @@ namespace Coddee.Data.MongoDB
     {
         private readonly IMongoDBManager _dbManager;
         private readonly IObjectMapper _mapper;
+        public int RepositoryType { get; } = (int)RepositoryTypes.Mongo;
 
         public MongoRepositoryInitializer(IMongoDBManager dbManager, IObjectMapper mapper)
         {

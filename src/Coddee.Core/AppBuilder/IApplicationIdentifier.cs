@@ -2,10 +2,6 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Coddee.AppBuilder
 {
@@ -18,9 +14,9 @@ namespace Coddee.AppBuilder
         /// This method define the application name, id and type then returns 
         /// the appropriate application builder
         /// </summary>
-        /// <param name="applicatioName"></param>
-        /// <param name="applicationID"></param>
-        /// <param name="applicationType"></param>
+        /// <param name="applicatioName">The name of the application.</param>
+        /// <param name="applicationID">An Identifier for the application.</param>
+        /// <param name="applicationType">The type of the application.</param>
         /// <returns></returns>
         IApplicationBuilder IdentifyApplication(
             string applicatioName,

@@ -38,7 +38,10 @@ namespace Coddee.Data
             _syncService = syncService;
             syncService.SyncReceived += SyncServiceSyncReceived;
         }
-
+        
+        /// <summary>
+        /// Called whenever a sync call is received from the <see cref="IRepositorySyncService"/> 
+        /// </summary>
         public virtual void SyncServiceSyncReceived(string identifier, RepositorySyncEventArgs args)
         {
 

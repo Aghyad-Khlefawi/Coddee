@@ -69,7 +69,7 @@ namespace Coddee.Data.REST
             {
                 if (res.StatusCode == HttpStatusCode.Unauthorized || res.StatusCode == HttpStatusCode.Forbidden)
                     _unauthorizedRequestHandler?.Invoke();
-                throw new InvalidOperationException(resString);
+                            throw new InvalidOperationException(resString);
             }
         }
 
@@ -144,7 +144,7 @@ namespace Coddee.Data.REST
             {
                 if (res.StatusCode == HttpStatusCode.Unauthorized || res.StatusCode == HttpStatusCode.Forbidden)
                     _unauthorizedRequestHandler?.Invoke();
-                throw new InvalidOperationException(resString);
+                            throw new InvalidOperationException(resString);
             }
         }
 
@@ -168,7 +168,7 @@ namespace Coddee.Data.REST
             if (res.StatusCode == HttpStatusCode.Unauthorized || res.StatusCode == HttpStatusCode.Forbidden)
                 _unauthorizedRequestHandler?.Invoke();
 
-            throw new InvalidOperationException(resString);
+                        throw new InvalidOperationException(resString);
         }
 
         /// <summary>
@@ -218,7 +218,7 @@ namespace Coddee.Data.REST
                 return JsonConvert.DeserializeObject<T>(resString);
             if (res.StatusCode == HttpStatusCode.Unauthorized || res.StatusCode == HttpStatusCode.Forbidden)
                 _unauthorizedRequestHandler?.Invoke();
-            throw new InvalidOperationException(resString);
+                        throw new InvalidOperationException(resString);
         }
 
         /// <summary>
@@ -284,7 +284,7 @@ namespace Coddee.Data.REST
                 await _httpClient.DeleteAsync(urlBuilder.ToString());
             var resString = await res.Content.ReadAsStringAsync();
             if (!res.IsSuccessStatusCode)
-                throw new InvalidOperationException(resString);
+                            throw new InvalidOperationException(resString);
             if (res.StatusCode == HttpStatusCode.Unauthorized || res.StatusCode == HttpStatusCode.Forbidden)
                 _unauthorizedRequestHandler?.Invoke();
         }

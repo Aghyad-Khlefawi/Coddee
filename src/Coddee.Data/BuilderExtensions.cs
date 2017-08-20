@@ -6,10 +6,22 @@ using Coddee.Loggers;
 
 namespace Coddee.AppBuilder
 {
+    /// <summary>
+    /// Extensions for the application builder
+    /// </summary>
     public static class BuilderExtensions
     {
         private const string EventsSource = "ApplicationBuilder";
 
+
+        /// <summary>
+        /// Configure the repository manager to use InMemory repositories
+        /// </summary>
+        /// <param name="builder">Application builder</param>
+        /// <param name="repositoriesAssembly">The name of the assembly containing the repositories
+        /// <remarks>The assembly name should not contain the extension.</remarks></param>
+        /// <param name="config">The configuration object to be passed to the repositories</param>
+        /// <returns>Application builder</returns>
         public static T UseInMemoryRepositories<T>(this T builder, string repositoriesAssembly,
                                                                   RepositoryConfigurations config = null) where T :IApplicationBuilder
         {

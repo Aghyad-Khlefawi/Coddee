@@ -86,8 +86,8 @@
                                   Width="15" />
                         </Button>
                     </DockPanel>
+                    <ContentPresenter Content="{Binding ToolbarContent}"/>
                 </DockPanel>
-
                 <Grid>
 
                     <Grid>

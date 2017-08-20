@@ -2,8 +2,7 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
 using System;
-using System.Threading.Tasks;
-using Coddee.WPF.DefaultShell;
+using System.Windows;
 
 namespace Coddee.WPF
 {
@@ -22,5 +21,7 @@ namespace Coddee.WPF
     {
         IPresentableViewModel SetMainContent(Type defaultPresentable, bool useNavigation);
         IPresentableViewModel GetMainContent();
+
+        void SetToolbarContent(UIElement content);
     }
 }

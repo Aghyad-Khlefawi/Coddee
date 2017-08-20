@@ -104,80 +104,91 @@
     <Compile Include="IEditorViewModel.cs" />
     <Compile Include="InputMask.cs" />
     <Compile Include="IViewModel.cs" />
-    <Compile Include="Modules\Interfaces\IViewModelsManager.cs" />
+    <Compile Include="Services\ApplicationSearch\ApplicationSearchModule.cs" />
+    <Compile Include="Services\ApplicationSearch\ApplicationSearchService.cs" />
+    <Compile Include="Services\ApplicationSearch\CategorySearchItems.cs" />
+    <Compile Include="Services\ApplicationSearch\IApplicationQuickSearch.cs" />
+    <Compile Include="Services\ApplicationSearch\IApplicationSearchService.cs" />
+    <Compile Include="Services\ApplicationSearch\SearchItem.cs" />
+    <Compile Include="Services\ApplicationSearch\SearchOperation.cs" />
+    <Compile Include="Services\ApplicationSearch\SearchView.xaml.cs">
+      <DependentUpon>SearchView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Services\ApplicationSearch\SearchViewModel.cs" />
+    <Compile Include="Services\Interfaces\IViewModelsManager.cs" />
     <Compile Include="Localize.cs" />
-    <Compile Include="Modules\Console\ApplicationConsoleModule.cs" />
-    <Compile Include="Modules\Console\ApplicationConsoleView.xaml.cs">
+    <Compile Include="Services\Console\ApplicationConsoleModule.cs" />
+    <Compile Include="Services\Console\ApplicationConsoleView.xaml.cs">
       <DependentUpon>ApplicationConsoleView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Modules\Console\ApplicationConsole.cs" />
-    <Compile Include="Modules\Console\ConsoleCommand.cs" />
-    <Compile Include="Modules\Console\ConsoleCommandArgs.cs" />
-    <Compile Include="Modules\Console\ConsoleCommandParser.cs" />
-    <Compile Include="Modules\Console\DefaultCommands.cs" />
-    <Compile Include="Modules\Console\StringLogger.cs" />
+    <Compile Include="Services\Console\ApplicationConsole.cs" />
+    <Compile Include="Services\Console\ConsoleCommand.cs" />
+    <Compile Include="Services\Console\ConsoleCommandArgs.cs" />
+    <Compile Include="Services\Console\ConsoleCommandParser.cs" />
+    <Compile Include="Services\Console\DefaultCommands.cs" />
+    <Compile Include="Services\Console\StringLogger.cs" />
     <Compile Include="Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="DefaultShell\DefaultShell.xaml.cs">
       <DependentUpon>DefaultShell.xaml</DependentUpon>
     </Compile>
     <Compile Include="DefaultShell\DefaultShellViewModel.cs" />
     <Compile Include="IPresentable.cs" />
-    <Compile Include="Modules\Dialogs\ConfirmationDialogView.xaml.cs">
+    <Compile Include="Services\Dialogs\ConfirmationDialogView.xaml.cs">
       <DependentUpon>ConfirmationDialogView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Modules\Dialogs\ContentDialogView.xaml.cs">
+    <Compile Include="Services\Dialogs\ContentDialogView.xaml.cs">
       <DependentUpon>ContentDialogView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Modules\Dialogs\ContentDialogViewModel.cs" />
-    <Compile Include="Modules\Dialogs\EditorDialogView.xaml.cs">
+    <Compile Include="Services\Dialogs\ContentDialogViewModel.cs" />
+    <Compile Include="Services\Dialogs\EditorDialogView.xaml.cs">
       <DependentUpon>EditorDialogView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Modules\Dialogs\EditorDialogViewModel.cs" />
-    <Compile Include="Modules\Dialogs\ConfirmationDialogViewModel.cs" />
-    <Compile Include="Modules\Dialogs\DialogContainer.xaml.cs">
+    <Compile Include="Services\Dialogs\EditorDialogViewModel.cs" />
+    <Compile Include="Services\Dialogs\ConfirmationDialogViewModel.cs" />
+    <Compile Include="Services\Dialogs\DialogContainer.xaml.cs">
       <DependentUpon>DialogContainer.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Modules\Dialogs\DialogService.cs" />
-    <Compile Include="Modules\Dialogs\DialogServiceView.xaml.cs">
+    <Compile Include="Services\Dialogs\DialogService.cs" />
+    <Compile Include="Services\Dialogs\DialogServiceView.xaml.cs">
       <DependentUpon>DialogServiceView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Modules\Dialogs\DialogServicsModule.cs" />
-    <Compile Include="Modules\Dialogs\DialogViewModelBase.cs" />
-    <Compile Include="Modules\Dialogs\IDialog.cs" />
-    <Compile Include="Modules\Dialogs\MessageDialog.cs" />
-    <Compile Include="Modules\Dialogs\MessageDialogView.xaml.cs">
+    <Compile Include="Services\Dialogs\DialogServicsModule.cs" />
+    <Compile Include="Services\Dialogs\DialogViewModelBase.cs" />
+    <Compile Include="Services\Dialogs\IDialog.cs" />
+    <Compile Include="Services\Dialogs\MessageDialog.cs" />
+    <Compile Include="Services\Dialogs\MessageDialogView.xaml.cs">
       <DependentUpon>MessageDialogView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Modules\Interfaces\IDebugTool.cs" />
-    <Compile Include="Modules\Interfaces\IDialogService.cs" />
-    <Compile Include="Modules\Interfaces\INavigationService.cs" />
-    <Compile Include="Modules\Interfaces\IApplicationConsole.cs" />
-    <Compile Include="Modules\Navigation\NavigationEventArgs.cs" />
-    <Compile Include="Modules\Navigation\NavigationModule.cs" />
-    <Compile Include="Modules\Navigation\NavigationService.cs" />
-    <Compile Include="Modules\Navigation\NavigationServiceView.xaml.cs">
+    <Compile Include="Services\Interfaces\IDebugTool.cs" />
+    <Compile Include="Services\Interfaces\IDialogService.cs" />
+    <Compile Include="Services\Interfaces\INavigationService.cs" />
+    <Compile Include="Services\Interfaces\IApplicationConsole.cs" />
+    <Compile Include="Services\Navigation\NavigationEventArgs.cs" />
+    <Compile Include="Services\Navigation\NavigationModule.cs" />
+    <Compile Include="Services\Navigation\NavigationService.cs" />
+    <Compile Include="Services\Navigation\NavigationServiceView.xaml.cs">
       <DependentUpon>NavigationServiceView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Modules\Interfaces\ISQLDBBrowser.cs" />
-    <Compile Include="Modules\SQLBrowser\SQLConnectHelper.cs" />
-    <Compile Include="Modules\SQLBrowser\SQLDBBrowser.cs" />
-    <Compile Include="Modules\SQLBrowser\SQLDBBrowserModule.cs" />
-    <Compile Include="Modules\SQLBrowser\SQLDBBrowserView.xaml.cs">
+    <Compile Include="Services\Interfaces\ISQLDBBrowser.cs" />
+    <Compile Include="Services\SQLBrowser\SQLConnectHelper.cs" />
+    <Compile Include="Services\SQLBrowser\SQLDBBrowser.cs" />
+    <Compile Include="Services\SQLBrowser\SQLDBBrowserModule.cs" />
+    <Compile Include="Services\SQLBrowser\SQLDBBrowserView.xaml.cs">
       <DependentUpon>SQLDBBrowserView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Modules\SQLBrowser\SQLNativeBrowser.cs" />
-    <Compile Include="Modules\SQLBrowser\SQLServer.cs" />
-    <Compile Include="Modules\Interfaces\IToastService.cs" />
-    <Compile Include="Modules\Toast\Toast.cs" />
-    <Compile Include="Modules\Toast\ToastService.cs" />
-    <Compile Include="Modules\Toast\ToastServiceModule.cs" />
-    <Compile Include="Modules\Toast\ToastServiceView.xaml.cs">
+    <Compile Include="Services\SQLBrowser\SQLNativeBrowser.cs" />
+    <Compile Include="Services\SQLBrowser\SQLServer.cs" />
+    <Compile Include="Services\Interfaces\IToastService.cs" />
+    <Compile Include="Services\Toast\Toast.cs" />
+    <Compile Include="Services\Toast\ToastService.cs" />
+    <Compile Include="Services\Toast\ToastServiceModule.cs" />
+    <Compile Include="Services\Toast\ToastServiceView.xaml.cs">
       <DependentUpon>ToastServiceView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Modules\Toast\ToastTemplateSelector.cs" />
-    <Compile Include="Modules\Navigation\NavigationItem.cs" />
-    <Compile Include="Modules\ViewModelManager\ViewModelInfo.cs" />
-    <Compile Include="Modules\ViewModelManager\ViewModelManagerModule.cs" />
+    <Compile Include="Services\Toast\ToastTemplateSelector.cs" />
+    <Compile Include="Services\Navigation\NavigationItem.cs" />
+    <Compile Include="Services\ViewModelManager\ViewModelInfo.cs" />
+    <Compile Include="Services\ViewModelManager\ViewModelManagerModule.cs" />
     <Compile Include="PasswordBoxText.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
@@ -199,7 +210,7 @@
     <Compile Include="UpdatableMarkupExtension.cs" />
     <Compile Include="Validate.cs" />
     <Compile Include="ViewModelBase.cs" />
-    <Compile Include="Modules\ViewModelManager\ViewModelsManager.cs" />
+    <Compile Include="Services\ViewModelManager\ViewModelsManager.cs" />
     <Compile Include="WPFModulesDefnitions.cs" />
     <Compile Include="XamlHelpers\FocusOnLoad.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -246,39 +257,43 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Modules\Dialogs\ConfirmationDialogView.xaml">
+    <Page Include="Services\ApplicationSearch\SearchView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Modules\Dialogs\ContentDialogView.xaml">
+    <Page Include="Services\Dialogs\ConfirmationDialogView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Modules\Dialogs\DialogContainer.xaml">
+    <Page Include="Services\Dialogs\ContentDialogView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Modules\Dialogs\DialogServiceView.xaml">
+    <Page Include="Services\Dialogs\DialogContainer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Modules\Dialogs\EditorDialogView.xaml">
+    <Page Include="Services\Dialogs\DialogServiceView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Modules\Dialogs\MessageDialogView.xaml">
+    <Page Include="Services\Dialogs\EditorDialogView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Modules\Navigation\NavigationServiceView.xaml">
+    <Page Include="Services\Dialogs\MessageDialogView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Modules\SQLBrowser\SQLDBBrowserView.xaml">
+    <Page Include="Services\Navigation\NavigationServiceView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Modules\Toast\ToastServiceView.xaml">
+    <Page Include="Services\SQLBrowser\SQLDBBrowserView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Services\Toast\ToastServiceView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -290,7 +305,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Modules\Console\ApplicationConsoleView.xaml">
+    <Page Include="Services\Console\ApplicationConsoleView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

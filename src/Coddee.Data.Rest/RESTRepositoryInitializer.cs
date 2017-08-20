@@ -12,6 +12,7 @@ namespace Coddee.Data.REST
         private readonly IObjectMapper _mapper;
         private readonly HttpClient _client;
 
+        public int RepositoryType { get; } = (int)RepositoryTypes.REST;
 
         public RESTRepositoryInitializer(string apiBaseURL, Action unauthorizedRequestHandler, IObjectMapper mapper)
         {

@@ -24,9 +24,11 @@ namespace Coddee.Unity
             _container.RegisterInstance<T>(instance);
         }
 
-        public void RegisterInstance<T, TImplementation>() where TImplementation:T
+        public T RegisterInstance<T, TImplementation>() where TImplementation:T
         {
-            _container.RegisterInstance<T>(_container.Resolve<TImplementation>());
+            var res = _container.Resolve<TImplementation>();
+            RegisterInstance<T>(res);
+            return res;
         }
 
         public void RegisterType<T, TImplementation>() where TImplementation : T

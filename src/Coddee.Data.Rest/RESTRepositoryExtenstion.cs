@@ -41,7 +41,7 @@ namespace Coddee.AppBuilder
                 var repositoryManager = container.Resolve<IRepositoryManager>();
 
                 var configRes = config(container.Resolve<IConfigurationManager>());
-                repositoryManager.AddRepositoryInitializer(new RESTRepositoryInitializer(configRes.ApiUrl, configRes.UnauthorizedRequestHandler, container.Resolve<IObjectMapper>()), (int)RepositoryTypes.REST);
+                repositoryManager.AddRepositoryInitializer(new RESTRepositoryInitializer(configRes.ApiUrl, configRes.UnauthorizedRequestHandler, container.Resolve<IObjectMapper>()));
                 repositoryManager.RegisterRepositories(configRes.RepositoriesAssembly);
 
                 var logger = container.Resolve<ILogger>();

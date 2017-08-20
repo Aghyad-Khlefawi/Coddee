@@ -114,9 +114,9 @@ namespace Coddee.Data
             _repositoryInitializers[repo.RepositoryType].InitializeRepository(this, repo, implementedInterface);
         }
 
-        public void AddRepositoryInitializer(IRepositoryInitializer initializer, int repositoryType)
+        public void AddRepositoryInitializer(IRepositoryInitializer initializer)
         {
-            _repositoryInitializers[repositoryType] = initializer;
+            _repositoryInitializers[initializer.RepositoryType] = initializer;
         }
     }
 }

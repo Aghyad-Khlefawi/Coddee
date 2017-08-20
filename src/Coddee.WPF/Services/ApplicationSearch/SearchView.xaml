@@ -1,0 +1,209 @@
+﻿<UserControl x:Class="Coddee.Services.ApplicationSearch.SearchView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Coddee.Services.ApplicationSearch"
+             xmlns:global="clr-namespace:"
+             xmlns:coddee="http://schemas.Coddee.com/2017/WPF"
+             xmlns:controls="clr-namespace:Coddee.WPF.Controls"
+             xmlns:commands="clr-namespace:Coddee.WPF.Commands"
+             xmlns:wpf="clr-namespace:Coddee.WPF"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../../Resources.xaml" />
+                <ResourceDictionary>
+                    <local:SearchViewModel x:Key="designData" />
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid d:DataContext="{StaticResource designData}">
+        <controls:BusyIndicator IsBusy="{Binding IsBusy}"
+                              Text="Initializing quick search..."
+                              HideContentOnBusy="True"
+                              VerticalAlignment="Center"
+                              FillColor="white">
+            <Grid VerticalAlignment="Center" Width="225">
+                <Border BorderThickness="1 1 1 0"
+                        Height="26"
+                        Visibility="{Binding ShowPopup}"
+                        Margin="0 -1 0 0"
+                        BorderBrush="{DynamicResource ApplicationAccentColorDarker}" />
+                <Border BorderThickness="1"
+                        Height="25"
+                        Margin="1"
+                        Background="White"
+                        BorderBrush="#FFABADB3">
+                    <DockPanel>
+                        <Border DockPanel.Dock="Right" Background="White">
+                            <Grid>
+                                <Path Style="{StaticResource Shape_Search}"
+                                      Fill="LightGray"
+                                      Height="15"
+                                      Visibility="{Binding ShowPopup,Converter={StaticResource BoolToVisibilityConverter},ConverterParameter=R}"
+                                      Margin="5 0" />
+                                <Button Command="{Binding CloseSearchCommand}"
+                                        Visibility="{Binding ShowPopup,Converter={StaticResource BoolToVisibilityConverter}}">
+                                    <Button.Template>
+                                        <ControlTemplate>
+                                            <DockPanel Background="White"
+                                                       Cursor="Hand">
+                                                <Path Style="{StaticResource Shape_Exit}"
+                                                      Fill="LightGray"
+                                                      Height="15"
+                                                      Margin="5 0" />
+                                            </DockPanel>
+                                        </ControlTemplate>
+                                    </Button.Template>
+                                </Button>
+                            </Grid>
+                        </Border>
+                        <controls:WaterMarkTextBox WaterMarkContent="Quick search"
+                                                 x:Name="SearchBox"
+                                                 DockPanel.Dock="Top"
+                                                 BorderThickness="0"
+                                                 Text="{Binding SearchText,UpdateSourceTrigger=PropertyChanged}"
+                                                 commands:OnEnterCommand.Command="{Binding NavigateFirstCommand}"
+                                                 commands:KeyDownCommand.Command="{Binding KeyDownCommand}" />
+                    </DockPanel>
+                </Border>
+                <Popup IsOpen="{Binding ShowPopup}"
+                       Margin="1 25 2 0"
+                       Height="200"
+                       Width="226">
+                    <Border BorderThickness="1 0 1 1"
+                            BorderBrush="{DynamicResource ApplicationAccentColorDarker}"
+                            Background="WhiteSmoke">
+                        <DockPanel>
+                            <Grid>
+                                <Label Content="{wpf:Localize SearchResultsNotFound}"
+                                       Visibility="{Binding SearchResultsFound,Converter={StaticResource BoolToVisibilityConverter},ConverterParameter=R}" />
+                                <ListBox x:Name="ResultBox"
+                                         IsSynchronizedWithCurrentItem="True"
+                                         ItemsSource="{Binding SearchResults.CollectionView}"
+                                         SelectedItem="{Binding SelectedResult}"
+                                         Visibility="{Binding SearchResultsFound,Converter={StaticResource BoolToVisibilityConverter}}"
+                                         ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                         ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                         Background="Transparent"
+                                         commands:OnEnterCommand.Command="{Binding NavigateCommand}"
+                                         BorderThickness="0">
+                                    <ListBox.ItemContainerStyle>
+                                        <Style TargetType="ListBoxItem">
+                                            <EventSetter Event="Selected"
+                                                         Handler="EventSetter_OnHandler" />
+                                            <Setter Property="FocusVisualStyle"
+                                                    Value="{x:Null}" />
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate>
+                                                        <DockPanel  Margin="0 0 0 2">
+                                                            <Border Height="2"
+                                                                    DockPanel.Dock="Bottom">
+                                                                <Border.Background>
+                                                                    <RadialGradientBrush>
+                                                                        <GradientStop Color="DarkGray" Offset="0.279"/>
+                                                                        <GradientStop Offset="1"/>
+                                                                    </RadialGradientBrush>
+                                                                </Border.Background>
+                                                            </Border>
+                                                            <Button Command="{Binding NavigateCommand}">
+                                                                <Button.Template>
+                                                                    <ControlTemplate>
+                                                                        <DockPanel x:Name="Root">
+                                                                            <DockPanel.Style>
+                                                                                <Style TargetType="DockPanel">
+                                                                                    <Setter Property="Background"
+                                                                                        Value="WhiteSmoke" />
+                                                                                    <Setter Property="Cursor"
+                                                                                        Value="Hand" />
+                                                                                    <Style.Triggers>
+                                                                                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=ListBoxItem,Mode=FindAncestor},Path=IsSelected}"
+                                                                                                 Value="true">
+                                                                                            <Setter Property="Background"
+                                                                                                Value="#747474" />
+                                                                                        </DataTrigger>
+                                                                                    </Style.Triggers>
+                                                                                </Style>
+                                                                            </DockPanel.Style>
+                                                                            <DockPanel.Resources>
+                                                                                <Style TargetType="TextBlock">
+                                                                                    <Setter Property="Foreground"
+                                                                                        Value="#373737" />
+                                                                                    <Style.Triggers>
+                                                                                        <DataTrigger  Binding="{Binding RelativeSource={RelativeSource AncestorType=ListBoxItem,Mode=FindAncestor},Path=IsSelected}"
+                                                                                                  Value="true">
+                                                                                            <Setter Property="Foreground"
+                                                                                                Value="WhiteSmoke" />
+                                                                                        </DataTrigger>
+                                                                                    </Style.Triggers>
+                                                                                </Style>
+                                                                                <Style TargetType="Path">
+                                                                                    <Setter Property="Fill"
+                                                                                        Value="#373737" />
+                                                                                    <Style.Triggers>
+                                                                                        <DataTrigger  Binding="{Binding RelativeSource={RelativeSource AncestorType=ListBoxItem,Mode=FindAncestor},Path=IsSelected}"
+                                                                                                  Value="true">
+                                                                                            <Setter Property="Fill"
+                                                                                                Value="WhiteSmoke" />
+                                                                                        </DataTrigger>
+                                                                                    </Style.Triggers>
+                                                                                </Style>
+
+                                                                            </DockPanel.Resources>
+
+                                                                            <Path Margin="5 0"
+                                                                              VerticalAlignment="Center"
+                                                                              Height="20"
+                                                                              Stretch="Uniform"
+                                                                              Data="{Binding Icon}"/>
+                                                                            <TextBlock Text="{Binding Category}"
+                                                                                   MaxWidth="170" HorizontalAlignment="Right"
+                                                                                   TextTrimming="CharacterEllipsis"
+                                                                                   DockPanel.Dock="Bottom"
+                                                                                   FontSize="12"
+                                                                                   FontWeight="Medium"
+                                                                                   FontStyle="Italic"
+                                                                                   Padding="5 0 5 5" />
+                                                                            <DockPanel>
+
+                                                                                <StackPanel>
+                                                                                    <TextBlock Text="{Binding Title}"
+                                                                                           FontWeight="Medium"
+                                                                                               HorizontalAlignment="Left"
+                                                                                           FontSize="14" MaxWidth="170"
+                                                                                           TextTrimming="CharacterEllipsis"
+                                                                                           Padding="5 5 5 0" />
+                                                                                    <TextBlock Text="{Binding Subtitle}"
+                                                                                           Visibility="{Binding Subtitle,Converter={StaticResource NullToVisibilityConverter}}"
+                                                                                           MaxWidth="170"
+                                                                                               HorizontalAlignment="Left"
+                                                                                           TextTrimming="CharacterEllipsis"
+                                                                                           FontSize="12"
+                                                                                           Padding="5 0 5 0" />
+
+                                                                                </StackPanel>
+                                                                            </DockPanel>
+                                                                        </DockPanel>
+                                                                    </ControlTemplate>
+                                                                </Button.Template>
+                                                            </Button>
+                                                        </DockPanel>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </ListBox.ItemContainerStyle>
+                                </ListBox>
+                            </Grid>
+                        </DockPanel>
+                    </Border>
+                </Popup>
+            </Grid>
+        </controls:BusyIndicator>
+    </Grid>
+</UserControl> 

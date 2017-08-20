@@ -49,6 +49,13 @@ namespace Coddee.WPF.DefaultShell
             set { SetProperty(ref this._hasError, value); }
         }
 
+        private UIElement _toolbarContent;
+        public UIElement ToolbarContent
+        {
+            get { return _toolbarContent; }
+            set { SetProperty(ref this._toolbarContent, value); }
+        }
+
         public ICommand MinimizeCommand => new RelayCommand(Minimize);
         public ICommand ExitCommand => new RelayCommand(Exit);
 
@@ -101,6 +108,11 @@ namespace Coddee.WPF.DefaultShell
         public IPresentableViewModel GetMainContent()
         {
             return _mainViewModel;
+        }
+
+        public void SetToolbarContent(UIElement content)
+        {
+            ToolbarContent = content;
         }
     }
 }

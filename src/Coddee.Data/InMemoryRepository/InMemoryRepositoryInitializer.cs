@@ -17,6 +17,8 @@ namespace Coddee.Data
         }
 
 
+        public int RepositoryType { get; } = (int) RepositoryTypes.InMemory;
+
         public void InitializeRepository(IRepositoryManager repositoryManager, IRepository repository, Type implementedInterface)
         {
             repository.Initialize(repositoryManager,_mapper,implementedInterface,_config);

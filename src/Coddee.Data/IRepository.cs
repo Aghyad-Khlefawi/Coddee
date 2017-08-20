@@ -18,9 +18,16 @@ namespace Coddee.Data
     /// </summary>
     public interface IRepository
     {
+        /// <summary>
+        /// The type of the repository <seealso cref="RepositoryTypes"/>
+        /// </summary>
         int RepositoryType { get; }
 
         bool Initialized { get; }
+
+        /// <summary>
+        /// The IRepository interface that this repository implements.
+        /// </summary>
         Type ImplementedInterface { get; }
 
         /// <summary>
@@ -31,6 +38,10 @@ namespace Coddee.Data
                         Type implementedInterface,
                         RepositoryConfigurations config=null);
 
+        /// <summary>
+        /// Set the sync service to be used in the repository
+        /// </summary>
+        /// <param name="syncService"></param>
         void SetSyncService(IRepositorySyncService syncService);
     }
 
@@ -40,6 +51,9 @@ namespace Coddee.Data
     public interface IRepository<TModel, TKey>: IRepository
         where TModel : IUniqueObject<TKey>
     {
+        /// <summary>
+        /// This event will be triggered when an item is added, edited or deleted in the repository
+        /// </summary>
         event EventHandler<RepositoryChangeEventArgs<TModel>> ItemsChanged;
     }
 

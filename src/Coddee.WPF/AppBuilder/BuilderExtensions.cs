@@ -167,6 +167,7 @@ namespace Coddee.AppBuilder
             where TShellViewModel : IShellViewModel
             where TLogin : ILoginViewModel
         {
+            container.RegisterInstance<ILoginViewModel>(loginViewModel);
             loginViewModel.Initialize()
                 .ContinueWith(lt =>
                 {

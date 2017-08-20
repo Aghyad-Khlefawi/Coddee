@@ -64,7 +64,7 @@ namespace Coddee.AppBuilder
             container.RegisterInstance<ILinqDBManager>(dbManager);
             dbManager.Initialize(connectionString);
 
-            repositoryManager.AddRepositoryInitializer(new LinqRepositoryInitializer(dbManager, container.Resolve<IObjectMapper>(), config), (int)RepositoryTypes.Linq);
+            repositoryManager.AddRepositoryInitializer(new LinqRepositoryInitializer(dbManager, container.Resolve<IObjectMapper>(), config));
             repositoryManager.RegisterRepositories(repositoriesAssembly);
 
             var logger = container.Resolve<ILogger>();

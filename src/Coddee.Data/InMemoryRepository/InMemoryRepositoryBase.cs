@@ -7,7 +7,10 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Coddee.Data
-{
+{   
+    /// <summary>
+    /// Base implementation for an InMemory repository
+    /// </summary>
     public class InMemoryRepositoryBase<TModel, TKey> : RepositoryBase, IRepository<TModel, TKey> where TModel : IUniqueObject<TKey>
     {
         public override int RepositoryType { get; } = (int)RepositoryTypes.InMemory;

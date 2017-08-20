@@ -27,7 +27,7 @@ namespace Coddee.AppBuilder
 
                 var repositoryManager = container.Resolve<IRepositoryManager>();
 
-                repositoryManager.AddRepositoryInitializer(new  MongoRepositoryInitializer(new MongoDBManager(connection, databaseName), container.Resolve<IObjectMapper>()),(int)RepositoryTypes.Mongo);
+                repositoryManager.AddRepositoryInitializer(new  MongoRepositoryInitializer(new MongoDBManager(connection, databaseName), container.Resolve<IObjectMapper>()));
                 repositoryManager.RegisterRepositories(repositoriesAssembly);
 
                 var logger = container.Resolve<ILogger>();

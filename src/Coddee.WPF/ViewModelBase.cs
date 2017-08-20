@@ -13,7 +13,6 @@ using System.Windows.Threading;
 using Coddee.Data;
 using Coddee.Loggers;
 using Coddee.Services;
-using Coddee.WPF.Modules;
 using Coddee.Validation;
 using Coddee.WPF.Commands;
 
@@ -494,7 +493,7 @@ namespace Coddee.WPF
             catch (Exception ex)
             {
                 _logger?.Log(_eventsSource, ex);
-                return false;
+                throw;
             }
         }
 

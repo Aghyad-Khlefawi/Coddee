@@ -42,7 +42,8 @@ namespace Coddee.Validation
                           fieldName,
                           validator,
                           LocalizationManager.DefaultLocalizationManager.GetValue("DefaultValidationMessage")
-                              .Replace("$FieldName$", LocalizationManager.DefaultLocalizationManager.GetValue(fieldName)));
+                              .Replace("$FieldName$",
+                                       LocalizationManager.DefaultLocalizationManager.GetValue(fieldName)));
         }
 
         public static RequiredField Create<T>(T item,
@@ -59,9 +60,7 @@ namespace Coddee.Validation
                                               Validator validator)
         {
             var fieldName = ((MemberExpression) field.Body).Member.Name;
-            return Create(item,
-                          fieldName,
-                          validator);
+            return Create(item, fieldName, validator);
         }
 
         public static RequiredField Create(string fieldName,
@@ -82,7 +81,8 @@ namespace Coddee.Validation
             return Create(fieldName,
                           validator,
                           LocalizationManager.DefaultLocalizationManager.GetValue("DefaultValidationMessage")
-                              .Replace("$FieldName$", LocalizationManager.DefaultLocalizationManager.GetValue(fieldName)));
+                              .Replace("$FieldName$",
+                                       LocalizationManager.DefaultLocalizationManager.GetValue(fieldName)));
         }
     }
 }

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Coddee.Data;
 using Coddee.Loggers;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace Coddee.AspNet.Controllers
 {
@@ -22,10 +23,10 @@ namespace Coddee.AspNet.Controllers
         protected readonly ILogger _logger;
         protected readonly IRepositoryManager _repositoryManager;
 
-        public IActionResult Error(Exception ex)
+        public virtual IActionResult Error(Exception ex)
         {
             _logger?.Log(EventsSource, ex);
-            return BadRequest("An error occurred.");
+            return BadRequest(JsonConvert.SerializeObject(ex));
         }
     }
 

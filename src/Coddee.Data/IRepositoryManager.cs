@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Coddee.Data
 {
@@ -49,9 +48,15 @@ namespace Coddee.Data
         /// </summary>
         void AddRepository(IRepository repository,Type implementedRepository);
 
-
+        /// <summary>
+        /// Set the sync service to be passed to all repositories.
+        /// </summary>
         void SetSyncService(IRepositorySyncService syncService);
-        void AddRepositoryInitializer(IRepositoryInitializer initializer, int repositoryType);
+
+        /// <summary>
+        /// Adds a repository initializer to the repository manager.
+        /// </summary>
+        void AddRepositoryInitializer(IRepositoryInitializer initializer);
     }
 
 

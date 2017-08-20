@@ -19,11 +19,11 @@ namespace Coddee.Loggers
 
         protected override void CommitLog(LogRecord record)
         {
-            lock(_file)
-            using (var sw= _file.AppendText())
-            {
-                sw.Write(BuildEvent(record));
-            }
+            lock (_file)
+                using (var sw = _file.AppendText())
+                {
+                    sw.Write(BuildEvent(record));
+                }
         }
     }
 }
