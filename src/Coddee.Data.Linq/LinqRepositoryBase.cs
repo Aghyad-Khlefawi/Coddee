@@ -347,7 +347,41 @@ namespace Coddee.Data.LinqToSQL
         {
             return GetItemFromDB();
         }
+      
+        public Task<IEnumerable<TModel>> GetItems<T>(params Condition<TModel, T>[] conditions)
+        {
+            return Execute((db,table) =>
+            {
+                IQueryable<TTable> query = table;
+                query = BuildConditionQuery(conditions, query);
+                return TableToModelMapping(query.ToList());
+            });
+        }
+        protected static IQueryable<TTable> BuildConditionQuery<TTable, TModel, T>(Condition<TModel, T>[] conditions, IQueryable<TTable> query)
+        {
+            foreach (var condition in conditions)
+            {
+                var param = Expression.Parameter(typeof(TTable), "e");
+                var value = Expression.Constant(condition.Value);
 
+                var propertyName = ((MemberExpression)condition.Property.Body).Member.Name;
+                var property = typeof(TTable).GetProperty(propertyName);
+                if (property == null)
+                    throw new ArgumentException($"There is no property named {propertyName} on type {typeof(TTable).FullName}");
+
+                var prop = Expression.MakeMemberAccess(param, property);
+                var body = Expression.Equal(prop, value);
+                var expressions = Expression.Lambda<Func<TTable, bool>>(body, param);
+                query = query.Where(expressions);
+            }
+
+            return query;
+        }
+        public Condition<TModel, T> Condition<T>(Expression<Func<TModel, T>> property, T value)
+        {
+            return new Condition<TModel, T>(property, value);
+        }
+        
         /// <summary>
         /// Return all the items from the table
         /// </summary>

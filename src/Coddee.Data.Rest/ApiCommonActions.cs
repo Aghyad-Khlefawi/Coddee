@@ -7,6 +7,7 @@ namespace Coddee.Data.REST
     {
         public const string InsertItem = nameof(InsertItem);
         public const string UpdateItem = nameof(UpdateItem);
+        public const string GetItemsWithConditions = nameof(GetItemsWithConditions);
         public const string GetItems = nameof(GetItems);
         public const string GetItem = nameof(GetItem);
         public const string DeleteItem = nameof(DeleteItem);

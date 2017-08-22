@@ -33,8 +33,7 @@ namespace Coddee.AppBuilder
                 var repositoryManager = container.Resolve<IRepositoryManager>();
 
                 repositoryManager
-                    .AddRepositoryInitializer(new InMemoryRepositoryInitializer(container.Resolve<IObjectMapper>(),
-                                                                                config),(int)RepositoryTypes.InMemory);
+                    .AddRepositoryInitializer(new InMemoryRepositoryInitializer(container.Resolve<IObjectMapper>(),config));
                 repositoryManager.RegisterRepositories(repositoriesAssembly);
 
                 var logger = container.Resolve<ILogger>();

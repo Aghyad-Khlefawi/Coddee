@@ -16,7 +16,7 @@ namespace Coddee.Data.MongoDB
     /// <summary>
     /// Base implementation for a MongoDB repository
     /// </summary>
-    public abstract class MongoRepositoryBase : RepositoryBase, IMongoRepository
+    public abstract class MongoRepositoryBase<TModel> : RepositoryBase<TModel>, IMongoRepository
     {
         protected IMongoDBManager _dbManager;
         protected IMongoDatabase _database;
@@ -35,7 +35,7 @@ namespace Coddee.Data.MongoDB
         {
             _dbManager = dbManager;
             _database = _dbManager.GetDatabase();
-            Initialize(repositoryManager, mapper, implementedInterface,config);
+            Initialize(repositoryManager, mapper, implementedInterface, config);
         }
 
         protected virtual void ConfigureDetaultTableMappings<TType, TKey>(
@@ -62,7 +62,7 @@ namespace Coddee.Data.MongoDB
     /// Base implementation for a MongoDB repository
     /// Register class mapping for a collection 
     /// </summary>
-    public abstract class MongoRepositoryBase<TModel, TKey> : MongoRepositoryBase
+    public abstract class MongoRepositoryBase<TModel, TKey> : MongoRepositoryBase<TModel>
     {
         protected IMongoCollection<TModel> _collection;
         protected readonly Expression<Func<TModel, TKey>> _idProperty;
@@ -93,7 +93,7 @@ namespace Coddee.Data.MongoDB
                                         Type implementedInterface,
                                         RepositoryConfigurations config = null)
         {
-            base.Initialize(dbManager, repositoryManager, mapper, implementedInterface,config);
+            base.Initialize(dbManager, repositoryManager, mapper, implementedInterface, config);
             RegisterTableMappings();
             _collection = _database.GetCollection<TModel>(_collectionName);
         }
@@ -131,7 +131,7 @@ namespace Coddee.Data.MongoDB
 
         protected void RaiseItemsChanged(object sender, RepositoryChangeEventArgs<TModel> args)
         {
-            ItemsChanged?.Invoke(this,args);
+            ItemsChanged?.Invoke(this, args);
         }
 
         public override void SetSyncService(IRepositorySyncService syncService)
@@ -174,6 +174,26 @@ namespace Coddee.Data.MongoDB
             return (await _collection.Find(e => true).ToListAsync()).AsEnumerable();
         }
 
+        public async Task<IEnumerable<TModel>> GetItems<T>(params Condition<TModel, T>[] conditions)
+        {
+            FilterDefinition<TModel> query = BuildConditionFilter(conditions);
+            return (await _collection.Find(query).ToListAsync()).AsEnumerable();
+        }
+
+        private static FilterDefinition<TModel> BuildConditionFilter<T>(Condition<TModel, T>[] conditions)
+        {
+            FilterDefinition<TModel> query = null;
+            foreach (var condition in conditions)
+            {
+                var filter = Builders<TModel>.Filter.Eq(condition.Property, condition.Value);
+                if (query == null)
+                    query = filter;
+                else
+                    query = query & filter;
+            }
+
+            return query;
+        }
     }
 
 
@@ -194,19 +214,19 @@ namespace Coddee.Data.MongoDB
                                           Expression<Func<TModel, TKey>> idProperty) : base(collectionName, idProperty)
         {
         }
-        
+
 
         public virtual async Task<TModel> UpdateItem(TModel item)
         {
             await _collection.ReplaceOneAsync(new BsonDocument("_id", BsonValue.Create(item.GetKey)), item);
-            RaiseItemsChanged(this,new RepositoryChangeEventArgs<TModel>(OperationType.Edit, item, false));
+            RaiseItemsChanged(this, new RepositoryChangeEventArgs<TModel>(OperationType.Edit, item, false));
             return item;
         }
 
         public virtual async Task<TModel> InsertItem(TModel item)
         {
             await _collection.InsertOneAsync(item);
-            RaiseItemsChanged(this,new RepositoryChangeEventArgs<TModel>(OperationType.Add, item, false));
+            RaiseItemsChanged(this, new RepositoryChangeEventArgs<TModel>(OperationType.Add, item, false));
             return item;
         }
 
@@ -214,13 +234,13 @@ namespace Coddee.Data.MongoDB
         {
             var item = await this[ID];
             await _collection.DeleteOneAsync(new BsonDocument("_id", BsonValue.Create(ID)));
-            RaiseItemsChanged(this,new RepositoryChangeEventArgs<TModel>(OperationType.Edit, item, false));
+            RaiseItemsChanged(this, new RepositoryChangeEventArgs<TModel>(OperationType.Edit, item, false));
         }
 
-        public  virtual async Task DeleteItem(TModel item)
+        public virtual async Task DeleteItem(TModel item)
         {
             await DeleteItem(item.GetKey);
-            RaiseItemsChanged(this,new RepositoryChangeEventArgs<TModel>(OperationType.Edit, item,false));
+            RaiseItemsChanged(this, new RepositoryChangeEventArgs<TModel>(OperationType.Edit, item, false));
         }
     }
 }

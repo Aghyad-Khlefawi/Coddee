@@ -10,6 +10,21 @@
     <AssemblyName>HR.Clients.Console</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -53,6 +68,10 @@
       <Project>{200805C2-E25C-4D1B-AC1E-0DBB5869AEB9}</Project>
       <Name>Coddee.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\src\Coddee.Data.Linq\Coddee.Data.LinqToSQL.csproj">
+      <Project>{b7f174a8-5037-4c30-9e8b-9896315ae855}</Project>
+      <Name>Coddee.Data.LinqToSQL</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\src\Coddee.Data\Coddee.Data.csproj">
       <Project>{9541018b-0cc1-4237-8370-df8f20940eed}</Project>
       <Name>Coddee.Data</Name>
@@ -65,10 +84,30 @@
       <Project>{91804C4A-4272-4736-8DB9-61A0BBD21642}</Project>
       <Name>Coddee.Windows</Name>
     </ProjectReference>
+    <ProjectReference Include="..\HR.Data.LinqToSQL\HR.Data.LinqToSQL.csproj">
+      <Project>{C7CDD99F-B288-45D9-B06C-4AA535E2C4A8}</Project>
+      <Name>HR.Data.LinqToSQL</Name>
+    </ProjectReference>
     <ProjectReference Include="..\HR.Data\HR.Data.csproj">
       <Project>{218ff723-ceb7-4beb-834c-538b713839e3}</Project>
       <Name>HR.Data</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="DB\HRDatabase.mdf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DB\HRDatabase_log.ldf">
+      <DependentUpon>HRDatabase.mdf</DependentUpon>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

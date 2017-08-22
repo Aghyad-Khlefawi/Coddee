@@ -16,7 +16,7 @@ using MongoDB.Driver;
 namespace HR.Data.Mongo.Repositories
 {
     [Repository(typeof(IEmployeeRepository))]
-    public class EmployeeRepository : MongoRepositoryBase, IEmployeeRepository
+    public class EmployeeRepository : MongoRepositoryBase<Employee>, IEmployeeRepository
     {
         public override void Initialize(IMongoDBManager dbManager,
                                         IRepositoryManager repositoryManager,
@@ -63,6 +63,11 @@ namespace HR.Data.Mongo.Repositories
                     .ToListAsync())
                 .SelectMany(e => e)
                 .AsEnumerable();
+        }
+
+        public Task<IEnumerable<Employee>> GetItems<T>(params Condition<Employee, T>[] conditions)
+        {
+            throw new NotImplementedException();
         }
 
         public event EventHandler<RepositoryChangeEventArgs<Employee>> ItemsChanged;

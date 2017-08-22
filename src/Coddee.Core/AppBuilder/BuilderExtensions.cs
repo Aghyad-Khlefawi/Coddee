@@ -38,7 +38,7 @@ namespace Coddee.AppBuilder
         /// <param name="defaultFile">The default configurations file.</param>
         public static IApplicationBuilder UseConfigurationFile(
             this IApplicationBuilder builder,
-           IConfigurationFile defaultFile)
+           IConfigurationFile defaultFile=null)
         {
             builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.ConfigFileBuildAction((container) =>
                   {

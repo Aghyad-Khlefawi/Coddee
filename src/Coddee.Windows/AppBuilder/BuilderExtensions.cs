@@ -10,6 +10,7 @@ using System.Reflection;
 using System.Resources;
 using Coddee.Loggers;
 using Coddee.Services;
+using Coddee.Services.Configuration;
 using Coddee.Windows.AppBuilder;
 using Coddee.Windows.Mapper;
 
@@ -19,12 +20,12 @@ namespace Coddee.AppBuilder
     public static class BuilderExtensions
     {
 
-        public static T UseLocalization<T>(
-            this T builder,
+        public static IApplicationBuilder UseLocalization(
+            this IApplicationBuilder builder,
             string resourceManagerFullPath,
             string resourceManagerAssembly,
             string[] supportedCultures,
-            string defaultCluture = "en-US") where T : IApplicationBuilder
+            string defaultCluture = "en-US") 
         {
             builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.LocalizationBuildAction((container) =>
             {
@@ -53,7 +54,7 @@ namespace Coddee.AppBuilder
         /// <summary>
         /// Use the IL object mapper
         /// </summary>
-        public static T UseILMapper<T>(this T builder) where T : IApplicationBuilder
+        public static IApplicationBuilder UseILMapper(this IApplicationBuilder builder) 
         {
             builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.MapperBuildAction((container) =>
             {
@@ -73,9 +74,9 @@ namespace Coddee.AppBuilder
         /// <param name="loggerType">Specify which logger to use. Uses Enum flags to specify multiple values</param>
         /// <param name="level">The minimum log level</param>
         /// <returns></returns>
-        public static T UseLogger<T>(this T builder,
+        public static IApplicationBuilder UseLogger(this IApplicationBuilder builder,
                                                     LoggerTypes loggerType,
-                                                    LogRecordTypes level) where T : IApplicationBuilder
+                                                    LogRecordTypes level)
         {
             builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.LoggerBuildAction((container) =>
             {
@@ -105,7 +106,7 @@ namespace Coddee.AppBuilder
             return builder;
         }
 
-        public static IConsoleApplicationBuilder UseMain(this IConsoleApplicationBuilder builder,
+        public static IApplicationBuilder UseMain(this IApplicationBuilder builder,
                                                     Action entryPoint)
         {
             builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.ConsoleMainBuildAction((container) =>
@@ -115,7 +116,7 @@ namespace Coddee.AppBuilder
             return builder;
         }
 
-        public static IConsoleApplicationBuilder UseMain(this IConsoleApplicationBuilder builder,
+        public static IApplicationBuilder UseMain(this IApplicationBuilder builder,
                                                          IEntryPointClass entryPoint)
         {
             builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.ConsoleMainBuildAction((container) =>
@@ -124,11 +125,25 @@ namespace Coddee.AppBuilder
             }));
             return builder;
         }
-        public static IConsoleApplicationBuilder UseMain<T>(this IConsoleApplicationBuilder builder) where T:IEntryPointClass
+        public static IApplicationBuilder UseMain<T>(this IApplicationBuilder builder) where T:IEntryPointClass
         {
             builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.ConsoleMainBuildAction((container) =>
             {
                 container.Resolve<T>().Start();
+            }));
+            return builder;
+        }
+
+        /// <summary>
+        /// Initialize the configuration manager
+        /// </summary>
+        public static IApplicationBuilder UseConfigurationFile(
+            this IApplicationBuilder builder)
+        {
+            builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.ConfigFileBuildAction((container) =>
+            {
+                var config = container.Resolve<IConfigurationManager>();
+                config.Initialize(new ConfigurationFile("config",Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"config.cfg")));
             }));
             return builder;
         }

@@ -10,6 +10,5 @@ namespace Coddee
         public string Key { get; set; }
         public object NewValue { get; set; }
         public object OldValue { get; set; }
-
     }
 }

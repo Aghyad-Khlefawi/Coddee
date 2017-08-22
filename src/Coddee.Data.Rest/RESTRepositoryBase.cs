@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -69,7 +70,7 @@ namespace Coddee.Data.REST
             {
                 if (res.StatusCode == HttpStatusCode.Unauthorized || res.StatusCode == HttpStatusCode.Forbidden)
                     _unauthorizedRequestHandler?.Invoke();
-                            throw new InvalidOperationException(resString);
+                throw new InvalidOperationException(resString);
             }
         }
 
@@ -144,7 +145,7 @@ namespace Coddee.Data.REST
             {
                 if (res.StatusCode == HttpStatusCode.Unauthorized || res.StatusCode == HttpStatusCode.Forbidden)
                     _unauthorizedRequestHandler?.Invoke();
-                            throw new InvalidOperationException(resString);
+                throw new InvalidOperationException(resString);
             }
         }
 
@@ -168,7 +169,7 @@ namespace Coddee.Data.REST
             if (res.StatusCode == HttpStatusCode.Unauthorized || res.StatusCode == HttpStatusCode.Forbidden)
                 _unauthorizedRequestHandler?.Invoke();
 
-                        throw new InvalidOperationException(resString);
+            throw new InvalidOperationException(resString);
         }
 
         /// <summary>
@@ -218,7 +219,7 @@ namespace Coddee.Data.REST
                 return JsonConvert.DeserializeObject<T>(resString);
             if (res.StatusCode == HttpStatusCode.Unauthorized || res.StatusCode == HttpStatusCode.Forbidden)
                 _unauthorizedRequestHandler?.Invoke();
-                        throw new InvalidOperationException(resString);
+            throw new InvalidOperationException(resString);
         }
 
         /// <summary>
@@ -284,7 +285,7 @@ namespace Coddee.Data.REST
                 await _httpClient.DeleteAsync(urlBuilder.ToString());
             var resString = await res.Content.ReadAsStringAsync();
             if (!res.IsSuccessStatusCode)
-                            throw new InvalidOperationException(resString);
+                throw new InvalidOperationException(resString);
             if (res.StatusCode == HttpStatusCode.Unauthorized || res.StatusCode == HttpStatusCode.Forbidden)
                 _unauthorizedRequestHandler?.Invoke();
         }
@@ -322,6 +323,11 @@ namespace Coddee.Data.REST
                                   new RepositoryChangeEventArgs<TModel>(args.OperationType,
                                                                         ((JObject)args.Item).ToObject<TModel>(), true));
             }
+        }
+
+        public Condition<TModel, T> Condition<T>(Expression<Func<TModel, T>> property, T value)
+        {
+            return new Condition<TModel, T>(property, value);
         }
 
         protected void RaiseItemsChanged(object sender, RepositoryChangeEventArgs<TModel> args)
@@ -384,6 +390,10 @@ namespace Coddee.Data.REST
             return GetFromController<IEnumerable<TModel>>(ApiCommonActions.GetItems);
         }
 
+        public Task<IEnumerable<TModel>> GetItems<T>(params Condition<TModel, T>[] conditions)
+        {
+            throw new NotImplementedException("This functions is not yes implemented in REST repositories.");
+        }
     }
 
     /// <summary>
@@ -439,7 +449,7 @@ namespace Coddee.Data.REST
         public virtual async Task<TModel> InsertItem(TModel item)
         {
             var res = await PostToController<TModel>(ApiCommonActions.InsertItem, item);
-            RaiseItemsChanged(this, new RepositoryChangeEventArgs<TModel>(OperationType.Add, res,false));
+            RaiseItemsChanged(this, new RepositoryChangeEventArgs<TModel>(OperationType.Add, res, false));
             return res;
         }
 

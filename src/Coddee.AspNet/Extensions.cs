@@ -65,7 +65,7 @@ namespace Coddee.AspNet
             services.AddSingleton<ILinqDBManager>(dbManager);
             services.AddSingleton<IRepositoryManager>(repositoryManager);
 
-            repositoryManager.AddRepositoryInitializer(new LinqRepositoryInitializer(dbManager, mapper, config), (int)RepositoryTypes.Linq);
+            repositoryManager.AddRepositoryInitializer(new LinqRepositoryInitializer(dbManager, mapper, config));
 
             repositoryManager.RegisterRepositories(repositoriesAssembly);
             foreach (var repository in repositoryManager.GetRepositories())
@@ -79,8 +79,7 @@ namespace Coddee.AspNet
             this IServiceCollection services,
             string connectionString,
             string dbName,
-            string repositoriesAssembly,
-            bool registerTheRepositoresInContainer = true)
+            string repositoriesAssembly)
         {
             if (services.All(e => e.ServiceType != typeof(IRepositoryManager)))
                 services.AddSingleton<IRepositoryManager>(new RepositoryManager());
@@ -89,19 +88,15 @@ namespace Coddee.AspNet
             var repositoryManager = serviceProvider.GetService<IRepositoryManager>();
             var mapper = serviceProvider.GetService<IObjectMapper>();
 
-
-
-
             var dbManager = new MongoDBManager(connectionString, dbName);
-            repositoryManager.AddRepositoryInitializer(new MongoRepositoryInitializer(dbManager, mapper), (int)RepositoryTypes.Mongo);
+            repositoryManager.AddRepositoryInitializer(new MongoRepositoryInitializer(dbManager, mapper));
             repositoryManager.RegisterRepositories(repositoriesAssembly);
             services.AddSingleton<IMongoDBManager>(dbManager);
             services.AddSingleton<IRepositoryManager>(repositoryManager);
-            if (registerTheRepositoresInContainer)
-                foreach (var repository in repositoryManager.GetRepositories())
-                {
-                    services.AddSingleton(repository.ImplementedInterface, repository);
-                }
+            foreach (var repository in repositoryManager.GetRepositories())
+            {
+                services.AddSingleton(repository.ImplementedInterface, repository);
+            }
             return services;
         }
 
