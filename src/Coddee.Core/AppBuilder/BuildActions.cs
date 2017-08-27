@@ -24,6 +24,7 @@ namespace Coddee.AppBuilder
         public const string Localization = nameof(Localization);
 
         public const string DiscoverModules = nameof(DiscoverModules);
+        public const string RegisterDefaultModules = nameof(RegisterDefaultModules);
         public const string ConfigureGlobalVariabls = nameof(ConfigureGlobalVariabls);
         public const string ConsoleMain = nameof(ConsoleMain);
     }

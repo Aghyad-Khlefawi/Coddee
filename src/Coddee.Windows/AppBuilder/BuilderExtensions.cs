@@ -6,9 +6,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Resources;
 using Coddee.Loggers;
+using Coddee.ModuleDefinitions;
 using Coddee.Services;
 using Coddee.Services.Configuration;
 using Coddee.Windows.AppBuilder;
@@ -25,7 +27,7 @@ namespace Coddee.AppBuilder
             string resourceManagerFullPath,
             string resourceManagerAssembly,
             string[] supportedCultures,
-            string defaultCluture = "en-US") 
+            string defaultCluture = "en-US")
         {
             builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.LocalizationBuildAction((container) =>
             {
@@ -54,7 +56,7 @@ namespace Coddee.AppBuilder
         /// <summary>
         /// Use the IL object mapper
         /// </summary>
-        public static IApplicationBuilder UseILMapper(this IApplicationBuilder builder) 
+        public static IApplicationBuilder UseILMapper(this IApplicationBuilder builder)
         {
             builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.MapperBuildAction((container) =>
             {
@@ -125,7 +127,7 @@ namespace Coddee.AppBuilder
             }));
             return builder;
         }
-        public static IApplicationBuilder UseMain<T>(this IApplicationBuilder builder) where T:IEntryPointClass
+        public static IApplicationBuilder UseMain<T>(this IApplicationBuilder builder) where T : IEntryPointClass
         {
             builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.ConsoleMainBuildAction((container) =>
             {
@@ -143,9 +145,27 @@ namespace Coddee.AppBuilder
             builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.ConfigFileBuildAction((container) =>
             {
                 var config = container.Resolve<IConfigurationManager>();
-                config.Initialize(new ConfigurationFile("config",Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"config.cfg")));
+                config.Initialize(new ConfigurationFile("config", Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "config.cfg")));
             }));
             return builder;
         }
+
+
+        public static IApplicationBuilder UseModules(this IApplicationBuilder buillder, params string[] modulesAssemblies)
+        {
+            buillder.BuildActionsCoordinator.AddAction(DefaultBuildActions.DiscoverModulesBuildAction(
+                                                                                             container =>
+                                                                                             {
+                                                                                                 var _modulesManager = container.Resolve<ApplicationModulesManager>();
+                                                                                                 if (modulesAssemblies != null)
+                                                                                                     foreach (var assembly in modulesAssemblies)
+                                                                                                     {
+                                                                                                         _modulesManager.RegisterModule(_modulesManager.DescoverModulesFromAssambles(assembly).ToArray());
+                                                                                                     }
+                                                                                                 _modulesManager.InitializeAutoModules().GetAwaiter().GetResult();
+                                                                                             }));
+            return buillder;
+        }
+       
     }
 }

@@ -26,7 +26,6 @@ namespace Coddee.Services
         public ApplicationModulesManager(IContainer container, ILogger logger)
         {
             _container = container;
-            _container.RegisterInstance<IApplicationModulesManager>(this);
             _logger = logger;
             _modules = new Dictionary<string, Module>();
         }

@@ -106,6 +106,11 @@ namespace Coddee.WPF
             return VmManager.CreateViewModel<TResult>(this);
         }
 
+        protected Task InitializeChildViewModels()
+        {
+            return GetChildViewModels().InitializeAll();
+        }
+
         /// <summary>
         /// Return the running application instance
         /// </summary>

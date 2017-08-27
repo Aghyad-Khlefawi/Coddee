@@ -25,7 +25,7 @@ namespace Coddee.Data
         /// <summary>
         /// Do any required initialization
         /// </summary>
-        public void Initialize(IRepositoryManager repositoryManager, IObjectMapper mapper,Type implementedInterface,
+        public virtual void Initialize(IRepositoryManager repositoryManager, IObjectMapper mapper,Type implementedInterface,
         RepositoryConfigurations config = null)
         {
             _config = config;
@@ -64,7 +64,7 @@ namespace Coddee.Data
 
     public abstract class RepositoryBase<TModel> : RepositoryBase
     {
-        public Condition<TModel, T> Condition<T>(Expression<Func<TModel, T>> property, T value)
+        public virtual Condition<TModel, T> Condition<T>(Expression<Func<TModel, T>> property, T value)
         {
             return new Condition<TModel, T>(property, value);
         }

@@ -10,45 +10,33 @@ namespace Coddee.WPF
     /// <typeparam name="TItem"></typeparam>
     public class SelectableItem<TItem> : BindableBase
     {
-        /// <summary>
-        /// Factory method
-        /// </summary>
-        /// <param name="item"></param>
-        /// <returns></returns>
-        public static SelectableItem<TItem> Create(TItem item)
-        {
-            return new SelectableItem<TItem>(item);
-        }
-
         public SelectableItem(TItem item, bool isSelected = false)
         {
             Item = item;
             IsSelected = isSelected;
         }
 
-        /// <summary>
-        /// Triggered when an item selections status is changed
-        /// </summary>
-        public event EventHandler<TItem> SelectChanged;
 
-        /// <summary>
-        /// Triggered when an item selection is set to true
-        /// </summary>
-        public event EventHandler<TItem> Selected;
+        private string _title;
+        public string Title
+        {
+            get { return _title; }
+            set { SetProperty(ref this._title, value); }
+        }
 
+        private string _subtitle;
+        public string Subtitle
+        {
+            get { return _subtitle; }
+            set { SetProperty(ref this._subtitle, value); }
+        }
 
-        /// <summary>
-        /// Triggered when an item selection is set to false
-        /// </summary>
-        public event EventHandler<TItem> UnSelected;
+        private bool _isSelected;
 
         /// <summary>
         /// Wraped object
         /// </summary>
         public TItem Item { get; set; }
-
-
-        private bool _isSelected;
 
         /// <summary>
         /// The object selection status
@@ -77,7 +65,33 @@ namespace Coddee.WPF
         /// A command for changing the selection value to true.
         /// </summary>
         public ICommand SelectCommand => new RelayCommand(Select);
-        
+
+        /// <summary>
+        /// Factory method
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        public static SelectableItem<TItem> Create(TItem item)
+        {
+            return new SelectableItem<TItem>(item);
+        }
+
+        /// <summary>
+        /// Triggered when an item selections status is changed
+        /// </summary>
+        public event EventHandler<TItem> SelectChanged;
+
+        /// <summary>
+        /// Triggered when an item selection is set to true
+        /// </summary>
+        public event EventHandler<TItem> Selected;
+
+
+        /// <summary>
+        /// Triggered when an item selection is set to false
+        /// </summary>
+        public event EventHandler<TItem> UnSelected;
+
         /// <summary>
         /// Toggle the selections status
         /// </summary>
@@ -91,5 +105,4 @@ namespace Coddee.WPF
             IsSelected = true;
         }
     }
-
 }

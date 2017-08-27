@@ -3,6 +3,7 @@
 
 using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Reflection;
 using Coddee.Loggers;
 using Coddee.ModuleDefinitions;
@@ -17,7 +18,6 @@ namespace Coddee.AppBuilder
         protected readonly IApplication _app;
         protected readonly IContainer _container;
         protected readonly LogAggregator _logger;
-        protected IApplicationModulesManager _modulesManager;
 
         protected WindowsApplicationBuilder(IApplication app, IContainer container)
         {
@@ -48,17 +48,6 @@ namespace Coddee.AppBuilder
         }
 
 
-        protected virtual void ConfigureAutoModuleDiscovery()
-        {
-            BuildActionsCoordinator.AddAction(DefaultBuildActions.DiscoverModulesBuildAction(
-                                                                                             container =>
-                                                                                             {
-                                                                                                 _modulesManager = _container.Resolve<ApplicationModulesManager>();
-                                                                                                 _modulesManager.RegisterModule(CoreModuleDefinitions.Modules);
-                                                                                                 _modulesManager.RegisterModule(WindowsModuleDefinitions.Modules);
-                                                                                                 _modulesManager.InitializeAutoModules();
-                                                                                             }));
-        }
         protected void Log(string log, LogRecordTypes type = LogRecordTypes.Debug)
         {
             _logger.Log(_eventsSource, log, type);
@@ -87,14 +76,24 @@ namespace Coddee.AppBuilder
         {
             Log($"Setting up default build actions.");
 
+
+            BuildActionsCoordinator.AddAction(DefaultBuildActions.RegisterDefaultModulesBuildAction(container =>
+            {
+                var applicationModulesManager = container.RegisterInstance<IApplicationModulesManager,ApplicationModulesManager>();
+                applicationModulesManager.RegisterModule(GetDefaultModules());
+                applicationModulesManager.InitializeAutoModules().GetAwaiter().GetResult();
+            }));
+
             if (!BuildActionsCoordinator.BuildActionExists(BuildActionsKeys.ConfigureGlobalVariabls))
                 ConfigureGlobalVariables();
-
-            if (!BuildActionsCoordinator.BuildActionExists(BuildActionsKeys.DiscoverModules))
-                ConfigureAutoModuleDiscovery();
-
+            
             if (!BuildActionsCoordinator.BuildActionExists(BuildActionsKeys.ConfigFile))
                 this.UseConfigurationFile(null);
+        }
+
+        protected virtual Type[] GetDefaultModules()
+        {
+            return CoreModuleDefinitions.Modules.Concat(WindowsModuleDefinitions.Modules).ToArray();
         }
     }
 }

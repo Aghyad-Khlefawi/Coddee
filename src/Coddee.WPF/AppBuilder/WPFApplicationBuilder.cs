@@ -1,7 +1,9 @@
 ﻿// Copyright (c) Aghyad khlefawi. All rights reserved.  
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
+using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Windows;
@@ -55,17 +57,10 @@ namespace Coddee.WPF
             }));
         }
 
-        protected override void ConfigureAutoModuleDiscovery()
+        
+        protected override Type[] GetDefaultModules()
         {
-            BuildActionsCoordinator.AddAction(DefaultBuildActions.DiscoverModulesBuildAction(
-                                                                                             container =>
-                                                                                             {
-                                                                                                 _modulesManager = _container.Resolve<ApplicationModulesManager>();
-                                                                                                 _modulesManager.RegisterModule(CoreModuleDefinitions.Modules);
-                                                                                                 _modulesManager.RegisterModule(WindowsModuleDefinitions.Modules);
-                                                                                                 _modulesManager.RegisterModule(WPFModuleDefinitions.Modules);
-                                                                                                 _modulesManager.InitializeAutoModules();
-                                                                                             }));
+            return CoreModuleDefinitions.Modules.Concat(WindowsModuleDefinitions.Modules.Concat(WPFModuleDefinitions.Modules)).ToArray();
         }
 
         protected virtual void SetupViewModelBase()

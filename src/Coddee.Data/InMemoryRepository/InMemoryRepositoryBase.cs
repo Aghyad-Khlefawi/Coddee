@@ -10,7 +10,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 
 namespace Coddee.Data
-{   
+{
     /// <summary>
     /// Base implementation for an InMemory repository
     /// </summary>
@@ -18,9 +18,13 @@ namespace Coddee.Data
     {
         public override int RepositoryType { get; } = (int)RepositoryTypes.InMemory;
 
-        public InMemoryRepositoryBase()
+        public override void Initialize(IRepositoryManager repositoryManager,
+                                        IObjectMapper mapper,
+                                        Type implementedInterface,
+                                        RepositoryConfigurations config = null)
         {
-            _dictionary = new ConcurrentDictionary<TKey, TModel>();
+            base.Initialize(repositoryManager, mapper, implementedInterface, config);
+            _dictionary = new ConcurrentDictionary<TKey, TModel>(Seed().ToDictionary(e => e.GetKey, e => e));
         }
 
         protected ConcurrentDictionary<TKey, TModel> _dictionary;
@@ -29,6 +33,11 @@ namespace Coddee.Data
         protected void RaiseItemsChanged(object sender, RepositoryChangeEventArgs<TModel> args)
         {
             ItemsChanged?.Invoke(this, args);
+        }
+
+        public virtual IEnumerable<TModel> Seed()
+        {
+            return new List<TModel>();
         }
 
         public event EventHandler<RepositoryChangeEventArgs<TModel>> ItemsChanged;
