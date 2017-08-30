@@ -32,7 +32,7 @@ namespace Coddee.Services.Dialogs
             _dialogsRegion.View(this);
         }
 
-        public IDialog ShowContent(UIElement content)
+        public IDialog ShowContent(UIElement content, bool showCloseButton = false)
         {
             var dialog = CreateDialog<ContentDialogViewModel>();
             dialog.Content = content;

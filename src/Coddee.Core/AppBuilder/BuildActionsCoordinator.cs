@@ -82,7 +82,7 @@ namespace Coddee.AppBuilder
         }
 
         /// <summary>
-        /// Add a build action the collection and executes it after a cerine action.
+        /// Add a build action the collection and executes it after a certain action.
         /// </summary>
         /// <param name="actionToAdd">The action to add.</param>
         /// <param name="targetActionName">The action that this action should be executed after.</param>
@@ -100,7 +100,7 @@ namespace Coddee.AppBuilder
         }
 
         /// <summary>
-        /// Add a build action the collection and executes it before a cerine action.
+        /// Add a build action the collection and executes it before a certain action.
         /// </summary>
         /// <param name="actionToAdd">The action to add.</param>
         /// <param name="targetActionName">The action that this action should be executed before.</param>
@@ -120,10 +120,10 @@ namespace Coddee.AppBuilder
         /// <summary>
         /// Execute all the added build actions.
         /// </summary>
-        /// <param name="container">The depenedncy container.</param>
+        /// <param name="container">The dependency container.</param>
         public void InvokeAll(IContainer container)
         {
-            foreach (var buildAction in _buildActions.OrderBy(e => e.InvokeOrder))
+            foreach (var buildAction in _buildActions.OrderBy(e => e.InvokeOrder).ToList())
             {
                 try
                 {
@@ -146,3 +146,4 @@ namespace Coddee.AppBuilder
         }
     }
 }
+ 

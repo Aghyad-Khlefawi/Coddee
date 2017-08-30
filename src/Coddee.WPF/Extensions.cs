@@ -4,6 +4,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Coddee.Collections;
+using Coddee.Data;
 using Coddee.WPF.Commands;
 
 namespace Coddee.WPF
@@ -14,6 +16,7 @@ namespace Coddee.WPF
         {
             return Task.WhenAll(items.Select(e => e.Initialize()));
         }
+
         public static ReactiveCommandBase<T> ObserveRequiredFields<T>(this ReactiveCommandBase<T> command)
         {
             if (command.ObservedObject is IViewModel vm)
@@ -25,25 +28,39 @@ namespace Coddee.WPF
             }
             return command;
         }
+
         public static IEnumerable<SelectableItem<T>> AsSelectable<T>(this IEnumerable<T> collection)
         {
             return collection.Select(e => new SelectableItem<T>(e));
         }
+
         public static async Task<IEnumerable<SelectableItem<T>>> AsSelectable<T>(this Task<IEnumerable<T>> collection)
         {
             return (await collection).AsSelectable();
         }
+
         public static IEnumerable<T> GetSelected<T>(this IEnumerable<SelectableItem<T>> collection)
         {
             return collection.Where(e => e.IsSelected).Select(e => e.Item);
         }
+
         public static void UnSelectAll<T>(this IEnumerable<SelectableItem<T>> collection)
         {
             collection.ForEach(e => e.IsSelected = false);
         }
+
         public static List<TKey> GetSelectedKeys<TKey, T>(this IEnumerable<SelectableItem<T>> collection) where T : IUniqueObject<TKey>
         {
             return collection.Where(e => e.IsSelected).Select(e => e.Item.GetKey).ToList();
+        }
+
+        public static async Task<AsyncObservableCollection<T>> BindToRepositoryItems<T, TKey>(this ICRUDRepository<T, TKey> repo)
+            where T : IUniqueObject<TKey>
+        {
+            var items = await repo.GetItems();
+            var collection = AsyncObservableCollection<T>.Create(items);
+            collection.BindToRepositoryChanges(repo);
+            return collection;
         }
     }
 }

@@ -32,6 +32,7 @@ namespace Coddee.WPF
         protected static WPFApplication _app;
         protected static IContainer _container;
         protected static IGlobalVariablesService _globalVariables;
+        protected static IDialogService _dialogService;
         protected static IToastService _toast;
         protected static ILocalizationManager _localization;
         protected static ILogger _logger;
@@ -191,7 +192,8 @@ namespace Coddee.WPF
 
             if (_container.IsRegistered<IToastService>())
                 _toast = _container.Resolve<IToastService>();
-
+            if (_container.IsRegistered < IDialogService>())
+                _dialogService = _container.Resolve<IDialogService>();
         }
 
         protected void ToastError(string message = "An error occurred.")

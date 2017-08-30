@@ -6,12 +6,18 @@
              xmlns:local="clr-namespace:Coddee.Services.Dialogs"
              xmlns:global="clr-namespace:"
              xmlns:coddee="http://schemas.Coddee.com/2017/WPF"
+             xmlns:wpf="clr-namespace:Coddee.WPF"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
         <local:ContentDialogViewModel x:Key="designData" />
     </UserControl.Resources>
     <Grid d:DataContext="{StaticResource designData}">
-        <ContentPresenter Content="{Binding Content}"/>
+        <DockPanel>
+            <Button Content="{wpf:Localize Close}" DockPanel.Dock="Bottom" HorizontalAlignment="Right" Margin="5" Width="60"
+                    Command="{Binding CloseCommand}" Style="{StaticResource HighlightButton}"
+                    Visibility="{Binding ShowCloseButton}"/>
+            <ContentPresenter Content="{Binding Content}"/>
+        </DockPanel>
     </Grid>
 </UserControl>
