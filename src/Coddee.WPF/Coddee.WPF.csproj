@@ -80,6 +80,7 @@
     <Compile Include="Controls\WaterMarkPasswordBox.cs" />
     <Compile Include="Controls\WaterMarkTextBox.cs" />
     <Compile Include="Converters\BoolReverseConverter.cs" />
+    <Compile Include="Converters\ListCountToVisibility.cs" />
     <Compile Include="Converters\NullToBoolConverter.cs" />
     <Compile Include="Converters\NullToVisibilityConverter.cs" />
     <Compile Include="Converters\RequiredBrushConverter.cs" />

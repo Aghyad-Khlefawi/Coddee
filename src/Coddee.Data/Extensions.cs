@@ -55,6 +55,16 @@ namespace Coddee.Data
         }
 
         /// <summary>
+        /// Updates the collection base on save arguments
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        public static void Update<T>(this IList<T> collection, object sender, EditorSaveArgs<T> args)
+        {
+            collection.Update(args.OperationType, args.Item);
+        }
+
+
+        /// <summary>
         /// Updates the collection base on the operation type 
         /// </summary>
         /// <typeparam name="T"></typeparam>
