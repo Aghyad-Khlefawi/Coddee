@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Coddee.Collections;
 
 namespace Coddee.Data
 {
@@ -72,6 +73,15 @@ namespace Coddee.Data
             where T : IUniqueObject<TKey>
         {
             repo.ItemsChanged += collection.Update;
+        }
+
+        public static async Task<AsyncObservableCollection<T>> ToAsyncObservableCollection<T, TKey>(this ICRUDRepository<T, TKey> repo)
+            where T : IUniqueObject<TKey>
+        {
+            var items = await repo.GetItems();
+            var collection = AsyncObservableCollection<T>.Create(items);
+            collection.BindToRepositoryChanges(repo);
+            return collection;
         }
     }
 }

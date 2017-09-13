@@ -26,5 +26,5 @@ using System.Windows.Markup;
 
 [assembly: ThemeInfo(ResourceDictionaryLocation.None, ResourceDictionaryLocation.SourceAssembly)]
 
-[assembly: AssemblyVersion("1.1.24.000000000000000")]
-[assembly: AssemblyFileVersion("1.1.24.000000000000000")]
+[assembly: AssemblyVersion("1.1.38.00000000000000000000000000000")]
+[assembly: AssemblyFileVersion("1.1.38.00000000000000000000000000000")]

@@ -53,14 +53,5 @@ namespace Coddee.WPF
         {
             return collection.Where(e => e.IsSelected).Select(e => e.Item.GetKey).ToList();
         }
-
-        public static async Task<AsyncObservableCollection<T>> BindToRepositoryItems<T, TKey>(this ICRUDRepository<T, TKey> repo)
-            where T : IUniqueObject<TKey>
-        {
-            var items = await repo.GetItems();
-            var collection = AsyncObservableCollection<T>.Create(items);
-            collection.BindToRepositoryChanges(repo);
-            return collection;
-        }
     }
 }

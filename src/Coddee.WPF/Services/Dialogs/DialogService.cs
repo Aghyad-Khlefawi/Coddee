@@ -35,6 +35,7 @@ namespace Coddee.Services.Dialogs
         public IDialog ShowContent(UIElement content, bool showCloseButton = false)
         {
             var dialog = CreateDialog<ContentDialogViewModel>();
+            dialog.ShowCloseButton = showCloseButton;
             dialog.Content = content;
             return ShowDialog(dialog);
         }

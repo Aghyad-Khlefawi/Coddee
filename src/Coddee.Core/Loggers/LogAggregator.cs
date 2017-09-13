@@ -1,11 +1,8 @@
 ﻿// Copyright (c) Aghyad khlefawi. All rights reserved.  
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Coddee.Loggers
 {
@@ -37,7 +34,7 @@ namespace Coddee.Loggers
         {
             if (!AllowedTypes.HasFlag(type))
                 return;
-            foreach (var log in _records)
+            foreach (var log in _records.ToList())
                 if (log.Type >= MinimumLevel)
                     logger.Log(log);
             _loggers.Add(logger);

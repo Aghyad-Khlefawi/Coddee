@@ -4,8 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media;
+using Coddee.Collections;
 using Coddee.WPF;
-using Coddee.WPF.Collections;
 using Coddee.WPF.Commands;
 
 namespace Coddee.Services.ApplicationSearch

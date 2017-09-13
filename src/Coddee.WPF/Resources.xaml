@@ -132,6 +132,69 @@
     <!--#endregion-->
 
     <!--#region Converters-->
+
+    <Style  x:Key="BorderedButton"  TargetType="Button" >
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource ApplicationAccentColorDarker}" />
+        <Setter Property="Background" Value="{DynamicResource ApplicationAccentColor}" />
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Border
+                        Name="Root"
+                        BorderBrush="{TemplateBinding BorderBrush}">
+                        <Border.Style>
+                            <Style TargetType="Border">
+                                <Setter Property="Background" Value="{Binding Background,RelativeSource={RelativeSource TemplatedParent}}"/>
+                                <Setter Property="IsEnabled" Value="{Binding IsEnabled,RelativeSource={RelativeSource TemplatedParent}}"/>
+                                <Style.Triggers>
+                                    <Trigger Property="IsEnabled" Value="False">
+                                        <Setter Property="Background" Value="LightGray"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Border.Style>
+                        <Grid>
+                            <Border
+                                BorderBrush="{TemplateBinding BorderBrush}">
+                                <Border.Style>
+                                    <Style TargetType="Border">
+                                        <Setter Property="Visibility" Value="{Binding IsEnabled,RelativeSource={RelativeSource TemplatedParent},Converter={StaticResource BoolToVisibilityConverter}}"/>
+                                        <Setter Property="Background" Value="{Binding RelativeSource={RelativeSource TemplatedParent},Path=Background}"/>
+                                        <Setter Property="BorderThickness" Value="0"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsMouseOver,RelativeSource={RelativeSource TemplatedParent}}" Value="True">
+                                                <DataTrigger.Setters>
+                                                    <Setter Property="BorderThickness" Value="2"/>
+                                                </DataTrigger.Setters>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=Button,Mode=FindAncestor},Path=IsPressed}" Value="true">
+                                                <Setter Property="Background" Value="{DynamicResource ApplicationAccentColorDarker}"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Border.Style>
+                            </Border>
+                            <ContentControl
+                                Padding="2"
+                                Content="{Binding RelativeSource={RelativeSource TemplatedParent},Path=Content}"
+                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                IsTabStop="False"
+                                Margin="{TemplateBinding Padding}"
+                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" />
+                        </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Foreground" Value="Black"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
     <Style x:Key="HighlightButton"
            TargetType="{x:Type Button}">
         <Setter Property="HorizontalContentAlignment" Value="Center" />
@@ -220,6 +283,8 @@
             </Trigger>
         </Style.Triggers>
     </Style>
+    <Style TargetType="Button" BasedOn="{StaticResource HighlightButton}"/>
+
     <Style x:Key="MenuBorder" TargetType="Border">
         <Setter Property="BorderThickness" Value="0 0 2 0" />
         <Setter Property="BorderBrush"
@@ -364,7 +429,7 @@
     </Style>
     <Style x:Key="DialogButton"
            TargetType="Button"
-           BasedOn="{StaticResource HighlightButton}">
+           BasedOn="{StaticResource BorderedButton}">
         <Setter Property="MinWidth" Value="60" />
         <Setter Property="Height" Value="30" />
     </Style>

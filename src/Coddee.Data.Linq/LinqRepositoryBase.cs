@@ -459,15 +459,28 @@ namespace Coddee.Data.LinqToSQL
         /// </summary>
         public virtual Task<TModel> UpdateItem(TModel item)
         {
-            return Execute((db, table) =>
+            return TransactionalExecute((db, table,transaction) =>
             {
-                var temp = GetItemByPrimaryKey(db, item.GetKey);
-                MapItemToTable(item, temp);
-                db.SubmitChanges();
+                TTable temp = UpdateToDB(item, db);
+                AditionalUpdate(item, temp, db, transaction);
+                transaction.Commit();
                 MapItemToModel(temp, item);
                 RaiseItemsChanged(this, new RepositoryChangeEventArgs<TModel>(OperationType.Edit, item, false));
                 return item;
             });
+        }
+
+        protected void AditionalUpdate(TModel item, TTable temp, TDataContext db, DbTransaction transaction)
+        {
+            
+        }
+
+        protected virtual TTable UpdateToDB(TModel item, TDataContext db)
+        {
+            var temp = GetItemByPrimaryKey(db, item.GetKey);
+            MapItemToTable(item, temp);
+            db.SubmitChanges();
+            return temp;
         }
 
         /// <summary>
@@ -475,17 +488,32 @@ namespace Coddee.Data.LinqToSQL
         /// </summary>
         public virtual Task<TModel> InsertItem(TModel item)
         {
-            return Execute((db, table) =>
+            return TransactionalExecute((db, table,transaction) =>
             {
-                var tableitem = new TTable();
-                MapItemToTable(item, tableitem);
-                db.GetTable<TTable>().InsertOnSubmit(tableitem);
-                db.SubmitChanges();
-                MapItemToModel(tableitem, item);
+                TTable tableItem = InsertToDB(item, db);
+                AdditionalInsert(item, tableItem, db, transaction);
+                transaction.Commit();
+                MapItemToModel(tableItem, item);
                 RaiseItemsChanged(this, new RepositoryChangeEventArgs<TModel>(OperationType.Add, item, false));
                 return item;
             });
         }
+
+        protected virtual void AdditionalInsert(TModel item, TTable tableItem, TDataContext db, DbTransaction transaction)
+        {
+
+        }
+
+        protected virtual TTable InsertToDB(TModel item, TDataContext db)
+        {
+            var tableitem = new TTable();
+            MapItemToTable(item, tableitem);
+            db.GetTable<TTable>().InsertOnSubmit(tableitem);
+            db.SubmitChanges();
+            return tableitem;
+        }
+
+
 
         /// <summary>
         /// Deletes an item from the repository by it's key

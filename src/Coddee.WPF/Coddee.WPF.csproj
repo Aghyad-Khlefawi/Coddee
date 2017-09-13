@@ -72,6 +72,7 @@
     <Compile Include="Commands\ReactiveCommand.cs" />
     <Compile Include="Commands\RelayCommand.cs" />
     <Compile Include="Controls\BusyIndicator.cs" />
+    <Compile Include="Controls\CoddeeControl.cs" />
     <Compile Include="Controls\Form.cs" />
     <Compile Include="Controls\FormField.cs" />
     <Compile Include="Controls\GlowBorder.cs" />

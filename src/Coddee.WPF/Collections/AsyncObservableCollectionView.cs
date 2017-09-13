@@ -5,24 +5,27 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Data;
-using Coddee.Collections;
 
-namespace Coddee.WPF.Collections
+namespace Coddee.Collections
 {
     public class AsyncObservableCollectionView<T> : AsyncObservableCollection<T>
     {
+
+
         public static AsyncObservableCollectionView<T> Create(Func<T, string, bool> filterPredicate)
         {
             AsyncObservableCollectionView<T> collection = null;
             ExecuteOnSyncContext(() => { collection = new AsyncObservableCollectionView<T>(); });
-            collection.FilterItem = filterPredicate;
+            if (filterPredicate != null)
+                collection.FilterItem = filterPredicate;
             return collection;
         }
 
-        public static AsyncObservableCollectionView<T> Create(Func<T, string, bool> filterPredicate,IList<T> list)
+        public static AsyncObservableCollectionView<T> Create(Func<T, string, bool> filterPredicate, IList<T> list)
         {
             AsyncObservableCollectionView<T> collection = null;
             ExecuteOnSyncContext(() => { collection = new AsyncObservableCollectionView<T>(list); });
+            if (filterPredicate != null)
             collection.FilterItem = filterPredicate;
             return collection;
         }
@@ -31,6 +34,7 @@ namespace Coddee.WPF.Collections
         {
             AsyncObservableCollectionView<T> collection = null;
             ExecuteOnSyncContext(() => { collection = new AsyncObservableCollectionView<T>(list); });
+            if (filterPredicate != null)
             collection.FilterItem = filterPredicate;
             return collection;
         }
@@ -78,7 +82,7 @@ namespace Coddee.WPF.Collections
         public void Search(string searchValue)
         {
             var search = searchValue.ToLower();
-            CollectionView.Filter = e => FilterItem((T) e, search);
+            CollectionView.Filter = e => FilterItem((T)e, search);
         }
 
     }
