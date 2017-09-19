@@ -14,6 +14,11 @@
     </UserControl.Resources>
     <Grid d:DataContext="{StaticResource designData}">
         <controls:Form>
+            <controls:Form.TitleStyle>
+                <Style TargetType="Label">
+                    <Setter Property="FontWeight" Value="Bold"/>
+                </Style>
+            </controls:Form.TitleStyle>
             <controls:FormField Title="First name">
                 <TextBox Text="{Binding FirstName,UpdateSourceTrigger=PropertyChanged}" />
             </controls:FormField>

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Net;
 using System.Net.Http;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -303,6 +304,12 @@ namespace Coddee.Data.REST
         {
             return Delete($"{controller}/{action}", id);
         }
+
+
+        protected KeyValuePair<string, string> KeyValue(string name, object value)
+        {
+            return new KeyValuePair<string, string>(name,value.ToString());
+        }
     }
 
     public abstract class RESTRepositoryBase<TModel, TKey> : RESTRepositoryBase
@@ -369,14 +376,17 @@ namespace Coddee.Data.REST
         /// Return the name of the targeted controller
         /// </summary>
         /// <returns></returns>
-        protected Task<T> GetFromController<T>(string action,
+        protected Task<T> GetFromController<T>([CallerMemberName]string action="",
                                                params KeyValuePair<string, string>[] param)
         {
             return Get<T>(ControllerName, action, param);
         }
 
-        protected Task<T> GetFromController<T>(string action,
-                                               IDictionary<string, string> param = null)
+        protected Task<T> GetFromController<T>(KeyValuePair<string, string> param, [CallerMemberName]string action="")
+        {
+            return Get<T>(ControllerName, action, param);
+        }
+        protected Task<T> GetFromController<T>(IDictionary<string, string> param, [CallerMemberName]string action = "")
         {
             return Get<T>(ControllerName, action, param);
         }

@@ -54,6 +54,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Extensions.cs" />
     <Compile Include="ILinqRepository.cs" />
     <Compile Include="LinqDBManager.cs" />
     <Compile Include="LinqRepositoryBase.cs" />

@@ -10,6 +10,21 @@
     <SolidColorBrush x:Key="ErrorColor"
                      Color="#D91D1D" />
 
+    <!--#region Consts-->
+    <system:Int32 x:Key="Int32_0">0</system:Int32>
+    <system:Int32 x:Key="Int32_1">1</system:Int32>
+    <system:Int32 x:Key="Int32_2">2</system:Int32>
+    <system:Int32 x:Key="Int32_3">3</system:Int32>
+    <system:Int32 x:Key="Int32_4">4</system:Int32>
+    <system:Int32 x:Key="Int32_5">5</system:Int32>
+    <system:Int32 x:Key="Int32_6">6</system:Int32>
+    <system:Int32 x:Key="Int32_7">7</system:Int32>
+    <system:Int32 x:Key="Int32_8">8</system:Int32>
+    <system:Int32 x:Key="Int32_9">9</system:Int32>
+    <system:Int32 x:Key="Int32_10">10</system:Int32>
+    <!--#endregion-->
+
+    
     <!--#region Converters-->
     <converters:BoolReverseConverter x:Key="BoolReverseConverter" />
     <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
@@ -17,6 +32,8 @@
     <converters:NullToBoolConverter x:Key="NullToBoolConverter" />
     <converters:ListCountGreaterThanToVisibility x:Key="ListCountGreaterThanToVisibility" />
     <converters:ListCountLowerThanToVisibility x:Key="ListCountLowerThanToVisibility" />
+    <converters:EqualityVisibilityConverter x:Key="EqualityVisibilityConverter" />
+    <converters:InequalityVisibilityConverter x:Key="InequalityVisibilityConverter" />
     <!--#endregion-->
 
     <!--#region Shapes-->

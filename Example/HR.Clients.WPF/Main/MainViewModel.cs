@@ -22,6 +22,7 @@ namespace HR.Clients.WPF.Main
             }
         }
 
+       
         private string _text = "Text";
         public string Text
         {

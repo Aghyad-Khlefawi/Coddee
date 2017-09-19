@@ -7,6 +7,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Coddee.Services.Dialogs"
              xmlns:wpf="clr-namespace:Coddee.WPF"
+             xmlns:controls="clr-namespace:Coddee.WPF.Controls"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
@@ -19,7 +20,7 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid d:DataContext="{StaticResource designData}">
+    <controls:BusyIndicator IsBusy="{Binding Content.DataContext.IsBusy,FallbackValue=False}" d:DataContext="{StaticResource designData}">
         <DockPanel MinWidth="400">
             <StackPanel HorizontalAlignment="Right"
                         DockPanel.Dock="Bottom"
@@ -40,5 +41,5 @@
                 x:Name="Presenter"
                 Content="{Binding Content}"/>
         </DockPanel>
-    </Grid>
+    </controls:BusyIndicator>
 </UserControl>

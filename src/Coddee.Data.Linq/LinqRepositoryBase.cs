@@ -470,7 +470,7 @@ namespace Coddee.Data.LinqToSQL
             });
         }
 
-        protected void AditionalUpdate(TModel item, TTable temp, TDataContext db, DbTransaction transaction)
+        protected virtual void AditionalUpdate(TModel item, TTable tableItem, TDataContext db, DbTransaction transaction)
         {
             
         }
@@ -522,12 +522,18 @@ namespace Coddee.Data.LinqToSQL
         {
             return Execute((db, table) =>
             {
-                var oldItem = GetItemByPrimaryKey(db, ID);
-                var item = TableToModelMapping(oldItem);
-                db.GetTable<TTable>().DeleteOnSubmit(oldItem);
-                db.SubmitChanges();
+                TModel item = DeleteFromDB(ID, db);
                 RaiseItemsChanged(this, new RepositoryChangeEventArgs<TModel>(OperationType.Delete, item, false));
             });
+        }
+
+        protected virtual TModel DeleteFromDB(TKey ID, TDataContext db)
+        {
+            var oldItem = GetItemByPrimaryKey(db, ID);
+            var item = TableToModelMapping(oldItem);
+            db.GetTable<TTable>().DeleteOnSubmit(oldItem);
+            db.SubmitChanges();
+            return item;
         }
 
         /// <summary>

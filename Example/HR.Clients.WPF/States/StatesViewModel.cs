@@ -3,6 +3,7 @@
 
 using System.Threading;
 using System.Threading.Tasks;
+using Coddee.Collections;
 using Coddee.Data;
 using Coddee.WPF;
 using Coddee.WPF.Collections;

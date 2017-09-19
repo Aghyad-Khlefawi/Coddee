@@ -3,16 +3,21 @@
 
 using System;
 using Coddee;
+using Coddee.Validation;
 using Coddee.WPF;
 using HR.Data.Models;
 using HR.Data.Repositories;
 
 namespace HR.Clients.WPF.Companies.Editors
 {
-    public class EmployeeEditorViewModel : EditorViewModel<EmployeeEditorViewModel,EmployeeEditorView, IEmployeeRepository, Employee, Guid>
+    public class EmployeeEditorViewModel : EditorViewModel<EmployeeEditorViewModel, EmployeeEditorView, IEmployeeRepository, Employee, Guid>
     {
         private Company _selectedCompany;
 
+        public EmployeeEditorViewModel() : base(null, null)
+        {
+
+        }
         public void Add(Company companiesSelectedItem)
         {
             _selectedCompany = companiesSelectedItem;
@@ -32,6 +37,7 @@ namespace HR.Clients.WPF.Companies.Editors
             EditedItem.StateName = _selectedCompany.StateName;
             base.PreSave();
         }
+
 
         public EmployeeEditorViewModel(IObjectMapper mapper, IEmployeeRepository repository) : base(mapper, repository)
         {

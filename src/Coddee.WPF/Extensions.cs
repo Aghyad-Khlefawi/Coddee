@@ -1,11 +1,13 @@
 ﻿// Copyright (c) Aghyad khlefawi. All rights reserved.  
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
 using System.Threading.Tasks;
-using Coddee.Collections;
-using Coddee.Data;
+using Coddee.Validation;
 using Coddee.WPF.Commands;
 
 namespace Coddee.WPF
@@ -52,6 +54,14 @@ namespace Coddee.WPF
         public static List<TKey> GetSelectedKeys<TKey, T>(this IEnumerable<SelectableItem<T>> collection) where T : IUniqueObject<TKey>
         {
             return collection.Where(e => e.IsSelected).Select(e => e.Item.GetKey).ToList();
+        }
+
+        public static ReactiveCommand<TObserved> ObserveProperty<TObserved>(this ReactiveCommand<TObserved> command, Expression<Func<TObserved, object>> property)
+        {
+            var propertyName = ((MemberExpression)property.Body).Member.Name;
+            var type = ((PropertyInfo)((MemberExpression) property.Body).Member).PropertyType;
+            command.ObserveProperty(propertyName,RequiredFieldValidators.GetValidator(type));
+            return command;
         }
     }
 }

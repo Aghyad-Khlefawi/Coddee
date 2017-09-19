@@ -1,7 +1,9 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using Coddee;
 using Coddee.AppBuilder;
+using Coddee.Collections;
 using Coddee.Data;
 using Coddee.Loggers;
 using Coddee.Unity;
@@ -40,25 +42,10 @@ namespace HR.Clients.Console
         }
         public void Start()
         {
-            var company = new Company
-            {
-                Name = "Test",
-                StateID = _repositoryManager.GetRepository<IStateRepository>().GetItems().Result.First().ID
-            };
-            var res = _repositoryManager.GetRepository<ICompanyRepository>().InsertItem(company).Result;
-
-            var employeeRepository = _repositoryManager.GetRepository<IEmployeeRepository>();
-            var emp = employeeRepository.InsertItem(new Employee
-            {
-                CompanyID = company.ID,
-                FirstName = "Test",
-                LastName = "Test"
-            }).Result;
-
-            var resault = employeeRepository.GetItems(employeeRepository.Condition(e => e.CompanyID, emp.CompanyID)).Result;
-
-            System.Console.WriteLine("Hello console");
-            System.Console.Read();
+            var temp = new AsyncObservableDictionary<Guid, Employee>();
+            var id = Guid.NewGuid();
+            temp.Add(new Employee { ID = id });
+            temp.Update(OperationType.Edit, new Employee { ID = id, FirstName = "Test" });
         }
     }
 }

@@ -8,34 +8,36 @@ using System.Windows.Data;
 
 namespace Coddee.Collections
 {
+    public delegate bool FilterHandler<T>(T item, string term);
+
     public class AsyncObservableCollectionView<T> : AsyncObservableCollection<T>
     {
 
 
-        public static AsyncObservableCollectionView<T> Create(Func<T, string, bool> filterPredicate)
+        public static AsyncObservableCollectionView<T> Create(FilterHandler<T> filterPredicate)
         {
             AsyncObservableCollectionView<T> collection = null;
             ExecuteOnSyncContext(() => { collection = new AsyncObservableCollectionView<T>(); });
             if (filterPredicate != null)
-                collection.FilterItem = filterPredicate;
+                collection.FilterItem = (item, term) => filterPredicate(item, term);
             return collection;
         }
 
-        public static AsyncObservableCollectionView<T> Create(Func<T, string, bool> filterPredicate, IList<T> list)
+        public static AsyncObservableCollectionView<T> Create(FilterHandler<T> filterPredicate, IList<T> list)
         {
             AsyncObservableCollectionView<T> collection = null;
             ExecuteOnSyncContext(() => { collection = new AsyncObservableCollectionView<T>(list); });
             if (filterPredicate != null)
-            collection.FilterItem = filterPredicate;
+                collection.FilterItem = (item, term) => filterPredicate(item, term);
             return collection;
         }
 
-        public static AsyncObservableCollectionView<T> Create(Func<T, string, bool> filterPredicate, IEnumerable<T> list)
+        public static AsyncObservableCollectionView<T> Create(FilterHandler<T> filterPredicate, IEnumerable<T> list)
         {
             AsyncObservableCollectionView<T> collection = null;
             ExecuteOnSyncContext(() => { collection = new AsyncObservableCollectionView<T>(list); });
             if (filterPredicate != null)
-            collection.FilterItem = filterPredicate;
+                collection.FilterItem = (item, term) => filterPredicate(item, term);
             return collection;
         }
 

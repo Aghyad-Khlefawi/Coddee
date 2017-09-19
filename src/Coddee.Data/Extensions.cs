@@ -52,7 +52,16 @@ namespace Coddee.Data
         /// <typeparam name="T"></typeparam>
         public static void Update<T>(this IList<T> collection, object sender, RepositoryChangeEventArgs<T> args)
         {
-            collection.Update(args.OperationType,args.Item);
+            collection.Update(args);
+        }
+
+        /// <summary>
+        /// Updates the collection base on the operation type 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        public static void Update<T>(this IList<T> collection,RepositoryChangeEventArgs<T> args)
+        {
+            collection.Update(args.OperationType, args.Item);
         }
 
         /// <summary>

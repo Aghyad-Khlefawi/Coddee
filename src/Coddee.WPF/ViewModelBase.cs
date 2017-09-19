@@ -27,7 +27,7 @@ namespace Coddee.WPF
     {
         private const string _eventsSource = "VMBase";
 
-        
+
         protected static readonly Task completedTask = Task.FromResult(false);
         protected static WPFApplication _app;
         protected static IContainer _container;
@@ -36,8 +36,11 @@ namespace Coddee.WPF
         protected static IToastService _toast;
         protected static ILocalizationManager _localization;
         protected static ILogger _logger;
+        protected static IRepositoryManager _repositoryManager;
+        protected static IObjectMapper _mapper;
 
-        private static IViewModelsManager VmManager;
+
+        private static IViewModelsManager _vmManager;
 
         public string __Name { get; protected set; }
 
@@ -75,7 +78,7 @@ namespace Coddee.WPF
 
         protected Task<IViewModel> InitializeViewModel(Type viewModelType)
         {
-            return VmManager.InitializeViewModel(viewModelType, this);
+            return _vmManager.InitializeViewModel(viewModelType, this);
         }
 
         protected virtual void OnDesignMode()
@@ -85,26 +88,27 @@ namespace Coddee.WPF
 
         protected Task<TResult> InitializeViewModel<TResult>() where TResult : IViewModel
         {
-            return VmManager.InitializeViewModel<TResult>(this);
+            return _vmManager.InitializeViewModel<TResult>(this);
         }
 
         protected virtual Task IntitilzieChildViewModels()
         {
-            return Task.WhenAll(VmManager.GetChildViewModels(this).Select(e => e.ViewModel.Initialize()));
+            return Task.WhenAll(_vmManager.GetChildViewModels(this).Select(e => e.ViewModel.Initialize()));
         }
 
         protected IEnumerable<IViewModel> GetChildViewModels()
         {
-            return VmManager.GetChildViewModels(this).Select(e => e.ViewModel);
+            return _vmManager.GetChildViewModels(this).Select(e => e.ViewModel);
         }
+
         protected IViewModel CreateViewModel(Type viewModelType)
         {
-            return VmManager.CreateViewModel(viewModelType, this);
+            return _vmManager.CreateViewModel(viewModelType, this);
         }
 
         protected TResult CreateViewModel<TResult>() where TResult : IViewModel
         {
-            return VmManager.CreateViewModel<TResult>(this);
+            return _vmManager.CreateViewModel<TResult>(this);
         }
 
         protected Task InitializeChildViewModels()
@@ -143,7 +147,7 @@ namespace Coddee.WPF
             return completedTask;
         }
 
-        private readonly object _initializationLock = new object(); 
+        private readonly object _initializationLock = new object();
 
         /// <summary>
         /// Called when the ViewModel is ready to be presented
@@ -166,6 +170,16 @@ namespace Coddee.WPF
             });
         }
 
+        /// <summary>
+        /// Gets a repository by its interface
+        /// </summary>
+        /// <typeparam name="TInterface"></typeparam>
+        /// <returns></returns>
+        protected TInterface GetRepository<TInterface>() where TInterface : IRepository
+        {
+            return _repositoryManager.GetRepository<TInterface>();
+        }
+
         protected virtual void RefreshRequiredFields()
         {
             RequiredFields.Clear();
@@ -185,15 +199,30 @@ namespace Coddee.WPF
         public static void SetContainer(IContainer container)
         {
             _container = container;
-            _globalVariables = _container.Resolve<IGlobalVariablesService>();
-            _logger = _container.Resolve<ILogger>();
-            _localization = _container.Resolve<ILocalizationManager>();
-            VmManager = _container.Resolve<IViewModelsManager>();
+
+            if (_container.IsRegistered<IGlobalVariablesService>())
+                _globalVariables = _container.Resolve<IGlobalVariablesService>();
+
+            if (_container.IsRegistered<ILogger>())
+                _logger = _container.Resolve<ILogger>();
+
+            if (_container.IsRegistered<IViewModelsManager>())
+                _vmManager = _container.Resolve<IViewModelsManager>();
 
             if (_container.IsRegistered<IToastService>())
                 _toast = _container.Resolve<IToastService>();
-            if (_container.IsRegistered < IDialogService>())
+
+            if (_container.IsRegistered<IDialogService>())
                 _dialogService = _container.Resolve<IDialogService>();
+
+            if (_container.IsRegistered<IRepositoryManager>())
+                _repositoryManager = _container.Resolve<IRepositoryManager>();
+
+            if (_container.IsRegistered<ILocalizationManager>())
+                _localization = _container.Resolve<ILocalizationManager>();
+
+            if (_container.IsRegistered<IObjectMapper>())
+                _mapper = _container.Resolve<IObjectMapper>();
         }
 
         protected void ToastError(string message = "An error occurred.")
@@ -315,7 +344,10 @@ namespace Coddee.WPF
             return errors;
         }
 
-
+        public ReactiveCommand<ViewModelBase> CreateReactiveCommand(Action handler)
+        {
+            return ReactiveCommand<ViewModelBase>.Create(this, handler);
+        }
         public ReactiveCommand<T> CreateReactiveCommand<T>(T obj, Action handler)
         {
             return ReactiveCommand<T>.Create(obj, handler);
@@ -391,14 +423,12 @@ namespace Coddee.WPF
     {
         private const string _eventsSource = "EditorBase";
 
-        protected EditorViewModel(IObjectMapper mapper)
+        protected EditorViewModel()
         {
-            _mapper = mapper;
             Saved += OnSave;
             Canceled += OnCanceled;
         }
-
-        protected readonly IObjectMapper _mapper;
+        
         public event EventHandler<EditorSaveArgs<TModel>> Saved;
         public event EventHandler<EditorSaveArgs<TModel>> Canceled;
 
@@ -486,20 +516,24 @@ namespace Coddee.WPF
         {
             try
             {
+                IsBusy = true;
                 var errors = Validate();
                 if (errors != null && errors.Any())
                 {
                     ShowErrors(errors);
+                    IsBusy = false;
                     return false;
                 }
 
                 PreSave();
                 Saved?.Invoke(this, new EditorSaveArgs<TModel>(OperationType, await SaveItem()));
+                IsBusy = false;
                 return true;
             }
             catch (Exception ex)
             {
                 _logger?.Log(_eventsSource, ex);
+                IsBusy = false;
                 throw;
             }
         }
@@ -539,9 +573,10 @@ namespace Coddee.WPF
     {
         protected TRepository _repository;
 
-        protected EditorViewModel(IObjectMapper mapper, TRepository repository) : base(mapper)
+        protected override async Task OnInitialization()
         {
-            _repository = repository;
+            await base.OnInitialization();
+            _repository = GetRepository<TRepository>();
         }
 
         protected override async Task<TModel> SaveItem()

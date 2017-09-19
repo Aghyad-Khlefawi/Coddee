@@ -26,7 +26,17 @@ namespace Coddee.WPF.Controls
             "IsBusy", typeof(bool), typeof(FormField), new PropertyMetadata(default(bool)));
         public static readonly DependencyProperty ContentProperty = DependencyProperty.Register(
             "Content", typeof(object), typeof(FormField), new PropertyMetadata(default(object)));
+        public static readonly DependencyProperty TitleStyleProperty = DependencyProperty.Register(
+                                                        "TitleStyle",
+                                                        typeof(Style),
+                                                        typeof(FormField),
+                                                        new PropertyMetadata(default(Style)));
 
+        public Style TitleStyle
+        {
+            get { return (Style)GetValue(TitleStyleProperty); }
+            set { SetValue(TitleStyleProperty, value); }
+        }
         public object Content
         {
             get { return (object)GetValue(ContentProperty); }

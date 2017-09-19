@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Reflection;
 using Coddee.Services;
 
 namespace Coddee.Validation
@@ -62,7 +63,21 @@ namespace Coddee.Validation
             var fieldName = ((MemberExpression) field.Body).Member.Name;
             return Create(item, fieldName, validator);
         }
-
+        public static RequiredField Create<T>(T item,
+                                              Expression<Func<T, object>> field)
+        {
+            var fieldName = ((MemberExpression)field.Body).Member.Name;
+            var type = ((PropertyInfo)((MemberExpression)field.Body).Member).PropertyType;
+            return Create(item, fieldName, RequiredFieldValidators.GetValidator(type));
+        }
+        public static RequiredField Create<T>(T item,
+                                              Expression<Func<T, object>> field,
+                                              string errorMessage)
+        {
+            var fieldName = ((MemberExpression)field.Body).Member.Name;
+            var type = ((PropertyInfo)((MemberExpression)field.Body).Member).PropertyType;
+            return Create(item, fieldName, RequiredFieldValidators.GetValidator(type), errorMessage);
+        }
         public static RequiredField Create(string fieldName,
                                            Validator validator,
                                            string errorMessage)

@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 
@@ -22,8 +23,8 @@ namespace Coddee
             for (int ix = 0; ix < s.Length; ++ix)
             {
                 char ch = s[ix];
-                if (ch <= 0x7f) retval[ix] = (byte) ch;
-                else retval[ix] = (byte) '?';
+                if (ch <= 0x7f) retval[ix] = (byte)ch;
+                else retval[ix] = (byte)'?';
             }
             return retval;
         }
@@ -98,7 +99,7 @@ namespace Coddee
             else if (operationType == OperationType.Delete)
                 collection.Remove(item);
         }
-        
+
 
         /// <summary>
         /// Removes item from collection and insert the new item
@@ -118,8 +119,5 @@ namespace Coddee
                 collection.Insert(oldIndex, item);
             }
         }
-
-
-       
     }
 }

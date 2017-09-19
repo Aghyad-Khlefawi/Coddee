@@ -5,6 +5,7 @@ using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Coddee;
+using Coddee.Collections;
 using Coddee.Services;
 using Coddee.WPF;
 using Coddee.WPF.Collections;
@@ -17,6 +18,11 @@ namespace HR.Clients.WPF.Companies
 {
     public class CompaniesViewModel : ViewModelBase<CompaniesView>
     {
+        public CompaniesViewModel()
+        {
+            EditCompanyCommand = CreateReactiveCommand(this, EditCompany)
+                .ObserveProperty(e => e.SelectedEmployee);
+        }
         private CompanyEditorViewModel _companyEditor;
         private EmployeeEditorViewModel _employeeEditor;
 
@@ -33,9 +39,14 @@ namespace HR.Clients.WPF.Companies
             get { return _employees; }
             set { SetProperty(ref this._employees, value); }
         }
-
+        private Employee _selectedEmployee;
+        public Employee SelectedEmployee
+        {
+            get { return _selectedEmployee; }
+            set { SetProperty(ref this._selectedEmployee, value); }
+        }
         public ICommand AddCompanyCommand => new RelayCommand(AddCompany);
-        public ICommand EditCompanyCommand => new RelayCommand(EditCompany);
+        public ICommand EditCompanyCommand;
         public ICommand DeleteCompanyCommand => new RelayCommand(DeleteCompany);
 
         public ICommand AddEmployeeCommand => new RelayCommand(AddEmployee);

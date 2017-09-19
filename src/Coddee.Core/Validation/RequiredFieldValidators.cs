@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Aghyad khlefawi. All rights reserved.  
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
+using System;
+
 namespace Coddee.Validation
 {
     public class RequiredFieldValidators
@@ -10,6 +12,15 @@ namespace Coddee.Validation
             var value = e as string;
             return !string.IsNullOrEmpty(value?.Trim()) && !string.IsNullOrWhiteSpace(value.Trim());
         };
+
+        public static Validator StringLengthValidator(int min, int max)
+        {
+            return e =>
+            {
+                var value = e as string ?? String.Empty;
+                return value.Length >= min && value.Length <= max;
+            };
+        }
 
         public static Validator NullableValidator = e => e != null;
 
@@ -24,6 +35,14 @@ namespace Coddee.Validation
                     return NullableValidator;
             }
             return null;
+        }
+
+        public static Validator GetValidator(Type type)
+        {
+            if (type == typeof(string))
+                return StringValidator;
+
+            return NullableValidator;
         }
     }
 }

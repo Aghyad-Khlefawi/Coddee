@@ -5,11 +5,12 @@ using System.Windows.Controls;
 
 namespace Coddee.WPF.Controls
 {
-    public class CoddeeControl:Control
+    public class CoddeeControl : Control
     {
         static CoddeeControl()
         {
-            _container = WPFApplication.Current.GetContainer();
+            if (WPFApplication.Current != null)
+                _container = WPFApplication.Current.GetContainer();
         }
 
         protected static readonly IContainer _container;

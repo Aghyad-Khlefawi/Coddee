@@ -60,7 +60,7 @@ namespace Coddee.Collections
         /// <summary>
         /// The dictionary for the items lookup
         /// </summary>
-        private Dictionary<TKey, TValue> _dictionary;
+        private readonly Dictionary<TKey, TValue> _dictionary;
 
 
         /// <summary>
@@ -98,6 +98,13 @@ namespace Coddee.Collections
         {
             TValue item = Items.ElementAt(index);
             base.UnsafeRemoveItem(index);
+            _dictionary.Remove(item.GetKey);
+        }
+
+        protected override void RemoveItem(int index)
+        {
+            var item = this.ElementAt(index);
+            base.RemoveItem(index);
             _dictionary.Remove(item.GetKey);
         }
     }

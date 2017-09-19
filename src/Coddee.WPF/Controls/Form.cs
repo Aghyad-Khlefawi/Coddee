@@ -40,6 +40,17 @@ namespace Coddee.WPF.Controls
         public static readonly DependencyProperty FieldsMarginProperty = DependencyProperty.Register(
                                                                                                      "FieldsMargin", typeof(Thickness), typeof(Form), new PropertyMetadata(default(Thickness)));
 
+        public static readonly DependencyProperty TitleStyleProperty = DependencyProperty.Register(
+                                                        "TitleStyle",
+                                                        typeof(Style),
+                                                        typeof(Form),
+                                                        new PropertyMetadata(default(Style)));
+
+        public Style TitleStyle
+        {
+            get { return (Style) GetValue(TitleStyleProperty); }
+            set { SetValue(TitleStyleProperty, value); }
+        }
 
         private double _titlesWidth;
         public Thickness FieldsMargin
@@ -63,6 +74,10 @@ namespace Coddee.WPF.Controls
                 {
                     if (item.Margin == new Thickness(0, 0, 0, 0))
                         item.Margin = FieldsMargin;
+
+                    if (TitleStyle != null)
+                        item.TitleStyle = TitleStyle;
+
                     this.CalculateWidth();
                 }
             }
