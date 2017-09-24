@@ -22,7 +22,9 @@
                                 HeaderForeground="{StaticResource ApplicationAccentColor}"
                                 Margin="5">
                 <controls:TabsPanelItem Header="Companies and Employees"
-                                        Presentable="{Binding CompaniesViewModel}" />
+                                        Presentable="{Binding CompaniesViewModel}" >
+                    <controls:ViewModelPresenter ViewModel="{Binding CompaniesViewModel}"/>
+                </controls:TabsPanelItem>
 
                 <controls:TabsPanelItem Header="{controls:Localize States}"
                                         Presentable="{Binding StatesViewModel}" />

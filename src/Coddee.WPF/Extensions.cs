@@ -14,9 +14,9 @@ namespace Coddee.WPF
 {
     public static class Extensions
     {
-        public static Task InitializeAll(this IEnumerable<IViewModel> items)
+        public static Task InitializeAll(this IEnumerable<IViewModel> items, bool forceInitialization = false)
         {
-            return Task.WhenAll(items.Select(e => e.Initialize()));
+            return Task.WhenAll(items.Where(e => forceInitialization || !e.IsInitialized).Select(e => e.Initialize()));
         }
 
         public static ReactiveCommandBase<T> ObserveRequiredFields<T>(this ReactiveCommandBase<T> command)
@@ -58,10 +58,11 @@ namespace Coddee.WPF
 
         public static ReactiveCommand<TObserved> ObserveProperty<TObserved>(this ReactiveCommand<TObserved> command, Expression<Func<TObserved, object>> property)
         {
-            var propertyName = ((MemberExpression)property.Body).Member.Name;
-            var type = ((PropertyInfo)((MemberExpression) property.Body).Member).PropertyType;
-            command.ObserveProperty(propertyName,RequiredFieldValidators.GetValidator(type));
+            var propertyName = ExpressionHelper.GetMemberName(property);
+            var type = ((PropertyInfo)((MemberExpression)property.Body).Member).PropertyType;
+            command.ObserveProperty(propertyName, RequiredFieldValidators.GetValidator(type));
             return command;
         }
+
     }
 }

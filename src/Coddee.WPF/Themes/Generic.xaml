@@ -866,10 +866,11 @@
     </Style>
 
     <Style TargetType="{x:Type local:ViewModelPresenter}">
+        <Setter Property="IsTabStop" Value="False"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:ViewModelPresenter}">
-                    <ContentPresenter Content="{Binding Content,RelativeSource={RelativeSource TemplatedParent}}"/>
+                    <ContentPresenter Content="{Binding ViewModel.View,RelativeSource={RelativeSource TemplatedParent}}"/>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

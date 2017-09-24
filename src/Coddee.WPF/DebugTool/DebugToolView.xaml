@@ -27,5 +27,7 @@
     <controls:TabsPanel TabsBarHeight="35" VerticalContentAlignment="Stretch">
         <controls:TabsPanelItem Header="VM Explorer"
                                 Presentable="{Binding ViewModelExplorer}"/>
+        <controls:TabsPanelItem Header="Shell tools"
+                                Presentable="{Binding ShellTools}"/>
     </controls:TabsPanel>
 </Window>

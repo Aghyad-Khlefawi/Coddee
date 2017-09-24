@@ -12,7 +12,7 @@ using HR.Data.Repositories;
 
 namespace HR.Clients.WPF.Companies.Editors
 {
-    public class CompanyEditorViewModel : EditorViewModel<CompanyEditorViewModel,CompanyEditorView, ICompanyRepository,Company, Guid>
+    public class CompanyEditorViewModelBase : EditorViewModelBase<CompanyEditorViewModelBase,CompanyEditorView, ICompanyRepository,Company, Guid>
     {
        private AsyncObservableCollection<State> _states;
         public AsyncObservableCollection<State> States
@@ -46,10 +46,6 @@ namespace HR.Clients.WPF.Companies.Editors
             await base.OnInitialization();
             States = AsyncObservableCollection<State>.Create(await Resolve<IStateRepository>().GetItems());
         }
-
-        public CompanyEditorViewModel(IObjectMapper mapper, ICompanyRepository repository) : base(mapper, repository)
-        {
-
-        }
+        
     }
 }

@@ -52,7 +52,7 @@ namespace Coddee.Validation
                                               Validator validator,
                                               string errorMessage)
         {
-            var fieldName = ((MemberExpression) field.Body).Member.Name;
+            var fieldName = ExpressionHelper.GetMemberName(field);
             return Create(item, fieldName, validator, errorMessage);
         }
 
@@ -60,13 +60,13 @@ namespace Coddee.Validation
                                               Expression<Func<T, object>> field,
                                               Validator validator)
         {
-            var fieldName = ((MemberExpression) field.Body).Member.Name;
+            var fieldName = ExpressionHelper.GetMemberName(field);
             return Create(item, fieldName, validator);
         }
         public static RequiredField Create<T>(T item,
                                               Expression<Func<T, object>> field)
         {
-            var fieldName = ((MemberExpression)field.Body).Member.Name;
+            var fieldName = ExpressionHelper.GetMemberName(field);
             var type = ((PropertyInfo)((MemberExpression)field.Body).Member).PropertyType;
             return Create(item, fieldName, RequiredFieldValidators.GetValidator(type));
         }
@@ -74,7 +74,7 @@ namespace Coddee.Validation
                                               Expression<Func<T, object>> field,
                                               string errorMessage)
         {
-            var fieldName = ((MemberExpression)field.Body).Member.Name;
+            var fieldName = ExpressionHelper.GetMemberName(field);
             var type = ((PropertyInfo)((MemberExpression)field.Body).Member).PropertyType;
             return Create(item, fieldName, RequiredFieldValidators.GetValidator(type), errorMessage);
         }

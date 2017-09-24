@@ -47,8 +47,8 @@ namespace Coddee.Services.ViewModelManager
                 }
                 else if (parentVM == null && RootViewModel != null)
                     parentVM = RootViewModel.ViewModel;
-                
-                if (parentVM!=null && ViewModels.ContainsKey(parentVM))
+
+                if (parentVM != null && ViewModels.ContainsKey(parentVM))
                 {
                     var parent = ViewModels[parentVM];
                     vmInfo.ParentViewModel = parent;
@@ -76,7 +76,9 @@ namespace Coddee.Services.ViewModelManager
 
         public IEnumerable<ViewModelInfo> GetChildViewModels(IViewModel parent)
         {
-            return ViewModels[parent].ChildViewModels;
+            if (ViewModels.ContainsKey(parent))
+                return ViewModels[parent].ChildViewModels;
+            return new List<ViewModelInfo>();
         }
 
         public async Task<TResult> InitializeViewModel<TResult>(IViewModel parentVM) where TResult : IViewModel

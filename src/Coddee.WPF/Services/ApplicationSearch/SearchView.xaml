@@ -80,7 +80,9 @@
                             Background="WhiteSmoke">
                         <DockPanel>
                             <Grid>
-                                <Label Content="{wpf:Localize SearchResultsNotFound}"
+                                <Label Content="{wpf:Localize SearchResultsNotFound}" HorizontalAlignment="Center"
+                                       Margin="10"
+                                       FontStyle="Italic"
                                        Visibility="{Binding SearchResultsFound,Converter={StaticResource BoolToVisibilityConverter},ConverterParameter=R}" />
                                 <ListBox x:Name="ResultBox"
                                          IsSynchronizedWithCurrentItem="True"

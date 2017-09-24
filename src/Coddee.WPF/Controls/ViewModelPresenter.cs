@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Diagnostics;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace Coddee.WPF.Controls
@@ -14,25 +15,25 @@ namespace Coddee.WPF.Controls
                                                         "ViewModel",
                                                         typeof(IPresentableViewModel),
                                                         typeof(ViewModelPresenter),
-                                                        new PropertyMetadata(default(IPresentableViewModel),ViewModelSet));
+                                                        new PropertyMetadata(default(IPresentableViewModel), ViewModelSet));
 
-       
+
 
         public static readonly DependencyProperty ContentProperty = DependencyProperty.Register(
-                                                        "C ontent",
+                                                        "Content",
                                                         typeof(UIElement),
                                                         typeof(ViewModelPresenter),
                                                         new PropertyMetadata(default(UIElement)));
 
         public UIElement Content
         {
-            get { return (UIElement) GetValue(ContentProperty); }
+            get { return (UIElement)GetValue(ContentProperty); }
             set { SetValue(ContentProperty, value); }
         }
 
         public IPresentableViewModel ViewModel
         {
-            get { return (IPresentableViewModel) GetValue(ViewModelProperty); }
+            get { return (IPresentableViewModel)GetValue(ViewModelProperty); }
             set { SetValue(ViewModelProperty, value); }
         }
 

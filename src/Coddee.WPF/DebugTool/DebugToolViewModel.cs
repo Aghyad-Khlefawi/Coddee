@@ -13,6 +13,7 @@ using Coddee.Collections;
 using Coddee.Services;
 using Coddee.Services.ViewModelManager;
 using Coddee.WPF.Commands;
+using Coddee.WPF.DebugTool.Shell;
 
 namespace Coddee.WPF.DebugTool
 {
@@ -24,9 +25,17 @@ namespace Coddee.WPF.DebugTool
 
         }
 
-        public DebugToolViewModel(ViewModelExplorerViewModel viewModelExplorer)
+        public DebugToolViewModel(ViewModelExplorerViewModel viewModelExplorer, ShellToolsViewModel shellTools)
         {
             _viewModelExplorer = viewModelExplorer;
+            _shellTools = shellTools;
+        }
+
+        private ShellToolsViewModel _shellTools;
+        public ShellToolsViewModel ShellTools
+        {
+            get { return _shellTools; }
+            set { SetProperty(ref this._shellTools, value); }
         }
 
         private ViewModelExplorerViewModel _viewModelExplorer;
@@ -41,6 +50,7 @@ namespace Coddee.WPF.DebugTool
             await base.OnInitialization();
             AttachWindowKeyDown();
             await _viewModelExplorer.Initialize();
+            await _shellTools.Initialize();
         }
 
         void Load()

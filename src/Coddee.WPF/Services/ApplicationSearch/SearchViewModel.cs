@@ -10,7 +10,7 @@ using Coddee.WPF.Commands;
 
 namespace Coddee.Services.ApplicationSearch
 {
-    public class SearchViewModel : ViewModelBase<SearchView>,IApplicationQuickSearch
+    public class SearchViewModel : ViewModelBase<SearchView>, IApplicationQuickSearch
     {
         private readonly IApplicationSearchService _applicationSearchService;
 
@@ -139,7 +139,7 @@ namespace Coddee.Services.ApplicationSearch
             _lastOperation = _applicationSearchService.Search(term, ItemFound,
                                                   res =>
                                                   {
-                                                      
+                                                      SearchResultsFound = res != null && res.Any();
                                                   });
         }
 

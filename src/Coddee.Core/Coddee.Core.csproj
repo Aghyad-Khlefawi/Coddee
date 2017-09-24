@@ -58,6 +58,7 @@
     <Compile Include="ConfigKeys.cs" />
     <Compile Include="Exceptions\ConfigurationExption.cs" />
     <Compile Include="Exceptions\ModuleException.cs" />
+    <Compile Include="ExpresstionHelper.cs" />
     <Compile Include="Globals.cs" />
     <Compile Include="IContainer.cs" />
     <Compile Include="Math.cs" />

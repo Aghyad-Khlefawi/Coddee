@@ -21,10 +21,11 @@ using System.Windows.Markup;
 [assembly: XmlnsDefinition("http://schemas.Coddee.com/2017/WPF", "Coddee.WPF")]
 [assembly: XmlnsDefinition("http://schemas.Coddee.com/2017/WPF", "Coddee.WPF.Controls")]
 [assembly: XmlnsDefinition("http://schemas.Coddee.com/2017/WPF", "Coddee.WPF.Commands")]
+[assembly: XmlnsDefinition("http://schemas.Coddee.com/2017/WPF", "Coddee.WPF.XamlHelpers")]
 
 [assembly: ComVisible(false)]
 
 [assembly: ThemeInfo(ResourceDictionaryLocation.None, ResourceDictionaryLocation.SourceAssembly)]
 
-[assembly: AssemblyVersion("1.1.59.0000000")]
-[assembly: AssemblyFileVersion("1.1.59.0000000")]
+[assembly: AssemblyVersion("1.1.74.000000")]
+[assembly: AssemblyFileVersion("1.1.74.000000")]

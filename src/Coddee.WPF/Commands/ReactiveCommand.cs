@@ -21,7 +21,7 @@ namespace Coddee.WPF.Commands
     {
         private readonly PropertyInfo _property;
         public ObservedProperty(T obj, Expression<Func<T, object>> observedField, Validator validator)
-            : this(obj, ((MemberExpression)observedField.Body).Member.Name, validator)
+            : this(obj, ExpressionHelper.GetMemberName(observedField), validator)
         {
         }
 
@@ -161,7 +161,7 @@ namespace Coddee.WPF.Commands
         }
         public IReactiveCommand ObserveProperty(Expression<Func<TObserved, object>> propertyName, Validator validator)
         {
-            return ObserveProperty(((MemberExpression)propertyName.Body).Member.Name, validator);
+            return ObserveProperty(ExpressionHelper.GetMemberName(propertyName), validator);
         }
 
         public override void Execute(object parameter)

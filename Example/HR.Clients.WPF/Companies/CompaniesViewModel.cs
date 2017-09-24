@@ -23,8 +23,8 @@ namespace HR.Clients.WPF.Companies
             EditCompanyCommand = CreateReactiveCommand(this, EditCompany)
                 .ObserveProperty(e => e.SelectedEmployee);
         }
-        private CompanyEditorViewModel _companyEditor;
-        private EmployeeEditorViewModel _employeeEditor;
+        private CompanyEditorViewModelBase _companyEditor;
+        private EmployeeEditorViewModelBase _employeeEditor;
 
         private AsyncObservableDictionaryView<Guid,Company> _companies;
         public AsyncObservableDictionaryView<Guid, Company> Companies
@@ -105,10 +105,10 @@ namespace HR.Clients.WPF.Companies
 
             Companies.SelectedItemChanged += CompanySelected;
 
-            _companyEditor = await InitializeViewModel<CompanyEditorViewModel>();
+            _companyEditor = await InitializeViewModel<CompanyEditorViewModelBase>();
             _companyEditor.Saved += CompanySaved;
 
-            _employeeEditor = await InitializeViewModel<EmployeeEditorViewModel>();
+            _employeeEditor = await InitializeViewModel<EmployeeEditorViewModelBase>();
             _employeeEditor.Saved += EmployeeSaved;
 
         }

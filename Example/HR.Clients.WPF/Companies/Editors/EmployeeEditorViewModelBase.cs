@@ -10,14 +10,10 @@ using HR.Data.Repositories;
 
 namespace HR.Clients.WPF.Companies.Editors
 {
-    public class EmployeeEditorViewModel : EditorViewModel<EmployeeEditorViewModel, EmployeeEditorView, IEmployeeRepository, Employee, Guid>
+    public class EmployeeEditorViewModelBase : EditorViewModelBase<EmployeeEditorViewModelBase, EmployeeEditorView, IEmployeeRepository, Employee, Guid>
     {
         private Company _selectedCompany;
-
-        public EmployeeEditorViewModel() : base(null, null)
-        {
-
-        }
+        
         public void Add(Company companiesSelectedItem)
         {
             _selectedCompany = companiesSelectedItem;
@@ -38,9 +34,6 @@ namespace HR.Clients.WPF.Companies.Editors
             base.PreSave();
         }
 
-
-        public EmployeeEditorViewModel(IObjectMapper mapper, IEmployeeRepository repository) : base(mapper, repository)
-        {
-        }
+        
     }
 }

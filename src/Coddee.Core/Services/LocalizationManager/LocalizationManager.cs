@@ -99,7 +99,7 @@ namespace Coddee.Services
         public string BindValue<T>(T item, Expression<Func<T, object>> property, string key, string culture = null)
         {
             var currentValue = GetValue(key, culture);
-            var propertyName = ((MemberExpression) property.Body).Member.Name;
+            var propertyName = ExpressionHelper.GetMemberName(property);
             var boundValue = new BoundLocalizationObject
             {
                 Item = item,

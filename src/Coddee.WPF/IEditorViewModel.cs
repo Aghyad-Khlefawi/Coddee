@@ -18,6 +18,7 @@ namespace Coddee.WPF
         void Cancel();
         Task<bool> Save();
         IEnumerable<string> Validate();
+        void Show();
     }
 
     public interface IEditorViewModel<TModel> : IEditorViewModel where TModel : new()
@@ -33,6 +34,6 @@ namespace Coddee.WPF
     public interface IEditorViewModel<TView,TModel> : IEditorViewModel<TModel>,IPresentable<TView> where TModel : new() 
         where TView : UIElement
     {
-
+        
     }
 }

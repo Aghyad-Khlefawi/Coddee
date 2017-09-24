@@ -38,7 +38,7 @@ namespace Coddee.WPF.Controls
                                                                                                "Fields", typeof(FormFieldsCollection), typeof(Form), new PropertyMetadata(new FormFieldsCollection()/*, FieldsSet*/));
 
         public static readonly DependencyProperty FieldsMarginProperty = DependencyProperty.Register(
-                                                                                                     "FieldsMargin", typeof(Thickness), typeof(Form), new PropertyMetadata(default(Thickness)));
+                                                                                                     "FieldsMargin", typeof(Thickness), typeof(Form), new PropertyMetadata(new Thickness(0,0,0,3)));
 
         public static readonly DependencyProperty TitleStyleProperty = DependencyProperty.Register(
                                                         "TitleStyle",

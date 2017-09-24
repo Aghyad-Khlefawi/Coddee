@@ -93,6 +93,10 @@
     <Compile Include="DebugTool\DebugToolView.xaml.cs">
       <DependentUpon>DebugToolView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="DebugTool\Shell\ShellToolsView.xaml.cs">
+      <DependentUpon>ShellToolsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DebugTool\Shell\ShellToolsViewModel.cs" />
     <Compile Include="DebugTool\ViewModelExplorer\PropertyMainpulatorView.xaml.cs">
       <DependentUpon>PropertyMainpulatorView.xaml</DependentUpon>
     </Compile>
@@ -104,11 +108,13 @@
     <Compile Include="DebugTool\ViewModelExplorer\ViewModelPropertyTemplateSelector.cs" />
     <Compile Include="DefaultNavigations.cs" />
     <Compile Include="DefaultShell\DefaultRegions.cs" />
+    <Compile Include="EditorViewModelBase.cs" />
     <Compile Include="Events\ApplicationStartedEvent.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="IEditorViewModel.cs" />
     <Compile Include="InputMask.cs" />
     <Compile Include="IViewModel.cs" />
+    <Compile Include="Resolution.cs" />
     <Compile Include="Services\ApplicationSearch\ApplicationSearchModule.cs" />
     <Compile Include="Services\ApplicationSearch\ApplicationSearchService.cs" />
     <Compile Include="Services\ApplicationSearch\CategorySearchItems.cs" />
@@ -251,6 +257,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="DebugTool\DebugToolView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="DebugTool\Shell\ShellToolsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

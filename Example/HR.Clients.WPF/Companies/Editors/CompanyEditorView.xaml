@@ -10,7 +10,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
-        <local:CompanyEditorViewModel x:Key="designData" />
+        <local:CompanyEditorViewModelBase x:Key="designData" />
     </UserControl.Resources>
     <Grid d:DataContext="{StaticResource designData}">
         <controls:Form>

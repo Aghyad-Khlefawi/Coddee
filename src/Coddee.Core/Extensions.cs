@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading.Tasks;
+using Coddee.Collections;
 
 
 namespace Coddee
@@ -118,6 +120,26 @@ namespace Coddee
                 collection.Remove(oldItem);
                 collection.Insert(oldIndex, item);
             }
+        }
+
+        public static AsyncObservableCollection<T> ToAsyncObservableCollection<T>(this IEnumerable<T> collection)
+        {
+            return AsyncObservableCollection<T>.Create(collection); 
+        }
+
+        public static async Task<AsyncObservableCollection<T>> ToAsyncObservableCollection<T>(this Task<IEnumerable<T>> collection)
+        {
+            return AsyncObservableCollection<T>.Create(await collection);
+        }
+
+        public static Task WhenAll(this IEnumerable<Task> tasks)
+        {
+            return Task.WhenAll(tasks);
+        }
+
+        public static Task ContinueWithResult<T>(this Task<T> task,Action<T> action)
+        {
+            return task.ContinueWith(t => action(t.Result));
         }
     }
 }
