@@ -118,5 +118,10 @@ namespace Coddee.Data
         {
             _repositoryInitializers[initializer.RepositoryType] = initializer;
         }
+
+        public IEnumerable<IRepositoryInitializer> GetRepositoryInitializers()
+        {
+            return _repositoryInitializers.Values.ToList();
+        }
     }
 }

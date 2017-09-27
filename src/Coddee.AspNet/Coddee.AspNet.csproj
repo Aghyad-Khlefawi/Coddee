@@ -272,6 +272,10 @@
       <Project>{8750B71C-E3ED-440D-9D2F-7BAA6A30ACD1}</Project>
       <Name>Coddee.Data.MongoDB</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Coddee.Data.Rest\Coddee.Data.REST.csproj">
+      <Project>{D37A3BAF-2C12-4947-AA65-C737DACC5B54}</Project>
+      <Name>Coddee.Data.REST</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Coddee.Data\Coddee.Data.csproj">
       <Project>{9541018B-0CC1-4237-8370-DF8F20940EED}</Project>
       <Name>Coddee.Data</Name>

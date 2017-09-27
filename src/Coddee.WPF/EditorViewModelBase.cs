@@ -24,7 +24,7 @@ namespace Coddee.WPF
             Saved += OnSave;
             Canceled += OnCanceled;
         }
-        
+
         public event EventHandler<EditorSaveArgs<TModel>> Saved;
         public event EventHandler<EditorSaveArgs<TModel>> Canceled;
 
@@ -50,11 +50,26 @@ namespace Coddee.WPF
             set { SetProperty(ref this._fillingValues, value); }
         }
 
+        private string _title;
+        public string Title
+        {
+            get { return _title; }
+            set { SetProperty(ref this._title, value); }
+        }
+
+        private string _fullTitle;
+        public string FullTitle
+        {
+            get { return _fullTitle; }
+            set { SetProperty(ref this._fullTitle, value); }
+        }
+
         public virtual void Add()
         {
             OperationType = OperationType.Add;
             Clear();
             OnAdd();
+            FullTitle = _localization["AddTemplate"].Replace("$Name$", Title);
         }
 
         public virtual void Clear()
@@ -67,6 +82,7 @@ namespace Coddee.WPF
             FillingValues = true;
             OperationType = OperationType.Edit;
             Clear();
+            FullTitle = _localization["EditTemplate"].Replace("$Name$", Title);
             EditedItem = _mapper.Map<TModel>(item);
             OnEdit(item);
             FillingValues = false;

@@ -32,9 +32,14 @@ namespace Coddee.Data.REST
                                Type implementedInterface,
                                RepositoryConfigurations config = null)
         {
-            _httpClient = httpClient;
+            SetHttpClient(httpClient);
             _unauthorizedRequestHandler = unauthorizedRequestHandler;
             Initialize(repositoryManager, mapper, implementedInterface, config);
+        }
+
+        public void SetHttpClient(HttpClient httpClient)
+        {
+            _httpClient = httpClient;
         }
 
 
@@ -71,8 +76,14 @@ namespace Coddee.Data.REST
             {
                 if (res.StatusCode == HttpStatusCode.Unauthorized || res.StatusCode == HttpStatusCode.Forbidden)
                     _unauthorizedRequestHandler?.Invoke();
-                throw new InvalidOperationException(resString);
+                throw HandleBadRequest(resString);
             }
+        }
+
+        protected virtual Exception HandleBadRequest(string ex)
+        {
+            var exception = JsonConvert.DeserializeObject<APIException>(ex);
+            return new DBException(exception.Code, exception.Message);
         }
 
         /// <summary>
@@ -95,7 +106,7 @@ namespace Coddee.Data.REST
             if (res.StatusCode == HttpStatusCode.Unauthorized || res.StatusCode == HttpStatusCode.Forbidden)
                 _unauthorizedRequestHandler?.Invoke();
 
-            throw new InvalidOperationException(resString);
+            throw HandleBadRequest(resString);
         }
 
         /// <summary>
@@ -146,7 +157,7 @@ namespace Coddee.Data.REST
             {
                 if (res.StatusCode == HttpStatusCode.Unauthorized || res.StatusCode == HttpStatusCode.Forbidden)
                     _unauthorizedRequestHandler?.Invoke();
-                throw new InvalidOperationException(resString);
+                throw HandleBadRequest(resString);
             }
         }
 
@@ -170,7 +181,7 @@ namespace Coddee.Data.REST
             if (res.StatusCode == HttpStatusCode.Unauthorized || res.StatusCode == HttpStatusCode.Forbidden)
                 _unauthorizedRequestHandler?.Invoke();
 
-            throw new InvalidOperationException(resString);
+            throw HandleBadRequest(resString);
         }
 
         /// <summary>
@@ -220,7 +231,7 @@ namespace Coddee.Data.REST
                 return JsonConvert.DeserializeObject<T>(resString);
             if (res.StatusCode == HttpStatusCode.Unauthorized || res.StatusCode == HttpStatusCode.Forbidden)
                 _unauthorizedRequestHandler?.Invoke();
-            throw new InvalidOperationException(resString);
+            throw HandleBadRequest(resString);
         }
 
         /// <summary>
@@ -286,7 +297,7 @@ namespace Coddee.Data.REST
                 await _httpClient.DeleteAsync(urlBuilder.ToString());
             var resString = await res.Content.ReadAsStringAsync();
             if (!res.IsSuccessStatusCode)
-                throw new InvalidOperationException(resString);
+                throw HandleBadRequest(resString);
             if (res.StatusCode == HttpStatusCode.Unauthorized || res.StatusCode == HttpStatusCode.Forbidden)
                 _unauthorizedRequestHandler?.Invoke();
         }

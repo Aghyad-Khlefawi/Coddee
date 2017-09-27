@@ -2,7 +2,6 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Coddee.Data;
 using Coddee.Loggers;
@@ -27,7 +26,7 @@ namespace Coddee.AspNet.Controllers
         public virtual IActionResult Error(Exception ex)
         {
             _logger?.Log(EventsSource, ex);
-            return BadRequest(JsonConvert.SerializeObject(ex));
+            return BadRequest(JsonConvert.SerializeObject(new APIException(ex)));
         }
     }
 

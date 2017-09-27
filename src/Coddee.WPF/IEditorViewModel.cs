@@ -12,7 +12,8 @@ namespace Coddee.WPF
     
     public interface IEditorViewModel : IViewModel,IPresentable
     {
-        OperationType OperationType { get; set; }
+        string Title { get; set; }
+
         
         void Add();
         void Cancel();

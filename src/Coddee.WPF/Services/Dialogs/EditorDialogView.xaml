@@ -22,6 +22,9 @@
     </UserControl.Resources>
     <controls:BusyIndicator IsBusy="{Binding Content.DataContext.IsBusy,FallbackValue=False}" d:DataContext="{StaticResource designData}">
         <DockPanel MinWidth="400">
+            <Label DockPanel.Dock="Top" Style="{StaticResource Header}" 
+                   Content="{Binding Content.DataContext.FullTitle}"
+                   Visibility="{Binding Content.DataContext.Title,Converter={StaticResource NullToVisibilityConverter}}"/>
             <StackPanel HorizontalAlignment="Right"
                         DockPanel.Dock="Bottom"
                         Orientation="Horizontal">

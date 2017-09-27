@@ -17,5 +17,7 @@ namespace Coddee.Data.REST
                         IObjectMapper mapper,
                         Type implementedInterface,
                         RepositoryConfigurations config = null);
+
+        void SetHttpClient(HttpClient httpClient);
     }
 }
