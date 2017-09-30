@@ -114,6 +114,13 @@
     <Compile Include="IEditorViewModel.cs" />
     <Compile Include="InputMask.cs" />
     <Compile Include="IViewModel.cs" />
+    <Compile Include="Notification\NotificationModule.cs" />
+    <Compile Include="Notification\NotificationPopupViewModel.cs" />
+    <Compile Include="Notification\NotificationService.cs" />
+    <Compile Include="Notification\NotificationServiceView.xaml.cs">
+      <DependentUpon>NotificationServiceView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Notification\NotificationTemplateSelector.cs" />
     <Compile Include="Resolution.cs" />
     <Compile Include="Services\ApplicationSearch\ApplicationSearchModule.cs" />
     <Compile Include="Services\ApplicationSearch\ApplicationSearchService.cs" />
@@ -271,6 +278,10 @@
     <Page Include="DebugTool\ViewModelExplorer\ViewModelExplorerView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Notification\NotificationServiceView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Services\ApplicationSearch\SearchView.xaml">
       <SubType>Designer</SubType>

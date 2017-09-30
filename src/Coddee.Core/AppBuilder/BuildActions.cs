@@ -17,6 +17,7 @@ namespace Coddee.AppBuilder
         public const string AppConsole = nameof(AppConsole);
         public const string Login = nameof(Login);
         public const string Toast = nameof(Toast);
+        public const string Notification = nameof(Notification);
         public const string Navigation = nameof(Navigation);
         public const string DialogService = nameof(DialogService);
         public const string DebugTool = nameof(DebugTool);

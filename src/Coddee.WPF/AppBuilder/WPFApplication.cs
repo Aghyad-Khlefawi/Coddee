@@ -42,6 +42,11 @@ namespace Coddee.WPF
             var factory = _container.Resolve<WPFApplicationBuilder>();
             BuildApplication(factory);
         }
+        public void Run(StartupEventArgs startupEventArgs, Action<IWPFApplicationBuilder> BuildApplication)
+        {
+            _container.RegisterInstance(startupEventArgs);
+            Run(BuildApplication);
+        }
 
         /// <summary>
         /// Dependency container

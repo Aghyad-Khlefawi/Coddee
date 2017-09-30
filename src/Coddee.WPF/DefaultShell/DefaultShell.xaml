@@ -99,11 +99,18 @@
                                 Region="{x:Static defaultShell:DefaultRegions.ApplicationMainRegion}" />
                         </DockPanel>
 
-                        <controls:RegionControl HorizontalAlignment="Right"
-                                                Margin="0 5 10 5"
-                                                MaxWidth="300"
-                                                Region="{x:Static defaultShell:DefaultRegions.ToastRegion}"
-                                                Grid.Column="1" />
+                        <Grid HorizontalAlignment="Right" Margin="0 5 10 5">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height=".4*"/>
+                                <RowDefinition Height=".6*"/>
+                            </Grid.RowDefinitions>
+                            <controls:RegionControl Width="300" 
+                                                    Region="{x:Static defaultShell:DefaultRegions.ToastRegion}" />
+                            <controls:RegionControl Grid.Row="1"
+                                                    VerticalAlignment="Bottom"
+                                                    Region="{x:Static defaultShell:DefaultRegions.NotificationRegion}" />
+                        </Grid>
+
                     </Grid>
                     <controls:RegionControl HorizontalAlignment="Left"
                                             Region="{x:Static defaultShell:DefaultRegions.NavbarRegion}" />

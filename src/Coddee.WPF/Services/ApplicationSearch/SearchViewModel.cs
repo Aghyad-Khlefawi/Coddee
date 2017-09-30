@@ -121,6 +121,7 @@ namespace Coddee.Services.ApplicationSearch
 
         public void Focus()
         {
+            View.SearchBox.Focus();
             Keyboard.Focus(View.SearchBox);
         }
 

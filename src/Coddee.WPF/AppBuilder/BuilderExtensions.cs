@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using Coddee.Loggers;
+using Coddee.Notification;
 using Coddee.Services;
 using Coddee.WPF.DefaultShell;
 using Coddee.WPF.Events;
@@ -156,7 +157,7 @@ namespace Coddee.AppBuilder
             builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.ShellBuildAction((container) =>
             {
                 var wpfApplication = container.Resolve<WPFApplication>();
-                var shellViewModel = BuildCustomShell<TShellViewModel>( config, container);
+                var shellViewModel = BuildCustomShell<TShellViewModel>(config, container);
                 var loginViewModel = container.Resolve<TLogin>();
                 BuildLogin(container, wpfApplication, shellViewModel, loginViewModel);
             }));
@@ -342,6 +343,21 @@ namespace Coddee.AppBuilder
                 container.Resolve<IToastService>().Initialize(toastRegion, duration);
             }));
             return builder;
+        }
+
+        public static IApplicationBuilder UseNotification(this IApplicationBuilder builder,Region notificationRegion,double duration)
+        {
+            builder.BuildActionsCoordinator.AddActionAfter(new BuildAction(BuildActionsKeys.Notification,
+                                                                           container =>
+                                                                           {
+                                                                               NotificationService service= (NotificationService)container.Resolve<INotificationService>();
+                                                                               service.Inititlize(notificationRegion,duration);
+                                                                           }), BuildActionsKeys.Toast);
+            return builder;
+        }
+        public static IApplicationBuilder UseNotification(this IApplicationBuilder builder)
+        {
+            return builder.UseNotification(DefaultRegions.NotificationRegion, 5000);
         }
     }
 

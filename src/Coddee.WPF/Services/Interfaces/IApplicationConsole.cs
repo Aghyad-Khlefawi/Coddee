@@ -53,5 +53,10 @@ namespace Coddee.Services
         /// Execute a command
         /// </summary>
         void Execute(string commandString);
+
+        /// <summary>
+        /// Execute a command
+        /// </summary>
+        void Execute(ConsoleCommand command);
     }
 }

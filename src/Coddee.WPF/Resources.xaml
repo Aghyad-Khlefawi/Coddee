@@ -3,12 +3,19 @@
                     xmlns:local="clr-namespace:Coddee.WPF"
                     xmlns:converters="clr-namespace:Coddee.WPF.Converters"
                     xmlns:system="clr-namespace:System;assembly=mscorlib"
-                    xmlns:controls="clr-namespace:Coddee.WPF.Controls">
+                    xmlns:controls="clr-namespace:Coddee.WPF.Controls"
+                    xmlns:notification="clr-namespace:Coddee.Notification">
 
     <system:Double x:Key="MenuWidth">50</system:Double>
 
     <SolidColorBrush x:Key="ErrorColor"
                      Color="#D91D1D" />
+    <SolidColorBrush x:Key="WarningColor" 
+                     Color="#FFF39524"/>
+    <SolidColorBrush x:Key="WarningColorDarker" 
+                     Color="#C97D21"/>
+    <SolidColorBrush x:Key="ErrorColorDarker"
+                     Color="#C01D1D"/>
 
     <!--#region Consts-->
     <system:Int32 x:Key="Int32_0">0</system:Int32>
@@ -583,6 +590,101 @@
         </Grid>
 
     </DataTemplate>
+
+    <DataTemplate x:Key="InformationNotificationTemplate">
+        <Button 
+            Height="90"
+            Width="400"
+            Margin="0 0 0 5"
+            Command="{Binding OpenCommand}">
+            <Button.Template>
+                <ControlTemplate>
+                    <Border Background="{DynamicResource ApplicationAccentColor}"
+                            BorderThickness="2"
+                            BorderBrush="{DynamicResource ApplicationAccentColorDarker}">
+                        <DockPanel Margin="5 0 0 0">
+                            <Path Style="{StaticResource Shape_Information}" Height="40" Margin="5 0 10 0"/>
+                            <DockPanel DockPanel.Dock="Top">
+                                <Button Style="{StaticResource HighlightButton}" DockPanel.Dock="Right" Margin="5"
+                                        Command="{Binding CloseCommand}">
+                                    <Path Style="{StaticResource Shape_Exit}" Height="15" />
+                                </Button>
+                                <StackPanel Orientation="Horizontal" DockPanel.Dock="Left" HorizontalAlignment="Left">
+                                    <TextBlock Margin="0 5 0 0" FontSize="16" FontWeight="Medium" TextTrimming="CharacterEllipsis" Text="{Binding Title}" Foreground="White" />
+                                </StackPanel>
+                            </DockPanel>
+                            <TextBlock Text="{Binding Description}" TextWrapping="Wrap" TextTrimming="WordEllipsis" Height="50" Margin="0 0 10 5" VerticalAlignment="Center" Foreground="AliceBlue" FontSize="14" />
+                        </DockPanel>
+                    </Border>
+
+                </ControlTemplate>
+            </Button.Template>
+        </Button>
+    </DataTemplate>
+    <DataTemplate x:Key="WarningNotificationTemplate">
+        <Button 
+            Height="90"
+            Width="400"
+            Margin="0 0 0 5"
+            Command="{Binding OpenCommand}">
+            <Button.Template>
+                <ControlTemplate>
+                    <Border BorderThickness="2"
+                            BorderBrush="{StaticResource WarningColorDarker}"
+                            Background="{DynamicResource WarningColor}">
+                        <DockPanel Margin="5 0 0 0">
+                            <Path Style="{StaticResource Shape_Warning}" Height="40" Margin="5 0 10 0"/>
+                            <DockPanel DockPanel.Dock="Top">
+                                <Button Style="{StaticResource HighlightButton}" Background="{StaticResource WarningColor}" DockPanel.Dock="Right" Margin="5"
+                                        Command="{Binding CloseCommand}">
+                                    <Path Style="{StaticResource Shape_Exit}" Height="15" />
+                                </Button>
+                                <StackPanel Orientation="Horizontal" DockPanel.Dock="Left" HorizontalAlignment="Left">
+                                    <TextBlock Margin="0 5 0 0" FontSize="16" FontWeight="Medium" TextTrimming="CharacterEllipsis" Text="{Binding Title}" Foreground="White" />
+                                </StackPanel>
+                            </DockPanel>
+                            <TextBlock Text="{Binding Description}" TextWrapping="Wrap" TextTrimming="WordEllipsis" Height="50" Margin="0 0 10 5" VerticalAlignment="Center" Foreground="AliceBlue" FontSize="14" />
+                        </DockPanel>
+                    </Border>
+
+                </ControlTemplate>
+            </Button.Template>
+        </Button>
+    </DataTemplate>
+    <DataTemplate x:Key="ErrorNotificationTemplate">
+        <Button 
+            Height="90"
+            Width="400"
+            Margin="0 0 0 5"
+            Command="{Binding OpenCommand}">
+            <Button.Template>
+                <ControlTemplate>
+                    <Border BorderThickness="2"
+                            BorderBrush="{StaticResource ErrorColorDarker}"
+                            Background="{StaticResource ErrorColor}">
+                        <DockPanel Margin="5 0 0 0">
+                            <Path Style="{StaticResource Shape_Error}" Height="40" Margin="5 0 10 0"/>
+                            <DockPanel DockPanel.Dock="Top">
+                                <Button Style="{StaticResource HighlightButton}" Background="{StaticResource ErrorColor}" DockPanel.Dock="Right" Margin="5"
+                                        Command="{Binding CloseCommand}">
+                                    <Path Style="{StaticResource Shape_Exit}" Height="15" />
+                                </Button>
+                                <StackPanel Orientation="Horizontal" DockPanel.Dock="Left" HorizontalAlignment="Left">
+                                    <TextBlock Margin="0 5 0 0" FontSize="16" FontWeight="Medium" TextTrimming="CharacterEllipsis" Text="{Binding Title}" Foreground="White" />
+                                </StackPanel>
+                            </DockPanel>
+                            <TextBlock Text="{Binding Description}" TextWrapping="Wrap" TextTrimming="WordEllipsis" Height="50" Margin="0 0 10 5" VerticalAlignment="Center" Foreground="AliceBlue" FontSize="14" />
+                        </DockPanel>
+                    </Border>
+
+                </ControlTemplate>
+            </Button.Template>
+        </Button>
+    </DataTemplate>
+    <notification:NotificationTemplateSelector x:Key="NotificationTemplateSelector"
+                                        InformationTemplate="{StaticResource InformationNotificationTemplate}"
+                                        WarningTemplate="{StaticResource WarningNotificationTemplate}"
+                                        ErrorTemplate="{StaticResource ErrorNotificationTemplate}"/>
 
     <!--#endregion-->
 

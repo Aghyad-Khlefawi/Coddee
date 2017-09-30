@@ -150,7 +150,7 @@ namespace Coddee.Services.ApplicationConsole
         /// <param name="shell"></param>
         public void Initialize(IShell shell, LogRecordTypes logLevel)
         {
-            var shellWindow = (Window) shell;
+            var shellWindow = (Window)shell;
             _logger.Initialize(logLevel);
             //Check if the root element of the shell is grid
             //if not a grid will be created and the original content added to it
@@ -160,7 +160,7 @@ namespace Coddee.Services.ApplicationConsole
                 grid = new Grid();
                 var oldContent = shellWindow.Content;
                 shellWindow.Content = null;
-                grid.Children.Add((UIElement) oldContent);
+                grid.Children.Add((UIElement)oldContent);
                 shellWindow.Content = grid;
             }
             grid.Children.Add(GetView());
@@ -203,28 +203,28 @@ namespace Coddee.Services.ApplicationConsole
         private void AddDefaultCommandHandlers()
         {
             _defaultCommandHandlers[DefaultCommands.RestartCommand.Name] =
-                new List<EventHandler<ConsoleCommandArgs>> {OnRestartCommand};
+                new List<EventHandler<ConsoleCommandArgs>> { OnRestartCommand };
 
             _defaultCommandHandlers[DefaultCommands.HelpCommand.Name] =
-                new List<EventHandler<ConsoleCommandArgs>> {OnHelpCommand};
+                new List<EventHandler<ConsoleCommandArgs>> { OnHelpCommand };
 
             _defaultCommandHandlers[DefaultCommands.ExitCommand.Name] =
-                new List<EventHandler<ConsoleCommandArgs>> {OnExitCommand};
+                new List<EventHandler<ConsoleCommandArgs>> { OnExitCommand };
 
             _defaultCommandHandlers[DefaultCommands.ShowGlobalsCommand.Name] =
-                new List<EventHandler<ConsoleCommandArgs>> {OnShowGlobalsCommand};
+                new List<EventHandler<ConsoleCommandArgs>> { OnShowGlobalsCommand };
 
             _defaultCommandHandlers[DefaultCommands.CMDCommand.Name] =
-                new List<EventHandler<ConsoleCommandArgs>> {OnCMDCommand};
+                new List<EventHandler<ConsoleCommandArgs>> { OnCMDCommand };
 
             _defaultCommandHandlers[DefaultCommands.ClearCommand.Name] =
-                new List<EventHandler<ConsoleCommandArgs>> {OnClearCommand};
+                new List<EventHandler<ConsoleCommandArgs>> { OnClearCommand };
 
             _defaultCommandHandlers[DefaultCommands.SetScreenCommand.Name] =
-                new List<EventHandler<ConsoleCommandArgs>> {OnSetScreenCommand};
+                new List<EventHandler<ConsoleCommandArgs>> { OnSetScreenCommand };
 
             _defaultCommandHandlers[DefaultCommands.SetLanguageCommand.Name] =
-                new List<EventHandler<ConsoleCommandArgs>> {OnSetLanguageCommand};
+                new List<EventHandler<ConsoleCommandArgs>> { OnSetLanguageCommand };
         }
 
         private void OnSetLanguageCommand(object sender, ConsoleCommandArgs e)
@@ -385,6 +385,11 @@ namespace Coddee.Services.ApplicationConsole
                     WriteToConsole(result);
                     WriteToConsole(Environment.NewLine);
                 }
+        }
+
+        public void Execute(ConsoleCommand command)
+        {
+            Execute(command.Name);
         }
 
         /// <summary>

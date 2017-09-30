@@ -2,6 +2,7 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
 using System;
+using Coddee.Notification;
 using Coddee.Services.ApplicationConsole;
 using Coddee.SQL;
 using Coddee.WPF.DebugTool;
@@ -25,6 +26,7 @@ namespace Coddee.ModuleDefinitions
            typeof(ViewModelManagerModule),
            typeof(SQLDBBrowserModule),
            typeof(ApplicationSearchModule),
+           typeof(NotificationModule)
        };
    }
 }

@@ -9,5 +9,6 @@ namespace Coddee.WPF.DefaultShell
         public static Region ToastRegion { get; } = Region.CreateRegion(nameof(ToastRegion));
         public static Region NavbarRegion { get; } = Region.CreateRegion(nameof(NavbarRegion));
         public static Region DialogRegion { get; } = Region.CreateRegion(nameof(DialogRegion));
+        public static Region NotificationRegion { get; } = Region.CreateRegion(nameof(NotificationRegion));
     }
 }

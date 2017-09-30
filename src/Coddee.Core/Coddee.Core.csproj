@@ -64,6 +64,11 @@
     <Compile Include="Globals.cs" />
     <Compile Include="IContainer.cs" />
     <Compile Include="Math.cs" />
+    <Compile Include="Notification\INotification.cs" />
+    <Compile Include="Notification\INotificationService.cs" />
+    <Compile Include="Notification\NotificationBase.cs" />
+    <Compile Include="Notification\Notifications.cs" />
+    <Compile Include="Notification\NotificationTypes.cs" />
     <Compile Include="Security.cs" />
     <Compile Include="CoreModulesDefnitions.cs" />
     <Compile Include="GlobalEvent.cs" />

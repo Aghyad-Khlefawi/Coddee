@@ -87,15 +87,17 @@ namespace Coddee.WPF.Commands
         {
             observedObject.PropertyChanged += (sender, args) =>
             {
+
                 if (_observedProperties.Any(e => e.ObservedPropertyName == args.PropertyName))
                 {
                     UpdateCanExecute();
                 }
+
             };
         }
 
 
-      
+
 
         public IReactiveCommand ObserveProperty(string propertyName, Validator validator)
         {
@@ -105,21 +107,25 @@ namespace Coddee.WPF.Commands
         }
 
         public virtual void UpdateCanExecute()
+
         {
-            bool canExecute = true;
-            foreach (var property in _observedProperties)
+            UISynchronizationContext.ExecuteOnUIContext(() =>
             {
-                if (!property.Validate())
+                bool canExecute = true;
+                foreach (var property in _observedProperties)
                 {
-                    canExecute = false;
-                    break;
+                    if (!property.Validate())
+                    {
+                        canExecute = false;
+                        break;
+                    }
                 }
-            }
-            if (_canExecute != canExecute)
-            {
-                _canExecute = canExecute;
-                CanExecuteChanged?.Invoke(this, EventArgs.Empty);
-            }
+                if (_canExecute != canExecute)
+                {
+                    _canExecute = canExecute;
+                    CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+                }
+            });
         }
 
         public bool CanExecute()
