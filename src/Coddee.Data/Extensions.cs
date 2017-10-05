@@ -1,7 +1,9 @@
 ﻿// Copyright (c) Aghyad khlefawi. All rights reserved.  
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Coddee.Collections;
 
@@ -91,6 +93,11 @@ namespace Coddee.Data
             var collection = AsyncObservableCollection<T>.Create(items);
             collection.BindToRepositoryChanges(repo);
             return collection;
+        }
+
+        public static async Task<IEnumerable<TResult>> Select<T, TResult>(this Task<IEnumerable<T>> collection,Func<T,TResult> func)
+        {
+            return (await collection).Select(func);
         }
     }
 }

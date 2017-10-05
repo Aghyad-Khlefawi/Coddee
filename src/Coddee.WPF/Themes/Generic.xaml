@@ -5,7 +5,11 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:Coddee.WPF.Controls"
                     xmlns:converters="clr-namespace:Coddee.WPF.Converters"
-                    xmlns:system="clr-namespace:System;assembly=mscorlib">
+                    xmlns:system="clr-namespace:System;assembly=mscorlib"
+                    xmlns:wpf="clr-namespace:Coddee.WPF">
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="pack://application:,,,/Coddee.WPF;component/Resources.xaml" />
+    </ResourceDictionary.MergedDictionaries>
     <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
 
     <Style TargetType="{x:Type local:RegionControl}">
@@ -871,6 +875,152 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:ViewModelPresenter}">
                     <ContentPresenter Content="{Binding ViewModel.View,RelativeSource={RelativeSource TemplatedParent}}"/>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type local:Wizard}">
+        <Style.Resources>
+            <Style x:Key="StepRect"
+                   TargetType="Rectangle">
+                <Setter Property="Height"
+                        Value="11" />
+                <Setter Property="VerticalAlignment"
+                        Value="Center" />
+                <Setter Property="Width"
+                        Value="80" />
+                <Setter Property="Fill"
+                        Value="LightGray" />
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding IsCompleted}"
+                                 Value="true">
+                        <Setter Property="Fill"
+                                Value="{DynamicResource ApplicationAccentColor}" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding IsCurrent}"
+                                 Value="true">
+                        <Setter Property="Fill"
+                                Value="{DynamicResource ApplicationAccentColorDarker}" />
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+            <Style x:Key="StepEllipse"
+                   TargetType="Ellipse">
+                <Setter Property="Height"
+                        Value="25" />
+                <Setter Property="Width"
+                        Value="25" />
+                <Setter Property="Fill"
+                        Value="LightGray" />
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding IsCompleted}"
+                                 Value="true">
+                        <Setter Property="Fill"
+                                Value="{DynamicResource ApplicationAccentColor}" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding IsCurrent}"
+                                 Value="true">
+                        <Setter Property="Fill"
+                                Value="{DynamicResource ApplicationAccentColorDarker}" />
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+            <DataTemplate x:Key="FirstStepTemplate">
+                <DockPanel>
+                    <Grid DockPanel.Dock="Left">
+                        <Ellipse Style="{StaticResource StepEllipse}" />
+                        <Label Content="{Binding Title}"
+                               VerticalAlignment="Bottom"
+                               HorizontalAlignment="Center"
+                               Margin="0 0 0 -20" />
+                    </Grid>
+                    <Rectangle Style="{StaticResource StepRect}"
+                               Margin="-10 0 0 0" />
+                </DockPanel>
+            </DataTemplate>
+            <DataTemplate x:Key="LastStepTemplate">
+                <DockPanel>
+                    <Rectangle Margin="0 0 -5 0"
+                               Style="{StaticResource StepRect}" />
+                    <Grid Margin="-5 0 0 0"
+                          DockPanel.Dock="Left">
+                        <Ellipse Style="{StaticResource StepEllipse}" />
+                        <Label Content="{Binding Title}"
+                               VerticalAlignment="Bottom"
+                               HorizontalAlignment="Center"
+                               Margin="0 0 0 -20" />
+                    </Grid>
+                </DockPanel>
+
+            </DataTemplate>
+            <DataTemplate x:Key="StepTemplate">
+                <DockPanel>
+                    <Rectangle Style="{StaticResource StepRect}"
+                               Margin="0 0 -10 0" />
+                    <Grid DockPanel.Dock="Left">
+                        <Ellipse Style="{StaticResource StepEllipse}" />
+                        <Label Content="{Binding Title}"
+                               VerticalAlignment="Bottom"
+                               HorizontalAlignment="Center"
+                               Margin="0 0 0 -20" />
+                    </Grid>
+                    <Rectangle Style="{StaticResource StepRect}"
+                               Margin="-10 0 0 0" />
+                </DockPanel>
+            </DataTemplate>
+        </Style.Resources>
+        <Setter Property="IsTabStop"
+                Value="False" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:Wizard}">
+                    <DockPanel>
+                        <DockPanel DockPanel.Dock="Bottom">
+                            <StackPanel Orientation="Horizontal"
+                                        HorizontalAlignment="Left">
+                                <Button Content="{wpf:Localize Cancel}"
+                                        Command="{Binding RelativeSource={RelativeSource TemplatedParent},Path=CancelCommand}"
+                                        Style="{StaticResource DialogButton}" />
+                                <Button Content="{wpf:Localize Back}"
+                                        Margin="10 0 0 0"
+                                        Command="{Binding RelativeSource={RelativeSource TemplatedParent},Path=BackCommand}"
+                                        Style="{StaticResource DialogButton}" />
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal"
+                                        HorizontalAlignment="Right">
+                                <Button Content="{wpf:Localize Next}"
+                                        Command="{Binding RelativeSource={RelativeSource TemplatedParent},Path=NextCommand}"
+                                        Style="{StaticResource DialogButton}" />
+                                <Button Content="{wpf:Localize Save}"
+                                        Margin="10 0 0 0"
+                                        Command="{Binding RelativeSource={RelativeSource TemplatedParent},Path=SaveCommand}"
+                                        Style="{StaticResource DialogButton}" />
+                            </StackPanel>
+                        </DockPanel>
+                        <DockPanel DockPanel.Dock="Top"
+                                   HorizontalAlignment="Center">
+                            <ItemsControl ItemsSource="{Binding RelativeSource={RelativeSource TemplatedParent},Path=Steps}">
+                                <ItemsControl.ItemTemplateSelector>
+                                    <local:WizardStepTemplateSelector FirstStepTemplate="{StaticResource FirstStepTemplate}"
+                                                                         LastStepTemplate="{StaticResource LastStepTemplate}"
+                                                                         StepTemplate="{StaticResource StepTemplate}" />
+                                </ItemsControl.ItemTemplateSelector>
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                            </ItemsControl>
+
+                        </DockPanel>
+                        <DockPanel Margin="0 20 0 0">
+                            <ContentPresenter Margin="{Binding RelativeSource={RelativeSource TemplatedParent},Path=Padding}"
+                                              VerticalAlignment="{Binding RelativeSource={RelativeSource TemplatedParent},Path=VerticalContentAlignment}"
+                                              HorizontalAlignment="{Binding RelativeSource={RelativeSource TemplatedParent},Path=HorizontalContentAlignment}"
+                                              Content="{Binding RelativeSource={RelativeSource TemplatedParent},Path=CurrentStep.Content}" />
+                        </DockPanel>
+                    </DockPanel>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

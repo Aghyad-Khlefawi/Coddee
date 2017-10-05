@@ -40,9 +40,12 @@ namespace Coddee.Notification
             var timer = new Timer(_notificationDuration);
             timer.Elapsed += delegate
             {
-                Notifications.Remove(popup);
-                timer.Stop();
-                timer.Dispose();
+                ExecuteOnUIContext(() =>
+                {
+                    Notifications.Remove(popup);
+                    timer.Stop();
+                    timer.Dispose();
+                });
             };
             timer.Start();
             GC.KeepAlive(timer);

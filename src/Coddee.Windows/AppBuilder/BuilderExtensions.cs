@@ -109,29 +109,23 @@ namespace Coddee.AppBuilder
         }
 
         public static IApplicationBuilder UseMain(this IApplicationBuilder builder,
-                                                    Action entryPoint)
+                                                    Action<IContainer> entryPoint)
         {
-            builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.ConsoleMainBuildAction((container) =>
-            {
-                entryPoint();
-            }));
+            builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.ConsoleMainBuildAction(entryPoint));
             return builder;
         }
 
         public static IApplicationBuilder UseMain(this IApplicationBuilder builder,
                                                          IEntryPointClass entryPoint)
         {
-            builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.ConsoleMainBuildAction((container) =>
-            {
-                entryPoint.Start();
-            }));
+            builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.ConsoleMainBuildAction(entryPoint.Start));
             return builder;
         }
         public static IApplicationBuilder UseMain<T>(this IApplicationBuilder builder) where T : IEntryPointClass
         {
             builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.ConsoleMainBuildAction((container) =>
             {
-                container.Resolve<T>().Start();
+                container.Resolve<T>().Start(container);
             }));
             return builder;
         }
@@ -166,6 +160,6 @@ namespace Coddee.AppBuilder
                                                                                              }));
             return buillder;
         }
-       
+
     }
 }

@@ -15,6 +15,8 @@
                 <ResourceDictionary>
                     <SolidColorBrush x:Key="ApplicationAccentColor"
                                      Color="#065FCF" />
+                    <SolidColorBrush x:Key="ApplicationAccentColorDarker"
+                                     Color="#06438F" />
                     <SolidColorBrush x:Key="NavigationBarBorderBrush"
                                      Color="#065FCF" />
 

@@ -56,6 +56,15 @@ namespace Coddee.Services.ApplicationConsole
                 {"/l", "The new language."}
             }
         };
+        public static ConsoleCommand SetResolutionCommand = new ConsoleCommand
+        {
+            Name = "setres",
+            Description = "Changes the resolution of the application shell.",
+            SupportedArguments = new Dictionary<string, string>
+            {
+                {"/r", "The new resolution like 1080x1920 or 'FullScreen'."}
+            }
+        };
         public static ConsoleCommand CMDCommand = new ConsoleCommand
         {
             Name = "cmd",
@@ -64,6 +73,19 @@ namespace Coddee.Services.ApplicationConsole
             {
                 {"/c", "The command to execute."}
             }
+        };
+
+        public static ConsoleCommand[] AllCommands = new[]
+        {
+            DefaultCommands.RestartCommand,
+            DefaultCommands.HelpCommand,
+            DefaultCommands.ShowGlobalsCommand,
+            DefaultCommands.ClearCommand,
+            DefaultCommands.CMDCommand,
+            DefaultCommands.SetScreenCommand,
+            DefaultCommands.SetLanguageCommand,
+            DefaultCommands.SetResolutionCommand,
+            DefaultCommands.ExitCommand
         };
     }
 }

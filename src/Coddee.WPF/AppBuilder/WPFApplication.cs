@@ -2,9 +2,12 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using Coddee.AppBuilder;
 using Coddee.Services;
+using Coddee.Services.ApplicationConsole;
 using Coddee.WPF.Events;
 
 
@@ -32,20 +35,32 @@ namespace Coddee.WPF
 
         public static WPFApplication Current { get; protected set; }
 
-        public void Run(Action<IWPFApplicationBuilder> BuildApplication)
+        public void Run(Action<IWPFApplicationBuilder> BuildApplication, StartupEventArgs startupEventArgs)
         {
             Current = this;
             _systemApplication = Application.Current;
             _systemApplication.ShutdownMode = ShutdownMode.OnExplicitShutdown;
             _container.RegisterInstance<IApplication>(this);
             _container.RegisterInstance(this);
-            var factory = _container.Resolve<WPFApplicationBuilder>();
-            BuildApplication(factory);
+            var builder = _container.Resolve<WPFApplicationBuilder>();
+            ResolveStartupArgs(startupEventArgs);
+            BuildApplication(builder);
         }
-        public void Run(StartupEventArgs startupEventArgs, Action<IWPFApplicationBuilder> BuildApplication)
+
+        public IEnumerable<string> StartupCommandStrings { get; private set; }
+        public IEnumerable<CommandParseResult> StartupCommands { get; private set; }
+        private void ResolveStartupArgs(StartupEventArgs startupEventArgs)
         {
-            _container.RegisterInstance(startupEventArgs);
-            Run(BuildApplication);
+            var command = string.Concat(startupEventArgs.Args.Select(e => e + " ")).TrimEnd();
+            var commandParser = new ConsoleCommandParser();
+            commandParser.RegisterCommands(DefaultCommands.AllCommands);
+            StartupCommandStrings = command.Split('|');
+            var parsedCommands = new List<CommandParseResult>();
+            foreach (var cmd in StartupCommandStrings)
+            {
+                parsedCommands.Add(commandParser.ParseCommand(cmd));
+            }
+            StartupCommands = parsedCommands;
         }
 
         /// <summary>

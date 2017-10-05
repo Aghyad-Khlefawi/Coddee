@@ -341,6 +341,7 @@ namespace Coddee.WPF
         {
             return ReactiveCommand<ViewModelBase>.Create(this, handler);
         }
+        
         public ReactiveCommand<T> CreateReactiveCommand<T>(T obj, Action handler)
         {
             return ReactiveCommand<T>.Create(obj, handler);

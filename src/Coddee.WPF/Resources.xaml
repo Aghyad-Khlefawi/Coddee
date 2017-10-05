@@ -166,12 +166,24 @@
                 Value="24" />
         <Setter Property="Margin" Value="0 0 0 5" />
     </Style>
+    <Style x:Key="ButtonFocusVisualStyle" TargetType="Control">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Rectangle StrokeThickness="3" Margin="-2" Stroke="{DynamicResource ApplicationAccentColor}"
+                               Opacity=".8"
+                               Fill="Transparent"/>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
     <Style  x:Key="BorderedButton"  TargetType="Button" >
         <Setter Property="Foreground" Value="White"/>
         <Setter Property="BorderBrush" Value="{DynamicResource ApplicationAccentColorDarker}" />
         <Setter Property="Background" Value="{DynamicResource ApplicationAccentColor}" />
         <Setter Property="HorizontalContentAlignment" Value="Center"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="FocusVisualStyle" Value="{StaticResource ButtonFocusVisualStyle}"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate>
@@ -237,6 +249,7 @@
         <Setter Property="Foreground" Value="White" />
         <Setter Property="Padding"
                 Value="3" />
+        <Setter Property="FocusVisualStyle" Value="{StaticResource ButtonFocusVisualStyle}"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate>

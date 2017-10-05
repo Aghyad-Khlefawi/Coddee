@@ -69,5 +69,11 @@ namespace Coddee.WPF
             ViewModelBase.SetApplication((WPFApplication)_app);
             ViewModelBase.SetContainer(_container);
         }
+
+        private StartupEventArgs _startupEventArgs;
+        internal void SetStartupArgs(StartupEventArgs startupEventArgs)
+        {
+            _startupEventArgs = startupEventArgs;
+        }
     }
 }

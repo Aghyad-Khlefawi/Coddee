@@ -1,4 +1,4 @@
-﻿    // Copyright (c) Aghyad khlefawi. All rights reserved.  
+﻿// Copyright (c) Aghyad khlefawi. All rights reserved.  
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
 using System;
@@ -199,11 +199,16 @@ namespace Coddee.Collections
         /// <param name="item">The item to insert</param>
         public new bool Remove(T item)
         {
-            int index = Items.IndexOf(item);
-            if (index < 0)
-                return false;
-            RemoveItem(index);
-            return true;
+            bool res = false;
+            ExecuteOnSyncContext(() =>
+            {
+                int index = Items.IndexOf(item);
+                if (index < 0)
+                    res = false;
+                RemoveItem(index);
+                res = true;
+            });
+            return res;
         }
 
         /// <summary>

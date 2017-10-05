@@ -5,9 +5,13 @@ namespace Coddee
 {
     public class Globals
     {
+        //string
         public const string Username = nameof(Username);
+
+        //string
         public const string ApplicationName = nameof(ApplicationName);
 
+        //bool
         public const string UsingDefaultShell = nameof(UsingDefaultShell);
     }
 }

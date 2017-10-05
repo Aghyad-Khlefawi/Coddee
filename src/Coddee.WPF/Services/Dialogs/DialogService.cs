@@ -32,6 +32,11 @@ namespace Coddee.Services.Dialogs
             _dialogsRegion.View(this);
         }
 
+        public IDialog ShowContent(IPresentable content, bool showCloseButton = false)
+        {
+            return ShowContent(content.GetView(), showCloseButton);
+        }
+
         public IDialog ShowContent(UIElement content, bool showCloseButton = false)
         {
             var dialog = CreateDialog<ContentDialogViewModel>();
@@ -94,7 +99,7 @@ namespace Coddee.Services.Dialogs
             dialog.ZIndex = _dialogs.Count;
             _dialogs[dialog] = dialog.Container;
             _view.DialogsContainer.Children.Add(dialog.Container);
-            DialogDisplayed?.Invoke(this,dialog);
+            DialogDisplayed?.Invoke(this, dialog);
             return dialog;
         }
 
@@ -103,13 +108,13 @@ namespace Coddee.Services.Dialogs
         {
             var container = new DialogContainer
             {
-                DialogBorder = {Background = _dialogBorderBrush},
-                Presenter = {HorizontalAlignment = horizontalAlignment}
+                DialogBorder = { Background = _dialogBorderBrush },
+                Presenter = { HorizontalAlignment = horizontalAlignment }
             };
-            return CreateDialog<TType>(container,container.Presenter);
+            return CreateDialog<TType>(container, container.Presenter);
         }
 
-        public TType CreateDialog<TType>(UserControl container,ContentPresenter presenter) where TType : IDialog
+        public TType CreateDialog<TType>(UserControl container, ContentPresenter presenter) where TType : IDialog
         {
             var dialog = Resolve<TType>();
             return CreateDialog(dialog, container, presenter);
@@ -127,7 +132,7 @@ namespace Coddee.Services.Dialogs
         {
             _view.DialogsContainer.Children.Remove(_dialogs[dialog]);
             _dialogs.Remove(dialog);
-            DialogClosed?.Invoke(this,dialog);
+            DialogClosed?.Invoke(this, dialog);
         }
     }
 }

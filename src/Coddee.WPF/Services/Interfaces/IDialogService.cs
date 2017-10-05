@@ -18,6 +18,7 @@ namespace Coddee.Services
 
         void Initialize(Region dialogsRegion, SolidColorBrush dialogBorderBrush);
 
+        IDialog ShowContent(IPresentable content, bool showCloseButton=false);
         IDialog ShowContent(UIElement content, bool showCloseButton=false);
         IDialog ShowMessage(string message);
         IDialog ShowConfirmation(string message, Action OnYes, Action OnNo = null);

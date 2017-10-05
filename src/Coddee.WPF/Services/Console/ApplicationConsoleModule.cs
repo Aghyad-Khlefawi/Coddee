@@ -11,6 +11,7 @@ namespace Coddee.Services.ApplicationConsole
     {
         public Task Initialize(IContainer container)
         {
+            container.RegisterInstance<IConsoleCommandParser, ConsoleCommandParser>();
             container.RegisterInstance<IApplicationConsole, ApplicationConsoleService>();
             return Task.FromResult(true);
         }

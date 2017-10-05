@@ -23,11 +23,11 @@ namespace Coddee.Services.ApplicationConsole
     /// </summary>
     public class ApplicationConsoleService : ViewModelBase<ApplicationConsoleView>, IApplicationConsole
     {
-        public ApplicationConsoleService()
+        public ApplicationConsoleService(IConsoleCommandParser parser)
         {
             _logger = new StringLogger();
             _logger.AppendString += LoggerAppendString;
-            _parser = new ConsoleCommandParser();
+            _parser = parser;
             _defaultCommandHandlers = new Dictionary<string, List<EventHandler<ConsoleCommandArgs>>>();
             _commandHandlers = new Dictionary<string, List<EventHandler<ConsoleCommandArgs>>>();
             _commands = new List<ConsoleCommand>();
@@ -46,7 +46,7 @@ namespace Coddee.Services.ApplicationConsole
 
         private readonly List<ConsoleCommand> _commands;
         private readonly List<string> _executedCommands;
-        private readonly ConsoleCommandParser _parser;
+        private readonly IConsoleCommandParser _parser;
 
         private int _executedCommandIndex;
         /// <summary>
@@ -190,14 +190,7 @@ namespace Coddee.Services.ApplicationConsole
 
         private void AddDefaultCommands()
         {
-            AddCommands(DefaultCommands.RestartCommand,
-                        DefaultCommands.HelpCommand,
-                        DefaultCommands.ShowGlobalsCommand,
-                        DefaultCommands.ClearCommand,
-                        DefaultCommands.CMDCommand,
-                        DefaultCommands.SetScreenCommand,
-                        DefaultCommands.SetLanguageCommand,
-                        DefaultCommands.ExitCommand);
+            AddCommands(DefaultCommands.AllCommands);
         }
 
         private void AddDefaultCommandHandlers()
@@ -225,6 +218,38 @@ namespace Coddee.Services.ApplicationConsole
 
             _defaultCommandHandlers[DefaultCommands.SetLanguageCommand.Name] =
                 new List<EventHandler<ConsoleCommandArgs>> { OnSetLanguageCommand };
+
+            _defaultCommandHandlers[DefaultCommands.SetResolutionCommand.Name] =
+                new List<EventHandler<ConsoleCommandArgs>> { OnSetResolutionCommand };
+
+
+        }
+
+        private void OnSetResolutionCommand(object sender, ConsoleCommandArgs e)
+        {
+            UISynchronizationContext.ExecuteOnUIContext(() =>
+            {
+                var window = Resolve<IShell>() as Window;
+                if (!e.Arguments.ContainsKey("/r"))
+                {
+                    e.Result.Add("You must specify the /r argument.");
+                    e.Handled = false;
+                    return;
+                }
+                var res = e.Arguments["/r"];
+                if (res.ToLower() == "fullscreen")
+                {
+                    window.WindowState = WindowState.Maximized;
+                }
+                else
+                {
+                    var resWH = res.Split('x');
+                    window.WindowState = WindowState.Normal;
+                    window.Height = double.Parse(resWH[0]);
+                    window.Width = double.Parse(resWH[1]);
+                }
+            });
+            e.Handled = true;
         }
 
         private void OnSetLanguageCommand(object sender, ConsoleCommandArgs e)

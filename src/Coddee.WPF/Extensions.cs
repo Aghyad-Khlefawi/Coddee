@@ -64,5 +64,10 @@ namespace Coddee.WPF
             return command;
         }
 
+        public static async Task EnsureInitialization(this IViewModel vm)
+        {
+            if (!vm.IsInitialized)
+                await vm.Initialize();
+        }
     }
 }

@@ -26,7 +26,7 @@ namespace Coddee.Services.ApplicationConsole
     /// <summary>
     /// Console commands parser
     /// </summary>
-    public class ConsoleCommandParser
+    public class ConsoleCommandParser : IConsoleCommandParser
     {
         public ConsoleCommandParser()
         {

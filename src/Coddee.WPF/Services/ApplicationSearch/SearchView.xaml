@@ -25,16 +25,14 @@
         <controls:BusyIndicator IsBusy="{Binding IsBusy}"
                               Text="Initializing quick search..."
                               HideContentOnBusy="True"
-                              VerticalAlignment="Center"
                               FillColor="white">
-            <Grid VerticalAlignment="Center" Width="225">
+            <Grid Width="225">
                 <Border BorderThickness="1 1 1 0"
                         Height="26"
                         Visibility="{Binding ShowPopup}"
                         Margin="0 -1 0 0"
                         BorderBrush="{DynamicResource ApplicationAccentColorDarker}" />
-                <Border BorderThickness="1"
-                        Height="25"
+                <Border BorderThickness="0"
                         Margin="1"
                         Background="White"
                         BorderBrush="#FFABADB3">

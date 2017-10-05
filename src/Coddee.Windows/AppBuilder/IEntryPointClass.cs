@@ -5,6 +5,6 @@ namespace Coddee.Windows.AppBuilder
 {
     public interface IEntryPointClass
     {
-        void Start();
+        void Start(IContainer container);
     }
 }
