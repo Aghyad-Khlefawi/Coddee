@@ -12,6 +12,7 @@
              d:DesignHeight="300">
     <UserControl.Resources>
         <local:MainViewModel x:Key="designData" />
+
     </UserControl.Resources>
     <controls:BusyIndicator IsBusy="{Binding IsBusy}" >
         <DockPanel d:DataContext="{StaticResource designData}"
@@ -28,5 +29,6 @@
                                         Presentable="{Binding StatesViewModel}" />
             </controls:TabsPanel>
         </DockPanel>
+        
     </controls:BusyIndicator>
 </UserControl>

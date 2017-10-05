@@ -2,6 +2,7 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Coddee;
@@ -150,6 +151,10 @@ namespace HR.Clients.WPF.Companies
                 Employees.Remove(e=>e.ID == args.Item.ID);
             ToastSuccess();
         }
-        
+
+        public override IEnumerable<string> Validate()
+        {
+            return new[] {"Error"};
+        }
     }
 }

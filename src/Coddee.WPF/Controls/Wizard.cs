@@ -94,12 +94,12 @@ namespace Coddee.WPF.Controls
             get { return (WizardStep)GetValue(CurrentStepProperty); }
             set
             {
+                CurrentStep?.Validate();
                 CurrentStep?.SetCurrent(false);
                 SetValue(CurrentStepProperty, value);
                 RefreshCommands();
                 value?.SetCompleted(true);
                 value?.SetCurrent(true);
-
                 Content = value?.Content;
             }
         }
@@ -273,6 +273,34 @@ namespace Coddee.WPF.Controls
                                                         typeof(WizardStep),
                                                         new PropertyMetadata(default(object)));
 
+        public static readonly DependencyPropertyKey IsValidatedPropertyKey = DependencyProperty.RegisterReadOnly(
+                                                                      "IsValidated",
+                                                                      typeof(bool),
+                                                                      typeof(WizardStep),
+                                                                      new PropertyMetadata(default(bool)));
+
+        public static readonly DependencyProperty IsValidatedProperty = IsValidatedPropertyKey.DependencyProperty;
+
+        public static readonly DependencyPropertyKey IsValidPropertyKey = DependencyProperty.RegisterReadOnly(
+                                                                      "IsValid",
+                                                                      typeof(bool),
+                                                                      typeof(WizardStep),
+                                                                      new PropertyMetadata(default(bool)));
+
+        public static readonly DependencyProperty IsValidProperty = IsValidPropertyKey.DependencyProperty;
+
+        public bool IsValid
+        {
+            get { return (bool) GetValue(IsValidProperty); }
+            protected set { SetValue(IsValidPropertyKey, value); }
+        }
+
+        public bool IsValidated
+        {
+            get { return (bool) GetValue(IsValidatedProperty); }
+            protected set { SetValue(IsValidatedPropertyKey, value); }
+        }
+
         public object Content
         {
             get { return (object) GetValue(ContentProperty); }
@@ -321,7 +349,14 @@ namespace Coddee.WPF.Controls
             {
                 SetValue(ViewModelProperty, value);
                 UpdateContent();
+                value.Validated += ViewModelValidated;
             }
+        }
+
+        private void ViewModelValidated(object sender, System.Collections.Generic.IEnumerable<string> res)
+        {
+            IsValidated = true;
+            IsValid = res == null || !res.Any();
         }
 
         private static void ViewModelSet(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -365,6 +400,18 @@ namespace Coddee.WPF.Controls
         public void SetCurrent(bool newValue)
         {
             IsCurrent = newValue;
+        }
+
+        public void Validate()
+        {
+            if (ViewModel == null)
+            {
+                IsValidated = false;
+                return;
+            }
+            var res = ViewModel.Validate();
+            IsValidated = true;
+            IsValid = res == null || !res.Any();
         }
     }
 

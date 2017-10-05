@@ -930,11 +930,22 @@
                         <Setter Property="Fill"
                                 Value="{DynamicResource ApplicationAccentColor}" />
                     </DataTrigger>
+                    <MultiDataTrigger>
+                        <MultiDataTrigger.Conditions>
+                            <Condition Binding="{Binding IsValid}"
+                                       Value="false" />
+                            <Condition Binding="{Binding IsValidated}"
+                                       Value="true" />
+                        </MultiDataTrigger.Conditions>
+                        <Setter Property="Fill"
+                                Value="{DynamicResource ErrorColor}" />
+                    </MultiDataTrigger>
                     <DataTrigger Binding="{Binding IsCurrent}"
                                  Value="true">
                         <Setter Property="Fill"
                                 Value="{DynamicResource ApplicationAccentColorDarker}" />
                     </DataTrigger>
+                    
                 </Style.Triggers>
             </Style>
             <Style x:Key="StepTitle"
@@ -970,20 +981,46 @@
                         <Setter Property="Fill"
                                 Value="{DynamicResource ApplicationAccentColor}" />
                     </DataTrigger>
+                    <MultiDataTrigger>
+                        <MultiDataTrigger.Conditions>
+                            <Condition Binding="{Binding IsValid}"
+                                       Value="false"/>
+                            <Condition Binding="{Binding IsValidated}"
+                                       Value="true" />
+                           </MultiDataTrigger.Conditions>
+                        <Setter Property="Fill"
+                                Value="{DynamicResource ErrorColor}" />
+                    </MultiDataTrigger>
+                   
                     <DataTrigger Binding="{Binding IsCurrent}"
                                  Value="true">
                         <Setter Property="Fill"
                                 Value="{DynamicResource ApplicationAccentColorDarker}" />
                     </DataTrigger>
+                 
                 </Style.Triggers>
             </Style>
 
             <DataTemplate x:Key="FirstStepTemplate">
                 <StackPanel>
                     <StackPanel Orientation="Horizontal">
-                        <Ellipse Style="{StaticResource StepEllipse}" />
+                        <Grid>
+                            <Ellipse Style="{StaticResource StepEllipse}" />
+                            <Grid Visibility="{Binding IsValidated,Converter={StaticResource BoolToVisibilityConverter}}">
+                                <Path Style="{StaticResource Shape_CheckMark}"
+                                      VerticalAlignment="Center"
+                                      Height="10"
+                                      Visibility="{Binding IsValid,Converter={StaticResource BoolToVisibilityConverter}}"
+                                      HorizontalAlignment="Center" />
+                                <Path Style="{StaticResource Shape_Exit}"
+                                      VerticalAlignment="Center"
+                                      Visibility="{Binding IsValid,Converter={StaticResource BoolToVisibilityConverter},ConverterParameter=R}"
+                                      Height="12"
+                                      HorizontalAlignment="Center" />
+                            </Grid>
+                        </Grid>
                         <Rectangle Style="{StaticResource StepRect}"
-                                   Margin="-10 0 0 0" />
+                                   Margin="-5 0 0 0" />
                     </StackPanel>
                     <TextBlock Style="{StaticResource StepTitle}"
                                Margin="-28 5 0 0" />
@@ -995,7 +1032,21 @@
                         <Rectangle Margin="0 0 -5 0"
                                    Style="{StaticResource StepRect}" />
 
-                        <Ellipse Style="{StaticResource StepEllipse}" />
+                        <Grid>
+                            <Ellipse Style="{StaticResource StepEllipse}" />
+                            <Grid Visibility="{Binding IsValidated,Converter={StaticResource BoolToVisibilityConverter}}">
+                                <Path Style="{StaticResource Shape_CheckMark}"
+                                      VerticalAlignment="Center"
+                                      Height="10"
+                                      Visibility="{Binding IsValid,Converter={StaticResource BoolToVisibilityConverter}}"
+                                      HorizontalAlignment="Center" />
+                                <Path Style="{StaticResource Shape_Exit}"
+                                      VerticalAlignment="Center"
+                                      Visibility="{Binding IsValid,Converter={StaticResource BoolToVisibilityConverter},ConverterParameter=R}"
+                                      Height="12"
+                                      HorizontalAlignment="Center" />
+                            </Grid>
+                        </Grid>
                     </StackPanel>
                     <TextBlock Style="{StaticResource StepTitle}"
                                Margin="0 5 -28 0"
@@ -1007,10 +1058,24 @@
                 <StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <Rectangle Style="{StaticResource StepRect}"
-                                   Margin="0 0 -10 0" />
-                        <Ellipse Style="{StaticResource StepEllipse}" />
+                                   Margin="0 0 -5 0" />
+                        <Grid>
+                            <Ellipse Style="{StaticResource StepEllipse}" />
+                            <Grid Visibility="{Binding IsValidated,Converter={StaticResource BoolToVisibilityConverter}}">
+                                <Path Style="{StaticResource Shape_CheckMark}"
+                                      VerticalAlignment="Center"
+                                      Height="10"
+                                      Visibility="{Binding IsValid,Converter={StaticResource BoolToVisibilityConverter}}"
+                                      HorizontalAlignment="Center" />
+                                <Path Style="{StaticResource Shape_Exit}"
+                                      VerticalAlignment="Center"
+                                      Visibility="{Binding IsValid,Converter={StaticResource BoolToVisibilityConverter},ConverterParameter=R}"
+                                      Height="12"
+                                      HorizontalAlignment="Center" />
+                            </Grid>
+                        </Grid>
                         <Rectangle Style="{StaticResource StepRect}"
-                                   Margin="-10 0 0 0" />
+                                   Margin="-5 0 0 0" />
                     </StackPanel>
                     <TextBlock Style="{StaticResource StepTitle}"
                                HorizontalAlignment="Center"

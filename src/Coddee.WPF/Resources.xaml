@@ -92,6 +92,12 @@
         <Setter Property="Data"
                 Value="M10.6,1.4H0V0h10.6V1.4z" />
     </Style>
+    <Style x:Key="Shape_CheckMark"
+           TargetType="Path"
+           BasedOn="{StaticResource ShapeBase}">
+        <Setter Property="Data"
+                Value="M28.718018,0L32,3.2819897 10.666016,24.616999 0,13.951997 3.2810059,10.670007 10.666016,18.055033z" />
+    </Style>
     <Style x:Key="Shape_Success"
            TargetType="{x:Type Path}"
            BasedOn="{StaticResource ShapeBase}">
@@ -698,6 +704,7 @@
                                         InformationTemplate="{StaticResource InformationNotificationTemplate}"
                                         WarningTemplate="{StaticResource WarningNotificationTemplate}"
                                         ErrorTemplate="{StaticResource ErrorNotificationTemplate}"/>
+ 
 
     <!--#endregion-->
 

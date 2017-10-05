@@ -19,6 +19,8 @@ namespace Coddee.WPF
         Task Initialize();
 
         RequiredFieldCollection RequiredFields { get; }
+        IEnumerable<string> Validate();
+        event EventHandler<IEnumerable<string>> Validated;
     }
 
     public interface IPresentableViewModel : IViewModel, IPresentable

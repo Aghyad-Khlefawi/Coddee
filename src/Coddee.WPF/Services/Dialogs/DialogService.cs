@@ -32,15 +32,16 @@ namespace Coddee.Services.Dialogs
             _dialogsRegion.View(this);
         }
 
-        public IDialog ShowContent(IPresentable content, bool showCloseButton = false)
+        public IDialog ShowContent(IPresentable content, bool showCloseButton = false, HorizontalAlignment horizontalAlignment = HorizontalAlignment.Center)
         {
-            return ShowContent(content.GetView(), showCloseButton);
+            return ShowContent(content.GetView(), showCloseButton, horizontalAlignment);
         }
 
-        public IDialog ShowContent(UIElement content, bool showCloseButton = false)
+        public IDialog ShowContent(UIElement content, bool showCloseButton = false, HorizontalAlignment horizontalAlignment = HorizontalAlignment.Center)
         {
-            var dialog = CreateDialog<ContentDialogViewModel>();
+            var dialog = CreateDialog<ContentDialogViewModel>(horizontalAlignment);
             dialog.ShowCloseButton = showCloseButton;
+            dialog.View.Presenter.HorizontalAlignment = horizontalAlignment;
             dialog.Content = content;
             return ShowDialog(dialog);
         }

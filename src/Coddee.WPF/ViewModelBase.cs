@@ -334,8 +334,11 @@ namespace Coddee.WPF
                         errors.Add(error);
                 }
             }
+            Validated?.Invoke(this,errors);
             return errors;
         }
+
+        public event EventHandler<IEnumerable<string>> Validated;
 
         public ReactiveCommand<ViewModelBase> CreateReactiveCommand(Action handler)
         {
