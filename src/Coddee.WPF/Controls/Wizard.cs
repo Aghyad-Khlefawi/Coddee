@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows;
@@ -191,6 +192,7 @@ namespace Coddee.WPF.Controls
             for (int i = 0; i < Steps.Count; i++)
             {
                 Steps[i].SetIndex(i);
+                Steps[i].Clicked = OnStepClick;
             }
             FirstStep?.ClearFisrtAndLast();
             LastStep?.ClearFisrtAndLast();
@@ -204,6 +206,11 @@ namespace Coddee.WPF.Controls
 
             CurrentStep = FirstStep;
 
+        }
+
+        private void OnStepClick(object sender, EventArgs e)
+        {
+            CurrentStep = (WizardStep)sender;
         }
     }
 
@@ -288,6 +295,8 @@ namespace Coddee.WPF.Controls
                                                                       new PropertyMetadata(default(bool)));
 
         public static readonly DependencyProperty IsValidProperty = IsValidPropertyKey.DependencyProperty;
+
+        public EventHandler Clicked;
 
         public bool IsValid
         {
@@ -412,6 +421,16 @@ namespace Coddee.WPF.Controls
             var res = ViewModel.Validate();
             IsValidated = true;
             IsValid = res == null || !res.Any();
+        }
+
+        public override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+            var button = GetTemplateChild("PART_BUTTON") as Button;
+            if (button != null)
+            {
+                button.Click += (sender, args) => Clicked?.Invoke(this, EventArgs.Empty);
+            }
         }
     }
 

@@ -15,7 +15,7 @@
 
     </UserControl.Resources>
     <controls:BusyIndicator IsBusy="{Binding IsBusy}" >
-        <DockPanel d:DataContext="{StaticResource designData}"
+        <!--<DockPanel d:DataContext="{StaticResource designData}"
                    Background="WhiteSmoke">
             <controls:TabsPanel Padding="5"
                                 HeaderForeground="{StaticResource ApplicationAccentColor}"
@@ -28,7 +28,17 @@
                 <controls:TabsPanelItem Header="{controls:Localize States}"
                                         Presentable="{Binding StatesViewModel}" />
             </controls:TabsPanel>
-        </DockPanel>
-        
+        </DockPanel>-->
+        <controls:Wizard >
+            <controls:WizardStep Title="Information"
+                                 ViewModel="{Binding CompaniesViewModel,NotifyOnSourceUpdated=True}">
+            </controls:WizardStep>
+            <controls:WizardStep Title="Warehouse Itmes"
+                                 ViewModel="{Binding StatesViewModel,NotifyOnSourceUpdated=True}">
+            </controls:WizardStep>
+            <controls:WizardStep Title="Warehouse Itmes"
+                                 ViewModel="{Binding StatesViewModel,NotifyOnSourceUpdated=True}">
+            </controls:WizardStep>
+        </controls:Wizard>
     </controls:BusyIndicator>
 </UserControl>

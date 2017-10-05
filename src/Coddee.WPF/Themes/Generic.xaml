@@ -1084,17 +1084,26 @@
             </DataTemplate>
 
         </Style.Resources>
+        <Setter Property="Foreground"
+                Value="Black" />
         <Setter Property="Template">
            <Setter.Value>
-               <ControlTemplate>
-                   <ContentPresenter Content="{Binding RelativeSource={RelativeSource TemplatedParent}}">
-                       <ContentPresenter.ContentTemplateSelector>
-                           <local:WizardStepTemplateSelector FirstStepTemplate="{StaticResource FirstStepTemplate}"
-                                                             LastStepTemplate="{StaticResource LastStepTemplate}"
-                                                             StepTemplate="{StaticResource StepTemplate}" />
-                        </ContentPresenter.ContentTemplateSelector>
-                    </ContentPresenter>
-               </ControlTemplate>
+               <ControlTemplate TargetType="{x:Type local:WizardStep}">
+                    <Button Foreground="{TemplateBinding Foreground}"
+                            Name="PART_BUTTON">
+                        <Button.Template>
+                            <ControlTemplate>
+                                <ContentPresenter Content="{Binding RelativeSource={RelativeSource AncestorType=local:WizardStep,Mode=FindAncestor}}">
+                                    <ContentPresenter.ContentTemplateSelector>
+                                        <local:WizardStepTemplateSelector FirstStepTemplate="{StaticResource FirstStepTemplate}"
+                                                                          LastStepTemplate="{StaticResource LastStepTemplate}"
+                                                                          StepTemplate="{StaticResource StepTemplate}" />
+                                    </ContentPresenter.ContentTemplateSelector>
+                                </ContentPresenter>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
