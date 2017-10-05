@@ -22,9 +22,9 @@ namespace Coddee.WPF.Controls
 
         public static readonly DependencyProperty StepsProperty = DependencyProperty.Register(
                                                         "Steps",
-                                                        typeof(ObservableCollection<WizardStep>),
+                                                        typeof(WizardStepsCollection),
                                                         typeof(Wizard),
-                                                        new PropertyMetadata(default(ObservableCollection<WizardStep>), StepsValueChanged));
+                                                        new PropertyMetadata(default(WizardStepsCollection), StepsValueChanged));
 
         public static readonly DependencyPropertyKey FirstStepPropertyKey = DependencyProperty.RegisterReadOnly(
                                                                                                                 "FirstStep",
@@ -63,6 +63,20 @@ namespace Coddee.WPF.Controls
                                                         typeof(Wizard),
                                                         new PropertyMetadata(default(ICommand)));
 
+        public static readonly DependencyPropertyKey ContentPropertyKey = DependencyProperty.RegisterReadOnly(
+                                                                      "Content",
+                                                                      typeof(object),
+                                                                      typeof(Wizard),
+                                                                      new PropertyMetadata(default(object)));
+
+        public static readonly DependencyProperty ContentProperty = ContentPropertyKey.DependencyProperty;
+
+        public object Content
+        {
+            get { return (object) GetValue(ContentProperty); }
+            protected set { SetValue(ContentPropertyKey, value); }
+        }
+
         public ICommand CancelCommand
         {
             get { return (ICommand) GetValue(CancelCommandProperty); }
@@ -85,6 +99,8 @@ namespace Coddee.WPF.Controls
                 RefreshCommands();
                 value?.SetCompleted(true);
                 value?.SetCurrent(true);
+
+                Content = value?.Content;
             }
         }
 
@@ -111,7 +127,7 @@ namespace Coddee.WPF.Controls
 
         public Wizard()
         {
-            Steps = new ObservableCollection<WizardStep>();
+            Steps = new WizardStepsCollection();
             Steps.CollectionChanged += (sender, args) =>
             {
                 RefreshSteps();
@@ -164,9 +180,9 @@ namespace Coddee.WPF.Controls
             }
         }
 
-        public ObservableCollection<WizardStep> Steps
+        public WizardStepsCollection Steps
         {
-            get { return (ObservableCollection<WizardStep>)GetValue(StepsProperty); }
+            get { return (WizardStepsCollection)GetValue(StepsProperty); }
             set { SetValue(StepsProperty, value); }
         }
 
@@ -176,7 +192,6 @@ namespace Coddee.WPF.Controls
             {
                 Steps[i].SetIndex(i);
             }
-
             FirstStep?.ClearFisrtAndLast();
             LastStep?.ClearFisrtAndLast();
 
@@ -192,8 +207,14 @@ namespace Coddee.WPF.Controls
         }
     }
 
-    public class WizardStep : DependencyObject
+    public class WizardStep : Control
     {
+
+        static WizardStep()
+        {
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(WizardStep), new FrameworkPropertyMetadata(typeof(WizardStep)));
+        }
+
         public static readonly DependencyProperty ViewModelProperty = DependencyProperty.Register(
                                                         "ViewModel",
                                                         typeof(IPresentableViewModel),
@@ -230,11 +251,6 @@ namespace Coddee.WPF.Controls
 
         public static readonly DependencyProperty IsLastStepProperty = IsLastStepPropertyKey.DependencyProperty;
 
-        public static readonly DependencyProperty ContentProperty = DependencyProperty.Register(
-                                                        "Content",
-                                                        typeof(object),
-                                                        typeof(WizardStep),
-                                                        new PropertyMetadata(default(object)));
 
         public static readonly DependencyPropertyKey IsCompletedPropertyKey = DependencyProperty.RegisterReadOnly(
                                                                       "IsCompleted",
@@ -251,7 +267,17 @@ namespace Coddee.WPF.Controls
                                                                       new PropertyMetadata(default(bool)));
 
         public static readonly DependencyProperty IsCurrentProperty = IsCurrentPropertyKey.DependencyProperty;
+        public static readonly DependencyProperty ContentProperty = DependencyProperty.Register(
+                                                        "Content",
+                                                        typeof(object),
+                                                        typeof(WizardStep),
+                                                        new PropertyMetadata(default(object)));
 
+        public object Content
+        {
+            get { return (object) GetValue(ContentProperty); }
+            set { SetValue(ContentProperty, value); }
+        }
         public bool IsCurrent
         {
             get { return (bool)GetValue(IsCurrentProperty); }
@@ -262,11 +288,6 @@ namespace Coddee.WPF.Controls
         {
             get { return (bool)GetValue(IsCompletedProperty); }
             protected set { SetValue(IsCompletedPropertyKey, value); }
-        }
-        public object Content
-        {
-            get { return (object)GetValue(ContentProperty); }
-            set { SetValue(ContentProperty, value); }
         }
 
         public bool IsLastStep
@@ -279,7 +300,7 @@ namespace Coddee.WPF.Controls
             get { return (bool)GetValue(IsFirstStepProperty); }
             protected set { SetValue(IsFirstStepPropertyKey, value); }
         }
-
+        
         public int Index
         {
             get { return (int)GetValue(IndexProperty); }
@@ -296,7 +317,11 @@ namespace Coddee.WPF.Controls
         public IPresentableViewModel ViewModel
         {
             get { return (IPresentableViewModel)GetValue(ViewModelProperty); }
-            set { SetValue(ViewModelProperty, value); }
+            set
+            {
+                SetValue(ViewModelProperty, value);
+                UpdateContent();
+            }
         }
 
         private static void ViewModelSet(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -309,7 +334,7 @@ namespace Coddee.WPF.Controls
 
         private void UpdateContent()
         {
-            Content = ViewModel.GetView();
+            Content = ViewModel?.GetView();
         }
 
         internal void SetIndex(int index)
@@ -362,5 +387,10 @@ namespace Coddee.WPF.Controls
             }
             return base.SelectTemplate(item, container);
         }
+    }
+
+    public class WizardStepsCollection : ObservableCollection<WizardStep>
+    {
+        
     }
 }

@@ -862,6 +862,57 @@
     </Style>
 
     <Style TargetType="{x:Type local:Wizard}">
+        <Setter Property="IsTabStop"
+                Value="False" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:Wizard}">
+                    <DockPanel>
+                        <DockPanel DockPanel.Dock="Bottom">
+                            <StackPanel Orientation="Horizontal"
+                                        HorizontalAlignment="Left">
+                                <Button Content="{wpf:Localize Cancel}"
+                                        Command="{Binding CancelCommand, RelativeSource={RelativeSource TemplatedParent}}"
+                                        Style="{StaticResource DialogButton}" />
+                                <Button Content="{wpf:Localize Back}"
+                                        Margin="10 0 0 0"
+                                        Command="{Binding BackCommand, RelativeSource={RelativeSource TemplatedParent}}"
+                                        Style="{StaticResource DialogButton}" />
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal"
+                                        HorizontalAlignment="Right">
+                                <Button Content="{wpf:Localize Next}"
+                                        Command="{Binding NextCommand, RelativeSource={RelativeSource TemplatedParent}}"
+                                        Style="{StaticResource DialogButton}" />
+                                <Button Content="{wpf:Localize Save}"
+                                        Margin="10 0 0 0"
+                                        Command="{Binding SaveCommand, RelativeSource={RelativeSource TemplatedParent}}"
+                                        Style="{StaticResource DialogButton}" />
+                            </StackPanel>
+                        </DockPanel>
+                        <DockPanel DockPanel.Dock="Top"
+                                   HorizontalAlignment="Center">
+                            <ItemsControl ItemsSource="{Binding Steps, RelativeSource={RelativeSource TemplatedParent}}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                            </ItemsControl>
+
+                        </DockPanel>
+                        <DockPanel Margin="0 20 0 0">
+                            <ContentPresenter Margin="{Binding Padding, RelativeSource={RelativeSource TemplatedParent}}"
+                                              VerticalAlignment="{Binding VerticalContentAlignment, RelativeSource={RelativeSource TemplatedParent}}"
+                                              HorizontalAlignment="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource TemplatedParent}}"
+                                              Content="{Binding CurrentStep.Content, RelativeSource={RelativeSource TemplatedParent}}" />
+                        </DockPanel>
+                    </DockPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style TargetType="{x:Type local:WizardStep}">
         <Style.Resources>
             <Style x:Key="StepRect"
                    TargetType="{x:Type Rectangle}">
@@ -926,6 +977,7 @@
                     </DataTrigger>
                 </Style.Triggers>
             </Style>
+
             <DataTemplate x:Key="FirstStepTemplate">
                 <StackPanel>
                     <StackPanel Orientation="Horizontal">
@@ -965,60 +1017,19 @@
                                Margin="0 5 0 0" />
                 </StackPanel>
             </DataTemplate>
-        </Style.Resources>
-        <Setter Property="IsTabStop"
-                Value="False" />
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type local:Wizard}">
-                    <DockPanel>
-                        <DockPanel DockPanel.Dock="Bottom">
-                            <StackPanel Orientation="Horizontal"
-                                        HorizontalAlignment="Left">
-                                <Button Content="{wpf:Localize Cancel}"
-                                        Command="{Binding CancelCommand, RelativeSource={RelativeSource TemplatedParent}}"
-                                        Style="{StaticResource DialogButton}" />
-                                <Button Content="{wpf:Localize Back}"
-                                        Margin="10 0 0 0"
-                                        Command="{Binding BackCommand, RelativeSource={RelativeSource TemplatedParent}}"
-                                        Style="{StaticResource DialogButton}" />
-                            </StackPanel>
-                            <StackPanel Orientation="Horizontal"
-                                        HorizontalAlignment="Right">
-                                <Button Content="{wpf:Localize Next}"
-                                        Command="{Binding NextCommand, RelativeSource={RelativeSource TemplatedParent}}"
-                                        Style="{StaticResource DialogButton}" />
-                                <Button Content="{wpf:Localize Save}"
-                                        Margin="10 0 0 0"
-                                        Command="{Binding SaveCommand, RelativeSource={RelativeSource TemplatedParent}}"
-                                        Style="{StaticResource DialogButton}" />
-                            </StackPanel>
-                        </DockPanel>
-                        <DockPanel DockPanel.Dock="Top"
-                                   HorizontalAlignment="Center">
-                            <ItemsControl ItemsSource="{Binding Steps, RelativeSource={RelativeSource TemplatedParent}}">
-                                <ItemsControl.ItemTemplateSelector>
-                                    <local:WizardStepTemplateSelector FirstStepTemplate="{StaticResource FirstStepTemplate}"
-                                                                         LastStepTemplate="{StaticResource LastStepTemplate}"
-                                                                         StepTemplate="{StaticResource StepTemplate}">
-                                    </local:WizardStepTemplateSelector>
-                                </ItemsControl.ItemTemplateSelector>
-                                <ItemsControl.ItemsPanel>
-                                    <ItemsPanelTemplate>
-                                        <StackPanel Orientation="Horizontal" />
-                                    </ItemsPanelTemplate>
-                                </ItemsControl.ItemsPanel>
-                            </ItemsControl>
 
-                        </DockPanel>
-                        <DockPanel Margin="0 20 0 0">
-                            <ContentPresenter Margin="{Binding Padding, RelativeSource={RelativeSource TemplatedParent}}"
-                                              VerticalAlignment="{Binding VerticalContentAlignment, RelativeSource={RelativeSource TemplatedParent}}"
-                                              HorizontalAlignment="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource TemplatedParent}}"
-                                              Content="{Binding CurrentStep.Content, RelativeSource={RelativeSource TemplatedParent}}" />
-                        </DockPanel>
-                    </DockPanel>
-                </ControlTemplate>
+        </Style.Resources>
+        <Setter Property="Template">
+           <Setter.Value>
+               <ControlTemplate>
+                   <ContentPresenter Content="{Binding RelativeSource={RelativeSource TemplatedParent}}">
+                       <ContentPresenter.ContentTemplateSelector>
+                           <local:WizardStepTemplateSelector FirstStepTemplate="{StaticResource FirstStepTemplate}"
+                                                             LastStepTemplate="{StaticResource LastStepTemplate}"
+                                                             StepTemplate="{StaticResource StepTemplate}" />
+                        </ContentPresenter.ContentTemplateSelector>
+                    </ContentPresenter>
+               </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
