@@ -8,10 +8,11 @@
              xmlns:local="clr-namespace:HR.Clients.WPF.Main"
              xmlns:controls="http://schemas.Coddee.com/2017/WPF"
              mc:Ignorable="d"
+             d:DesignWidth="600"
              d:DesignHeight="300">
     <UserControl.Resources>
         <local:MainViewModel x:Key="designData" />
-       
+
     </UserControl.Resources>
     <controls:BusyIndicator IsBusy="{Binding IsBusy}">
         <DockPanel d:DataContext="{StaticResource designData}"
