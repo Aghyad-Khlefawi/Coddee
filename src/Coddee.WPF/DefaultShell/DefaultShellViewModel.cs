@@ -93,6 +93,7 @@ namespace Coddee.WPF.DefaultShell
             if (!_mainViewModel.IsInitialized)
                 await _mainViewModel.Initialize();
         }
+        
         public IPresentableViewModel SetMainContent(Type defaultPresentable, bool useNavigation)
         {
             _globalVariables.TryGetValue(Globals.Username, out _username);

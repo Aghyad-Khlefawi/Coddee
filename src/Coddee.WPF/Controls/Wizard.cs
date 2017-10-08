@@ -74,19 +74,19 @@ namespace Coddee.WPF.Controls
 
         public object Content
         {
-            get { return (object) GetValue(ContentProperty); }
+            get { return (object)GetValue(ContentProperty); }
             protected set { SetValue(ContentPropertyKey, value); }
         }
 
         public ICommand CancelCommand
         {
-            get { return (ICommand) GetValue(CancelCommandProperty); }
+            get { return (ICommand)GetValue(CancelCommandProperty); }
             set { SetValue(CancelCommandProperty, value); }
         }
 
         public ICommand SaveCommand
         {
-            get { return (ICommand) GetValue(SaveCommandProperty); }
+            get { return (ICommand)GetValue(SaveCommandProperty); }
             set { SetValue(SaveCommandProperty, value); }
         }
 
@@ -139,7 +139,7 @@ namespace Coddee.WPF.Controls
 
             BackCommand = new ReactiveCommand<Wizard>(this, Back)
                 .ObserveProperty(e => e.CurrentStep, ValidateCanGoBack);
-            
+
         }
 
         public IReactiveCommand NextCommand { get; }
@@ -300,19 +300,19 @@ namespace Coddee.WPF.Controls
 
         public bool IsValid
         {
-            get { return (bool) GetValue(IsValidProperty); }
+            get { return (bool)GetValue(IsValidProperty); }
             protected set { SetValue(IsValidPropertyKey, value); }
         }
 
         public bool IsValidated
         {
-            get { return (bool) GetValue(IsValidatedProperty); }
+            get { return (bool)GetValue(IsValidatedProperty); }
             protected set { SetValue(IsValidatedPropertyKey, value); }
         }
 
         public object Content
         {
-            get { return (object) GetValue(ContentProperty); }
+            get { return (object)GetValue(ContentProperty); }
             set { SetValue(ContentProperty, value); }
         }
         public bool IsCurrent
@@ -337,7 +337,7 @@ namespace Coddee.WPF.Controls
             get { return (bool)GetValue(IsFirstStepProperty); }
             protected set { SetValue(IsFirstStepPropertyKey, value); }
         }
-        
+
         public int Index
         {
             get { return (int)GetValue(IndexProperty); }
@@ -357,8 +357,8 @@ namespace Coddee.WPF.Controls
             set
             {
                 SetValue(ViewModelProperty, value);
-                UpdateContent();
-                value.Validated += ViewModelValidated;
+                //UpdateContent();
+                //value.Validated += ViewModelValidated;
             }
         }
 
@@ -378,6 +378,7 @@ namespace Coddee.WPF.Controls
 
         private void UpdateContent()
         {
+            ViewModel.Validated += ViewModelValidated;
             Content = ViewModel?.GetView();
         }
 
@@ -418,9 +419,7 @@ namespace Coddee.WPF.Controls
                 IsValidated = false;
                 return;
             }
-            var res = ViewModel.Validate();
-            IsValidated = true;
-            IsValid = res == null || !res.Any();
+            ViewModel.Validate();
         }
 
         public override void OnApplyTemplate()
@@ -457,6 +456,6 @@ namespace Coddee.WPF.Controls
 
     public class WizardStepsCollection : ObservableCollection<WizardStep>
     {
-        
+
     }
 }

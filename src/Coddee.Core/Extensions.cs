@@ -122,9 +122,21 @@ namespace Coddee
             }
         }
 
+        public static void Remove<T>(this IList<T> collection, Func<T, bool> predicate)
+        {
+            collection.Remove(collection.First(predicate));
+        }
+
+        public static void RemoveIfExists<T>(this IList<T> collection, Func<T, bool> predicate)
+        {
+            var item = collection.FirstOrDefault(predicate);
+            if (item != null)
+                collection.Remove(item);
+        }
+
         public static AsyncObservableCollection<T> ToAsyncObservableCollection<T>(this IEnumerable<T> collection)
         {
-            return AsyncObservableCollection<T>.Create(collection); 
+            return AsyncObservableCollection<T>.Create(collection);
         }
 
         public static async Task<AsyncObservableCollection<T>> ToAsyncObservableCollection<T>(this Task<IEnumerable<T>> collection)
@@ -137,7 +149,7 @@ namespace Coddee
             return Task.WhenAll(tasks);
         }
 
-        public static Task ContinueWithResult<T>(this Task<T> task,Action<T> action)
+        public static Task ContinueWithResult<T>(this Task<T> task, Action<T> action)
         {
             return task.ContinueWith(t => action(t.Result));
         }

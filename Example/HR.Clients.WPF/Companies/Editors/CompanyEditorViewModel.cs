@@ -7,14 +7,17 @@ using Coddee;
 using Coddee.Collections;
 using Coddee.Validation;
 using Coddee.WPF;
+using Coddee.WPF.DefaultShell;
 using HR.Data.Models;
 using HR.Data.Repositories;
 
 namespace HR.Clients.WPF.Companies.Editors
 {
-    public class CompanyEditorViewModelBase : EditorViewModelBase<CompanyEditorViewModelBase,CompanyEditorView, ICompanyRepository,Company, Guid>
+    
+
+    public class CompanyEditorViewModel : EditorViewModelBase<CompanyEditorViewModel, CompanyEditorView, ICompanyRepository, Company, Guid>
     {
-       private AsyncObservableCollection<State> _states;
+        private AsyncObservableCollection<State> _states;
         public AsyncObservableCollection<State> States
         {
             get { return _states; }
@@ -24,9 +27,12 @@ namespace HR.Clients.WPF.Companies.Editors
         public string Name
         {
             get { return _name; }
-            set { SetProperty(ref this._name, value); }
+            set
+            {
+                SetProperty(ref this._name, value);
+            }
         }
-       
+
 
         public override void PreSave()
         {
@@ -38,7 +44,7 @@ namespace HR.Clients.WPF.Companies.Editors
         protected override void SetRequiredFields(RequiredFieldCollection requiredFields)
         {
             base.SetRequiredFields(requiredFields);
-            requiredFields.Add(RequiredField.Create(EditedItem,e=>e.Name,RequiredFieldValidators.StringValidator));
+            requiredFields.Add(RequiredField.Create(EditedItem, e => e.Name, RequiredFieldValidators.StringValidator));
         }
 
         protected override async Task OnInitialization()
@@ -46,6 +52,5 @@ namespace HR.Clients.WPF.Companies.Editors
             await base.OnInitialization();
             States = AsyncObservableCollection<State>.Create(await Resolve<IStateRepository>().GetItems());
         }
-        
     }
 }

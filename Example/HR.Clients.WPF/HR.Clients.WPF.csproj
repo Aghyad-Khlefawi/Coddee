@@ -81,7 +81,7 @@
     <Compile Include="Companies\Editors\CompanyEditorView.xaml.cs">
       <DependentUpon>CompanyEditorView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Companies\Editors\CompanyEditorViewModelBase.cs" />
+    <Compile Include="Companies\Editors\CompanyEditorViewModel.cs" />
     <Compile Include="Companies\Editors\EmployeeEditorView.xaml.cs">
       <DependentUpon>EmployeeEditorView.xaml</DependentUpon>
     </Compile>

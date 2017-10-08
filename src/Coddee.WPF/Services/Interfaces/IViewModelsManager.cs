@@ -21,5 +21,14 @@ namespace Coddee.Services
 
 
         IEnumerable<ViewModelInfo> GetChildViewModels(IViewModel parent);
+
+
+        void RaiseEvent<TEvent, TArgs>(IViewModel sender, TEvent eventToRaise, TArgs args)
+            where TEvent : IViewModelEvent<TArgs>, new();
+
+        TEvent GetEvent<TEvent>() where TEvent : IViewModelEvent, new();
+
+        void SubscribeToEvent<TEvent, TArgs>(IViewModel subscriver, ViewModelEventHandler<TArgs> handler)
+            where TEvent : IViewModelEvent<TArgs>, new();
     }
 }

@@ -51,7 +51,7 @@ namespace Coddee.WPF
             _requiredFieldsPropertyInfo = new Dictionary<string, PropertyInfo>();
             __Name = GetType().Name;
             if (IsDesignMode())
-                OnDesignMode();
+                OnDesignMode(); 
         }
 
         public RequiredFieldCollection RequiredFields { get; }
@@ -322,9 +322,9 @@ namespace Coddee.WPF
             return null;
         }
 
-        public virtual IEnumerable<string> Validate()
+        public virtual IEnumerable<string> Validate(IEnumerable<string> additionalErrors)
         {
-            var errors = new List<string>();
+            var errors = additionalErrors?.ToList() ?? new List<string>();
             if (RequiredFields != null)
             {
                 foreach (var requiredField in RequiredFields)
@@ -334,8 +334,12 @@ namespace Coddee.WPF
                         errors.Add(error);
                 }
             }
-            Validated?.Invoke(this,errors);
+            Validated?.Invoke(this, errors);
             return errors;
+        }
+        public virtual IEnumerable<string> Validate()
+        {
+            return Validate(null);
         }
 
         public event EventHandler<IEnumerable<string>> Validated;
@@ -344,7 +348,7 @@ namespace Coddee.WPF
         {
             return ReactiveCommand<ViewModelBase>.Create(this, handler);
         }
-        
+
         public ReactiveCommand<T> CreateReactiveCommand<T>(T obj, Action handler)
         {
             return ReactiveCommand<T>.Create(obj, handler);
@@ -352,6 +356,21 @@ namespace Coddee.WPF
         public ReactiveCommand<T, TParam> CreateReactiveCommand<T, TParam>(T obj, Action<TParam> handler)
         {
             return ReactiveCommand<T, TParam>.Create(obj, handler);
+        }
+
+        protected virtual void RaiseEvent<TEvent, TArgs>(TArgs args)
+            where TEvent : IViewModelEvent<TArgs>, new()
+        {
+            var targetEvent = _vmManager.GetEvent<TEvent>();
+            _vmManager.RaiseEvent(this, targetEvent, args);
+        }
+
+        protected virtual void SubscribeToEvent<TEvent, TArgs>(
+            ViewModelEventHandler<TArgs> handler)
+            where TEvent : IViewModelEvent<TArgs>, new()
+        {
+            var targetEvent = _vmManager.GetEvent<TEvent>();
+            targetEvent.Subscribe(this, handler);
         }
     }
 

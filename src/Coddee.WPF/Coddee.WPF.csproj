@@ -109,6 +109,7 @@
     <Compile Include="DebugTool\ViewModelExplorer\ViewModelPropertyTemplateSelector.cs" />
     <Compile Include="DefaultNavigations.cs" />
     <Compile Include="DefaultShell\DefaultRegions.cs" />
+    <Compile Include="Delegates.cs" />
     <Compile Include="EditorViewModelBase.cs" />
     <Compile Include="Events\ApplicationStartedEvent.cs" />
     <Compile Include="Extensions.cs" />
@@ -231,6 +232,7 @@
     <Compile Include="Validate.cs" />
     <Compile Include="ViewModelBase.cs" />
     <Compile Include="Services\ViewModelManager\ViewModelsManager.cs" />
+    <Compile Include="ViewModelEvent.cs" />
     <Compile Include="WPFModulesDefnitions.cs" />
     <Compile Include="XamlHelpers\FocusOnLoad.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Coddee.Loggers;
 using Coddee.WPF;
+using Coddee.WPF.Events;
 
 
 namespace Coddee.Services.ViewModelManager
@@ -24,6 +25,7 @@ namespace Coddee.Services.ViewModelManager
             _container = container;
             _logger = logger;
             ViewModels = new Dictionary<IViewModel, ViewModelInfo>();
+            _events = new Dictionary<Type, IViewModelEvent>();
         }
 
         public event EventHandler<ViewModelInfo> ViewModelCreated;
@@ -84,6 +86,54 @@ namespace Coddee.Services.ViewModelManager
         public async Task<TResult> InitializeViewModel<TResult>(IViewModel parentVM) where TResult : IViewModel
         {
             return (TResult)await InitializeViewModel(typeof(TResult), parentVM);
+        }
+
+        public void RaiseEvent<TEvent, TArgs>(IViewModel sender, TEvent eventToRaise, TArgs args) where TEvent : IViewModelEvent<TArgs>, new()
+        {
+            if (eventToRaise.EventRoutingStrategy == EventRoutingStrategy.Tunnel)
+            {
+                InvokeTunnelEvent(sender, eventToRaise, args, GetChildViewModels(sender));
+            }
+            else if (eventToRaise.EventRoutingStrategy == EventRoutingStrategy.Bubble)
+            {
+                InvokeBubbleEvent(sender, eventToRaise, args, ViewModels[sender].ParentViewModel.ViewModel);
+            }
+        }
+
+        private void InvokeBubbleEvent<TEvent, TArgs>(IViewModel sender, TEvent eventToRaise, TArgs args, IViewModel parentViewModel) where TEvent : IViewModelEvent<TArgs>, new()
+        {
+
+            var handler = eventToRaise.GetHandler(parentViewModel);
+            handler?.Invoke(sender, args);
+            if (ViewModels[parentViewModel].ParentViewModel != null)
+                InvokeBubbleEvent(sender, eventToRaise, args, ViewModels[parentViewModel].ParentViewModel.ViewModel);
+        }
+
+        private void InvokeTunnelEvent<TEvent, TArgs>(IViewModel sender, TEvent eventToRaise, TArgs args, IEnumerable<ViewModelInfo> childViewModels) where TEvent : IViewModelEvent<TArgs>, new()
+        {
+            foreach (var childViewModel in childViewModels)
+            {
+                var handler = eventToRaise.GetHandler(childViewModel.ViewModel);
+                handler?.Invoke(sender, args);
+                InvokeTunnelEvent(sender, eventToRaise, args, GetChildViewModels(childViewModel.ViewModel));
+            }
+        }
+
+        private readonly Dictionary<Type, IViewModelEvent> _events;
+
+        public TEvent GetEvent<TEvent>() where TEvent : IViewModelEvent, new()
+        {
+            if (!_events.ContainsKey(typeof(TEvent)))
+                _events[typeof(TEvent)] = new TEvent();
+
+            return (TEvent)_events[typeof(TEvent)];
+        }
+
+        public void SubscribeToEvent<TEvent, TArgs>(IViewModel subscriver, ViewModelEventHandler<TArgs> handler)
+            where TEvent : IViewModelEvent<TArgs>, new()
+        {
+            var eventToSubscribe = GetEvent<TEvent>();
+            eventToSubscribe.Subscribe(subscriver, handler);
         }
     }
 }

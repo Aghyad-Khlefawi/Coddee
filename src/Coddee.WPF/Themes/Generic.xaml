@@ -862,6 +862,10 @@
     </Style>
 
     <Style TargetType="{x:Type local:Wizard}">
+        <Setter Property="HorizontalContentAlignment"
+                Value="Stretch" />
+        <Setter Property="VerticalContentAlignment"
+                Value="Stretch" />
         <Setter Property="IsTabStop"
                 Value="False" />
         <Setter Property="Template">
@@ -1086,10 +1090,12 @@
         </Style.Resources>
         <Setter Property="Foreground"
                 Value="Black" />
+        <Setter Property="IsTabStop"
+                Value="False" />
         <Setter Property="Template">
            <Setter.Value>
                <ControlTemplate TargetType="{x:Type local:WizardStep}">
-                    <Button Foreground="{TemplateBinding Foreground}"
+                    <Button IsTabStop="False" Foreground="{TemplateBinding Foreground}"
                             Name="PART_BUTTON">
                         <Button.Template>
                             <ControlTemplate>
