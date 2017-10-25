@@ -28,7 +28,7 @@ namespace Coddee.Services.Navigation
         bool IsVisible { get; set; }
 
         void Navigate();
-        Task Initialize();
+        Task Initialize(bool forceInititalzie = false);
         void InitializeContent();
 
         void SetDestination(IPresentable destination);
@@ -63,7 +63,7 @@ namespace Coddee.Services.Navigation
             get { return _isVisible; }
             set { SetProperty(ref this._isVisible, value); }
         }
-        public event EventHandler ContentInitialized ;
+        public event EventHandler ContentInitialized;
         public Type DestinationType { get; protected set; }
         public bool DestinationResolved { get; protected set; }
 

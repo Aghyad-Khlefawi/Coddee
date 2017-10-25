@@ -20,10 +20,13 @@ namespace Coddee.WPF.Controls
 
         public static readonly DependencyProperty TitleProperty = DependencyProperty.Register(
             "Title", typeof(string), typeof(FormField), new PropertyMetadata(default(string)));
+
         public static readonly DependencyProperty TitleWidthProperty = DependencyProperty.Register(
             "TitleWidth", typeof(double), typeof(FormField), new PropertyMetadata(double.NaN));
+
         public static readonly DependencyProperty IsBusyProperty = DependencyProperty.Register(
             "IsBusy", typeof(bool), typeof(FormField), new PropertyMetadata(default(bool)));
+
         public static readonly DependencyProperty ContentProperty = DependencyProperty.Register(
             "Content", typeof(object), typeof(FormField), new PropertyMetadata(default(object)));
         public static readonly DependencyProperty TitleStyleProperty = DependencyProperty.Register(
@@ -31,7 +34,7 @@ namespace Coddee.WPF.Controls
                                                         typeof(Style),
                                                         typeof(FormField),
                                                         new PropertyMetadata(default(Style)));
-
+        
         public Style TitleStyle
         {
             get { return (Style)GetValue(TitleStyleProperty); }

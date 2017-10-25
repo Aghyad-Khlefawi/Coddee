@@ -10,7 +10,7 @@ namespace Coddee.ModuleDefinitions
     {
        public static Type[] Modules = new[]
        {
-           typeof(GlobalEventsServiceModule),
+           typeof(EventDispatcherServiceModule),
            typeof(GlobalVariablesServiceModule),
            typeof(LocalizationManagerModule),
        };

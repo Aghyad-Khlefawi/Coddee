@@ -12,15 +12,17 @@ namespace Coddee.WPF
     public interface IViewModel:IDisposable,INotifyPropertyChanged
     {
         string __Name { get; }
-
-        event EventHandler Initialized;
-        
+        List<string> Errors { get; }
+        bool IsValid { get; }
         bool IsInitialized { get; }
-        Task Initialize();
-
+        Task Initialize(bool forceInitialize = false);
         RequiredFieldCollection RequiredFields { get; }
-        IEnumerable<string> Validate();
-        event EventHandler<IEnumerable<string>> Validated;
+
+        event ViewModelEventHandler Initialized;
+        event ViewModelEventHandler<IEnumerable<string>> Validated;
+
+        IEnumerable<string> Validate(bool validateChildren = false);
+
     }
 
     public interface IPresentableViewModel : IViewModel, IPresentable

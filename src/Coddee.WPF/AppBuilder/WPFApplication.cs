@@ -74,9 +74,9 @@ namespace Coddee.WPF
         protected Application _systemApplication;
 
 
-        public Guid ApplicationID { get; private set; }
-        public string ApplicationName { get; private set; }
-        public ApplicationTypes ApplicationType { get; private set; }
+        public Guid ApplicationID { get; }
+        public string ApplicationName { get; }
+        public ApplicationTypes ApplicationType { get; }
 
 
         public IContainer GetContainer()
@@ -99,7 +99,7 @@ namespace Coddee.WPF
         public void ShowWindow()
         {
             _systemApplication.MainWindow.Show();
-            _container.Resolve<IGlobalEventsService>().GetEvent<ApplicationStartedEvent>().Invoke(this);
+            _container.Resolve<IEventDispatcher>().GetEvent<ApplicationStartedEvent>().Raise(this);
         }
     }
 }

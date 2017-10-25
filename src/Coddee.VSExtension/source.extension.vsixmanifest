@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
-  <Metadata>
-    <Identity Id="92dfe8bb-efb5-4f8d-8ded-a2aa927bcb1b" Version="1.0" Language="en-US" Publisher="Aghyad Khlefawi" />
-    <DisplayName>Coddee.VSExtension</DisplayName>
-    <Description xml:space="preserve">Visual studio extensions for Coddee library.</Description>
-    <MoreInfo>https://github.com/Aghyad-Khlefawi/Coddee</MoreInfo>
-    <License>LICENSE.txt</License>
-    <Icon>Coddee_48.ico</Icon>
-    <PreviewImage>coddee-transparent.png</PreviewImage>
-    <Tags>Codde,WPF,XAML</Tags>
-  </Metadata>
-  <Installation>
-    <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[15.0]" />
-    <InstallationTarget Version="[14.0,16.0)" Id="Microsoft.VisualStudio.Community" />
-  </Installation>
-  <Dependencies>
-    <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="[4.5,)" />
-  </Dependencies>
-  <Assets>
-    <Asset Type="Microsoft.VisualStudio.ItemTemplate" d:Source="Project" d:ProjectName="Coddee.VMTemplate" d:TargetPath="|Coddee.VMTemplate;TemplateProjectOutputGroup|" Path="ItemTemplates" d:VsixSubPath="ItemTemplates" />
-  </Assets>
-  <Prerequisites>
-    <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[15.0,16.0)" DisplayName="Visual Studio core editor" />
-  </Prerequisites>
+    <Metadata>
+        <Identity Id="92dfe8bb-efb5-4f8d-8ded-a2aa927bcb1b" Version="1.1" Language="en-US" Publisher="Aghyad Khlefawi" />
+        <DisplayName>Coddee.VSExtension</DisplayName>
+        <Description xml:space="preserve">Visual studio extensions for Coddee library.</Description>
+        <MoreInfo>https://github.com/Aghyad-Khlefawi/Coddee</MoreInfo>
+        <License>LICENSE.txt</License>
+        <Icon>Coddee_48.ico</Icon>
+        <PreviewImage>coddee-transparent.png</PreviewImage>
+        <Tags>Codde,WPF,XAML</Tags>
+    </Metadata>
+    <Installation>
+        <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[15.0]" />
+        <InstallationTarget Version="[14.0,16.0)" Id="Microsoft.VisualStudio.Community" />
+    </Installation>
+    <Dependencies>
+        <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="[4.5,)" />
+    </Dependencies>
+    <Assets>
+        <Asset Type="Microsoft.VisualStudio.ItemTemplate" d:Source="Project" d:ProjectName="Coddee.VMTemplate" d:TargetPath="|Coddee.VMTemplate;TemplateProjectOutputGroup|" Path="ItemTemplates" d:VsixSubPath="ItemTemplates" />
+    </Assets>
+    <Prerequisites>
+        <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[15.0,16.0)" DisplayName="Visual Studio core editor" />
+    </Prerequisites>
 </PackageManifest>

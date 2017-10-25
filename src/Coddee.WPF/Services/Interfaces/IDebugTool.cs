@@ -10,8 +10,8 @@ namespace Coddee.Services
     public interface IDebugTool
     {
 
-        Task Initialize();
-        
+        Task Initialize(bool forceInitialize = false);
+
         /// <summary>
         /// Set the condition on which the tool visibility will be toggled
         /// </summary>

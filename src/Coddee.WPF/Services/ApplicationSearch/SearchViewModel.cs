@@ -106,9 +106,9 @@ namespace Coddee.Services.ApplicationSearch
             Search(value);
         }
 
-        protected override void OnViewCreated(object sender, SearchView e)
+        protected override void OnDefaultViewCreated(SearchView e)
         {
-            base.OnViewCreated(sender, e);
+            base.OnDefaultViewCreated( e);
             e.SearchBox.PreviewKeyDown += (send, args) =>
             {
                 if (args.Key == Key.Down)

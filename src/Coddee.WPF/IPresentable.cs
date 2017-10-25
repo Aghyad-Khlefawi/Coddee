@@ -14,6 +14,12 @@ namespace Coddee.WPF
         /// Returns the view associated with this object
         /// </summary>
         /// <returns></returns>
+        UIElement GetView(int viewIndex);
+
+        /// <summary>
+        /// Returns the view associated with this object
+        /// </summary>
+        /// <returns></returns>
         UIElement GetView();
     }
 

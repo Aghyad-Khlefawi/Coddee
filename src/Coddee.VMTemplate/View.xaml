@@ -11,7 +11,7 @@
     <UserControl.Resources>
         <local:$fileinputname$ViewModel x:Key="designData" />
     </UserControl.Resources>
-    <Grid d:DataContext="{StaticResource designData}">
+    <coddee:BusyIndicator IsBusy="{Binding IsBusy}"  d:DataContext="{StaticResource designData}">
         
-    </Grid>
+    </coddee:BusyIndicator>
 </UserControl>

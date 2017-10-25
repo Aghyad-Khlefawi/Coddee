@@ -37,29 +37,45 @@ namespace Coddee.WPF
         protected static ILogger _logger;
         protected static IRepositoryManager _repositoryManager;
         protected static IObjectMapper _mapper;
+        protected static IViewModelsManager _vmManager;
+        protected static IEventDispatcher _eventDispatcher;
 
-
-        private static IViewModelsManager _vmManager;
-
+        protected bool _validateOnPropertyChanged;
         public string __Name { get; protected set; }
 
 
         protected ViewModelBase()
         {
-            Initialized += OnInitialized;
             RequiredFields = new RequiredFieldCollection();
             _requiredFieldsPropertyInfo = new Dictionary<string, PropertyInfo>();
+            _views = new Dictionary<int, UIElement>();
+            _viewsTypes = new Dictionary<int, Type>();
+
             __Name = GetType().Name;
             if (IsDesignMode())
-                OnDesignMode(); 
+                OnDesignMode();
+            Errors = new List<string>();
         }
 
+        private readonly Dictionary<int, UIElement> _views;
+        private readonly Dictionary<int, Type> _viewsTypes;
+        public event EventHandler<UIElement> ViewCreated;
+
+        private bool _viewsRegistered;
+
+        public List<string> Errors { get; set; }
         public RequiredFieldCollection RequiredFields { get; }
 
         protected readonly Dictionary<string, PropertyInfo> _requiredFieldsPropertyInfo;
 
-        public event EventHandler Initialized;
+        public event ViewModelEventHandler Initialized;
 
+        private bool _isValid = true;
+        public bool IsValid
+        {
+            get { return _isValid; }
+            protected set { SetProperty(ref this._isValid, value); }
+        }
 
         private bool _isInitialized;
         public bool IsInitialized
@@ -147,20 +163,106 @@ namespace Coddee.WPF
         /// Called when the ViewModel is ready to be presented
         /// </summary>
         /// <returns></returns>
-        public Task Initialize()
+        public Task Initialize(bool forceInitialize = false)
         {
+            bool skip = false;
             lock (_initializationLock)
+            {
+                if (IsInitialized && !forceInitialize)
+                {
+                    skip = true;
+                }
                 IsInitialized = true;
+            }
 
-            _logger?.Log(_eventsSource, $"ViewModel initializing {__Name}", LogRecordTypes.Debug);
+            if (skip)
+            {
+                _logger?.Log(_eventsSource, $"ViewModel {__Name} is initialized skipping initialization", LogRecordTypes.Debug);
+                return completedTask;
+            }
+
+            _logger?.Log(_eventsSource, $"ViewModel {__Name} initializing", LogRecordTypes.Debug);
             return Task.Run(() =>
             {
-                OnInitialization().Wait();
-                RefreshRequiredFields();
-
-                IsBusy = false;
-                Initialized?.Invoke(this, EventArgs.Empty);
+                var task = OnInitialization().ContinueWith(t =>
+                {
+                    RefreshRequiredFields();
+                    PropertyChanged += PropertyChangedHandler;
+                    IsBusy = false;
+                    OnInitialized(this);
+                });
+                Task.WaitAll(task);
             });
+        }
+
+        public TView GetDefaultView<TView>(int index) where TView : UIElement
+        {
+            return (TView)GetView(index);
+        }
+
+        public UIElement GetView(int index)
+        {
+            if (!_viewsRegistered)
+                RegisterViews();
+
+            if (!_viewsTypes.ContainsKey(index))
+                throw new ArgumentException($"There is no view with the index {index}");
+
+            if (!_views.ContainsKey(index))
+            {
+                var type = _viewsTypes[index];
+                CreateView(index, type);
+            }
+            return _views[index];
+        }
+
+        protected TView CreateView<TView>(int index) where TView : UIElement, new()
+        {
+            return (TView)CreateView(index, typeof(TView));
+        }
+
+        protected UIElement CreateView(int index, Type viewType)
+        {
+            if (!_viewsRegistered)
+                RegisterViews();
+            UIElement view = null;
+            ExecuteOnUIContext(() =>
+            {
+                view = (UIElement)Activator.CreateInstance(viewType);
+                _views[index] = view;
+                // Check if the view is a Framework element then
+                // set the DataContext to this ViewModel
+                var frameworkElement = view as FrameworkElement;
+                if (frameworkElement != null)
+                    frameworkElement.DataContext = this;
+                //frameworkElement.Loaded += delegate { };
+                OnViewCreated(view);
+            });
+            return view;
+        }
+
+        protected virtual void OnViewCreated(UIElement e)
+        {
+            _logger?.Log(_eventsSource, $"View created {e.GetType().Name} for {__Name}", LogRecordTypes.Debug);
+            ViewCreated?.Invoke(this, e);
+        }
+
+        protected virtual void RegisterViews()
+        {
+            _viewsRegistered = true;
+        }
+
+        protected void RegisterViewType<T>(int index) where T : UIElement
+        {
+            if (_views.ContainsKey(index))
+                throw new ArgumentException($"There is already a view with the index {index}");
+            _viewsTypes.Add(index, typeof(T));
+        }
+
+        protected virtual void PropertyChangedHandler(object sender, PropertyChangedEventArgs args)
+        {
+            if (_validateOnPropertyChanged && RequiredFields.Any(e => e.FieldName == args.PropertyName))
+                Validate();
         }
 
         /// <summary>
@@ -180,9 +282,10 @@ namespace Coddee.WPF
             GetRequiredPropertiesInfo();
         }
 
-        protected virtual void OnInitialized(object sender, EventArgs e)
+        protected virtual void OnInitialized(IViewModel sender)
         {
-            _logger?.Log(_eventsSource, $"ViewModel initialized {__Name}", LogRecordTypes.Debug);
+            _logger?.Log(_eventsSource, $"ViewModel {__Name} initialization completed ", LogRecordTypes.Debug);
+            Initialized?.Invoke(this);
         }
 
         /// <summary>
@@ -216,6 +319,9 @@ namespace Coddee.WPF
 
             if (_container.IsRegistered<IObjectMapper>())
                 _mapper = _container.Resolve<IObjectMapper>();
+
+            if (_container.IsRegistered<IEventDispatcher>())
+                _eventDispatcher = _container.Resolve<IEventDispatcher>();
         }
 
         protected void ToastError(string message = "An error occurred.")
@@ -258,7 +364,7 @@ namespace Coddee.WPF
 
         protected void LogError(string EventSource, Exception ex)
         {
-            _logger.Log(EventSource, ex);
+            _logger.Log(__Name, ex);
         }
 
         protected void LogError(Exception ex)
@@ -311,6 +417,7 @@ namespace Coddee.WPF
             var field = RequiredFields?.FirstOrDefault(e => e.FieldName == fieldName);
             if (field != null && _requiredFieldsPropertyInfo.ContainsKey(field.FieldName))
             {
+                _logger.Log(__Name, $"Checking field {fieldName}", LogRecordTypes.Debug);
                 var property = _requiredFieldsPropertyInfo[field.FieldName];
                 if (property != null && field.ValidateField != null)
                 {
@@ -322,27 +429,52 @@ namespace Coddee.WPF
             return null;
         }
 
-        public virtual IEnumerable<string> Validate(IEnumerable<string> additionalErrors)
+        protected bool _validating;
+
+        public IEnumerable<string> Validate(bool validateChildren = false)
         {
-            var errors = additionalErrors?.ToList() ?? new List<string>();
+            Errors.Clear();
+
+            if (_validating)
+                return Errors;
+
+            _validating = true;
+
+
             if (RequiredFields != null)
             {
                 foreach (var requiredField in RequiredFields)
                 {
                     var error = CheckField(requiredField.FieldName);
                     if (!string.IsNullOrEmpty(error))
-                        errors.Add(error);
+                        Errors.Add(error);
                 }
             }
-            Validated?.Invoke(this, errors);
-            return errors;
-        }
-        public virtual IEnumerable<string> Validate()
-        {
-            return Validate(null);
+
+            if (validateChildren)
+            {
+                foreach (var childViewModel in GetChildViewModels())
+                {
+                    Errors.AddRange(childViewModel.Validate());
+                }
+            }
+
+            CustomValidation(Errors);
+            IsValid = !Errors.Any();
+            OnValidated(Errors);
+            _validating = false;
+            return Errors;
         }
 
-        public event EventHandler<IEnumerable<string>> Validated;
+        public virtual void CustomValidation(List<string> errors)
+        {
+        }
+
+        protected void OnValidated(List<string> errors)
+        {
+            Validated?.Invoke(this, errors);
+        }
+        public event ViewModelEventHandler<IEnumerable<string>> Validated;
 
         public ReactiveCommand<ViewModelBase> CreateReactiveCommand(Action handler)
         {
@@ -359,18 +491,44 @@ namespace Coddee.WPF
         }
 
         protected virtual void RaiseEvent<TEvent, TArgs>(TArgs args)
-            where TEvent : IViewModelEvent<TArgs>, new()
+            where TEvent : class, IViewModelEvent<TArgs>, new()
         {
-            var targetEvent = _vmManager.GetEvent<TEvent>();
-            _vmManager.RaiseEvent(this, targetEvent, args);
+            var targetEvent = _eventDispatcher.GetEvent<TEvent>();
+            targetEvent.Raise(this, args);
         }
 
         protected virtual void SubscribeToEvent<TEvent, TArgs>(
             ViewModelEventHandler<TArgs> handler)
-            where TEvent : IViewModelEvent<TArgs>, new()
+            where TEvent : class, IViewModelEvent<TArgs>, new()
         {
-            var targetEvent = _vmManager.GetEvent<TEvent>();
+            var targetEvent = _eventDispatcher.GetEvent<TEvent>();
             targetEvent.Subscribe(this, handler);
+        }
+
+        protected virtual void ToggleBusy(Action action)
+        {
+            try
+            {
+                IsBusy = true;
+                action?.Invoke();
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+        }
+
+        protected virtual async Task ToggleBusyAsync(Task action)
+        {
+            try
+            {
+                IsBusy = true;
+                await action;
+            }
+            finally
+            {
+                IsBusy = false;
+            }
         }
     }
 
@@ -382,25 +540,14 @@ namespace Coddee.WPF
     public class ViewModelBase<TView> : ViewModelBase, IPresentable<TView>, IPresentableViewModel
         where TView : UIElement, new()
     {
-        private const string _eventsSource = "VMBase";
-
-        public ViewModelBase()
-        {
-            ViewCreate += OnViewCreated;
-        }
-
-        protected virtual void OnViewCreated(object sender, TView e)
-        {
-            _logger?.Log(_eventsSource, $"View created {e.GetType().Name} for {__Name}", LogRecordTypes.Debug);
-        }
-
-        /// <summary>
-        /// The view object
-        /// </summary>
-        protected TView _view;
         public TView View => (TView)GetView();
 
-        public event EventHandler<TView> ViewCreate;
+
+        protected override void RegisterViews()
+        {
+            base.RegisterViews();
+            RegisterViewType<TView>(0);
+        }
 
         /// <summary>
         /// Returns a the view object 
@@ -409,24 +556,27 @@ namespace Coddee.WPF
         /// <returns></returns>
         public virtual UIElement GetView()
         {
-            if (_view == null)
-                CreateView();
-            return _view;
+            return GetView(0);
         }
 
-        protected void CreateView()
+        protected override void OnViewCreated(UIElement e)
         {
-            ExecuteOnUIContext(() =>
-            {
-                _view = new TView();
-                // Check if the view is a Framework element then
-                // set the DataContext to this ViewModel
-                var frameworkElement = _view as FrameworkElement;
-                if (frameworkElement != null)
-                    frameworkElement.DataContext = this;
-                //frameworkElement.Loaded += delegate { };
-                ViewCreate?.Invoke(this, _view);
-            });
+            base.OnViewCreated(e);
+            if (e is TView defaultView)
+                OnDefaultViewCreated(defaultView);
+        }
+
+        protected TView CreateView()
+        {
+            return (TView)CreateView(0, typeof(TView));
+        }
+
+        protected virtual void OnDefaultViewCreated(TView view)
+        {
+        }
+        public TView GetDefaultView()
+        {
+            return (TView)GetView(0);
         }
     }
 }

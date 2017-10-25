@@ -14,6 +14,6 @@ namespace Coddee
         public const string DialogService = nameof(DialogService);
         public const string DebugTool = nameof(DebugTool);
         public const string LocalizationManager = nameof(LocalizationManager);
-        public const string GlobalEventsService = nameof(GlobalEventsService);
+        public const string EventDispatcher = nameof(EventDispatcher);
     }
 }

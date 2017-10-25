@@ -6,32 +6,7 @@ using System.Collections.Generic;
 
 namespace Coddee
 {
-    public enum EventRoutingStrategy
-    {
-        //
-        // Summary:
-        //     The routed event uses a tunneling strategy, where the event instance routes downwards
-        //     through the tree, from root to source element.
-        Tunnel = 0,
-        //
-        // Summary:
-        //     The routed event uses a bubbling strategy, where the event instance routes upwards
-        //     through the tree, from event source to root.
-        Bubble = 1,
-        //
-        // Summary:
-        //     The routed event does not route through an element tree, but does support other
-        //     routed event capabilities such as class handling, System.Windows.EventTrigger
-        //     or System.Windows.EventSetter.
-        Direct = 2
-    }
-
-    public interface IGlobalEvent 
-    {
-
-    }
-
-    public class GlobalEvent<TPayload> : IGlobalEvent
+    public class GlobalEvent<TPayload> : IEvent
     {
         public GlobalEvent()
         {
@@ -40,7 +15,7 @@ namespace Coddee
 
         protected readonly List<Action<TPayload>> _handlers;
 
-        public virtual void Invoke(TPayload payload)
+        public virtual void Raise(TPayload payload)
         {
             foreach (var handler in _handlers)
             {
@@ -57,5 +32,7 @@ namespace Coddee
         {
             _handlers.Remove(handler);
         }
+
+        public EventRoutingStrategy EventRoutingStrategy => EventRoutingStrategy.Direct;
     }
 }

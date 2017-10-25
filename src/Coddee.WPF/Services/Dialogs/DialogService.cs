@@ -99,7 +99,7 @@ namespace Coddee.Services.Dialogs
         {
             dialog.ZIndex = _dialogs.Count;
             _dialogs[dialog] = dialog.Container;
-            _view.DialogsContainer.Children.Add(dialog.Container);
+            View.DialogsContainer.Children.Add(dialog.Container);
             DialogDisplayed?.Invoke(this, dialog);
             return dialog;
         }
@@ -131,7 +131,7 @@ namespace Coddee.Services.Dialogs
 
         public void CloseDialog(IDialog dialog)
         {
-            _view.DialogsContainer.Children.Remove(_dialogs[dialog]);
+            View.DialogsContainer.Children.Remove(_dialogs[dialog]);
             _dialogs.Remove(dialog);
             DialogClosed?.Invoke(this, dialog);
         }

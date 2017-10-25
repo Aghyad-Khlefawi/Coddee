@@ -27,7 +27,7 @@ namespace HR.Clients.WPF.Companies
         private CompanyEditorViewModel _companyEditor;
         private EmployeeEditorViewModelBase _employeeEditor;
 
-        private AsyncObservableDictionaryView<Guid,Company> _companies;
+        private AsyncObservableDictionaryView<Guid, Company> _companies;
         public AsyncObservableDictionaryView<Guid, Company> Companies
         {
             get { return _companies; }
@@ -67,7 +67,7 @@ namespace HR.Clients.WPF.Companies
 
         private void EditEmployee()
         {
-            _employeeEditor.Edit(Employees.SelectedItem,Companies.SelectedItem);
+            _employeeEditor.Edit(Employees.SelectedItem, Companies.SelectedItem);
         }
 
         private void AddEmployee()
@@ -101,7 +101,7 @@ namespace HR.Clients.WPF.Companies
         {
             var companyRepo = Resolve<ICompanyRepository>();
 
-            Companies = AsyncObservableDictionaryView<Guid, Company>.Create(CompanySearch,await companyRepo.GetDetailedItems());
+            Companies = AsyncObservableDictionaryView<Guid, Company>.Create(CompanySearch, await companyRepo.GetDetailedItems());
             Employees = AsyncObservableCollectionView<Employee>.Create(EmployeeSearch);
 
             Companies.SelectedItemChanged += CompanySelected;
@@ -126,7 +126,7 @@ namespace HR.Clients.WPF.Companies
                    item.StateName.ToLower().Contains(search);
         }
 
-        private void CompanySaved(object sernder,EditorSaveArgs<Company> args)
+        private void CompanySaved(object sernder, EditorSaveArgs<Company> args)
         {
             Companies.Update(args.OperationType, args.Item);
             ToastSuccess();
@@ -148,13 +148,9 @@ namespace HR.Clients.WPF.Companies
                 Employees.Update(args.OperationType, args.Item);
             }
             else
-                Employees.Remove(e=>e.ID == args.Item.ID);
+                Employees.Remove(e => e.ID == args.Item.ID);
             ToastSuccess();
         }
-
-        public override IEnumerable<string> Validate()
-        {
-            return new[] {"Error"};
-        }
+        
     }
 }

@@ -26,7 +26,7 @@ namespace Coddee.Data
         }
         public static void DeleteOnSubmit<TTable>(this Table<TTable> table, Func<TTable, bool> filter) where TTable : class
         {
-            table.DeleteOnSubmit(table.First(filter));
+            table.DeleteOnSubmit(table.First<TTable>(filter));
         }
         public static void DeleteAndSubmit<TTable>(this Table<TTable> table, Func<TTable, bool> filter) where TTable : class
         {

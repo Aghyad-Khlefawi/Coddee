@@ -7,12 +7,12 @@ using Coddee.Services;
 
 namespace Coddee.Modules
 {
-    [Module(BuiltInModules.GlobalEventsService)]
-    public class GlobalEventsServiceModule : IModule
+    [Module(BuiltInModules.EventDispatcher)]
+    public class EventDispatcherServiceModule : IModule
     {
         public Task Initialize(IContainer container)
         {
-            container.RegisterInstance<IGlobalEventsService, GlobalEventsService>();
+            container.RegisterInstance<IEventDispatcher, EventDispatcher>();
             return Task.FromResult(true);
         }
     }

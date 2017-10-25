@@ -18,7 +18,6 @@ namespace Coddee.WPF
         void Add();
         void Cancel();
         Task<bool> Save();
-        IEnumerable<string> Validate();
         void Show();
     }
 

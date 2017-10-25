@@ -2,6 +2,7 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
@@ -164,6 +165,7 @@ namespace Coddee.Data.LinqToSQL
             });
         }
 
+       
         /// <summary>
         /// Execute a function on the targeted SQL table and then returning a value
         /// </summary>
@@ -381,7 +383,58 @@ namespace Coddee.Data.LinqToSQL
         {
             return new Condition<TModel, T>(property, value);
         }
-        
+
+        /// <summary>
+        /// Execute a function on the targeted SQL table and then returning a value
+        /// </summary>
+        protected Task<TResult> ExecuteAndMap<TResult>(Func<TDataContext, object> action) where TResult : new()
+        {
+            var context = _dbManager.CreateContext();
+            return Task.Run(() =>
+            {
+                using (context)
+                {
+                    var res = _mapper.Map<TResult>(action(context));
+                    context.SubmitChanges();
+                    return res;
+                }
+            });
+        }
+
+        /// <summary>
+        /// Execute a function on the targeted SQL table and then returning a value
+        /// </summary>
+        protected Task<IEnumerable<TResult>> ExecuteAndMapCollection<TResult>(Func<TDataContext, IList> action) where TResult : new()
+        {
+            var context = _dbManager.CreateContext();
+            return Task.Run(() =>
+            {
+                using (context)
+                {
+                    var res = _mapper.MapCollection<TResult>(action(context));
+                    context.SubmitChanges();
+                    return res;
+                }
+            });
+        }
+
+
+        /// <summary>
+        /// Execute a function on the targeted SQL table and then returning a value
+        /// </summary>
+        protected Task<TModel> ExecuteAndMap(Func<TDataContext,object> action)
+        {
+            return ExecuteAndMap<TModel>(action);
+        }
+
+        /// <summary>
+        /// Execute a function on the targeted SQL table and then returning a value
+        /// </summary>
+        protected Task<IEnumerable<TModel>> ExecuteAndMapCollection(Func<TDataContext, IList> action)
+        {
+            return ExecuteAndMapCollection<TModel>(action);
+        }
+
         /// <summary>
         /// Return all the items from the table
         /// </summary>
@@ -474,7 +527,7 @@ namespace Coddee.Data.LinqToSQL
         {
             
         }
-
+            
         protected virtual TTable UpdateToDB(TModel item, TDataContext db)
         {
             var temp = GetItemByPrimaryKey(db, item.GetKey);

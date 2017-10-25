@@ -6,18 +6,18 @@ using System.Collections.Concurrent;
 
 namespace Coddee.Services
 {
-    public class GlobalEventsService : IGlobalEventsService
+    public class EventDispatcher : IEventDispatcher
     {
-        public GlobalEventsService()
+        public EventDispatcher()
         {
-            _events = new ConcurrentDictionary<Type, IGlobalEvent>();
+            _events = new ConcurrentDictionary<Type, IEvent>();
         }
 
-        public ConcurrentDictionary<Type, IGlobalEvent> _events;
+        public ConcurrentDictionary<Type, IEvent> _events;
 
-        public TResult GetEvent<TResult>() where TResult : class, IGlobalEvent, new()
+        public TResult GetEvent<TResult>() where TResult : class, IEvent, new()
         {
-            IGlobalEvent globalEvent = null;
+            IEvent globalEvent = null;
             if (!_events.TryGetValue(typeof(TResult), out globalEvent))
             {
                 globalEvent = new TResult();

@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using Coddee.Collections;
@@ -71,7 +70,7 @@ namespace Coddee
         /// <typeparam name="T"></typeparam>
         public static void Remove<T>(this ICollection<T> collection, Func<T, bool> pred)
         {
-            var item = collection.FirstOrDefault(pred);
+            var item = collection.FirstOrDefault<T>(pred);
             if (item != null)
                 collection.Remove(item);
         }
@@ -89,6 +88,19 @@ namespace Coddee
         }
 
         /// <summary>
+        /// Removes item from collection and insert the new item
+        /// The old item is removed based on IEquality interface
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="collection"></param>
+        /// <param name="item"></param>
+        public static void UpdateFirst<T>(this IList<T> collection, T item)
+        {
+            collection.UpdateFirst(item, e => e.Equals(item));
+        }
+
+
+        /// <summary>
         /// Updates the collection base on the operation type 
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -102,6 +114,19 @@ namespace Coddee
                 collection.Remove(item);
         }
 
+        /// <summary>
+        /// Updates the collection base on the operation type 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        public static void UpdateFirst<T>(this IList<T> collection, OperationType operationType, T item)
+        {
+            if (operationType == OperationType.Add)
+                collection.Insert(0, item);
+            else if (operationType == OperationType.Edit)
+                collection.UpdateFirst(item);
+            else if (operationType == OperationType.Delete)
+                collection.Remove(item);
+        }
 
         /// <summary>
         /// Removes item from collection and insert the new item
@@ -113,7 +138,7 @@ namespace Coddee
         /// <param name="predicate"></param>
         public static void Update<T>(this IList<T> collection, T item, Func<T, bool> predicate)
         {
-            var oldItem = collection.FirstOrDefault(predicate);
+            var oldItem = collection.FirstOrDefault<T>(predicate);
             if (oldItem != null)
             {
                 var oldIndex = collection.IndexOf(oldItem);
@@ -122,26 +147,44 @@ namespace Coddee
             }
         }
 
+        /// <summary>
+        /// Removes item from collection and insert the new item
+        /// The old item is removed based on the predicate
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="collection"></param>
+        /// <param name="item"></param>
+        /// <param name="predicate"></param>
+        public static void UpdateFirst<T>(this IList<T> collection, T item, Func<T, bool> predicate)
+        {
+            var oldItem = collection.FirstOrDefault<T>(predicate);
+            if (oldItem != null)
+            {
+                collection.Remove(oldItem);
+                collection.Insert(0, item);
+            }
+        }
+
+        public static T First<T, TKey>(this IEnumerable<T> collection, TKey key) where T : IUniqueObject<TKey>
+        {
+            return collection.First(e => e.GetKey.Equals(key));
+        }
+
+        public static T FirstOrDefault<T, TKey>(this IEnumerable<T> collection, TKey key) where T : IUniqueObject<TKey>
+        {
+            return collection.FirstOrDefault(e => e.GetKey.Equals(key));
+        }
+
         public static void Remove<T>(this IList<T> collection, Func<T, bool> predicate)
         {
-            collection.Remove(collection.First(predicate));
+            collection.Remove(collection.First<T>(predicate));
         }
 
         public static void RemoveIfExists<T>(this IList<T> collection, Func<T, bool> predicate)
         {
-            var item = collection.FirstOrDefault(predicate);
+            var item = collection.FirstOrDefault<T>(predicate);
             if (item != null)
                 collection.Remove(item);
-        }
-
-        public static AsyncObservableCollection<T> ToAsyncObservableCollection<T>(this IEnumerable<T> collection)
-        {
-            return AsyncObservableCollection<T>.Create(collection);
-        }
-
-        public static async Task<AsyncObservableCollection<T>> ToAsyncObservableCollection<T>(this Task<IEnumerable<T>> collection)
-        {
-            return AsyncObservableCollection<T>.Create(await collection);
         }
 
         public static Task WhenAll(this IEnumerable<Task> tasks)
@@ -153,5 +196,6 @@ namespace Coddee
         {
             return task.ContinueWith(t => action(t.Result));
         }
+
     }
 }

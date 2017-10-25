@@ -55,7 +55,9 @@
     <Compile Include="AppBuilder\IApplication.cs" />
     <Compile Include="AppBuilder\IApplicationBuilder.cs" />
     <Compile Include="AppBuilder\IApplicationIdentifier.cs" />
+    <Compile Include="AsyncLinq.cs" />
     <Compile Include="ConfigKeys.cs" />
+    <Compile Include="EventRoutingStrategy.cs" />
     <Compile Include="Exceptions\CoddeeException.cs" />
     <Compile Include="Exceptions\ConfigurationExption.cs" />
     <Compile Include="Exceptions\DBException.cs" />
@@ -63,6 +65,7 @@
     <Compile Include="ExpresstionHelper.cs" />
     <Compile Include="Globals.cs" />
     <Compile Include="IContainer.cs" />
+    <Compile Include="IEvent.cs" />
     <Compile Include="Math.cs" />
     <Compile Include="Notification\INotification.cs" />
     <Compile Include="Notification\INotificationService.cs" />
@@ -73,13 +76,13 @@
     <Compile Include="CoreModulesDefnitions.cs" />
     <Compile Include="GlobalEvent.cs" />
     <Compile Include="Network\NetworkService.cs" />
-    <Compile Include="Services\GlobalEvents\GlobalEventsService.cs" />
-    <Compile Include="Services\GlobalEvents\GlobalEventsServiceModule.cs" />
+    <Compile Include="Services\EventDispatcher\EventDispatcher.cs" />
+    <Compile Include="Services\EventDispatcher\EventDispatcherServiceModule.cs" />
     <Compile Include="Services\GlobalVariables\GlobalVariablesService.cs" />
     <Compile Include="Services\GlobalVariables\GlobalVariablesServiceModule.cs" />
     <Compile Include="Services\IApplicationModulesManager.cs" />
     <Compile Include="Services\IConfigurationFile.cs" />
-    <Compile Include="Services\IGlobalEventsService.cs" />
+    <Compile Include="Services\IEventDispatcher.cs" />
     <Compile Include="Validation\RequiredField.cs" />
     <Compile Include="Validation\RequiredFieldValidators.cs" />
     <Compile Include="Validation\Validator.cs" />

@@ -15,20 +15,32 @@ namespace Coddee.WPF.Controls
                                                         "ViewModel",
                                                         typeof(IPresentableViewModel),
                                                         typeof(ViewModelPresenter),
-                                                        new PropertyMetadata(default(IPresentableViewModel), ViewModelSet));
+                                                        new PropertyMetadata(default(IPresentableViewModel), UpdatePresenterContent));
 
-
-
-        public static readonly DependencyProperty ContentProperty = DependencyProperty.Register(
-                                                        "Content",
-                                                        typeof(UIElement),
+        public static readonly DependencyProperty ViewIndexProperty = DependencyProperty.Register(
+                                                        "ViewIndex",
+                                                        typeof(int),
                                                         typeof(ViewModelPresenter),
-                                                        new PropertyMetadata(default(UIElement)));
+                                                        new PropertyMetadata(default(int), UpdatePresenterContent));
+
+        public static readonly DependencyPropertyKey ContentPropertyKey = DependencyProperty.RegisterReadOnly(
+                                                                      "Content",
+                                                                      typeof(UIElement),
+                                                                      typeof(ViewModelPresenter),
+                                                                      new PropertyMetadata(default(UIElement)));
+
+        public static readonly DependencyProperty ContentProperty = ContentPropertyKey.DependencyProperty;
 
         public UIElement Content
         {
             get { return (UIElement)GetValue(ContentProperty); }
-            set { SetValue(ContentProperty, value); }
+            protected set { SetValue(ContentPropertyKey, value); }
+        }
+
+        public int ViewIndex
+        {
+            get { return (int)GetValue(ViewIndexProperty); }
+            set { SetValue(ViewIndexProperty, value); }
         }
 
         public IPresentableViewModel ViewModel
@@ -37,17 +49,17 @@ namespace Coddee.WPF.Controls
             set { SetValue(ViewModelProperty, value); }
         }
 
-        void UpdateContent()
+        private static void UpdatePresenterContent(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            Content = ViewModel?.GetView();
+            if (d is ViewModelPresenter vmp)
+                vmp.UpdateContent();
         }
 
-        private static void ViewModelSet(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        void UpdateContent()
         {
-            if (d is ViewModelPresenter presenter)
-            {
-                presenter.UpdateContent();
-            }
+            Debug.WriteLine("Updating ViewModelPresenter content");
+            Content = ViewModel?.GetView(ViewIndex);
         }
+
     }
 }

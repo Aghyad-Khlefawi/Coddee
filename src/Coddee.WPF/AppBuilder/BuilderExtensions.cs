@@ -90,7 +90,7 @@ namespace Coddee.AppBuilder
                 var shellViewModel = BuildDefaultShell<TContent>(builder, state, config, container);
                 shellViewModel.Initialize().ContinueWith((t) =>
                 {
-                    container.Resolve<IGlobalEventsService>().GetEvent<ApplicationStartedEvent>().Invoke(wpfApplication);
+                    container.Resolve<IEventDispatcher>().GetEvent<ApplicationStartedEvent>().Raise(wpfApplication);
                 });
                 wpfApplication.ShowWindow();
             }));
@@ -137,7 +137,7 @@ namespace Coddee.AppBuilder
                 var shellViewModel = BuildCustomShell<TShellViewModel>(config, container);
                 shellViewModel.Initialize().ContinueWith((t) =>
                 {
-                    container.Resolve<IGlobalEventsService>().GetEvent<ApplicationStartedEvent>().Invoke(wpfApplication);
+                    container.Resolve<IEventDispatcher>().GetEvent<ApplicationStartedEvent>().Raise(wpfApplication);
                 });
                 wpfApplication.ShowWindow();
             }));
@@ -188,7 +188,7 @@ namespace Coddee.AppBuilder
                         loggedIn = true;
                         shellViewModel.Initialize().ContinueWith((t) =>
                         {
-                            container.Resolve<IGlobalEventsService>().GetEvent<ApplicationStartedEvent>().Invoke(wpfApplication);
+                            container.Resolve<IEventDispatcher>().GetEvent<ApplicationStartedEvent>().Raise(wpfApplication);
                         });
                         wpfApplication.ShowWindow();
                         loginView.Close();

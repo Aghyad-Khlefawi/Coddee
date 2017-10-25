@@ -543,7 +543,7 @@
                 <ControlTemplate TargetType="{x:Type local:FormField}">
                     <Border BorderThickness="{TemplateBinding BorderThickness}"
                             BorderBrush="{TemplateBinding BorderBrush}">
-                        <StackPanel Orientation="Horizontal">
+                        <DockPanel>
                             <Label x:Name="PART_TITLE"
                                    Style="{TemplateBinding TitleStyle}"
                                    Content="{TemplateBinding Title}"
@@ -554,9 +554,10 @@
                                                  HideText="true"
                                                  HideContentOnBusy="True"
                                                  Background="Transparent">
-                                <ContentPresenter Content="{TemplateBinding Content}" />
+                                <ContentPresenter Content="{TemplateBinding Content}"
+                                                  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" />
                             </local:BusyIndicator>
-                        </StackPanel>
+                        </DockPanel>
                     </Border>
                 </ControlTemplate>
             </Setter.Value>
@@ -758,6 +759,8 @@
                 Value="LightGray" />
         <Setter Property="ItemsMargin"
                 Value="10 3" />
+        <Setter Property="Padding"
+                Value="0 0 0 5" />
         <Setter Property="TabsBarHeight"
                 Value="55" />
         <Setter Property="HeaderForeground"
@@ -781,7 +784,7 @@
                             </ItemsControl>
                             <StackPanel Height="1"
                                         DockPanel.Dock="Top"
-                                        Margin="0 -1 0 5"
+                                        Margin="0 -1 0 0"
                                         Background="LightGray" />
                             <ContentPresenter MaxHeight="{Binding RelativeSource={RelativeSource TemplatedParent},Path=MaxContentHeight}"
                                               Margin="{Binding RelativeSource={RelativeSource AncestorType=local:TabsPanel,Mode=FindAncestor},Path=Padding}"
@@ -855,7 +858,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:ViewModelPresenter}">
-                    <ContentPresenter Content="{Binding ViewModel.View,RelativeSource={RelativeSource TemplatedParent}}" />
+                    <ContentPresenter Content="{Binding RelativeSource={RelativeSource TemplatedParent},Path=Content}" />
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
@@ -949,7 +952,7 @@
                         <Setter Property="Fill"
                                 Value="{DynamicResource ApplicationAccentColorDarker}" />
                     </DataTrigger>
-                    
+
                 </Style.Triggers>
             </Style>
             <Style x:Key="StepTitle"
@@ -988,20 +991,20 @@
                     <MultiDataTrigger>
                         <MultiDataTrigger.Conditions>
                             <Condition Binding="{Binding IsValid}"
-                                       Value="false"/>
+                                       Value="false" />
                             <Condition Binding="{Binding IsValidated}"
                                        Value="true" />
-                           </MultiDataTrigger.Conditions>
+                        </MultiDataTrigger.Conditions>
                         <Setter Property="Fill"
                                 Value="{DynamicResource ErrorColor}" />
                     </MultiDataTrigger>
-                   
+
                     <DataTrigger Binding="{Binding IsCurrent}"
                                  Value="true">
                         <Setter Property="Fill"
                                 Value="{DynamicResource ApplicationAccentColorDarker}" />
                     </DataTrigger>
-                 
+
                 </Style.Triggers>
             </Style>
 
@@ -1093,9 +1096,11 @@
         <Setter Property="IsTabStop"
                 Value="False" />
         <Setter Property="Template">
-           <Setter.Value>
-               <ControlTemplate TargetType="{x:Type local:WizardStep}">
-                    <Button IsTabStop="False" Foreground="{TemplateBinding Foreground}"
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:WizardStep}">
+                    <Button IsTabStop="False"
+                            FocusVisualStyle="{x:Null}"
+                            Foreground="{TemplateBinding Foreground}"
                             Name="PART_BUTTON">
                         <Button.Template>
                             <ControlTemplate>

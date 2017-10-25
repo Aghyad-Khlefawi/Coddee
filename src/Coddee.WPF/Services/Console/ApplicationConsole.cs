@@ -109,7 +109,7 @@ namespace Coddee.Services.ApplicationConsole
                 if (command != null)
                 {
                     CurrentCommand = command.Name;
-                    _view.commandBox.CaretIndex = Int32.MaxValue;
+                    View.commandBox.CaretIndex = Int32.MaxValue;
                 }
                 arg.Handled = true;
             }
@@ -120,7 +120,7 @@ namespace Coddee.Services.ApplicationConsole
                     _executedCommandIndex = _executedCommands.Count - 1;
 
                 CurrentCommand = _executedCommands[_executedCommandIndex];
-                _view.commandBox.CaretIndex = Int32.MaxValue;
+                View.commandBox.CaretIndex = Int32.MaxValue;
                 arg.Handled = true;
             }
             else if (arg.Key == Key.Down)
@@ -130,7 +130,7 @@ namespace Coddee.Services.ApplicationConsole
                     _executedCommandIndex = 0;
 
                 CurrentCommand = _executedCommands[_executedCommandIndex];
-                _view.commandBox.CaretIndex = Int32.MaxValue;
+                View.commandBox.CaretIndex = Int32.MaxValue;
                 arg.Handled = true;
             }
         }
@@ -173,7 +173,7 @@ namespace Coddee.Services.ApplicationConsole
                     ToggleConsole();
             };
 
-            _view.commandBox.PreviewKeyDown += KeyDown;
+            View.commandBox.PreviewKeyDown += KeyDown;
             AddDefaultCommands();
             AddDefaultCommandHandlers();
         }
@@ -335,8 +335,8 @@ namespace Coddee.Services.ApplicationConsole
         public void ToggleConsole()
         {
             ShowConsole = !ShowConsole;
-            _view.commandBox.Focus();
-            Keyboard.Focus(_view.commandBox);
+            View.commandBox.Focus();
+            Keyboard.Focus(View.commandBox);
         }
 
         /// <summary>
@@ -429,7 +429,7 @@ namespace Coddee.Services.ApplicationConsole
         private void WriteToConsole(string content)
         {
             ConsoleContent += content;
-            ExecuteOnUIContext(_view.consoleTextBox.ScrollToEnd);
+            ExecuteOnUIContext(View.consoleTextBox.ScrollToEnd);
         }
 
 

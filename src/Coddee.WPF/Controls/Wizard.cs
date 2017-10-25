@@ -95,13 +95,17 @@ namespace Coddee.WPF.Controls
             get { return (WizardStep)GetValue(CurrentStepProperty); }
             set
             {
-                CurrentStep?.Validate();
-                CurrentStep?.SetCurrent(false);
+                if (CurrentStep != null)
+                {
+                    if (CurrentStep.ValidateOnNavigation)
+                        CurrentStep.Validate();
+                    CurrentStep.SetCurrent(false);
+                }
                 SetValue(CurrentStepProperty, value);
                 RefreshCommands();
+                Content = value?.Content;
                 value?.SetCompleted(true);
                 value?.SetCurrent(true);
-                Content = value?.Content;
             }
         }
 
@@ -169,7 +173,7 @@ namespace Coddee.WPF.Controls
             if (!CurrentStep.IsFirstStep)
             {
                 CurrentStep.SetCompleted(false);
-                CurrentStep = Steps.First(e => e.Index == CurrentStep.Index - 1);
+                CurrentStep = Steps.OrderByDescending(e=>e.Index).First(e => e.Index < CurrentStep.Index &&  e.Visibility == Visibility.Visible);
             }
         }
 
@@ -177,8 +181,26 @@ namespace Coddee.WPF.Controls
         {
             if (!CurrentStep.IsLastStep)
             {
-                CurrentStep = Steps.First(e => e.Index == CurrentStep.Index + 1);
+                CurrentStep = Steps.OrderBy(e => e.Index).First(e => e.Index > CurrentStep.Index && e.Visibility == Visibility.Visible);
             }
+        }
+
+        public void Clear()
+        {
+            foreach (var step in Steps)
+            {
+                step.Clear();
+            }
+            FirstStep?.Select();
+        }
+
+        protected override void OnPreviewKeyDown(KeyEventArgs e)
+        {
+            base.OnPreviewKeyDown(e);
+            if (e.Key == Key.Right && Keyboard.IsKeyDown(Key.LeftCtrl))
+                Next();
+            else if (e.Key == Key.Left && Keyboard.IsKeyDown(Key.LeftCtrl))
+                Back();
         }
 
         public WizardStepsCollection Steps
@@ -191,26 +213,31 @@ namespace Coddee.WPF.Controls
         {
             for (int i = 0; i < Steps.Count; i++)
             {
-                Steps[i].SetIndex(i);
-                Steps[i].Clicked = OnStepClick;
+                var step = Steps[i];
+                step.SetWizard(this);
+                if (step.Visibility == Visibility.Visible)
+                {
+                    step.SetIndex(i);
+                    step.Selected = OnStepSelected;
+                }
             }
+
             FirstStep?.ClearFisrtAndLast();
             LastStep?.ClearFisrtAndLast();
 
-            FirstStep = Steps.FirstOrDefault();
-            LastStep = Steps.LastOrDefault();
+            FirstStep = Steps.FirstOrDefault(e => e.Visibility == Visibility.Visible);
+            LastStep = Steps.LastOrDefault(e => e.Visibility == Visibility.Visible);
 
             FirstStep?.SetFirst();
             LastStep?.SetLast();
 
 
             CurrentStep = FirstStep;
-
         }
 
-        private void OnStepClick(object sender, EventArgs e)
+        private void OnStepSelected(object sender, WizardStep step)
         {
-            CurrentStep = (WizardStep)sender;
+            CurrentStep = step;
         }
     }
 
@@ -220,7 +247,9 @@ namespace Coddee.WPF.Controls
         static WizardStep()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(WizardStep), new FrameworkPropertyMetadata(typeof(WizardStep)));
+            VisibilityProperty.OverrideMetadata(typeof(WizardStep), new FrameworkPropertyMetadata(VisiblityChanged));
         }
+
 
         public static readonly DependencyProperty ViewModelProperty = DependencyProperty.Register(
                                                         "ViewModel",
@@ -296,7 +325,9 @@ namespace Coddee.WPF.Controls
 
         public static readonly DependencyProperty IsValidProperty = IsValidPropertyKey.DependencyProperty;
 
-        public EventHandler Clicked;
+        public EventHandler<WizardStep> Selected;
+
+        public bool ValidateOnNavigation { get; set; }
 
         public bool IsValid
         {
@@ -410,8 +441,34 @@ namespace Coddee.WPF.Controls
         public void SetCurrent(bool newValue)
         {
             IsCurrent = newValue;
+            if (ViewModel is IWizardStepViewModel wizardStepViewModel)
+            {
+                if (newValue)
+                    wizardStepViewModel.WizardStepEntered();
+                else
+                    wizardStepViewModel.WizardStepExited();
+            }
         }
 
+        private Wizard _wizard;
+
+        public void SetWizard(Wizard wizard)
+        {
+            _wizard = wizard;
+        }
+
+        private static void VisiblityChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is WizardStep step)
+            {
+                step.OnVisibilityChanged();
+            }
+        }
+
+        public void OnVisibilityChanged()
+        {
+            _wizard?.RefreshSteps();
+        }
         public void Validate()
         {
             if (ViewModel == null)
@@ -428,8 +485,19 @@ namespace Coddee.WPF.Controls
             var button = GetTemplateChild("PART_BUTTON") as Button;
             if (button != null)
             {
-                button.Click += (sender, args) => Clicked?.Invoke(this, EventArgs.Empty);
+                button.Click += (sender, args) => Select();
             }
+        }
+
+        public void Select()
+        {
+            Selected?.Invoke(this,this);
+        }
+
+        public void Clear()
+        {
+            IsValidated = false;
+            IsCompleted = false;
         }
     }
 
@@ -457,5 +525,11 @@ namespace Coddee.WPF.Controls
     public class WizardStepsCollection : ObservableCollection<WizardStep>
     {
 
+    }
+
+    public interface IWizardStepViewModel : IPresentableViewModel
+    {
+        void WizardStepEntered();
+        void WizardStepExited();
     }
 }

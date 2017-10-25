@@ -104,8 +104,8 @@ namespace Coddee.SQL
                 {
                     InitialCatalog = Databases.SelectedItem
                 }.ToString();
-                _view.DialogResult = true;
-                _view.Close();
+                View.DialogResult = true;
+                View.Close();
             }
         }
 
@@ -124,7 +124,7 @@ namespace Coddee.SQL
             GetView();
             GetServers();
             CreateView();
-            _view.ShowDialog();
+            View.ShowDialog();
             return _connection;
         }
 

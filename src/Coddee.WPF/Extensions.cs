@@ -7,6 +7,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading.Tasks;
+using Coddee.Collections;
 using Coddee.Validation;
 using Coddee.WPF.Commands;
 
@@ -40,7 +41,23 @@ namespace Coddee.WPF
         {
             return (await collection).AsSelectable();
         }
+        public static IEnumerable<SelectableItem<T>> AsSelectable<T>(this IEnumerable<T> collection, EventHandler<T> onItemSelected, EventHandler<T> onItemUnselected)
+        {
+            return collection.Select(e =>
+            {
+                var res = new SelectableItem<T>(e);
+                if (onItemSelected != null)
+                    res.Selected += onItemSelected;
+                if (onItemUnselected != null)
+                    res.UnSelected += onItemUnselected;
+                return res;
+            });
+        }
 
+        public static async Task<IEnumerable<SelectableItem<T>>> AsSelectable<T>(this Task<IEnumerable<T>> collection, EventHandler<T> onItemSelected, EventHandler<T> onItemUnselected)
+        {
+            return (await collection).AsSelectable(onItemSelected, onItemUnselected);
+        }
         public static IEnumerable<T> GetSelected<T>(this IEnumerable<SelectableItem<T>> collection)
         {
             return collection.Where(e => e.IsSelected).Select(e => e.Item);
@@ -59,7 +76,7 @@ namespace Coddee.WPF
         public static ReactiveCommand<TObserved> ObserveProperty<TObserved>(this ReactiveCommand<TObserved> command, Expression<Func<TObserved, object>> property)
         {
             var propertyName = ExpressionHelper.GetMemberName(property);
-            var type = ((PropertyInfo)((MemberExpression)property.Body).Member).PropertyType;
+            var type = ExpressionHelper.GetMemberType(property);
             command.ObserveProperty(propertyName, RequiredFieldValidators.GetValidator(type));
             return command;
         }
@@ -68,6 +85,16 @@ namespace Coddee.WPF
         {
             if (!vm.IsInitialized)
                 await vm.Initialize();
+        }
+
+        public static AsyncObservableCollectionView<T> ToAsyncObservableCollectionView<T>(this IEnumerable<T> collection, FilterHandler<T> filterPredicate)
+        {
+            return AsyncObservableCollectionView<T>.Create(filterPredicate, collection);
+        }
+
+        public static async Task<AsyncObservableCollectionView<T>> ToAsyncObservableCollectionView<T>(this Task<IEnumerable<T>> collection, FilterHandler<T> filterPredicate)
+        {
+            return AsyncObservableCollectionView<T>.Create(filterPredicate, await collection);
         }
     }
 }

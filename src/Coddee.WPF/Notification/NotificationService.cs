@@ -49,7 +49,7 @@ namespace Coddee.Notification
             };
             timer.Start();
             GC.KeepAlive(timer);
-            Notifications.Insert(0, popup);
+            Notifications.Add(popup);
         }
 
 

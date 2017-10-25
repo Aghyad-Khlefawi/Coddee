@@ -19,9 +19,9 @@ namespace Coddee.Services.Navigation
             
         }
 
-        public NavigationService(IGlobalEventsService globalEvents,IViewModelsManager viewModelsManager)
+        public NavigationService(IEventDispatcher eventDispatcher,IViewModelsManager viewModelsManager)
         {
-            _globalEvents = globalEvents;
+            _eventDispatcher = eventDispatcher;
             _viewModelsManager = viewModelsManager;
         }
 
@@ -49,7 +49,7 @@ namespace Coddee.Services.Navigation
             NavigationItems = AsyncObservableCollection<INavigationItem>.Create();
             navigationItems.ForEach(AddNavigationItem);
             navbarRegion.View(this);
-            _globalEvents.GetEvent<ApplicationStartedEvent>().Subscribe(e =>
+            _eventDispatcher.GetEvent<ApplicationStartedEvent>().Subscribe(e =>
             {
                 if (navigationItems.Any())
                 {
@@ -72,7 +72,7 @@ namespace Coddee.Services.Navigation
         }
 
         private AsyncObservableCollection<INavigationItem> _navigationItems;
-        private readonly IGlobalEventsService _globalEvents;
+        private readonly IEventDispatcher _eventDispatcher;
         private readonly IViewModelsManager _viewModelsManager;
         public AsyncObservableCollection<INavigationItem> NavigationItems
         {

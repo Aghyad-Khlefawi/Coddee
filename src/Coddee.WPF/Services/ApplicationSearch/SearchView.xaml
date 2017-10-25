@@ -1,16 +1,17 @@
 ﻿<UserControl x:Class="Coddee.Services.ApplicationSearch.SearchView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:Coddee.Services.ApplicationSearch"
              xmlns:global="clr-namespace:"
              xmlns:coddee="http://schemas.Coddee.com/2017/WPF"
              xmlns:controls="clr-namespace:Coddee.WPF.Controls"
              xmlns:commands="clr-namespace:Coddee.WPF.Commands"
              xmlns:wpf="clr-namespace:Coddee.WPF"
-             mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             mc:Ignorable="d"
+             d:DesignHeight="300"
+             d:DesignWidth="300">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -23,13 +24,13 @@
     </UserControl.Resources>
     <Grid d:DataContext="{StaticResource designData}">
         <controls:BusyIndicator IsBusy="{Binding IsBusy}"
-                              Text="Initializing quick search..."
-                              HideContentOnBusy="True"
-                              FillColor="white">
+                                Text="Initializing quick search..."
+                                HideContentOnBusy="True"
+                                FillColor="white">
             <Grid Width="225">
                 <Border BorderThickness="1 1 1 0"
                         Height="26"
-                        Visibility="{Binding ShowPopup}"
+                        Visibility="{Binding ShowPopup,Converter={StaticResource BoolToVisibilityConverter}}"
                         Margin="0 -1 0 0"
                         BorderBrush="{DynamicResource ApplicationAccentColorDarker}" />
                 <Border BorderThickness="0"
@@ -37,7 +38,8 @@
                         Background="White"
                         BorderBrush="#FFABADB3">
                     <DockPanel>
-                        <Border DockPanel.Dock="Right" Background="White">
+                        <Border DockPanel.Dock="Right"
+                                Background="White">
                             <Grid>
                                 <Path Style="{StaticResource Shape_Search}"
                                       Fill="LightGray"
@@ -61,12 +63,13 @@
                             </Grid>
                         </Border>
                         <controls:WaterMarkTextBox WaterMarkContent="Quick search"
-                                                 x:Name="SearchBox"
-                                                 DockPanel.Dock="Top"
-                                                 BorderThickness="0"
-                                                 Text="{Binding SearchText,UpdateSourceTrigger=PropertyChanged}"
-                                                 commands:OnEnterCommand.Command="{Binding NavigateFirstCommand}"
-                                                 commands:KeyDownCommand.Command="{Binding KeyDownCommand}" />
+                                                   IsTabStop="False"
+                                                   x:Name="SearchBox"
+                                                   DockPanel.Dock="Top"
+                                                   BorderThickness="0"
+                                                   Text="{Binding SearchText,UpdateSourceTrigger=PropertyChanged}"
+                                                   commands:OnEnterCommand.Command="{Binding NavigateFirstCommand}"
+                                                   commands:KeyDownCommand.Command="{Binding KeyDownCommand}" />
                     </DockPanel>
                 </Border>
                 <Popup IsOpen="{Binding ShowPopup}"
@@ -78,7 +81,8 @@
                             Background="WhiteSmoke">
                         <DockPanel>
                             <Grid>
-                                <Label Content="{wpf:Localize SearchResultsNotFound}" HorizontalAlignment="Center"
+                                <Label Content="{wpf:Localize SearchResultsNotFound}"
+                                       HorizontalAlignment="Center"
                                        Margin="10"
                                        FontStyle="Italic"
                                        Visibility="{Binding SearchResultsFound,Converter={StaticResource BoolToVisibilityConverter},ConverterParameter=R}" />
@@ -106,8 +110,9 @@
                                                                     DockPanel.Dock="Bottom">
                                                                 <Border.Background>
                                                                     <RadialGradientBrush>
-                                                                        <GradientStop Color="DarkGray" Offset="0.279"/>
-                                                                        <GradientStop Offset="1"/>
+                                                                        <GradientStop Color="DarkGray"
+                                                                                      Offset="0.279" />
+                                                                        <GradientStop Offset="1" />
                                                                     </RadialGradientBrush>
                                                                 </Border.Background>
                                                             </Border>
@@ -118,14 +123,14 @@
                                                                             <DockPanel.Style>
                                                                                 <Style TargetType="DockPanel">
                                                                                     <Setter Property="Background"
-                                                                                        Value="WhiteSmoke" />
+                                                                                            Value="WhiteSmoke" />
                                                                                     <Setter Property="Cursor"
-                                                                                        Value="Hand" />
+                                                                                            Value="Hand" />
                                                                                     <Style.Triggers>
                                                                                         <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=ListBoxItem,Mode=FindAncestor},Path=IsSelected}"
-                                                                                                 Value="true">
+                                                                                                     Value="true">
                                                                                             <Setter Property="Background"
-                                                                                                Value="#747474" />
+                                                                                                    Value="#747474" />
                                                                                         </DataTrigger>
                                                                                     </Style.Triggers>
                                                                                 </Style>
@@ -133,23 +138,23 @@
                                                                             <DockPanel.Resources>
                                                                                 <Style TargetType="TextBlock">
                                                                                     <Setter Property="Foreground"
-                                                                                        Value="#373737" />
+                                                                                            Value="#373737" />
                                                                                     <Style.Triggers>
                                                                                         <DataTrigger  Binding="{Binding RelativeSource={RelativeSource AncestorType=ListBoxItem,Mode=FindAncestor},Path=IsSelected}"
-                                                                                                  Value="true">
+                                                                                                      Value="true">
                                                                                             <Setter Property="Foreground"
-                                                                                                Value="WhiteSmoke" />
+                                                                                                    Value="WhiteSmoke" />
                                                                                         </DataTrigger>
                                                                                     </Style.Triggers>
                                                                                 </Style>
                                                                                 <Style TargetType="Path">
                                                                                     <Setter Property="Fill"
-                                                                                        Value="#373737" />
+                                                                                            Value="#373737" />
                                                                                     <Style.Triggers>
                                                                                         <DataTrigger  Binding="{Binding RelativeSource={RelativeSource AncestorType=ListBoxItem,Mode=FindAncestor},Path=IsSelected}"
-                                                                                                  Value="true">
+                                                                                                      Value="true">
                                                                                             <Setter Property="Fill"
-                                                                                                Value="WhiteSmoke" />
+                                                                                                    Value="WhiteSmoke" />
                                                                                         </DataTrigger>
                                                                                     </Style.Triggers>
                                                                                 </Style>
@@ -157,34 +162,36 @@
                                                                             </DockPanel.Resources>
 
                                                                             <Path Margin="5 0"
-                                                                              VerticalAlignment="Center"
-                                                                              Height="20"
-                                                                              Stretch="Uniform"
-                                                                              Data="{Binding Icon}"/>
+                                                                                  VerticalAlignment="Center"
+                                                                                  Height="20"
+                                                                                  Stretch="Uniform"
+                                                                                  Data="{Binding Icon}" />
                                                                             <TextBlock Text="{Binding Category}"
-                                                                                   MaxWidth="170" HorizontalAlignment="Right"
-                                                                                   TextTrimming="CharacterEllipsis"
-                                                                                   DockPanel.Dock="Bottom"
-                                                                                   FontSize="12"
-                                                                                   FontWeight="Medium"
-                                                                                   FontStyle="Italic"
-                                                                                   Padding="5 0 5 5" />
+                                                                                       MaxWidth="170"
+                                                                                       HorizontalAlignment="Right"
+                                                                                       TextTrimming="CharacterEllipsis"
+                                                                                       DockPanel.Dock="Bottom"
+                                                                                       FontSize="12"
+                                                                                       FontWeight="Medium"
+                                                                                       FontStyle="Italic"
+                                                                                       Padding="5 0 5 5" />
                                                                             <DockPanel>
 
                                                                                 <StackPanel>
                                                                                     <TextBlock Text="{Binding Title}"
-                                                                                           FontWeight="Medium"
+                                                                                               FontWeight="Medium"
                                                                                                HorizontalAlignment="Left"
-                                                                                           FontSize="14" MaxWidth="170"
-                                                                                           TextTrimming="CharacterEllipsis"
-                                                                                           Padding="5 5 5 0" />
+                                                                                               FontSize="14"
+                                                                                               MaxWidth="170"
+                                                                                               TextTrimming="CharacterEllipsis"
+                                                                                               Padding="5 5 5 0" />
                                                                                     <TextBlock Text="{Binding Subtitle}"
-                                                                                           Visibility="{Binding Subtitle,Converter={StaticResource NullToVisibilityConverter}}"
-                                                                                           MaxWidth="170"
+                                                                                               Visibility="{Binding Subtitle,Converter={StaticResource NullToVisibilityConverter}}"
+                                                                                               MaxWidth="170"
                                                                                                HorizontalAlignment="Left"
-                                                                                           TextTrimming="CharacterEllipsis"
-                                                                                           FontSize="12"
-                                                                                           Padding="5 0 5 0" />
+                                                                                               TextTrimming="CharacterEllipsis"
+                                                                                               FontSize="12"
+                                                                                               Padding="5 0 5 0" />
 
                                                                                 </StackPanel>
                                                                             </DockPanel>
