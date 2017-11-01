@@ -19,7 +19,7 @@ namespace Coddee.Data
             _repositories = new Dictionary<Type, IRepository>();
             _repositoryInitializers = new Dictionary<int, IRepositoryInitializer>();
         }
-        
+
         private IRepositorySyncService _syncService;
         protected Dictionary<Type, IRepository> _repositories;
         protected Dictionary<int, IRepositoryInitializer> _repositoryInitializers;
@@ -97,12 +97,12 @@ namespace Coddee.Data
                 repository.SetSyncService(_syncService);
         }
 
-        public void SetSyncService(IRepositorySyncService syncService)
+        public void SetSyncService(IRepositorySyncService syncService, bool sendSyncRequests = true)
         {
             _syncService = syncService;
             foreach (var repo in _repositories.Values)
             {
-                repo.SetSyncService(_syncService);
+                repo.SetSyncService(_syncService, sendSyncRequests);
             }
         }
 

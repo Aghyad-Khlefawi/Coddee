@@ -2,6 +2,7 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -118,6 +119,20 @@ namespace Coddee
         /// Updates the collection base on the operation type 
         /// </summary>
         /// <typeparam name="T"></typeparam>
+        public static void Update<T>(this IList<T> collection, OperationType operationType, T item, Func<T, bool> predicate)
+        {
+            if (operationType == OperationType.Add)
+                collection.Add(item);
+            else if (operationType == OperationType.Edit)
+                collection.Update(item, predicate);
+            else if (operationType == OperationType.Delete)
+                collection.Remove(predicate);
+        }
+
+        /// <summary>
+        /// Updates the collection base on the operation type 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
         public static void UpdateFirst<T>(this IList<T> collection, OperationType operationType, T item)
         {
             if (operationType == OperationType.Add)
@@ -126,6 +141,20 @@ namespace Coddee
                 collection.UpdateFirst(item);
             else if (operationType == OperationType.Delete)
                 collection.Remove(item);
+        }
+
+        /// <summary>
+        /// Updates the collection base on the operation type 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        public static void UpdateFirst<T>(this IList<T> collection, OperationType operationType, T item, Func<T, bool> predicate)
+        {
+            if (operationType == OperationType.Add)
+                collection.Insert(0, item);
+            else if (operationType == OperationType.Edit)
+                collection.UpdateFirst(item, predicate);
+            else if (operationType == OperationType.Delete)
+                collection.Remove(predicate);
         }
 
         /// <summary>
@@ -170,6 +199,17 @@ namespace Coddee
             return collection.First(e => e.GetKey.Equals(key));
         }
 
+        public static IEnumerable<TResult> CastAs<TResult>(this IEnumerable collection)
+        {
+            foreach (var item in collection)
+            {
+                yield return (TResult)item;
+            }
+        }
+        public static async Task<IEnumerable<TResult>> CastAs<TSource, TResult>(this Task<IEnumerable<TSource>> collection)
+        {
+            return (await collection).CastAs<TResult>();
+        }
         public static T FirstOrDefault<T, TKey>(this IEnumerable<T> collection, TKey key) where T : IUniqueObject<TKey>
         {
             return collection.FirstOrDefault(e => e.GetKey.Equals(key));
@@ -197,5 +237,9 @@ namespace Coddee
             return task.ContinueWith(t => action(t.Result));
         }
 
+        public static Task ContinueWithResultAs<T,TResult>(this Task<IEnumerable<T>> task, Action<IEnumerable<TResult>> action)
+        {
+            return task.ContinueWith(t => action(t.Result.CastAs<TResult>()));
+        }
     }
 }

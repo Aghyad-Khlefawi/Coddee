@@ -51,7 +51,7 @@ namespace Coddee.Data
         /// <summary>
         /// Set the sync service to be passed to all repositories.
         /// </summary>
-        void SetSyncService(IRepositorySyncService syncService);
+        void SetSyncService(IRepositorySyncService syncService, bool sendSyncRequests = true);
 
         /// <summary>
         /// Adds a repository initializer to the repository manager.

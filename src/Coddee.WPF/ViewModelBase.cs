@@ -455,7 +455,7 @@ namespace Coddee.WPF
             {
                 foreach (var childViewModel in GetChildViewModels())
                 {
-                    Errors.AddRange(childViewModel.Validate());
+                    Errors.AddRange(childViewModel.Validate(true));
                 }
             }
 
@@ -529,6 +529,14 @@ namespace Coddee.WPF
             {
                 IsBusy = false;
             }
+        }
+
+        protected virtual void ToViewModelEvent<TEvent, TParam>(ref ViewModelEventHandler<TParam> handler) where TEvent : ViewModelEvent<TParam>, new()
+        {
+            handler += (sender, args) =>
+            {
+                _eventDispatcher.GetEvent<TEvent>().Raise(this, args);
+            };
         }
     }
 

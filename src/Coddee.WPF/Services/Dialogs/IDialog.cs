@@ -12,5 +12,6 @@ namespace Coddee.Services.Dialogs
         int ZIndex { get; set; }
         UIElement Container { get; set; }
         event Action<IDialog> CloseRequested;
+        void Close();
     }
 }

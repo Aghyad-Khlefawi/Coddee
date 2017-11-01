@@ -17,7 +17,7 @@ namespace Coddee.Data
         protected RepositoryConfigurations _config;
         protected IRepositoryManager _repositoryManager;
         protected IRepositorySyncService _syncService;
-
+        protected bool _sendSyncRequests;
         public abstract int RepositoryType { get; }
         public bool Initialized { get; protected set; }
         public Type ImplementedInterface { get; protected set; }
@@ -36,9 +36,10 @@ namespace Coddee.Data
             Initialized = true;
         }
 
-        public virtual void SetSyncService(IRepositorySyncService syncService)
+        public virtual void SetSyncService(IRepositorySyncService syncService,bool sendSyncRequests = true)
         {
             _syncService = syncService;
+            _sendSyncRequests = sendSyncRequests;
             syncService.SyncReceived += SyncServiceSyncReceived;
         }
         

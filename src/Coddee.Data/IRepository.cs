@@ -55,7 +55,7 @@ namespace Coddee.Data
         /// Set the sync service to be used in the repository
         /// </summary>
         /// <param name="syncService"></param>
-        void SetSyncService(IRepositorySyncService syncService);
+        void SetSyncService(IRepositorySyncService syncService,bool sendSyncRequests = true);
     }
 
     /// <summary>

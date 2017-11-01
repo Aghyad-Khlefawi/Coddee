@@ -41,6 +41,8 @@
     <converters:ListCountLowerThanToVisibility x:Key="ListCountLowerThanToVisibility" />
     <converters:EqualityVisibilityConverter x:Key="EqualityVisibilityConverter" />
     <converters:InequalityVisibilityConverter x:Key="InequalityVisibilityConverter" />
+    <converters:EnumToBoolConverter x:Key="EnumToBoolConverter" />
+    <converters:EnumToVisibilityConverter x:Key="EnumToVisibilityConverter" />
     <!--#endregion-->
 
     <!--#region Shapes-->

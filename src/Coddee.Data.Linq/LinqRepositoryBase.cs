@@ -297,14 +297,14 @@ namespace Coddee.Data.LinqToSQL
             ItemsChanged?.Invoke(this, args);
         }
 
-        public override void SetSyncService(IRepositorySyncService syncService)
+        public override void SetSyncService(IRepositorySyncService syncService, bool sendSyncRequests = true)
         {
-            base.SetSyncService(syncService);
+            base.SetSyncService(syncService, sendSyncRequests);
             ItemsChanged += OnItemsChanged;
         }
         private void OnItemsChanged(object sender, RepositoryChangeEventArgs<TModel> e)
         {
-            if (!e.FromSync)
+            if (!e.FromSync && _sendSyncRequests)
                 _syncService?.SyncItem(_identifier, new RepositorySyncEventArgs { Item = e.Item, OperationType = e.OperationType });
         }
     }

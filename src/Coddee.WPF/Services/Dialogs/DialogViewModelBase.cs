@@ -21,7 +21,7 @@ namespace Coddee.WPF.Dialogs
 
         public event Action<IDialog> CloseRequested;
 
-        protected void Close()
+        public void Close()
         {
             CloseRequested?.Invoke(this);
         }

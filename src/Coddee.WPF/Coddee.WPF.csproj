@@ -83,6 +83,8 @@
     <Compile Include="Controls\WaterMarkTextBox.cs" />
     <Compile Include="Controls\Wizard.cs" />
     <Compile Include="Converters\BoolReverseConverter.cs" />
+    <Compile Include="Converters\EnumToBoolConverter.cs" />
+    <Compile Include="Converters\EnumToVisibilityConverter.cs" />
     <Compile Include="Converters\EqualityVisibilityConverter - Copy.cs" />
     <Compile Include="Converters\ListCountToVisibility.cs" />
     <Compile Include="Converters\NullToBoolConverter.cs" />
@@ -233,6 +235,7 @@
     <Compile Include="ViewModelBase.cs" />
     <Compile Include="Services\ViewModelManager\ViewModelsManager.cs" />
     <Compile Include="ViewModelEvent.cs" />
+    <Compile Include="ViewModelsGroupEvent.cs" />
     <Compile Include="WPFModulesDefnitions.cs" />
     <Compile Include="XamlHelpers\FocusOnLoad.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">

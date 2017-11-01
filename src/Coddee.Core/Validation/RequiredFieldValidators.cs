@@ -2,6 +2,7 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
 using System;
+using System.Linq;
 
 namespace Coddee.Validation
 {
@@ -20,6 +21,11 @@ namespace Coddee.Validation
                 var value = e as string ?? String.Empty;
                 return value.Length >= min && value.Length <= max;
             };
+        }
+
+        public static Validator CombinedValidator(params Validator[] validators)
+        {
+            return obj => validators.All(e => e(obj));
         }
 
         public static Validator NullableValidator = e => e != null;

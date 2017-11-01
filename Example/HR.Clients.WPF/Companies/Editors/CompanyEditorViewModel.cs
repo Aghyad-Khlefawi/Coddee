@@ -13,7 +13,7 @@ using HR.Data.Repositories;
 
 namespace HR.Clients.WPF.Companies.Editors
 {
-    
+
 
     public class CompanyEditorViewModel : EditorViewModelBase<CompanyEditorViewModel, CompanyEditorView, ICompanyRepository, Company, Guid>
     {
@@ -27,10 +27,7 @@ namespace HR.Clients.WPF.Companies.Editors
         public string Name
         {
             get { return _name; }
-            set
-            {
-                SetProperty(ref this._name, value);
-            }
+            set { SetProperty(ref this._name, value); }
         }
 
 

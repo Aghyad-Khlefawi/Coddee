@@ -319,17 +319,19 @@ namespace Coddee.Data.REST
 
         protected KeyValuePair<string, string> KeyValue(string name, object value)
         {
-            return new KeyValuePair<string, string>(name,value.ToString());
+            return new KeyValuePair<string, string>(name, value.ToString());
         }
     }
 
     public abstract class RESTRepositoryBase<TModel, TKey> : RESTRepositoryBase
         where TModel : IUniqueObject<TKey>
     {
-        private readonly string _identifier;
+        protected readonly string _identifier;
+        
+
         protected RESTRepositoryBase()
         {
-            _identifier = GetType().Name;
+            _identifier = typeof(TModel).Name;
         }
 
         public override void SyncServiceSyncReceived(string identifier, RepositorySyncEventArgs args)
@@ -348,20 +350,20 @@ namespace Coddee.Data.REST
             return new Condition<TModel, T>(property, value);
         }
 
-        protected void RaiseItemsChanged(object sender, RepositoryChangeEventArgs<TModel> args)
+        protected virtual void RaiseItemsChanged(object sender, RepositoryChangeEventArgs<TModel> args)
         {
             ItemsChanged?.Invoke(this, args);
         }
 
-        public override void SetSyncService(IRepositorySyncService syncService)
+        public override void SetSyncService(IRepositorySyncService syncService, bool sendSyncRequests = true)
         {
-            base.SetSyncService(syncService);
+            base.SetSyncService(syncService, sendSyncRequests);
             ItemsChanged += OnItemsChanged;
         }
-
+        
         protected virtual void OnItemsChanged(object sender, RepositoryChangeEventArgs<TModel> e)
         {
-            if (!e.FromSync)
+            if (!e.FromSync && _sendSyncRequests)
                 _syncService?.SyncItem(_identifier, new RepositorySyncEventArgs { Item = e.Item, OperationType = e.OperationType });
         }
 
@@ -387,13 +389,13 @@ namespace Coddee.Data.REST
         /// Return the name of the targeted controller
         /// </summary>
         /// <returns></returns>
-        protected Task<T> GetFromController<T>([CallerMemberName]string action="",
+        protected Task<T> GetFromController<T>([CallerMemberName]string action = "",
                                                params KeyValuePair<string, string>[] param)
         {
             return Get<T>(ControllerName, action, param);
         }
 
-        protected Task<T> GetFromController<T>(KeyValuePair<string, string> param, [CallerMemberName]string action="")
+        protected Task<T> GetFromController<T>(KeyValuePair<string, string> param, [CallerMemberName]string action = "")
         {
             return Get<T>(ControllerName, action, param);
         }

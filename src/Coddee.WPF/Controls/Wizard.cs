@@ -17,15 +17,16 @@ namespace Coddee.WPF.Controls
         static Wizard()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(Wizard), new FrameworkPropertyMetadata(typeof(Wizard)));
+
         }
 
 
 
         public static readonly DependencyProperty StepsProperty = DependencyProperty.Register(
-                                                        "Steps",
-                                                        typeof(WizardStepsCollection),
-                                                        typeof(Wizard),
-                                                        new PropertyMetadata(default(WizardStepsCollection), StepsValueChanged));
+                                                                                              "Steps",
+                                                                                              typeof(WizardStepsCollection),
+                                                                                              typeof(Wizard),
+                                                                                              new FrameworkPropertyMetadata(default(WizardStepsCollection), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, StepsValueChanged));
 
         public static readonly DependencyPropertyKey FirstStepPropertyKey = DependencyProperty.RegisterReadOnly(
                                                                                                                 "FirstStep",
@@ -126,17 +127,25 @@ namespace Coddee.WPF.Controls
         {
             if (dependencyObject is Wizard wizard)
             {
+                if (dependencyPropertyChangedEventArgs.NewValue is WizardStepsCollection Steps)
+                {
+                    Steps.CollectionChanged += (sender, args) =>
+                    {
+                        wizard.RefreshSteps();
+                    };
+                }
                 wizard.RefreshSteps();
             }
         }
 
         public Wizard()
         {
-            Steps = new WizardStepsCollection();
-            Steps.CollectionChanged += (sender, args) =>
-            {
-                RefreshSteps();
-            };
+
+            if (Steps != null)
+                Steps.CollectionChanged += (sender, args) =>
+                {
+                    RefreshSteps();
+                };
 
             NextCommand = new ReactiveCommand<Wizard>(this, Next)
                 .ObserveProperty(e => e.CurrentStep, ValidateCanGoNext);
@@ -173,7 +182,7 @@ namespace Coddee.WPF.Controls
             if (!CurrentStep.IsFirstStep)
             {
                 CurrentStep.SetCompleted(false);
-                CurrentStep = Steps.OrderByDescending(e=>e.Index).First(e => e.Index < CurrentStep.Index &&  e.Visibility == Visibility.Visible);
+                CurrentStep = Steps.OrderByDescending(e => e.Index).First(e => e.Index < CurrentStep.Index && e.Visibility == Visibility.Visible);
             }
         }
 
@@ -211,28 +220,34 @@ namespace Coddee.WPF.Controls
 
         public void RefreshSteps()
         {
-            for (int i = 0; i < Steps.Count; i++)
+            if (Steps != null)
             {
-                var step = Steps[i];
-                step.SetWizard(this);
-                if (step.Visibility == Visibility.Visible)
+                for (int i = 0; i < Steps.Count; i++)
                 {
-                    step.SetIndex(i);
-                    step.Selected = OnStepSelected;
+                    var step = Steps[i];
+                    if (step != null)
+                    {
+                        step.SetWizard(this);
+                        if (step.Visibility == Visibility.Visible)
+                        {
+                            step.SetIndex(i);
+                            step.Selected = OnStepSelected;
+                        }
+                    }
                 }
+
+                FirstStep?.ClearFisrtAndLast();
+                LastStep?.ClearFisrtAndLast();
+
+                FirstStep = Steps.FirstOrDefault(e => e.Visibility == Visibility.Visible);
+                LastStep = Steps.LastOrDefault(e => e.Visibility == Visibility.Visible);
+
+                FirstStep?.SetFirst();
+                LastStep?.SetLast();
+
+
+                CurrentStep = FirstStep;
             }
-
-            FirstStep?.ClearFisrtAndLast();
-            LastStep?.ClearFisrtAndLast();
-
-            FirstStep = Steps.FirstOrDefault(e => e.Visibility == Visibility.Visible);
-            LastStep = Steps.LastOrDefault(e => e.Visibility == Visibility.Visible);
-
-            FirstStep?.SetFirst();
-            LastStep?.SetLast();
-
-
-            CurrentStep = FirstStep;
         }
 
         private void OnStepSelected(object sender, WizardStep step)
@@ -491,7 +506,7 @@ namespace Coddee.WPF.Controls
 
         public void Select()
         {
-            Selected?.Invoke(this,this);
+            Selected?.Invoke(this, this);
         }
 
         public void Clear()

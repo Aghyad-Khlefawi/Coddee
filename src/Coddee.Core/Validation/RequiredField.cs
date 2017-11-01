@@ -67,7 +67,7 @@ namespace Coddee.Validation
                                               Expression<Func<T, object>> field)
         {
             var fieldName = ExpressionHelper.GetMemberName(field);
-            var type = ((PropertyInfo)((MemberExpression)field.Body).Member).PropertyType;
+            var type = ExpressionHelper.GetMemberType(field);
             return Create(item, fieldName, RequiredFieldValidators.GetValidator(type));
         }
         public static RequiredField Create<T>(T item,
@@ -75,7 +75,7 @@ namespace Coddee.Validation
                                               string errorMessage)
         {
             var fieldName = ExpressionHelper.GetMemberName(field);
-            var type = ((PropertyInfo)((MemberExpression)field.Body).Member).PropertyType;
+            var type = ExpressionHelper.GetMemberType(field);
             return Create(item, fieldName, RequiredFieldValidators.GetValidator(type), errorMessage);
         }
         public static RequiredField Create(string fieldName,

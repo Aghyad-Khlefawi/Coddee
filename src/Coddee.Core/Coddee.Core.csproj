@@ -64,6 +64,7 @@
     <Compile Include="Exceptions\ModuleException.cs" />
     <Compile Include="ExpresstionHelper.cs" />
     <Compile Include="Globals.cs" />
+    <Compile Include="GroupEvent.cs" />
     <Compile Include="IContainer.cs" />
     <Compile Include="IEvent.cs" />
     <Compile Include="Math.cs" />
