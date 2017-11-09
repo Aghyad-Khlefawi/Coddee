@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using Coddee;
@@ -46,6 +47,28 @@ namespace HR.Clients.Console
             var id = Guid.NewGuid();
             temp.Add(new Employee { ID = id });
             temp.Update(OperationType.Edit, new Employee { ID = id, FirstName = "Test" });
+        }
+
+        public void Start(IContainer container)
+        {
+            var list = Enumerable.Range(0, 10000);
+            var watch = Stopwatch.StartNew();
+            AsyncObservableCollection<int> async1 = AsyncObservableCollection<int>.Create();
+            AsyncObservableCollection<int> asnyc2=null;
+            for (int i = 0; i < 1000; i++)
+            {
+                async1.ClearAndFill(list);
+            }
+
+            watch.Stop();
+            System.Console.WriteLine(watch.Elapsed);
+            watch.Restart();
+            for (int i = 0; i < 1000; i++)
+            {
+                asnyc2 = list.ToAsyncObservableCollection();
+            }
+            System.Console.WriteLine(watch.Elapsed);
+            System.Console.WriteLine(asnyc2.Count);
         }
     }
 }

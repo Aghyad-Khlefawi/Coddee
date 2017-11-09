@@ -17,6 +17,17 @@ namespace Coddee
         {
             return (await collection).Where(predicate);
         }
+
+        public static Task Fill<T>(this Task<IEnumerable<T>> collection, AsyncObservableCollection<T> asyncCollection)
+        {
+            return asyncCollection.FillAsync(collection);
+        }
+
+        public static Task ClearAndFill<T>(this Task<IEnumerable<T>> collection, AsyncObservableCollection<T> asyncCollection)
+        {
+            return asyncCollection.ClearAndFillAsync(collection);
+        }
+
         public static AsyncObservableCollection<T> ToAsyncObservableCollection<T>(this IEnumerable<T> collection)
         {
             return AsyncObservableCollection<T>.Create(collection);
@@ -27,5 +38,10 @@ namespace Coddee
             return AsyncObservableCollection<T>.Create(await collection);
         }
 
+
+        public static async Task<IEnumerable<T>> ForEach<T>(this Task<IEnumerable<T>> collection,Action<T> action)
+        {
+            return (await collection).ForEach(action);
+        }
     }
 }

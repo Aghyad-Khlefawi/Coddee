@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -141,11 +142,12 @@ namespace Coddee.WPF.Controls
         public Wizard()
         {
 
-            if (Steps != null)
-                Steps.CollectionChanged += (sender, args) =>
-                {
-                    RefreshSteps();
-                };
+            if (Steps == null)
+                Steps = new WizardStepsCollection();
+            Steps.CollectionChanged += (sender, args) =>
+            {
+                RefreshSteps();
+            };
 
             NextCommand = new ReactiveCommand<Wizard>(this, Next)
                 .ObserveProperty(e => e.CurrentStep, ValidateCanGoNext);
@@ -222,6 +224,7 @@ namespace Coddee.WPF.Controls
         {
             if (Steps != null)
             {
+
                 for (int i = 0; i < Steps.Count; i++)
                 {
                     var step = Steps[i];
@@ -242,9 +245,15 @@ namespace Coddee.WPF.Controls
                 FirstStep = Steps.FirstOrDefault(e => e.Visibility == Visibility.Visible);
                 LastStep = Steps.LastOrDefault(e => e.Visibility == Visibility.Visible);
 
-                FirstStep?.SetFirst();
-                LastStep?.SetLast();
-
+                if (Steps.Count(e => e.Visibility == Visibility.Visible) > 1)
+                {
+                    FirstStep?.SetFirst();
+                    LastStep?.SetLast();
+                }
+                else
+                {
+                    FirstStep?.SetOnlyStep();
+                }
 
                 CurrentStep = FirstStep;
             }
@@ -340,6 +349,32 @@ namespace Coddee.WPF.Controls
 
         public static readonly DependencyProperty IsValidProperty = IsValidPropertyKey.DependencyProperty;
 
+        public static readonly DependencyPropertyKey IsOnlyStepPropertyKey = DependencyProperty.RegisterReadOnly(
+                                                                      "IsOnlyStep",
+                                                                      typeof(bool),
+                                                                      typeof(WizardStep),
+                                                                      new PropertyMetadata(default(bool)));
+
+        public static readonly DependencyProperty IsOnlyStepProperty = IsOnlyStepPropertyKey.DependencyProperty;
+
+        public static readonly DependencyProperty ErrorProperty = DependencyProperty.Register(
+                                                        "Error",
+                                                        typeof(string),
+                                                        typeof(WizardStep),
+                                                        new PropertyMetadata(default(string)));
+
+        public string Error
+        {
+            get { return (string)GetValue(ErrorProperty); }
+            set { SetValue(ErrorProperty, value); }
+        }
+
+        public bool IsOnlyStep
+        {
+            get { return (bool)GetValue(IsOnlyStepProperty); }
+            protected set { SetValue(IsOnlyStepPropertyKey, value); }
+        }
+
         public EventHandler<WizardStep> Selected;
 
         public bool ValidateOnNavigation { get; set; }
@@ -412,6 +447,7 @@ namespace Coddee.WPF.Controls
         {
             IsValidated = true;
             IsValid = res == null || !res.Any();
+            Error = res.Combine("\n");
         }
 
         private static void ViewModelSet(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -442,11 +478,13 @@ namespace Coddee.WPF.Controls
         public void SetFirst()
         {
             IsFirstStep = true;
+            IsOnlyStep = false;
         }
 
         public void SetLast()
         {
             IsLastStep = true;
+            IsOnlyStep = false;
         }
 
         public void SetCompleted(bool newValue)
@@ -514,6 +552,11 @@ namespace Coddee.WPF.Controls
             IsValidated = false;
             IsCompleted = false;
         }
+
+        public void SetOnlyStep()
+        {
+            IsOnlyStep = true;
+        }
     }
 
     public class WizardStepTemplateSelector : DataTemplateSelector
@@ -521,11 +564,14 @@ namespace Coddee.WPF.Controls
         public DataTemplate FirstStepTemplate { get; set; }
         public DataTemplate LastStepTemplate { get; set; }
         public DataTemplate StepTemplate { get; set; }
+        public DataTemplate OnlyStepTemplate { get; set; }
 
         public override DataTemplate SelectTemplate(object item, DependencyObject container)
         {
             if (item is WizardStep step)
             {
+                if (step.IsOnlyStep)
+                    return OnlyStepTemplate;
                 if (step.IsFirstStep)
                     return FirstStepTemplate;
                 if (step.IsLastStep)

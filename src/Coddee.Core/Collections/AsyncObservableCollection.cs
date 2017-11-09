@@ -8,7 +8,6 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Coddee.Collections
@@ -144,18 +143,41 @@ namespace Coddee.Collections
         }
 
         /// <summary>
+        /// Adds new item to the collections
+        /// </summary>
+        /// <param name="item"></param>
+        private void AddSafe(T item)
+        {
+            UnsafeInsertItem(Items.Count, item);
+        }
+
+        /// <summary>
         /// Fill the collection from another collection
         /// </summary>
         /// <param name="collection">The other collection</param>
         public void Fill(IEnumerable<T> collection)
         {
-            if (collection == null || !collection.Any()) return;
-            IsBusy = true;
-            foreach (var item in collection)
+            ExecuteOnSyncContext(() =>
             {
-                Add(item);
-            }
-            IsBusy = false;
+                if (collection == null || !collection.Any()) return;
+                IsBusy = true;
+                foreach (var item in collection)
+                {
+                    AddSafe(item);
+                }
+                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+                IsBusy = false;
+            });
+        }
+
+        /// <summary>
+        /// Clears the collection then fills the collection from another collection
+        /// </summary>
+        /// <param name="collection">The other collection</param>
+        public void ClearAndFill(IEnumerable<T> collection)
+        {
+            Clear();
+            Fill(collection);
         }
 
         /// <summary>
@@ -168,6 +190,15 @@ namespace Coddee.Collections
             Fill(await collection);
         }
 
+        /// <summary>
+        /// Fill the collection from a task result
+        /// </summary>
+        /// <param name="collection"></param>
+        /// <returns></returns>
+        public async Task ClearAndFillAsync(Task<IEnumerable<T>> collection)
+        {
+            ClearAndFill(await collection);
+        }
 
         /// <summary>
         /// Inserts an item without using the SynchornizationContext nor raising collection changed event

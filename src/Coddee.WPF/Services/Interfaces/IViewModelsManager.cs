@@ -9,7 +9,6 @@ namespace Coddee.Services
     public interface IViewModelsManager
     {
         ViewModelInfo RootViewModel { get; }
-        Dictionary<IViewModel, ViewModelInfo> ViewModels { get; }
 
         event EventHandler<ViewModelInfo> ViewModelCreated;
 
@@ -23,5 +22,7 @@ namespace Coddee.Services
         IEnumerable<ViewModelInfo> GetChildViewModels(IViewModel parent);
         ViewModelInfo GetParentViewModel(IViewModel viewModel);
 
+        void AddViewModelToGroup(string group, IViewModel viewModel);
+        IEnumerable<IViewModel> GetGroupViewModels(string group);
     }
 }

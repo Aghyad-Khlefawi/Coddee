@@ -85,7 +85,7 @@
     <Compile Include="Converters\BoolReverseConverter.cs" />
     <Compile Include="Converters\EnumToBoolConverter.cs" />
     <Compile Include="Converters\EnumToVisibilityConverter.cs" />
-    <Compile Include="Converters\EqualityVisibilityConverter - Copy.cs" />
+    <Compile Include="Converters\InequalityVisibilityConverter.cs" />
     <Compile Include="Converters\ListCountToVisibility.cs" />
     <Compile Include="Converters\NullToBoolConverter.cs" />
     <Compile Include="Converters\NullToVisibilityConverter.cs" />
@@ -238,6 +238,7 @@
     <Compile Include="ViewModelsGroupEvent.cs" />
     <Compile Include="WPFModulesDefnitions.cs" />
     <Compile Include="XamlHelpers\FocusOnLoad.cs" />
+    <Compile Include="XamlHelpers\VisibilityConditions.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

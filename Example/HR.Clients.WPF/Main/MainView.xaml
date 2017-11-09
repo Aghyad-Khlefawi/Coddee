@@ -28,6 +28,7 @@
                 <controls:TabsPanelItem Header="{controls:Localize States}"
                                         Presentable="{Binding StatesViewModel}" />
             </controls:TabsPanel>
+            
         </DockPanel>
     </controls:BusyIndicator>
 </UserControl>

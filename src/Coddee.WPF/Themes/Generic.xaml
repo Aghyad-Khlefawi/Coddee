@@ -1065,7 +1065,7 @@
                 <StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <Rectangle Style="{StaticResource StepRect}"
-                                   Margin="0 0 -5 0" />
+                                   Margin="0 0 -4 0" />
                         <Grid>
                             <Ellipse Style="{StaticResource StepEllipse}" />
                             <Grid Visibility="{Binding IsValidated,Converter={StaticResource BoolToVisibilityConverter}}">
@@ -1082,8 +1082,17 @@
                             </Grid>
                         </Grid>
                         <Rectangle Style="{StaticResource StepRect}"
-                                   Margin="-5 0 0 0" />
+                                   Margin="-4 0 0 0" />
                     </StackPanel>
+                    <TextBlock Style="{StaticResource StepTitle}"
+                               HorizontalAlignment="Center"
+                               Margin="0 5 0 0" />
+                </StackPanel>
+            </DataTemplate>
+            <DataTemplate x:Key="OnlyStepTemplate">
+                <StackPanel>
+                    <Ellipse Style="{StaticResource StepEllipse}" />
+
                     <TextBlock Style="{StaticResource StepTitle}"
                                HorizontalAlignment="Center"
                                Margin="0 5 0 0" />
@@ -1099,6 +1108,8 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:WizardStep}">
                     <Button IsTabStop="False"
+                            ToolTipService.InitialShowDelay="100"
+                            ToolTip="{TemplateBinding Error}"
                             FocusVisualStyle="{x:Null}"
                             Foreground="{TemplateBinding Foreground}"
                             Name="PART_BUTTON">
@@ -1108,7 +1119,9 @@
                                     <ContentPresenter.ContentTemplateSelector>
                                         <local:WizardStepTemplateSelector FirstStepTemplate="{StaticResource FirstStepTemplate}"
                                                                           LastStepTemplate="{StaticResource LastStepTemplate}"
-                                                                          StepTemplate="{StaticResource StepTemplate}" />
+                                                                          StepTemplate="{StaticResource StepTemplate}"
+                                                                          OnlyStepTemplate="{StaticResource OnlyStepTemplate}"
+                                                                          />
                                     </ContentPresenter.ContentTemplateSelector>
                                 </ContentPresenter>
                             </ControlTemplate>

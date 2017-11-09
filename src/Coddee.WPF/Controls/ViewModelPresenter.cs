@@ -21,7 +21,7 @@ namespace Coddee.WPF.Controls
                                                         "ViewIndex",
                                                         typeof(int),
                                                         typeof(ViewModelPresenter),
-                                                        new PropertyMetadata(default(int), UpdatePresenterContent));
+                                                        new PropertyMetadata(-1, UpdatePresenterContent));
 
         public static readonly DependencyPropertyKey ContentPropertyKey = DependencyProperty.RegisterReadOnly(
                                                                       "Content",
@@ -58,7 +58,12 @@ namespace Coddee.WPF.Controls
         void UpdateContent()
         {
             Debug.WriteLine("Updating ViewModelPresenter content");
-            Content = ViewModel?.GetView(ViewIndex);
+            if (ViewModel != null)
+            {
+                if (ViewIndex == -1)
+                    ViewIndex = ViewModel.CurrentViewIndex;
+                Content = ViewModel?.GetView(ViewIndex);
+            }
         }
 
     }

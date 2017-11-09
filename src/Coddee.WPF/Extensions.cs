@@ -6,7 +6,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Input;
 using Coddee.Collections;
 using Coddee.Validation;
 using Coddee.WPF.Commands;
@@ -15,6 +18,32 @@ namespace Coddee.WPF
 {
     public static class Extensions
     {
+        public static void SetFocus(this IInputElement element)
+        {
+            element.Focus();
+            Keyboard.Focus(element);
+        }
+
+        public static void FocusOnLoad(this FrameworkElement parent, IInputElement element)
+        {
+            parent.Loaded += delegate
+            {
+                element.SetFocus();
+            };
+        }
+
+        public static string Combine(this IEnumerable<string> collection, string seperator)
+        {
+            if (!collection.Any())
+                return null;
+
+            var sb = new StringBuilder();
+            foreach (var item in collection)
+            {
+                sb.Append($"{item}{seperator}");
+            }
+            return sb.ToString(0, sb.Length - seperator.Length);
+        }
         public static Task InitializeAll(this IEnumerable<IViewModel> items, bool forceInitialization = false)
         {
             return Task.WhenAll(items.Where(e => forceInitialization || !e.IsInitialized).Select(e => e.Initialize()));

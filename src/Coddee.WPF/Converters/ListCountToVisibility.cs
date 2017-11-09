@@ -20,8 +20,7 @@ namespace Coddee.WPF.Converters
             if (parameter == null)
                 parameter = "0";
 
-            int count;
-            if (!int.TryParse(parameter.ToString(), out count))
+            if (!int.TryParse(parameter.ToString(), out var count))
             {
                 throw new ArgumentException("Converter parameter must be a valid integer.");
             }
@@ -29,8 +28,7 @@ namespace Coddee.WPF.Converters
             if (value == null)
                 return Visibility.Collapsed;
 
-            var list = value as IList;
-            if (list == null)
+            if (!(value is IList list))
                 throw new ArgumentException("Converter value must be an IList.");
 
             return list.Count > count ? Visibility.Visible : Visibility.Collapsed;
@@ -51,10 +49,9 @@ namespace Coddee.WPF.Converters
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (parameter == null)
-                parameter = "0";
+                parameter = "1";
 
-            int count;
-            if (!int.TryParse(parameter.ToString(), out count))
+            if (!int.TryParse(parameter.ToString(), out var count))
             {
                 throw new ArgumentException("Converter parameter must be a valid integer.");
             }
@@ -62,8 +59,7 @@ namespace Coddee.WPF.Converters
             if (value == null)
                 return Visibility.Collapsed;
 
-                var list = value as IList;
-            if (list == null)
+            if (!(value is IList list))
                 throw new ArgumentException("Converter value must be an IList.");
 
             return list.Count < count ? Visibility.Visible : Visibility.Collapsed;

@@ -2,6 +2,7 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -23,39 +24,56 @@ namespace Coddee.Services.ViewModelManager
         {
             _container = container;
             _logger = logger;
-            ViewModels = new Dictionary<IViewModel, ViewModelInfo>();
+            _viewModels = new ConcurrentDictionary<IViewModel, ViewModelInfo>();
+            _viewModelGroups = new ConcurrentDictionary<string, List<IViewModel>>();
         }
 
         public event EventHandler<ViewModelInfo> ViewModelCreated;
 
-        public Dictionary<IViewModel, ViewModelInfo> ViewModels { get; }
+        protected ConcurrentDictionary<IViewModel, ViewModelInfo> _viewModels;
+        protected ConcurrentDictionary<string, List<IViewModel>> _viewModelGroups;
 
         public ViewModelInfo RootViewModel { get; protected set; }
 
+        public void AddViewModelToGroup(string group, IViewModel viewModel)
+        {
+            if (!string.IsNullOrEmpty(viewModel.ViewModelGroup) && _viewModelGroups.ContainsKey(viewModel.ViewModelGroup))
+                _viewModelGroups[viewModel.ViewModelGroup].Remove(viewModel);
+
+            var list = _viewModelGroups.ContainsKey(group) ? _viewModelGroups[group] : (_viewModelGroups[group] = new List<IViewModel>());
+            list.Add(viewModel);
+        }
+
+        public IEnumerable<IViewModel> GetGroupViewModels(string group)
+        {
+            return _viewModelGroups[group];
+        }
+
+
         public IViewModel CreateViewModel(Type viewModelType, IViewModel parentVM)
         {
-            lock (ViewModels)
+            lock (_viewModels)
             {
                 IViewModel vm = (IViewModel)_container.Resolve(viewModelType);
                 var id = ++_lastID;
                 _logger?.Log(_eventsSource, $"ViewModelCreated {viewModelType.Name}", LogRecordTypes.Debug);
                 var vmInfo = new ViewModelInfo(vm) { ID = id };
 
-                if (!ViewModels.Any() && parentVM == null)
+                if (!_viewModels.Any() && parentVM == null)
                 {
                     RootViewModel = vmInfo;
                 }
                 else if (parentVM == null && RootViewModel != null)
                     parentVM = RootViewModel.ViewModel;
 
-                if (parentVM != null && ViewModels.ContainsKey(parentVM))
+                if (parentVM != null && _viewModels.ContainsKey(parentVM))
                 {
-                    var parent = ViewModels[parentVM];
+                    var parent = _viewModels[parentVM];
                     vmInfo.ParentViewModel = parent;
                     parent.ChildViewModels.Add(vmInfo);
                 }
 
-                ViewModels.Add(vm, vmInfo);
+                _viewModels.TryAdd(vm, vmInfo);
                 ViewModelCreated?.Invoke(this, vmInfo);
 
                 return vm;
@@ -76,14 +94,14 @@ namespace Coddee.Services.ViewModelManager
 
         public IEnumerable<ViewModelInfo> GetChildViewModels(IViewModel parent)
         {
-            if (ViewModels.ContainsKey(parent))
-                return ViewModels[parent].ChildViewModels;
+            if (_viewModels.ContainsKey(parent))
+                return _viewModels[parent].ChildViewModels;
             return new List<ViewModelInfo>();
         }
         public ViewModelInfo GetParentViewModel(IViewModel viewModel)
         {
-            if (ViewModels.ContainsKey(viewModel))
-                return ViewModels[viewModel].ParentViewModel;
+            if (_viewModels.ContainsKey(viewModel))
+                return _viewModels[viewModel].ParentViewModel;
             return null;
         }
 

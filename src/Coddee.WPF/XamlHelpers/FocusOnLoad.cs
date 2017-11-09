@@ -19,22 +19,12 @@ namespace Coddee.WPF.XamlHelpers
 
         private static void ValueSet(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var el = d as FrameworkElement;
-            if (el != null)
+            if (d is FrameworkElement el && e.NewValue is IInputElement inputElement)
             {
-                if (!el.IsLoaded)
-                    el.Loaded += delegate { FocuseElement((FrameworkElement)e.NewValue); };
-                else
-                    FocuseElement((FrameworkElement)e.NewValue);
+                el.FocusOnLoad(inputElement);
             }
         }
-
-        private static void FocuseElement(FrameworkElement el)
-        {
-            el.Focus();
-            Keyboard.Focus(el);
-        }
-
+        
         public static void SetElement(DependencyObject element, IInputElement value)
         {
             element.SetValue(ElementProperty, value);
@@ -42,7 +32,7 @@ namespace Coddee.WPF.XamlHelpers
 
         public static IInputElement GetElement(DependencyObject element)
         {
-            return (IInputElement) element.GetValue(ElementProperty);
+            return (IInputElement)element.GetValue(ElementProperty);
         }
     }
 }

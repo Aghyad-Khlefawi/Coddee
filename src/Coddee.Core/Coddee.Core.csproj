@@ -67,6 +67,7 @@
     <Compile Include="GroupEvent.cs" />
     <Compile Include="IContainer.cs" />
     <Compile Include="IEvent.cs" />
+    <Compile Include="IInitializable.cs" />
     <Compile Include="Math.cs" />
     <Compile Include="Notification\INotification.cs" />
     <Compile Include="Notification\INotificationService.cs" />

@@ -9,13 +9,16 @@ using Coddee.Validation;
 
 namespace Coddee.WPF
 {
-    public interface IViewModel:IDisposable,INotifyPropertyChanged
+    public interface IViewModel:IInitializable,IDisposable,INotifyPropertyChanged
     {
         string __Name { get; }
         List<string> Errors { get; }
         bool IsValid { get; }
-        bool IsInitialized { get; }
-        Task Initialize(bool forceInitialize = false);
+      
+
+        string ViewModelGroup { get; }
+        void SetViewModelGroup(string group);
+
         RequiredFieldCollection RequiredFields { get; }
 
         event ViewModelEventHandler Initialized;
@@ -27,6 +30,6 @@ namespace Coddee.WPF
 
     public interface IPresentableViewModel : IViewModel, IPresentable
     {
-        
+        int CurrentViewIndex { get; }
     }
 }

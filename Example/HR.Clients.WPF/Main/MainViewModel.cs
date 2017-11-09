@@ -20,9 +20,16 @@ namespace HR.Clients.WPF.Main
             if (IsDesignMode())
             {
             }
+            
         }
 
-       
+        private object _isVisible;
+        public object IsVisible
+        {
+            get { return _isVisible; }
+            set { SetProperty(ref _isVisible, value); }
+        }
+
         private string _text = "Text";
         public string Text
         {
@@ -79,6 +86,8 @@ namespace HR.Clients.WPF.Main
                     shellVM.SetToolbarContent(searchView);
                 });
                 Text = null;
+
+                IsVisible = 2;
             }
             catch (Exception e)
             {
