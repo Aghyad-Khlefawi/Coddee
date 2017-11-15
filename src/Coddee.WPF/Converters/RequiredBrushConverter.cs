@@ -18,9 +18,10 @@ namespace Concord.HIS1.UI.Converters
         {
             if (values[0] is RequiredFieldCollection required && parameter is string fieldName)
             {
-                var field = required.FirstOrDefault(e => e.FieldName == fieldName);
-                if(field!=null)
-                return !field.ValidateField(values[1]) ? ErrorBrush: GrayBrush;
+                var fields = required.Where(e => e.FieldName == fieldName);
+                foreach (var field in fields)
+                    if (!field.ValidateField(values[1]))
+                        return ErrorBrush;
             }
             return GrayBrush;
         }

@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using System.Reflection;
 using Coddee.Services;
 
 namespace Coddee.Validation
@@ -17,14 +16,24 @@ namespace Coddee.Validation
     {
         public object Item { get; set; }
         public string FieldName { get; set; }
-        public string ErrorMessage { get; set; }
+        public Func<string> ErrorMessage { get; set; }
         public Validator ValidateField { get; set; }
-
 
         public static RequiredField Create<T>(T item,
                                               string fieldName,
                                               Validator validator,
                                               string errorMessage)
+        {
+            return Create(item,
+                          fieldName,
+                          validator,
+                          () => errorMessage);
+        }
+
+        public static RequiredField Create<T>(T item,
+                                              string fieldName,
+                                              Validator validator,
+                                              Func<string> errorMessage)
         {
             return new RequiredField
             {
@@ -42,9 +51,13 @@ namespace Coddee.Validation
             return Create(item,
                           fieldName,
                           validator,
-                          LocalizationManager.DefaultLocalizationManager.GetValue("DefaultValidationMessage")
+                          LocalizationManager
+                              .DefaultLocalizationManager
+                              .GetValue("DefaultValidationMessage")
                               .Replace("$FieldName$",
-                                       LocalizationManager.DefaultLocalizationManager.GetValue(fieldName)));
+                                       LocalizationManager
+                                           .DefaultLocalizationManager
+                                           .GetValue(fieldName)));
         }
 
         public static RequiredField Create<T>(T item,
@@ -52,8 +65,22 @@ namespace Coddee.Validation
                                               Validator validator,
                                               string errorMessage)
         {
+            return Create(item,
+                          field,
+                          validator,
+                          () => errorMessage);
+        }
+
+        public static RequiredField Create<T>(T item,
+                                              Expression<Func<T, object>> field,
+                                              Validator validator,
+                                              Func<string> errorMessage)
+        {
             var fieldName = ExpressionHelper.GetMemberName(field);
-            return Create(item, fieldName, validator, errorMessage);
+            return Create(item,
+                          fieldName,
+                          validator,
+                          errorMessage);
         }
 
         public static RequiredField Create<T>(T item,
@@ -61,26 +88,56 @@ namespace Coddee.Validation
                                               Validator validator)
         {
             var fieldName = ExpressionHelper.GetMemberName(field);
-            return Create(item, fieldName, validator);
+            return Create(item,
+                          fieldName,
+                          validator);
         }
+
         public static RequiredField Create<T>(T item,
                                               Expression<Func<T, object>> field)
         {
             var fieldName = ExpressionHelper.GetMemberName(field);
             var type = ExpressionHelper.GetMemberType(field);
-            return Create(item, fieldName, RequiredFieldValidators.GetValidator(type));
+            return Create(item,
+                          fieldName,
+                          RequiredFieldValidators
+                              .GetValidator(type));
         }
+
         public static RequiredField Create<T>(T item,
                                               Expression<Func<T, object>> field,
                                               string errorMessage)
         {
+            return Create(item,
+                          field,
+                          () => errorMessage);
+        }
+
+        public static RequiredField Create<T>(T item,
+                                              Expression<Func<T, object>> field,
+                                              Func<string> errorMessage)
+        {
             var fieldName = ExpressionHelper.GetMemberName(field);
             var type = ExpressionHelper.GetMemberType(field);
-            return Create(item, fieldName, RequiredFieldValidators.GetValidator(type), errorMessage);
+            return Create(item,
+                          fieldName,
+                          RequiredFieldValidators
+                              .GetValidator(type),
+                          errorMessage);
         }
+
         public static RequiredField Create(string fieldName,
                                            Validator validator,
                                            string errorMessage)
+        {
+            return Create(fieldName,
+                          validator,
+                          () => errorMessage);
+        }
+
+        public static RequiredField Create(string fieldName,
+                                           Validator validator,
+                                           Func<string> errorMessage)
         {
             return new RequiredField
             {
@@ -95,9 +152,13 @@ namespace Coddee.Validation
         {
             return Create(fieldName,
                           validator,
-                          LocalizationManager.DefaultLocalizationManager.GetValue("DefaultValidationMessage")
+                          LocalizationManager
+                              .DefaultLocalizationManager
+                              .GetValue("DefaultValidationMessage")
                               .Replace("$FieldName$",
-                                       LocalizationManager.DefaultLocalizationManager.GetValue(fieldName)));
+                                       LocalizationManager
+                                           .DefaultLocalizationManager
+                                           .GetValue(fieldName)));
         }
     }
 }

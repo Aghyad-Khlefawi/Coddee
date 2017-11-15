@@ -446,8 +446,8 @@ namespace Coddee.WPF.Controls
         private void ViewModelValidated(object sender, System.Collections.Generic.IEnumerable<string> res)
         {
             IsValidated = true;
-            IsValid = res == null || !res.Any();
-            Error = res.Combine("\n");
+            Error = res?.Where(e=>!string.IsNullOrEmpty(e)).Combine("\n");
+            IsValid = string.IsNullOrWhiteSpace(Error);
         }
 
         private static void ViewModelSet(DependencyObject d, DependencyPropertyChangedEventArgs e)

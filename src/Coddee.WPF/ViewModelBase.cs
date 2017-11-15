@@ -416,6 +416,7 @@ namespace Coddee.WPF
 
         protected virtual void SetRequiredFields(RequiredFieldCollection requiredFields)
         {
+
         }
 
         protected virtual void GetRequiredPropertiesInfo()
@@ -423,38 +424,43 @@ namespace Coddee.WPF
             var type = GetType();
             foreach (var requiredField in RequiredFields)
             {
+                if (_requiredFieldsPropertyInfo.ContainsKey(requiredField.FieldName))
+                    return;
                 if (requiredField.Item == null)
-                    _requiredFieldsPropertyInfo[requiredField.FieldName] = type.GetProperty(requiredField.FieldName);
+                    _requiredFieldsPropertyInfo.Add(requiredField.FieldName, type.GetProperty(requiredField.FieldName));
                 else
-                    _requiredFieldsPropertyInfo[requiredField.FieldName] = requiredField.Item.GetType()
-                        .GetProperty(requiredField.FieldName);
+                    _requiredFieldsPropertyInfo.Add(requiredField.FieldName, requiredField.Item.GetType().GetProperty(requiredField.FieldName));
             }
         }
 
-        protected virtual string CheckField(string fieldName)
+        protected virtual IEnumerable<string> CheckField(RequiredField field)
         {
-            var field = RequiredFields?.FirstOrDefault(e => e.FieldName == fieldName);
+            var res = new List<string>();
             if (field != null && _requiredFieldsPropertyInfo.ContainsKey(field.FieldName))
             {
-                _logger.Log(__Name, $"Checking field {fieldName}", LogRecordTypes.Debug);
+                _logger.Log(__Name, $"Checking field {field.FieldName}", LogRecordTypes.Debug);
                 var property = _requiredFieldsPropertyInfo[field.FieldName];
                 if (property != null && field.ValidateField != null)
                 {
                     try
                     {
-                        if (field.Item == null)
-                            return field.ValidateField(property.GetValue(this)) ? null : field.ErrorMessage;
-                        return field.ValidateField(property.GetValue(field.Item)) ? null : field.ErrorMessage;
+                        var isValid = field.ValidateField(field.Item == null
+                            ? property.GetValue(this)
+                            : property.GetValue(field.Item));
+                        if (!isValid)
+                            res.Add(field.ErrorMessage());
                     }
                     catch (Exception ex)
                     {
                         LogError($"{field.FieldName} Field validator", ex);
-                        return "FieldValidationException";
+                        res.Add("FieldValidationException");
                     }
                 }
+
             }
-            return null;
+            return res.Any() ? res : null;
         }
+
 
         protected bool _validating;
 
@@ -468,21 +474,23 @@ namespace Coddee.WPF
             _validating = true;
 
 
-            if (RequiredFields != null)
-            {
-                foreach (var requiredField in RequiredFields)
-                {
-                    var error = CheckField(requiredField.FieldName);
-                    if (!string.IsNullOrEmpty(error))
-                        Errors.Add(error);
-                }
-            }
-
             if (validateChildren)
             {
                 foreach (var childViewModel in GetChildViewModels())
                 {
-                    Errors.AddRange(childViewModel.Validate(true));
+                    var errors = childViewModel.Validate(true);
+                    if (errors != null)
+                        Errors.AddRange(errors);
+                }
+            }
+
+            if (RequiredFields != null)
+            {
+                foreach (var requiredField in RequiredFields)
+                {
+                    var error = CheckField(requiredField);
+                    if (error != null)
+                        Errors.AddRange(error);
                 }
             }
 
@@ -490,7 +498,7 @@ namespace Coddee.WPF
             IsValid = !Errors.Any();
             OnValidated(Errors);
             _validating = false;
-            return Errors;
+            return Errors.Any() ? Errors : null;
         }
 
         public virtual void CustomValidation(List<string> errors)
@@ -501,6 +509,7 @@ namespace Coddee.WPF
         {
             Validated?.Invoke(this, errors);
         }
+
         public event ViewModelEventHandler<IEnumerable<string>> Validated;
 
         public ReactiveCommand<ViewModelBase> CreateReactiveCommand(Action handler)
@@ -609,7 +618,6 @@ namespace Coddee.WPF
             base.RegisterViews();
             RegisterViewType<TView>(0);
         }
-
 
         protected override void OnViewCreated(UIElement e)
         {
