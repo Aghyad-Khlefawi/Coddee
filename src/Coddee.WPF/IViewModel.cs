@@ -31,5 +31,6 @@ namespace Coddee.WPF
     public interface IPresentableViewModel : IViewModel, IPresentable
     {
         int CurrentViewIndex { get; }
+        event ViewModelEventHandler<int> ViewIndexChanged;
     }
 }

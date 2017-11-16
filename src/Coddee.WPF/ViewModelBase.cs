@@ -96,8 +96,14 @@ namespace Coddee.WPF
         public int CurrentViewIndex
         {
             get { return _currentViewIndex; }
-            set { SetProperty(ref _currentViewIndex, value); }
+            set
+            {
+                SetProperty(ref _currentViewIndex, value);
+                ViewIndexChanged?.Invoke(this,value);
+            }
         }
+
+        public event ViewModelEventHandler<int> ViewIndexChanged;
 
         protected Task<IViewModel> InitializeViewModel(Type viewModelType)
         {

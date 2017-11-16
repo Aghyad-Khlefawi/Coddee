@@ -1,9 +1,15 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 
 namespace Coddee.WPF.Controls
 {
+    public enum ViewIndexMode
+    {
+        UseViewModelIndex,
+        Explicit,
+    }
     public class ViewModelPresenter : Control
     {
         static ViewModelPresenter()
@@ -21,13 +27,25 @@ namespace Coddee.WPF.Controls
                                                         "ViewIndex",
                                                         typeof(int),
                                                         typeof(ViewModelPresenter),
-                                                        new PropertyMetadata(-1, UpdatePresenterContent));
+                                                        new PropertyMetadata(0, UpdatePresenterContent));
 
         public static readonly DependencyPropertyKey ContentPropertyKey = DependencyProperty.RegisterReadOnly(
                                                                       "Content",
                                                                       typeof(UIElement),
                                                                       typeof(ViewModelPresenter),
                                                                       new PropertyMetadata(default(UIElement)));
+
+        public static readonly DependencyProperty ViewIndexModeProperty = DependencyProperty.Register(
+                                                        "ViewIndexMode",
+                                                        typeof(ViewIndexMode),
+                                                        typeof(ViewModelPresenter),
+                                                        new PropertyMetadata(default(ViewIndexMode)));
+
+        public ViewIndexMode ViewIndexMode
+        {
+            get { return (ViewIndexMode)GetValue(ViewIndexModeProperty); }
+            set { SetValue(ViewIndexModeProperty, value); }
+        }
 
         public static readonly DependencyProperty ContentProperty = ContentPropertyKey.DependencyProperty;
 
@@ -52,7 +70,14 @@ namespace Coddee.WPF.Controls
         private static void UpdatePresenterContent(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (d is ViewModelPresenter vmp)
+            {
+                if (e.NewValue is IPresentableViewModel vm && vmp.ViewIndexMode == ViewIndexMode.UseViewModelIndex)
+                {
+                    vm.ViewIndexChanged += delegate
+                    { vmp.UpdateContent(); };
+                }
                 vmp.UpdateContent();
+            }
         }
 
         void UpdateContent()
@@ -60,8 +85,10 @@ namespace Coddee.WPF.Controls
             Debug.WriteLine("Updating ViewModelPresenter content");
             if (ViewModel != null)
             {
-                if (ViewIndex == -1)
+                if (ViewIndexMode == ViewIndexMode.UseViewModelIndex)
+                {
                     ViewIndex = ViewModel.CurrentViewIndex;
+                }
                 Content = ViewModel?.GetView(ViewIndex);
             }
         }

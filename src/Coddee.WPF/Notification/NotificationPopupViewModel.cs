@@ -7,7 +7,7 @@ using Coddee.WPF;
 
 namespace Coddee.Notification
 {
-    public class NotificationPopupViewModel : ViewModelBase, INotification
+    public class NotificationPopupViewModel : ViewModelBase, IInteractiveNotification
     {
         public NotificationPopupViewModel(INotification notification)
         {
@@ -18,7 +18,9 @@ namespace Coddee.Notification
 
             OpenCommand = CreateReactiveCommand(Open);
             CloseCommand = CreateReactiveCommand(Close);
-            Opened += e => notification.Open();
+
+            if (notification is IInteractiveNotification interactiveNotification)
+                Opened += e => interactiveNotification.Open();
         }
 
         public string Title { get; set; }
@@ -42,6 +44,5 @@ namespace Coddee.Notification
             Opened?.Invoke(this);
             Close();
         }
-
     }
 }

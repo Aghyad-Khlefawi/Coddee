@@ -11,7 +11,10 @@ namespace Coddee.Notification
         string Description { get; set; }
         int Type { get; }
         DateTime Date { get; set; }
+    }
 
+    public interface IInteractiveNotification : INotification
+    {
         event Action<INotification> Opened;
         void Open();
     }
