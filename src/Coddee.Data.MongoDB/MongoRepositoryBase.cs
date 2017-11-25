@@ -129,7 +129,7 @@ namespace Coddee.Data.MongoDB
                                   new RepositoryChangeEventArgs<TModel>(args.OperationType, ((JObject)args.Item).ToObject<TModel>(), true));
         }
 
-        protected void RaiseItemsChanged(object sender, RepositoryChangeEventArgs<TModel> args)
+        protected virtual void RaiseItemsChanged(object sender, RepositoryChangeEventArgs<TModel> args)
         {
             ItemsChanged?.Invoke(this, args);
         }

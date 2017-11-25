@@ -14,11 +14,13 @@ namespace Coddee.WPF
         string __Name { get; }
         List<string> Errors { get; }
         bool IsValid { get; }
-      
+
+        ViewModelOptions ViewModelOptions { get; }
+        ViewModelOptions DefaultViewModelOptions { get; }
 
         string ViewModelGroup { get; }
         void SetViewModelGroup(string group);
-
+        void SetViewModelOptions(ViewModelOptions options);
         RequiredFieldCollection RequiredFields { get; }
 
         event ViewModelEventHandler Initialized;

@@ -36,13 +36,17 @@ namespace Coddee.Notification
         {
             NotificationReceived?.Invoke(this, notification);
             var popup = new NotificationPopupViewModel(notification);
-            popup.Closed += e => Notifications.Remove(e);
+            popup.Closed += e =>
+            {
+                Notifications.Remove(e);
+            };
+
             var timer = new Timer(_notificationDuration);
             timer.Elapsed += delegate
             {
                 ExecuteOnUIContext(() =>
                 {
-                    Notifications.Remove(popup);
+                    popup.Close();
                     timer.Stop();
                     timer.Dispose();
                 });

@@ -13,7 +13,9 @@ namespace Coddee.Services
         event EventHandler<ViewModelInfo> ViewModelCreated;
 
         IViewModel CreateViewModel(Type viewModelType, IViewModel parentVM);
+        IViewModel CreateViewModel(Type viewModelType, IViewModel parentVM, ViewModelOptions options);
         TResult CreateViewModel<TResult>(IViewModel parentVM) where TResult : IViewModel;
+        TResult CreateViewModel<TResult>(IViewModel parentVM, ViewModelOptions options) where TResult : IViewModel;
 
         Task<IViewModel> InitializeViewModel(Type viewModelType, IViewModel parentVM);
         Task<TResult> InitializeViewModel<TResult>(IViewModel parentVM) where TResult:IViewModel;

@@ -16,7 +16,9 @@ namespace Coddee.WPF.Controls
         static FormField()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(FormField), new FrameworkPropertyMetadata(typeof(FormField)));
+            VisibilityProperty.OverrideMetadata(typeof(FormField), new PropertyMetadata(System.Windows.Visibility.Visible, OnVisiblityChanged));
         }
+
 
         public static readonly DependencyProperty TitleProperty = DependencyProperty.Register(
             "Title", typeof(string), typeof(FormField), new PropertyMetadata(default(string)));
@@ -34,7 +36,7 @@ namespace Coddee.WPF.Controls
                                                         typeof(Style),
                                                         typeof(FormField),
                                                         new PropertyMetadata(default(Style)));
-        
+
         public Style TitleStyle
         {
             get { return (Style)GetValue(TitleStyleProperty); }
@@ -64,12 +66,20 @@ namespace Coddee.WPF.Controls
         }
 
         public Label TitleControl { get; set; }
-        public event Action TitleControlSet = delegate { };
+        public event Action TitleControlSet;
+        public event Action VisbilityChanged;
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
             TitleControl = (Label)GetTemplateChild("PART_TITLE");
-            TitleControl.SizeChanged += (s, e) => TitleControlSet();
+            TitleControl.SizeChanged += (s, e) => TitleControlSet?.Invoke();
+        }
+
+
+        private static void OnVisiblityChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is FormField field)
+                field.VisbilityChanged?.Invoke();
         }
     }
 

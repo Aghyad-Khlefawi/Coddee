@@ -47,12 +47,15 @@ namespace Coddee.WPF.XamlHelpers
         {
             if (d is FrameworkElement element)
             {
-                if (element.GetValue(VisibleValuesProperty) is VisibleValuesCollection visiblityValues)
+                Application.Current.Dispatcher.Invoke(() =>
                 {
-                    element.Visibility = visiblityValues.Contains(e.NewValue)
-                        ? Visibility.Visible
-                        : Visibility.Collapsed;
-                }
+                    if (element.GetValue(VisibleValuesProperty) is VisibleValuesCollection visiblityValues)
+                    {
+                        element.Visibility = visiblityValues.Contains(e.NewValue)
+                                                 ? Visibility.Visible
+                                                 : Visibility.Collapsed;
+                    }
+                });
             }
         }
     }

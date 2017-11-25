@@ -3,9 +3,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Windows;
 using Coddee.AppBuilder;
+using Coddee.Loggers;
 using Coddee.Services;
 using Coddee.Services.ApplicationConsole;
 using Coddee.WPF.Events;
@@ -20,6 +23,8 @@ namespace Coddee.WPF
     /// </summary>
     public class WPFApplication : IApplication
     {
+        private const string _eventsSource = "Application";
+
         public WPFApplication(Guid applicationID, string applicationName, IContainer container)
         {
             ApplicationID = applicationID;
@@ -33,16 +38,32 @@ namespace Coddee.WPF
         {
         }
 
+
+        protected virtual void LogStart()
+        {
+            _logger.Log(_eventsSource, $"Initializing application {ApplicationName} {Assembly.GetEntryAssembly().GetName().Version}");
+            _logger.Log(_eventsSource, $"using Coddee.Core: {Assembly.Load("Coddee.Core").GetName().Version}");
+            _logger.Log(_eventsSource, $"using Coddee.Windows: {Assembly.Load("Coddee.Windows").GetName().Version}");
+            _logger.Log(_eventsSource, $"using Coddee.WPF: {Assembly.Load("Coddee.WPF").GetName().Version}");
+        }
+
+
         public static WPFApplication Current { get; protected set; }
+
+        ILogger _logger;
 
         public void Run(Action<IWPFApplicationBuilder> BuildApplication, StartupEventArgs startupEventArgs)
         {
+
+
             Current = this;
             _systemApplication = Application.Current;
             _systemApplication.ShutdownMode = ShutdownMode.OnExplicitShutdown;
             _container.RegisterInstance<IApplication>(this);
             _container.RegisterInstance(this);
             var builder = _container.Resolve<WPFApplicationBuilder>();
+            _logger = _container.Resolve<ILogger>();
+            LogStart();
             ResolveStartupArgs(startupEventArgs);
             BuildApplication(builder);
         }

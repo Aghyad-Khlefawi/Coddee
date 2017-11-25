@@ -32,13 +32,13 @@ namespace Coddee.WPF.Controls
             Focusable = false;
         }
 
-        
 
-        public static readonly DependencyProperty FieldsProperty = DependencyProperty.Register(
-                                                                                               "Fields", typeof(FormFieldsCollection), typeof(Form), new PropertyMetadata(new FormFieldsCollection()/*, FieldsSet*/));
+
+        public static readonly DependencyProperty FieldsProperty = DependencyProperty.Register("Fields", typeof(FormFieldsCollection), typeof(Form), new PropertyMetadata(new FormFieldsCollection(), FieldsSet));
+
 
         public static readonly DependencyProperty FieldsMarginProperty = DependencyProperty.Register(
-                                                                                                     "FieldsMargin", typeof(Thickness), typeof(Form), new PropertyMetadata(new Thickness(0,0,0,3)));
+                                                                                                     "FieldsMargin", typeof(Thickness), typeof(Form), new PropertyMetadata(new Thickness(0, 0, 0, 3)));
 
         public static readonly DependencyProperty TitleStyleProperty = DependencyProperty.Register(
                                                         "TitleStyle",
@@ -48,7 +48,7 @@ namespace Coddee.WPF.Controls
 
         public Style TitleStyle
         {
-            get { return (Style) GetValue(TitleStyleProperty); }
+            get { return (Style)GetValue(TitleStyleProperty); }
             set { SetValue(TitleStyleProperty, value); }
         }
 
@@ -72,16 +72,35 @@ namespace Coddee.WPF.Controls
             {
                 foreach (FormField item in e.NewItems)
                 {
-                    if (item.Margin == new Thickness(0, 0, 0, 0))
-                        item.Margin = FieldsMargin;
-
-                    if (TitleStyle != null)
-                        item.TitleStyle = TitleStyle;
-
-                    this.CalculateWidth();
+                    ConfigureField(item);
                 }
             }
         }
+
+        private void ConfigureField(FormField item)
+        {
+            if (item.Margin == new Thickness(0, 0, 0, 0))
+                item.Margin = FieldsMargin;
+
+            if (TitleStyle != null)
+                item.TitleStyle = TitleStyle;
+
+            item.Loaded += delegate
+            { CalculateWidth(); };
+            item.LayoutUpdated += delegate
+            { CalculateWidth(); };
+            CalculateWidth();
+        }
+
+        private static void FieldsSet(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (e.NewValue is FormFieldsCollection collection)
+            {
+                if (d is Form form)
+                    collection.ForEach(form.ConfigureField);
+            }
+        }
+
 
         void CalculateWidth()
         {

@@ -159,7 +159,8 @@ namespace Coddee.Collections
         {
             ExecuteOnSyncContext(() =>
             {
-                if (collection == null || !collection.Any()) return;
+                if (collection == null || !collection.Any())
+                    return;
                 IsBusy = true;
                 foreach (var item in collection)
                 {
@@ -178,6 +179,12 @@ namespace Coddee.Collections
         {
             Clear();
             Fill(collection);
+        }
+
+        public new void Clear()
+        {
+            SelectedItem = default(T);
+            base.Clear();
         }
 
         /// <summary>
@@ -237,6 +244,7 @@ namespace Coddee.Collections
                 if (index < 0)
                     res = false;
                 RemoveItem(index);
+              
                 res = true;
             });
             return res;
@@ -261,6 +269,8 @@ namespace Coddee.Collections
             {
                 var item = this[index];
                 base.RemoveItem(index);
+                if (ReferenceEquals(SelectedItem, item))
+                    SelectedItem = default(T);
                 OnPropertyChanged("Item[]");
                 OnCollectionChanged(
                                     new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove,
@@ -277,6 +287,7 @@ namespace Coddee.Collections
             ExecuteOnSyncContext(() =>
             {
                 base.ClearItems();
+                SelectedItem = default(T);
                 OnPropertyChanged(nameof(Count));
                 OnPropertyChanged("Item[]");
                 OnCollectionReset();

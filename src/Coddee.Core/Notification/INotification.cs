@@ -11,6 +11,8 @@ namespace Coddee.Notification
         string Description { get; set; }
         int Type { get; }
         DateTime Date { get; set; }
+        string Category { get; set; }
+        string Parameter { get; set; }
     }
 
     public interface IInteractiveNotification : INotification

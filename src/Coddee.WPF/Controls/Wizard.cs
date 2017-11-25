@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
@@ -446,7 +448,7 @@ namespace Coddee.WPF.Controls
         private void ViewModelValidated(object sender, System.Collections.Generic.IEnumerable<string> res)
         {
             IsValidated = true;
-            Error = res?.Where(e=>!string.IsNullOrEmpty(e)).Combine("\n");
+            Error = res?.Where(e => !string.IsNullOrEmpty(e)).Combine("\n");
             IsValid = string.IsNullOrWhiteSpace(Error);
         }
 
@@ -461,7 +463,16 @@ namespace Coddee.WPF.Controls
         private void UpdateContent()
         {
             ViewModel.Validated += ViewModelValidated;
-            Content = ViewModel?.GetView();
+            void UpdateView()
+            {
+                Content = ViewModel?.GetView();
+            }
+
+            ViewModel.ViewIndexChanged += delegate
+            {
+                UpdateView();
+            };
+            UpdateView();
         }
 
         internal void SetIndex(int index)
@@ -585,7 +596,10 @@ namespace Coddee.WPF.Controls
 
     public class WizardStepsCollection : ObservableCollection<WizardStep>
     {
-
+        public IEnumerable<IPresentableViewModel> GetViewModels()
+        {
+            return this.Select(e => e.ViewModel).ToList();
+        }
     }
 
     public interface IWizardStepViewModel : IPresentableViewModel

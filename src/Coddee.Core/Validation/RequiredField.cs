@@ -11,7 +11,7 @@ namespace Coddee.Validation
     public class RequiredFieldCollection : List<RequiredField>
     {
     }
-
+    
     public class RequiredField
     {
         public object Item { get; set; }
@@ -22,6 +22,18 @@ namespace Coddee.Validation
         public static RequiredField Create<T>(T item,
                                               string fieldName,
                                               Validator validator,
+                                              string errorMessage)
+        {
+            return Create(item,
+                          fieldName,
+                          validator,
+                          () => errorMessage);
+        }
+
+
+        public static RequiredField Create<T,TProperty>(T item,
+                                              string fieldName,
+                                              Validator<TProperty> validator,
                                               string errorMessage)
         {
             return Create(item,
@@ -44,9 +56,38 @@ namespace Coddee.Validation
             };
         }
 
+        public static RequiredField Create<T, TProperty>(T item,
+                                              string fieldName,
+                                              Validator<TProperty> validator,
+                                              Func<string> errorMessage)
+        {
+            return new RequiredField
+            {
+                Item = item,
+                FieldName = fieldName,
+                ValidateField = e=> validator((TProperty)e),
+                ErrorMessage = errorMessage
+            };
+        }
+
         public static RequiredField Create<T>(T item,
                                               string fieldName,
                                               Validator validator)
+        {
+            return Create(item,
+                          fieldName,
+                          validator,
+                          LocalizationManager
+                              .DefaultLocalizationManager
+                              .GetValue("DefaultValidationMessage")
+                              .Replace("$FieldName$",
+                                       LocalizationManager
+                                           .DefaultLocalizationManager
+                                           .GetValue(fieldName)));
+        }
+        public static RequiredField Create<T,TProperty>(T item,
+                                              string fieldName,
+                                              Validator<TProperty> validator)
         {
             return Create(item,
                           fieldName,
@@ -83,9 +124,31 @@ namespace Coddee.Validation
                           errorMessage);
         }
 
+        public static RequiredField Create<T,TProperty>(T item,
+                                              Expression<Func<T, TProperty>> field,
+                                              Validator<TProperty> validator,
+                                              Func<string> errorMessage)
+        {
+            var fieldName = ExpressionHelper.GetMemberName(field);
+            return Create(item,
+                          fieldName,
+                          validator,
+                          errorMessage);
+        }
+
         public static RequiredField Create<T>(T item,
                                               Expression<Func<T, object>> field,
                                               Validator validator)
+        {
+            var fieldName = ExpressionHelper.GetMemberName(field);
+            return Create(item,
+                          fieldName,
+                          validator);
+        }
+
+        public static RequiredField Create<T,TProperty>(T item,
+                                              Expression<Func<T, TProperty>> field,
+                                              Validator<TProperty> validator)
         {
             var fieldName = ExpressionHelper.GetMemberName(field);
             return Create(item,
@@ -147,6 +210,7 @@ namespace Coddee.Validation
             };
         }
 
+        
         public static RequiredField Create(string fieldName,
                                            Validator validator)
         {

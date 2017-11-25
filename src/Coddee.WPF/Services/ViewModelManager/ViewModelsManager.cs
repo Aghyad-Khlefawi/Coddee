@@ -5,6 +5,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using Coddee.Loggers;
 using Coddee.WPF;
@@ -12,6 +13,7 @@ using Coddee.WPF;
 
 namespace Coddee.Services.ViewModelManager
 {
+    
     public class ViewModelsManager : IViewModelsManager
     {
         private const string _eventsSource = "ViewModelsManager";
@@ -27,6 +29,7 @@ namespace Coddee.Services.ViewModelManager
             _viewModels = new ConcurrentDictionary<IViewModel, ViewModelInfo>();
             _viewModelGroups = new ConcurrentDictionary<string, List<IViewModel>>();
         }
+        
 
         public event EventHandler<ViewModelInfo> ViewModelCreated;
 
@@ -49,12 +52,22 @@ namespace Coddee.Services.ViewModelManager
             return _viewModelGroups[group];
         }
 
-
         public IViewModel CreateViewModel(Type viewModelType, IViewModel parentVM)
+        {
+            return CreateViewModel(viewModelType, parentVM, null);
+        }
+
+        public IViewModel CreateViewModel(Type viewModelType, IViewModel parentVM, ViewModelOptions viewModelOptions)
         {
             lock (_viewModels)
             {
                 IViewModel vm = (IViewModel)_container.Resolve(viewModelType);
+
+                if (viewModelOptions == null)
+                {
+                    viewModelOptions = vm.DefaultViewModelOptions;
+                }
+                vm.SetViewModelOptions(viewModelOptions);
                 var id = ++_lastID;
                 _logger?.Log(_eventsSource, $"ViewModelCreated {viewModelType.Name}", LogRecordTypes.Debug);
                 var vmInfo = new ViewModelInfo(vm) { ID = id };
@@ -83,6 +96,11 @@ namespace Coddee.Services.ViewModelManager
         public TResult CreateViewModel<TResult>(IViewModel parentVM) where TResult : IViewModel
         {
             return (TResult)CreateViewModel(typeof(TResult), parentVM);
+        }
+
+        public TResult CreateViewModel<TResult>(IViewModel parentVM, ViewModelOptions viewModelOptions) where TResult : IViewModel
+        {
+            return (TResult)CreateViewModel(typeof(TResult), parentVM, viewModelOptions);
         }
 
         public async Task<IViewModel> InitializeViewModel(Type viewModelType, IViewModel parentVM)

@@ -30,13 +30,6 @@ namespace Coddee.WPF
             _systemApplication.Startup += delegate { Start(); };
         }
 
-        protected override void LogCoddeeVersions()
-        {
-            base.LogCoddeeVersions();
-            _logger.Log(_eventsSource,
-                        $"using Coddee.WPF: {FileVersionInfo.GetVersionInfo(Assembly.Load("Coddee.WPF").Location).ProductVersion}");
-        }
-
         public override void Start()
         {
             _systemApplication.Dispatcher.Invoke(() =>

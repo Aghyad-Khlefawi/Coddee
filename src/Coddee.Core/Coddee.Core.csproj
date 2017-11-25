@@ -61,6 +61,7 @@
     <Compile Include="Exceptions\CoddeeException.cs" />
     <Compile Include="Exceptions\ConfigurationExption.cs" />
     <Compile Include="Exceptions\DBException.cs" />
+    <Compile Include="Exceptions\InitializationException.cs" />
     <Compile Include="Exceptions\ModuleException.cs" />
     <Compile Include="ExpresstionHelper.cs" />
     <Compile Include="Globals.cs" />

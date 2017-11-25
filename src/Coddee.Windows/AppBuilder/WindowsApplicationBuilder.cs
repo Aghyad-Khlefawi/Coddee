@@ -31,14 +31,6 @@ namespace Coddee.AppBuilder
         //Build Actions
         public BuildActionsCoordinator BuildActionsCoordinator { get; }
 
-        protected virtual void LogCoddeeVersions()
-        {
-            _logger.Log(_eventsSource,
-                        $"using Coddee.Core: {FileVersionInfo.GetVersionInfo(Assembly.Load("Coddee.Core").Location).ProductVersion}");
-            _logger.Log(_eventsSource,
-                      $"using Coddee.Windows: {FileVersionInfo.GetVersionInfo(Assembly.Load("Coddee.Windows").Location).ProductVersion}");
-        }
-
         protected void ConfigureGlobalVariables()
         {
             BuildActionsCoordinator.AddAction(DefaultBuildActions.ConfigureGlobalVariablesBuildAction(container =>
@@ -55,9 +47,7 @@ namespace Coddee.AppBuilder
 
         public virtual void Start()
         {
-            LogCoddeeVersions();
             _logger.Log(_eventsSource, "Application build started.", LogRecordTypes.Information);
-
             try
             {
                 SetupDefaultBuildActions();

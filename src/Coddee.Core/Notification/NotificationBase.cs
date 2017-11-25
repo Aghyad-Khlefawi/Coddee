@@ -19,9 +19,11 @@ namespace Coddee.Notification
         public string Description { get; set; }
         public int Type { get; }
         public DateTime Date { get; set; }
+        public string Category { get; set; }
+        public string Parameter { get; set; }
 
         public event Action<INotification> Opened;
-        public void Open()
+        public virtual void Open()
         {
             Opened?.Invoke(this);
         }

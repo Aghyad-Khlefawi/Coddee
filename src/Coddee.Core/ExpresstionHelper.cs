@@ -9,7 +9,7 @@ namespace Coddee
 {
     public class ExpressionHelper
     {
-        public static string GetMemberName<T>(Expression<Func<T, object>> expression)
+        public static string GetMemberName(LambdaExpression expression)
         {
             var body = expression.Body;
             {
@@ -28,6 +28,26 @@ namespace Coddee
 
             return null;
         }
+
+        //public static string GetMemberName<T>(Expression<Func<T, object>> expression)
+        //{
+        //    var body = expression.Body;
+        //    {
+        //        if (body is MemberExpression member)
+        //        {
+        //            return member.Member.Name;
+        //        }
+        //    }
+        //    {
+        //        if (body is UnaryExpression unary)
+        //        {
+        //            if (unary.Operand is MemberExpression member)
+        //                return member.Member.Name;
+        //        }
+        //    }
+
+        //    return null;
+        //}
 
         public static Type GetMemberType<T>(Expression<Func<T, object>> expression)
         {

@@ -15,6 +15,8 @@ namespace Coddee.Notification
             Description = notification.Description;
             Type = notification.Type;
             Date = notification.Date;
+            Category = notification.Category;
+            Parameter = notification.Parameter;
 
             OpenCommand = CreateReactiveCommand(Open);
             CloseCommand = CreateReactiveCommand(Close);
@@ -27,6 +29,8 @@ namespace Coddee.Notification
         public string Description { get; set; }
         public int Type { get; }
         public DateTime Date { get; set; }
+        public string Category { get; set; }
+        public string Parameter { get; set; }
 
         public event Action<INotification> Opened;
         public event Action<NotificationPopupViewModel> Closed;
@@ -34,9 +38,15 @@ namespace Coddee.Notification
         public ICommand OpenCommand { get; }
         public ICommand CloseCommand { get; }
 
-        private void Close()
+        public bool IsClosed { get; set; }
+
+        public void Close()
         {
-            Closed?.Invoke(this);
+            if (!IsClosed)
+            {
+                IsClosed = true;
+                Closed?.Invoke(this);
+            }
         }
 
         public void Open()

@@ -235,6 +235,7 @@
     <Compile Include="ViewModelBase.cs" />
     <Compile Include="Services\ViewModelManager\ViewModelsManager.cs" />
     <Compile Include="ViewModelEvent.cs" />
+    <Compile Include="ViewModelOptions.cs" />
     <Compile Include="ViewModelsGroupEvent.cs" />
     <Compile Include="WPFModulesDefnitions.cs" />
     <Compile Include="XamlHelpers\FocusOnLoad.cs" />

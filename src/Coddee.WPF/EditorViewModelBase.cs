@@ -28,6 +28,8 @@ namespace Coddee.WPF
         public event EventHandler<EditorSaveArgs<TModel>> Saved;
         public event EventHandler<EditorSaveArgs<TModel>> Canceled;
 
+        public override ViewModelOptions DefaultViewModelOptions => ViewModelOptions.Editor;
+
         private OperationType _operationType;
         public OperationType OperationType
         {

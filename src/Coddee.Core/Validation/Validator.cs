@@ -4,4 +4,5 @@
 namespace Coddee.Validation
 {
     public delegate bool Validator(object obj);
+    public delegate bool Validator<TTarget>(TTarget obj);
 }

@@ -10,11 +10,11 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
 using Coddee.Data;
+using Coddee.Exceptions;
 using Coddee.Loggers;
 using Coddee.Services;
 using Coddee.Validation;
 using Coddee.WPF.Commands;
-
 
 namespace Coddee.WPF
 {
@@ -25,7 +25,6 @@ namespace Coddee.WPF
     public abstract class ViewModelBase : BindableBase, IPresentableViewModel
     {
         private const string _eventsSource = "VMBase";
-
 
         protected static readonly Task completedTask = Task.FromResult(false);
         protected static WPFApplication _app;
@@ -41,8 +40,7 @@ namespace Coddee.WPF
         protected static IEventDispatcher _eventDispatcher;
 
         protected bool _validateOnPropertyChanged;
-        public string __Name { get; protected set; }
-
+        public virtual string __Name { get; protected set; }
 
         protected ViewModelBase()
         {
@@ -78,12 +76,16 @@ namespace Coddee.WPF
             protected set { SetProperty(ref this._isValid, value); }
         }
 
+        public virtual ViewModelOptions ViewModelOptions { get; private set; }
+
         private bool _isInitialized;
         public bool IsInitialized
         {
             get { return _isInitialized; }
             protected set { SetProperty(ref this._isInitialized, value); }
         }
+        public virtual ViewModelOptions DefaultViewModelOptions => ViewModelOptions.Default;
+
         public string ViewModelGroup { get; private set; }
 
         private bool _isBusy = true;
@@ -92,6 +94,7 @@ namespace Coddee.WPF
             get { return _isBusy; }
             set { SetProperty(ref this._isBusy, value); }
         }
+
         private int _currentViewIndex;
         public int CurrentViewIndex
         {
@@ -99,11 +102,16 @@ namespace Coddee.WPF
             set
             {
                 SetProperty(ref _currentViewIndex, value);
-                ViewIndexChanged?.Invoke(this,value);
+                ViewIndexChanged?.Invoke(this, value);
             }
         }
 
         public event ViewModelEventHandler<int> ViewIndexChanged;
+
+        public virtual void SetViewModelOptions(ViewModelOptions options)
+        {
+            ViewModelOptions = options;
+        }
 
         protected Task<IViewModel> InitializeViewModel(Type viewModelType)
         {
@@ -130,9 +138,19 @@ namespace Coddee.WPF
             return _vmManager.CreateViewModel(viewModelType, this);
         }
 
+        protected IViewModel CreateViewModel(Type viewModelType, ViewModelOptions viewModelOptions)
+        {
+            return _vmManager.CreateViewModel(viewModelType, this, viewModelOptions);
+        }
+
         protected TResult CreateViewModel<TResult>() where TResult : IViewModel
         {
             return _vmManager.CreateViewModel<TResult>(this);
+        }
+
+        protected TResult CreateViewModel<TResult>(ViewModelOptions viewModelOptions) where TResult : IViewModel
+        {
+            return _vmManager.CreateViewModel<TResult>(this, viewModelOptions);
         }
 
         protected Task InitializeChildViewModels(bool forceInitialize = false)
@@ -183,7 +201,7 @@ namespace Coddee.WPF
         /// Called when the ViewModel is ready to be presented
         /// </summary>
         /// <returns></returns>
-        public Task Initialize(bool forceInitialize = false)
+        public async Task Initialize(bool forceInitialize = false)
         {
             bool skip = false;
             lock (_initializationLock)
@@ -198,20 +216,23 @@ namespace Coddee.WPF
             if (skip)
             {
                 _logger?.Log(_eventsSource, $"ViewModel {__Name} is initialized skipping initialization", LogRecordTypes.Debug);
-                return completedTask;
+                return;
             }
 
             _logger?.Log(_eventsSource, $"ViewModel {__Name} initializing", LogRecordTypes.Debug);
-            return Task.Run(() =>
+            await Task.Run(OnInitialization).ContinueWith(t =>
             {
-                var task = OnInitialization().ContinueWith(t =>
+                if (t.IsFaulted)
                 {
-                    RefreshRequiredFields();
-                    PropertyChanged += PropertyChangedHandler;
-                    IsBusy = false;
-                    OnInitialized(this);
-                });
-                Task.WaitAll(task);
+                    var initializationException = new InitializationException(_eventsSource, t.Exception);
+                    LogError(_eventsSource, initializationException);
+                    _logger.Log(_eventsSource, $"Failed to initialize ViewModel {__Name} .", LogRecordTypes.Error);
+                }
+
+                RefreshRequiredFields();
+                PropertyChanged += PropertyChangedHandler;
+                IsBusy = false;
+                OnInitialized(this);
             });
         }
 
@@ -422,7 +443,6 @@ namespace Coddee.WPF
 
         protected virtual void SetRequiredFields(RequiredFieldCollection requiredFields)
         {
-
         }
 
         protected virtual void GetRequiredPropertiesInfo()
@@ -451,8 +471,8 @@ namespace Coddee.WPF
                     try
                     {
                         var isValid = field.ValidateField(field.Item == null
-                            ? property.GetValue(this)
-                            : property.GetValue(field.Item));
+                                                              ? property.GetValue(this)
+                                                              : property.GetValue(field.Item));
                         if (!isValid)
                             res.Add(field.ErrorMessage());
                     }
@@ -462,11 +482,9 @@ namespace Coddee.WPF
                         res.Add("FieldValidationException");
                     }
                 }
-
             }
             return res.Any() ? res : null;
         }
-
 
         protected bool _validating;
 
@@ -479,11 +497,13 @@ namespace Coddee.WPF
 
             _validating = true;
 
-
             if (validateChildren)
             {
                 foreach (var childViewModel in GetChildViewModels())
                 {
+                    if (!childViewModel.ViewModelOptions.IncludeInHierarchicalValidation)
+                        continue;
+
                     var errors = childViewModel.Validate(true);
                     if (errors != null)
                         Errors.AddRange(errors);
@@ -527,6 +547,7 @@ namespace Coddee.WPF
         {
             return ReactiveCommand<T>.Create(obj, handler);
         }
+
         public ReactiveCommand<T, TParam> CreateReactiveCommand<T, TParam>(T obj, Action<TParam> handler)
         {
             return ReactiveCommand<T, TParam>.Create(obj, handler);
@@ -538,12 +559,14 @@ namespace Coddee.WPF
             var targetEvent = _eventDispatcher.GetEvent<TEvent>();
             targetEvent.Raise(this, args);
         }
+
         protected virtual void RaiseGroupEvent<TEvent, TArgs>(string viewModelGroup, TArgs args)
             where TEvent : ViewModelsGroupEvent<TArgs>, new()
         {
             var targetEvent = _eventDispatcher.GetEvent<TEvent>();
             targetEvent.Raise(viewModelGroup, this, args);
         }
+
         protected virtual void RaiseGroupEvent<TEvent, TArgs>(TArgs args)
             where TEvent : ViewModelsGroupEvent<TArgs>, new()
         {
@@ -559,13 +582,15 @@ namespace Coddee.WPF
             var targetEvent = _eventDispatcher.GetEvent<TEvent>();
             targetEvent.Subscribe(this, handler);
         }
+
         protected virtual void SubscribeToGroupEvent<TEvent, TArgs>(string viewModelGroup,
-            ViewModelEventHandler<TArgs> handler)
+                                                                    ViewModelEventHandler<TArgs> handler)
             where TEvent : ViewModelsGroupEvent<TArgs>, new()
         {
             var targetEvent = _eventDispatcher.GetEvent<TEvent>();
             targetEvent.Subscribe(viewModelGroup, handler);
         }
+
         protected virtual void SubscribeToGroupEvent<TEvent, TArgs>(ViewModelEventHandler<TArgs> handler)
             where TEvent : ViewModelsGroupEvent<TArgs>, new()
         {
@@ -573,6 +598,7 @@ namespace Coddee.WPF
                 throw new InvalidOperationException("ViewModelGroup is not set.");
             SubscribeToGroupEvent<TEvent, TArgs>(ViewModelGroup, handler);
         }
+
         protected virtual void ToggleBusy(Action action)
         {
             try
@@ -601,10 +627,7 @@ namespace Coddee.WPF
 
         protected virtual void ToViewModelEvent<TEvent, TParam>(ref ViewModelEventHandler<TParam> handler) where TEvent : ViewModelEvent<TParam>, new()
         {
-            handler += (sender, args) =>
-            {
-                _eventDispatcher.GetEvent<TEvent>().Raise(this, args);
-            };
+            handler += (sender, args) => { _eventDispatcher.GetEvent<TEvent>().Raise(this, args); };
         }
     }
 
@@ -613,11 +636,10 @@ namespace Coddee.WPF
     /// Contains the property changed handlers and UI execute method
     /// </summary>
     /// <typeparam name="TView"></typeparam>
-    public class ViewModelBase<TView> : ViewModelBase, IPresentable<TView>, IPresentableViewModel
+    public class ViewModelBase<TView> : ViewModelBase, IPresentable<TView>
         where TView : UIElement, new()
     {
         public TView View => (TView)GetView();
-
 
         protected override void RegisterViews()
         {
@@ -639,8 +661,8 @@ namespace Coddee.WPF
 
         protected virtual void OnDefaultViewCreated(TView view)
         {
-
         }
+
         public TView GetDefaultView()
         {
             return (TView)GetView(0);
