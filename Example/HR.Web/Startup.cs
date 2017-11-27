@@ -6,6 +6,7 @@ using System.IO;
 using Coddee.AspNet;
 using Coddee.Loggers;
 using HR.Data.LinqToSQL;
+using Microsoft.ApplicationInsights.AspNetCore.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -37,10 +38,8 @@ namespace HR.Web
             services.AddLogger(LoggerTypes.DebugOutput, LogRecordTypes.Debug);
             services.AddILObjectMapper();
             services
-                .AddLinqRepositoryManager<HRDBManager, HRRepositoryManager
-                >(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\HRDatabase.mdf;Integrated Security=True;Connect Timeout=30",
-                  "HR.Data.LinqToSQL",
-                  true);
+                .AddLinqRepositoryManager<HRDBManager>(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\HRDatabase.mdf;Integrated Security=True;Connect Timeout=30",
+                  "HR.Data.LinqToSQL");
             // Add framework services.
             services.AddMvc();
         }
@@ -53,5 +52,6 @@ namespace HR.Web
 
             app.UseMVCWithCoddeeRoutes();
         }
+        
     }
 }

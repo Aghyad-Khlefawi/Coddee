@@ -1,14 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web" ToolsVersion="15.0">
   <PropertyGroup>
-    <TargetFramework>net46</TargetFramework>
+    <TargetFramework>net452</TargetFramework>
     <RuntimeIdentifier>win7-x86</RuntimeIdentifier>
-    <UserSecretsId>d87f9641-d1c1-4022-943e-3290294fa7d4</UserSecretsId>
-    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
-    <FileUpgradeFlags>
-    </FileUpgradeFlags>
-    <UpgradeBackupLocation>
-    </UpgradeBackupLocation>
-    <OldToolsVersion>2.0</OldToolsVersion>
+   
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="bin\**" />
@@ -38,13 +32,13 @@
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="1.0.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Coddee.AspNet\Coddee.AspNet.csproj" />
-    <ProjectReference Include="..\Coddee.Core\Coddee.Core.csproj" />
-    <ProjectReference Include="..\Coddee.Crypto\Coddee.Crypto.csproj" />
-    <ProjectReference Include="..\Coddee.Data.Linq\Coddee.Data.LinqToSQL.csproj" />
-    <ProjectReference Include="..\Coddee.Data\Coddee.Data.csproj" />
-    <ProjectReference Include="..\Coddee.Security\Coddee.Security.csproj" />
-    <ProjectReference Include="..\Coddee.Windows\Coddee.Windows.csproj" />
+    <ProjectReference Include="..\..\src\Coddee.AspNet\Coddee.AspNet.csproj" />
+    <ProjectReference Include="..\..\src\Coddee.Core\Coddee.Core.csproj" />
+    <ProjectReference Include="..\..\src\Coddee.Crypto\Coddee.Crypto.csproj" />
+    <ProjectReference Include="..\..\src\Coddee.Data.Linq\Coddee.Data.LinqToSQL.csproj" />
+    <ProjectReference Include="..\..\src\Coddee.Data\Coddee.Data.csproj" />
+    <ProjectReference Include="..\..\src\Coddee.Security\Coddee.Security.csproj" />
+    <ProjectReference Include="..\..\src\Coddee.Windows\Coddee.Windows.csproj" />
     <ProjectReference Include="..\HR.Data.LinqToSQL\HR.Data.LinqToSQL.csproj" />
     <ProjectReference Include="..\HR.Data\HR.Data.csproj" />
   </ItemGroup>
