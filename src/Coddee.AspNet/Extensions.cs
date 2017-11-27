@@ -1,7 +1,13 @@
 ﻿// Copyright (c) Aghyad khlefawi. All rights reserved.  
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
+using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
+using Coddee.Attributes;
 using Coddee.Data;
 using Coddee.Data.LinqToSQL;
 using Coddee.Data.MongoDB;
@@ -9,6 +15,9 @@ using Coddee.Loggers;
 using Coddee.Windows.Mapper;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using IApplicationBuilder = Microsoft.AspNetCore.Builder.IApplicationBuilder;
 
 namespace Coddee.AspNet
@@ -45,7 +54,7 @@ namespace Coddee.AspNet
             return services;
         }
 
-        public static IServiceCollection AddLinqRepositoryManager<TDBManager>(
+        public static IRepositoryManager AddLinqRepositoryManager<TDBManager>(
             this IServiceCollection services,
             string connectionString,
             string repositoriesAssembly,
@@ -72,7 +81,7 @@ namespace Coddee.AspNet
             {
                 services.AddSingleton(repository.ImplementedInterface, repository);
             }
-            return services;
+            return repositoryManager;
         }
 
         public static IServiceCollection AddMongoRepositoryManager(
@@ -99,10 +108,18 @@ namespace Coddee.AspNet
             }
             return services;
         }
-
+        public static IApplicationBuilder UseMVCWithCoddeeRoutes(this IApplicationBuilder app, string apiPrefix)
+        {
+            return app.UseMvc(routes => { routes.MapRoute("default", $"{apiPrefix}/{{controller}}/{{action}}"); });
+        }
         public static IApplicationBuilder UseMVCWithCoddeeRoutes(this IApplicationBuilder app)
         {
-            return app.UseMvc(routes => { routes.MapRoute("default", "api/{controller}/{action}"); });
+            return app.UseMVCWithCoddeeRoutes("api");
+        }
+        public static IApplicationBuilder UseCoddeeDynamicApi(this IApplicationBuilder appBuilder)
+        {
+            appBuilder.UseMiddleware<CoddeeDynamicApi>();
+            return appBuilder;
         }
     }
 }

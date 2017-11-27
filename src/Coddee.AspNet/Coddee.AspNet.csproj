@@ -252,6 +252,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApiControllerBase.cs" />
+    <Compile Include="CoddeeDynamicApi.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

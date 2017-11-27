@@ -6,21 +6,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="bin\**" />
+    <Compile Remove="wwwroot\**" />
     <Content Remove="bin\**" />
+    <Content Remove="wwwroot\**" />
     <EmbeddedResource Remove="bin\**" />
+    <EmbeddedResource Remove="wwwroot\**" />
     <None Remove="bin\**" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="DB\HRDatabase.mdf">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Content>
-    <Content Include="DB\HRDatabase_log.ldf">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      <DependentUpon>HRDatabase.mdf</DependentUpon>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="wwwroot\" />
+    <None Remove="wwwroot\**" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.1.0" />

@@ -6,7 +6,6 @@ using System.IO;
 using Coddee.AspNet;
 using Coddee.Loggers;
 using HR.Data.LinqToSQL;
-using Microsoft.ApplicationInsights.AspNetCore.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -32,16 +31,12 @@ namespace HR.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var dbLocation = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..\\", "..\\", "..\\", "..\\", "DB"));
+            var dbLocation = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..\\", "..\\", "..\\", "..\\","..\\", "HR.Clients.WPF", "DB"));
             AppDomain.CurrentDomain.SetData("DataDirectory", dbLocation);
 
             services.AddLogger(LoggerTypes.DebugOutput, LogRecordTypes.Debug);
             services.AddILObjectMapper();
-            services
-                .AddLinqRepositoryManager<HRDBManager>(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\HRDatabase.mdf;Integrated Security=True;Connect Timeout=30",
-                  "HR.Data.LinqToSQL");
-            // Add framework services.
-            services.AddMvc();
+            services.AddLinqRepositoryManager<HRDBManager>(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\HRDatabase.mdf;Integrated Security=True;Connect Timeout=30", "HR.Data.LinqToSQL");
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -50,8 +45,7 @@ namespace HR.Web
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
-            app.UseMVCWithCoddeeRoutes();
+            app.UseCoddeeDynamicApi();
         }
-        
     }
 }
