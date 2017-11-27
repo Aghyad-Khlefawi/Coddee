@@ -200,10 +200,11 @@ namespace Coddee.WPF.Controls
 
         public void Clear()
         {
-            foreach (var step in Steps)
-            {
-                step.Clear();
-            }
+            if (Steps != null)
+                foreach (var step in Steps)
+                {
+                    step.Clear();
+                }
             FirstStep?.Select();
         }
 

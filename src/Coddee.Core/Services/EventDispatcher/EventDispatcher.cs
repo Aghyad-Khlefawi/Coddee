@@ -17,13 +17,15 @@ namespace Coddee.Services
 
         public TResult GetEvent<TResult>() where TResult : class, IEvent, new()
         {
-            IEvent globalEvent = null;
-            if (!_events.TryGetValue(typeof(TResult), out globalEvent))
+            lock (_events)
             {
-                globalEvent = new TResult();
-                _events.TryAdd(typeof(TResult), globalEvent);
+                if (!_events.TryGetValue(typeof(TResult), out var globalEvent))
+                {
+                    globalEvent = new TResult();
+                    _events.TryAdd(typeof(TResult), globalEvent);
+                }
+                return (TResult) globalEvent;
             }
-            return (TResult) globalEvent;
         }
     }
 }

@@ -567,6 +567,13 @@ namespace Coddee.WPF
             targetEvent.Raise(viewModelGroup, this, args);
         }
 
+        protected virtual Task RaiseGroupEventAsync<TEvent, TArgs>(string viewModelGroup, TArgs args)
+            where TEvent : ViewModelsGroupEvent<TArgs>, new()
+        {
+            var targetEvent = _eventDispatcher.GetEvent<TEvent>();
+            return targetEvent.RaiseAsync(viewModelGroup, this, args);
+        }
+
         protected virtual void RaiseGroupEvent<TEvent, TArgs>(TArgs args)
             where TEvent : ViewModelsGroupEvent<TArgs>, new()
         {
@@ -575,8 +582,15 @@ namespace Coddee.WPF
             RaiseGroupEvent<TEvent, TArgs>(ViewModelGroup, args);
         }
 
-        protected virtual void SubscribeToEvent<TEvent, TArgs>(
-            ViewModelEventHandler<TArgs> handler)
+        protected virtual Task RaiseGroupEventAsync<TEvent, TArgs>(TArgs args)
+            where TEvent : ViewModelsGroupEvent<TArgs>, new()
+        {
+            if (string.IsNullOrEmpty(ViewModelGroup))
+                throw new InvalidOperationException("ViewModelGroup is not set.");
+            return RaiseGroupEventAsync<TEvent, TArgs>(ViewModelGroup, args);
+        }
+
+        protected virtual void SubscribeToEvent<TEvent, TArgs>(ViewModelEventHandler<TArgs> handler)
             where TEvent : class, IViewModelEvent<TArgs>, new()
         {
             var targetEvent = _eventDispatcher.GetEvent<TEvent>();
@@ -597,6 +611,22 @@ namespace Coddee.WPF
             if (string.IsNullOrEmpty(ViewModelGroup))
                 throw new InvalidOperationException("ViewModelGroup is not set.");
             SubscribeToGroupEvent<TEvent, TArgs>(ViewModelGroup, handler);
+        }
+
+        protected virtual void SubscribeToGroupEventAsync<TEvent, TArgs>(string viewModelGroup,
+                                                                         AsyncViewModelEventHandler<TArgs> handler)
+            where TEvent : ViewModelsGroupEvent<TArgs>, new()
+        {
+            var targetEvent = _eventDispatcher.GetEvent<TEvent>();
+            targetEvent.SubscribeAsync(viewModelGroup, handler);
+        }
+
+        protected virtual void SubscribeToGroupEventAsync<TEvent, TArgs>(AsyncViewModelEventHandler<TArgs> handler)
+            where TEvent : ViewModelsGroupEvent<TArgs>, new()
+        {
+            if (string.IsNullOrEmpty(ViewModelGroup))
+                throw new InvalidOperationException("ViewModelGroup is not set.");
+            SubscribeToGroupEventAsync<TEvent, TArgs>(ViewModelGroup, handler);
         }
 
         protected virtual void ToggleBusy(Action action)
