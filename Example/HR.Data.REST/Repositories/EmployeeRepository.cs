@@ -12,19 +12,17 @@ using HR.Data.Repositories;
 namespace HR.Data.REST.Repositories
 {
     [Repository(typeof(IEmployeeRepository))]
-    public class EmployeeRepository: CRUDRESTRepositoryBase<Models.Employee,Guid>, IEmployeeRepository
+    public class EmployeeRepository : CRUDRESTRepositoryBase<Models.Employee, Guid>, IEmployeeRepository
     {
         public EmployeeRepository()
-            :base("Employee")
+            : base("Employee")
         {
-            
+
         }
 
         public Task<IEnumerable<Employee>> GetEmployeesByCompany(Guid companyID)
         {
-            return GetFromController<IEnumerable<Employee>>(nameof(GetEmployeesByCompany),
-                                                            new KeyValuePair<string, string>(nameof(companyID),
-                                                                                             companyID.ToString()));
+            return PostToController<IEnumerable<Employee>>(nameof(GetEmployeesByCompany), companyID);
         }
     }
 }

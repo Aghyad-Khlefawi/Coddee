@@ -180,25 +180,48 @@ namespace Coddee.AspNet
                 }
                 else
                 {
-                    JObject bodyParams;
+                    JObject bodyParams = null;
+                    JToken premitiveParam = null;
+                    bool isPrimitveParam = false;
                     using (var sr = new StreamReader(req.Body))
                     {
                         var text = await sr.ReadToEndAsync();
-                        bodyParams = JObject.Parse(text);
+                        if (!text.StartsWith("{"))
+                        {
+                            premitiveParam = JToken.Parse(text);
+                            isPrimitveParam = true;
+                        }
+                        else
+                            bodyParams = JObject.Parse(text);
                     }
-                    if (param.Count() == 1)
+                    if (isPrimitveParam)
+                    {
+                        AddPrimitiveParam(args, premitiveParam, param.ElementAt(0));
+                    }
+                    else if (bodyParams != null && param.Count() == 1)
+                    {
                         args.Add(bodyParams.ToObject(param.ElementAt(0).Type));
+                    }
                     else
                         foreach (var parameterInfo in param)
                         {
-                            if (bodyParams.TryGetValue(parameterInfo.Name, StringComparison.InvariantCultureIgnoreCase, out JToken value))
-                            {
-                                args.Add(value.ToObject(parameterInfo.Type));
-                            }
+                            AddPrimitiveParam(args, bodyParams, parameterInfo);
                         }
                 }
             }
             return args;
+        }
+
+        private static void AddPrimitiveParam(List<object> args, JObject bodyParams, ActionParameter parameterInfo)
+        {
+            if (bodyParams.TryGetValue(parameterInfo.Name, StringComparison.InvariantCultureIgnoreCase, out JToken value))
+            {
+                args.Add(value.ToObject(parameterInfo.Type));
+            }
+        }
+        private static void AddPrimitiveParam(List<object> args, JToken bodyParams, ActionParameter parameterInfo)
+        {
+            args.Add(bodyParams.ToObject(parameterInfo.Type));
         }
     }
 }
