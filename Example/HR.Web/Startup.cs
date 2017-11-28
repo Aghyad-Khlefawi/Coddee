@@ -41,7 +41,7 @@ namespace HR.Web
             services.AddLinqRepositoryManager<HRDBManager>(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\HRDatabase.mdf;Integrated Security=True;Connect Timeout=30", "HR.Data.LinqToSQL");
 
 
-            services.AddCoddeeControllers(config =>
+            services.AddDynamicApiControllers(config =>
             {
                 config.RegisterController<AuthController>();
             });

@@ -9,6 +9,7 @@ namespace Coddee.Security
         public string Username { get; set; }
         public AuthenticationStatus Status { get; set; }
         public string Error { get; set; }
+        public string AuthenticationToken { get; set; }
     }
     public class AuthenticationResponse<TUser>: AuthenticationResponse
     {

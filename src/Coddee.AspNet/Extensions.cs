@@ -121,7 +121,7 @@ namespace Coddee.AspNet
             appBuilder.UseMiddleware<CoddeeDynamicApi>();
             return appBuilder;
         }
-        public static IServiceCollection AddCoddeeControllers(this IServiceCollection services, Action<CoddeeControllersManager> config)
+        public static IServiceCollection AddDynamicApiControllers(this IServiceCollection services, Action<CoddeeControllersManager> config)
         {
             var manager = new CoddeeControllersManager(services);
             config(manager);
