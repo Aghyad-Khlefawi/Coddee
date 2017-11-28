@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using Coddee.Data;
@@ -27,11 +28,17 @@ namespace HR.Data.REST.Repositories
                         });
         }
 
-        public Task<HRAuthenticationResponse> AuthenticationUser(string username, string password)
+        public async Task<HRAuthenticationResponse> AuthenticationUser(string username, string password)
         {
-            return Post<HRAuthenticationResponse>(_controller,
+            var res = await Post<HRAuthenticationResponse>(_controller,
                                                 nameof(AuthenticationUser),
-                                                new {Username = username, Password = password});
+                                                new { Username = username, Password = password });
+            if (res.Status == AuthenticationStatus.Successfull)
+            {
+                _httpClient.DefaultRequestHeaders.Authorization =
+                    AuthenticationHeaderValue.Parse($"Bearer {res.AuthenticationToken}");
+            }
+            return res;
         }
     }
 }

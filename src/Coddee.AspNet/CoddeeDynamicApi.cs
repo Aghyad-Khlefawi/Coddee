@@ -79,9 +79,26 @@ namespace Coddee.AspNet
                     var repository = GetRepositoryByName(repositoryName);
                     if (repository != null)
                     {
-                        var method = repository.GetType().GetMethods().FirstOrDefault(e => e.Name.Equals(actionName, StringComparison.InvariantCultureIgnoreCase));
+                        var method = repository
+                            .GetType()
+                            .GetMethods()
+                            .FirstOrDefault(e => e.Name.Equals(actionName, StringComparison.InvariantCultureIgnoreCase));
+
+                        var interfaceMethod = repository.ImplementedInterface
+                                                        .GetMethods()
+                                                        .FirstOrDefault(e => e.Name.Equals(actionName, StringComparison.InvariantCultureIgnoreCase));
+
                         var param = method.GetParameters();
                         action = new DelegateAction(path, repository, method, param);
+                        if (interfaceMethod != null)
+                        {
+                            var authAttr = interfaceMethod.GetCustomAttribute<AuthorizeAttribute>();
+                            if (authAttr != null)
+                            {
+                                action.RequiredAuthentication = true;
+                                action.Claim = authAttr.Claim;
+                            }
+                        }
                         _apiActions.Add(path, action);
                     }
                 }
@@ -90,6 +107,19 @@ namespace Coddee.AspNet
 
                     IEnumerable<object> args;
 
+                    if (action.RequiredAuthentication)
+                    {
+                        bool authoized = context.User.Identity.IsAuthenticated;
+                        if (!string.IsNullOrWhiteSpace(action.Claim))
+                            authoized = false;
+
+                        if (!authoized)
+                        {
+                            context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                            await context.Response.WriteAsync("Unauthorize.");
+                            return true;
+                        }
+                    }
                     try
                     {
                         args = await ParseParameters(req, action.ParametersInfo);
@@ -167,6 +197,8 @@ namespace Coddee.AspNet
         Task<object> Invoke(IEnumerable<object> param);
         bool RetrunsValue { get; }
         ParameterInfo[] ParametersInfo { get; set; }
+        bool RequiredAuthentication { get; set; }
+        string Claim { get; set; }
     }
 
     public class DelegateAction : IApiAction
@@ -192,6 +224,9 @@ namespace Coddee.AspNet
         public Type ReturnType { get; set; }
         public bool RetrunsValue { get; set; }
         public string Path { get; set; }
+        public bool RequiredAuthentication { get; set; }
+        public string Claim { get; set; }
+
         public async Task<object> Invoke(IEnumerable<object> param)
         {
             if (!RetrunsValue)
@@ -233,6 +268,12 @@ namespace Coddee.AspNet
                     {
                         var pathLower = path.ToLower();
                         var delegateAction = new DelegateAction(pathLower, controller, memberInfo, memberInfo.GetParameters());
+                        var authAttr = memberInfo.GetCustomAttribute<AuthorizeAttribute>();
+                        if (authAttr != null)
+                        {
+                            delegateAction.RequiredAuthentication = true;
+                            delegateAction.Claim = authAttr.Claim;
+                        }
                         _apiActions.Add(pathLower, delegateAction);
                     }
                 }
