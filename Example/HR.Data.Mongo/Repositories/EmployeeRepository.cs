@@ -91,7 +91,7 @@ namespace HR.Data.Mongo.Repositories
             return item;
         }
 
-        public async Task DeleteItem(Guid ID)
+        public async Task DeleteItemByKey(Guid ID)
         {
             var item = await this[ID];
             await _companyCollection.FindOneAndUpdateAsync(e => e.ID == item.CompanyID,
@@ -100,7 +100,7 @@ namespace HR.Data.Mongo.Repositories
 
         public Task DeleteItem(Employee item)
         {
-            return DeleteItem(item.ID);
+            return DeleteItemByKey(item.ID);
         }
 
         public async Task<IEnumerable<Employee>> GetEmployeesByCompany(Guid companyID)

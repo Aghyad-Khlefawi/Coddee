@@ -114,7 +114,7 @@ namespace Coddee.AspNet.Controllers
         {
             try
             {
-                await _repository.DeleteItem(ID);
+                await _repository.DeleteItemByKey(ID);
                 return Ok();
             }
             catch (Exception ex)

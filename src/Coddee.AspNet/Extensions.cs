@@ -61,16 +61,15 @@ namespace Coddee.AspNet
             RepositoryConfigurations config = null)
             where TDBManager : ILinqDBManager, new()
         {
+            var repositoryManager = new RepositoryManager();
             if (services.All(e => e.ServiceType != typeof(IRepositoryManager)))
-                services.AddSingleton<IRepositoryManager>(new RepositoryManager());
+                services.AddSingleton<IRepositoryManager>(repositoryManager);
 
             var serviceProvider = services.BuildServiceProvider();
             var mapper = serviceProvider.GetService<IObjectMapper>();
             var dbManager = new TDBManager();
             dbManager.Initialize(connectionString);
-
-            var repositoryManager = serviceProvider.GetService<IRepositoryManager>();
-
+            
             services.AddSingleton<ILinqDBManager>(dbManager);
             services.AddSingleton<IRepositoryManager>(repositoryManager);
 
@@ -121,7 +120,13 @@ namespace Coddee.AspNet
             appBuilder.UseMiddleware<CoddeeDynamicApi>();
             return appBuilder;
         }
-        public static IServiceCollection AddDynamicApiControllers(this IServiceCollection services, Action<CoddeeControllersManager> config)
+        public static IServiceCollection AddDynamicApi(this IServiceCollection services)
+        {
+            var manager = new CoddeeControllersManager(services);
+            services.AddSingleton(manager);
+            return services;
+        }
+        public static IServiceCollection AddDynamicApi(this IServiceCollection services, Action<CoddeeControllersManager> config)
         {
             var manager = new CoddeeControllersManager(services);
             config(manager);

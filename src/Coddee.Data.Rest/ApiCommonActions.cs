@@ -11,6 +11,6 @@ namespace Coddee.Data.REST
         public const string GetItems = nameof(GetItems);
         public const string GetItem = nameof(GetItem);
         public const string DeleteItem = nameof(DeleteItem);
-        public const string DeleteItemByID = nameof(DeleteItemByID);
+        public const string DeleteItemByKey = nameof(DeleteItemByKey);
     }
 }

@@ -109,7 +109,7 @@ namespace Coddee.Data
             return Task.FromResult(item);
         }
 
-        public virtual Task DeleteItem(TKey ID)
+        public virtual Task DeleteItemByKey(TKey ID)
         {
             _dictionary.TryRemove(ID, out TModel removed);
             RaiseItemsChanged(this, new RepositoryChangeEventArgs<TModel>(OperationType.Delete, removed));
@@ -118,7 +118,7 @@ namespace Coddee.Data
 
         public virtual Task DeleteItem(TModel item)
         {
-            return DeleteItem(item.GetKey);
+            return DeleteItemByKey(item.GetKey);
         }
     }
 }

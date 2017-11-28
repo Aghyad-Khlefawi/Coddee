@@ -18,22 +18,27 @@ namespace Coddee.AspNet
             Method = method;
             ReturnType = method.ReturnType;
             RetrunsValue = ReturnType != typeof(Task);
+            if (RetrunsValue)
+                TaskResult = ReturnType.GetProperty("Result");
         }
 
         public DelegateAction(string path, object owner, MethodInfo method, ParameterInfo[] parametersInfo)
             : this(path, owner, method)
         {
-            ParametersInfo = parametersInfo;
+            ParametersInfo = parametersInfo.Select(ActionParameter.Create);
         }
 
+        public Delegate Delegate { get; set; }
         public object Owner { get; set; }
         public MethodInfo Method { get; set; }
-        public ParameterInfo[] ParametersInfo { get; set; }
+        public IEnumerable<ActionParameter> ParametersInfo { get; set; }
         public Type ReturnType { get; set; }
         public bool RetrunsValue { get; set; }
         public string Path { get; set; }
         public bool RequiredAuthentication { get; set; }
         public string Claim { get; set; }
+
+        private PropertyInfo TaskResult { get; set; }
 
         public async Task<object> Invoke(IEnumerable<object> param)
         {
@@ -41,8 +46,8 @@ namespace Coddee.AspNet
                 await (Task)Method.Invoke(Owner, param.ToArray());
             else
             {
-                dynamic task = ((Task)Method.Invoke(Owner, param.ToArray()));
-                return (object)task.Result;
+                var task = ((Task)Method.Invoke(Owner, param.ToArray()));
+                return TaskResult.GetValue(task);
             }
             return null;
         }

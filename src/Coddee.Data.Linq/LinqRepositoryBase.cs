@@ -571,7 +571,7 @@ namespace Coddee.Data.LinqToSQL
         /// <summary>
         /// Deletes an item from the repository by it's key
         /// </summary>
-        public virtual Task DeleteItem(TKey ID)
+        public virtual Task DeleteItemByKey(TKey ID)
         {
             return Execute((db, table) =>
             {
@@ -594,7 +594,7 @@ namespace Coddee.Data.LinqToSQL
         /// </summary>
         public virtual Task DeleteItem(TModel item)
         {
-            return DeleteItem(item.GetKey);
+            return DeleteItemByKey(item.GetKey);
         }
 
         /// <summary>

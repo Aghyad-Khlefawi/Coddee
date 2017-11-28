@@ -130,7 +130,7 @@ namespace Coddee.Data
         /// <summary>
         /// Deletes an item from the repository by it's key
         /// </summary>
-        Task DeleteItem(TKey ID);
+        Task DeleteItemByKey(TKey ID);
 
         /// <summary>
         /// Deletes an item from the repository 

@@ -69,21 +69,16 @@ namespace Coddee.AspNet
         {
             if (req.Path.HasValue)
             {
-                var pathParts = req.Path.Value.Split('/').Skip(2);
+                var pathParts = req.Path.Value.ToLower().Split('/').Skip(2);
                 var repositoryName = pathParts.ElementAt(0);
                 var actionName = pathParts.ElementAt(1);
-                var path = pathParts.Combine("/").ToLower();
+                var path = $"{repositoryName}/{actionName}";
 
-                IApiAction action = null;
-                if (_apiActions.ContainsKey(path))
-                    action = _apiActions[path];
-                else
-                {
+                if (!_apiActions.TryGetValue(path, out var action))
                     action = CreateAction(repositoryName, actionName, path);
-                }
+
                 if (action != null)
                 {
-
                     if (action.RequiredAuthentication)
                     {
                         bool authoized = context.User.Identity.IsAuthenticated;
@@ -129,6 +124,9 @@ namespace Coddee.AspNet
             var repository = GetRepositoryByName(repositoryName);
             if (repository != null)
             {
+                if (actionName.ToLower() == "getitem")
+                    actionName = "get_item";
+
                 var method = repository
                     .GetType()
                     .GetMethods()
@@ -155,12 +153,32 @@ namespace Coddee.AspNet
             return action;
         }
 
-        public async Task<IEnumerable<object>> ParseParameters(HttpRequest req, ParameterInfo[] param)
+        public async Task<IEnumerable<object>> ParseParameters(HttpRequest req, IEnumerable<ActionParameter> param)
         {
             var args = new List<object>();
             if (param.Any())
             {
-                if (req.Method == "POST")
+                if (req.Method == "GET" || req.Method == "DELETE")
+                {
+                    foreach (var parameterInfo in param)
+                    {
+                        bool found = false;
+                        foreach (var queryParam in req.Query)
+                        {
+                            if (queryParam.Key.ToLower() == parameterInfo.Name)
+                            {
+                                var val = $"\"{queryParam.Value}\"";
+                                var json = JToken.Parse(val);
+                                args.Add(json.ToObject(parameterInfo.Type));
+                                found = true;
+                                break;
+                            }
+                        }
+                        if (!found)
+                            throw new APIException(0, $"Missing parameters '{parameterInfo.Name}'");
+                    }
+                }
+                else
                 {
                     JObject bodyParams;
                     using (var sr = new StreamReader(req.Body))
@@ -168,34 +186,16 @@ namespace Coddee.AspNet
                         var text = await sr.ReadToEndAsync();
                         bodyParams = JObject.Parse(text);
                     }
-
-                    if (param.Length == 1)
-                        args.Add(bodyParams.ToObject(param[0].ParameterType));
+                    if (param.Count() == 1)
+                        args.Add(bodyParams.ToObject(param.ElementAt(0).Type));
                     else
                         foreach (var parameterInfo in param)
                         {
                             if (bodyParams.TryGetValue(parameterInfo.Name, StringComparison.InvariantCultureIgnoreCase, out JToken value))
                             {
-                                args.Add(value.ToObject(parameterInfo.ParameterType));
+                                args.Add(value.ToObject(parameterInfo.Type));
                             }
                         }
-                }
-                else
-                {
-                    foreach (var parameterInfo in param)
-                    {
-                        var queryItemExists = req.Query.Any(e => e.Key.Equals(parameterInfo.Name, StringComparison.InvariantCultureIgnoreCase));
-                        if (queryItemExists)
-                        {
-                            var val = $"\"{req.Query.First(e => e.Key.Equals(parameterInfo.Name, StringComparison.InvariantCultureIgnoreCase)).Value}\"";
-                            var json = JToken.Parse(val);
-                            args.Add(json.ToObject(parameterInfo.ParameterType));
-                        }
-                        else
-                        {
-                            throw new APIException(0, $"Missing parameters '{parameterInfo.Name}'");
-                        }
-                    }
                 }
             }
             return args;

@@ -406,7 +406,7 @@ namespace Coddee.Data.REST
 
         public Task<TModel> this[TKey index] =>
             GetFromController<TModel>(ApiCommonActions.GetItem,
-                                      new KeyValuePair<string, string>("ID", index.ToString()));
+                                      new KeyValuePair<string, string>("index", index.ToString()));
 
         public Task<IEnumerable<TModel>> GetItems()
         {
@@ -476,16 +476,16 @@ namespace Coddee.Data.REST
             return res;
         }
 
-        public virtual async Task DeleteItem(TKey ID)
+        public virtual async Task DeleteItemByKey(TKey ID)
         {
             var res = await this[ID];
-            await DeleteFromController(ApiCommonActions.DeleteItemByID, ID);
+            await DeleteFromController(ApiCommonActions.DeleteItemByKey, ID);
             RaiseItemsChanged(this, new RepositoryChangeEventArgs<TModel>(OperationType.Delete, res, false));
         }
 
         public virtual async Task DeleteItem(TModel item)
         {
-            await DeleteItem(item.GetKey);
+            await DeleteItemByKey(item.GetKey);
         }
     }
 }

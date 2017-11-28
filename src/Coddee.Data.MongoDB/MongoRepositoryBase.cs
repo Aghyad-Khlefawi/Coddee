@@ -230,7 +230,7 @@ namespace Coddee.Data.MongoDB
             return item;
         }
 
-        public virtual async Task DeleteItem(TKey ID)
+        public virtual async Task DeleteItemByKey(TKey ID)
         {
             var item = await this[ID];
             await _collection.DeleteOneAsync(new BsonDocument("_id", BsonValue.Create(ID)));
@@ -239,7 +239,7 @@ namespace Coddee.Data.MongoDB
 
         public virtual async Task DeleteItem(TModel item)
         {
-            await DeleteItem(item.GetKey);
+            await DeleteItemByKey(item.GetKey);
             RaiseItemsChanged(this, new RepositoryChangeEventArgs<TModel>(OperationType.Edit, item, false));
         }
     }
