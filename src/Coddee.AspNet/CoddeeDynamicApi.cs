@@ -1,15 +1,16 @@
-﻿using System;
+﻿// Copyright (c) Aghyad khlefawi. All rights reserved.  
+// Licensed under the MIT License. See LICENSE file in the project root for full license information.  
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
 using Coddee.Attributes;
 using Coddee.Data;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -20,7 +21,9 @@ namespace Coddee.AspNet
         private readonly RequestDelegate _next;
         private readonly IRepositoryManager _repositoryManager;
 
-        public CoddeeDynamicApi(RequestDelegate next, IRepositoryManager repositoryManager, CoddeeControllersManager controllersManager)
+        public CoddeeDynamicApi(RequestDelegate next,
+            IRepositoryManager repositoryManager,
+            CoddeeControllersManager controllersManager)
         {
             _next = next;
             _repositoryManager = repositoryManager;
@@ -76,36 +79,10 @@ namespace Coddee.AspNet
                     action = _apiActions[path];
                 else
                 {
-                    var repository = GetRepositoryByName(repositoryName);
-                    if (repository != null)
-                    {
-                        var method = repository
-                            .GetType()
-                            .GetMethods()
-                            .FirstOrDefault(e => e.Name.Equals(actionName, StringComparison.InvariantCultureIgnoreCase));
-
-                        var interfaceMethod = repository.ImplementedInterface
-                                                        .GetMethods()
-                                                        .FirstOrDefault(e => e.Name.Equals(actionName, StringComparison.InvariantCultureIgnoreCase));
-
-                        var param = method.GetParameters();
-                        action = new DelegateAction(path, repository, method, param);
-                        if (interfaceMethod != null)
-                        {
-                            var authAttr = interfaceMethod.GetCustomAttribute<AuthorizeAttribute>();
-                            if (authAttr != null)
-                            {
-                                action.RequiredAuthentication = true;
-                                action.Claim = authAttr.Claim;
-                            }
-                        }
-                        _apiActions.Add(path, action);
-                    }
+                    action = CreateAction(repositoryName, actionName, path);
                 }
                 if (action != null)
                 {
-
-                    IEnumerable<object> args;
 
                     if (action.RequiredAuthentication)
                     {
@@ -120,6 +97,8 @@ namespace Coddee.AspNet
                             return true;
                         }
                     }
+
+                    IEnumerable<object> args;
                     try
                     {
                         args = await ParseParameters(req, action.ParametersInfo);
@@ -142,6 +121,38 @@ namespace Coddee.AspNet
             }
 
             return false;
+        }
+
+        private IApiAction CreateAction(string repositoryName, string actionName, string path)
+        {
+            IApiAction action = null;
+            var repository = GetRepositoryByName(repositoryName);
+            if (repository != null)
+            {
+                var method = repository
+                    .GetType()
+                    .GetMethods()
+                    .FirstOrDefault(e => e.Name.Equals(actionName, StringComparison.InvariantCultureIgnoreCase));
+
+                var interfaceMethod = repository.ImplementedInterface
+                                                .GetMethods()
+                                                .FirstOrDefault(e => e.Name.Equals(actionName, StringComparison.InvariantCultureIgnoreCase));
+
+                var param = method.GetParameters();
+                action = new DelegateAction(path, repository, method, param);
+                if (interfaceMethod != null)
+                {
+                    var authAttr = interfaceMethod.GetCustomAttribute<AuthorizeAttribute>();
+                    if (authAttr != null)
+                    {
+                        action.RequiredAuthentication = true;
+                        action.Claim = authAttr.Claim;
+                    }
+                }
+                _apiActions.Add(path, action);
+            }
+
+            return action;
         }
 
         public async Task<IEnumerable<object>> ParseParameters(HttpRequest req, ParameterInfo[] param)
@@ -189,124 +200,5 @@ namespace Coddee.AspNet
             }
             return args;
         }
-    }
-
-    public interface IApiAction
-    {
-        string Path { get; set; }
-        Task<object> Invoke(IEnumerable<object> param);
-        bool RetrunsValue { get; }
-        ParameterInfo[] ParametersInfo { get; set; }
-        bool RequiredAuthentication { get; set; }
-        string Claim { get; set; }
-    }
-
-    public class DelegateAction : IApiAction
-    {
-        public DelegateAction(string path, object owner, MethodInfo method)
-        {
-            Path = path;
-            Owner = owner;
-            Method = method;
-            ReturnType = method.ReturnType;
-            RetrunsValue = ReturnType != typeof(Task);
-        }
-
-        public DelegateAction(string path, object owner, MethodInfo method, ParameterInfo[] parametersInfo)
-            : this(path, owner, method)
-        {
-            ParametersInfo = parametersInfo;
-        }
-
-        public object Owner { get; set; }
-        public MethodInfo Method { get; set; }
-        public ParameterInfo[] ParametersInfo { get; set; }
-        public Type ReturnType { get; set; }
-        public bool RetrunsValue { get; set; }
-        public string Path { get; set; }
-        public bool RequiredAuthentication { get; set; }
-        public string Claim { get; set; }
-
-        public async Task<object> Invoke(IEnumerable<object> param)
-        {
-            if (!RetrunsValue)
-                await (Task)Method.Invoke(Owner, param.ToArray());
-            else
-            {
-                dynamic task = ((Task)Method.Invoke(Owner, param.ToArray()));
-                return (object)task.Result;
-            }
-            return null;
-        }
-
-    }
-
-    public class CoddeeControllersManager
-    {
-        private readonly IServiceCollection _container;
-
-        public CoddeeControllersManager(IServiceCollection container)
-        {
-            _container = container;
-            _apiActions = new Dictionary<string, IApiAction>();
-            _controllerTypes = new List<Type>();
-        }
-
-        private readonly List<Type> _controllerTypes;
-        private readonly Dictionary<string, IApiAction> _apiActions;
-
-        public Dictionary<string, IApiAction> GetRegisteredActions()
-        {
-            foreach (var type in _controllerTypes)
-            {
-                var actionsInfo = type.GetMethods().Where(e => Attribute.IsDefined(e, typeof(ApiActionAttribute)));
-                var controller = _container.BuildServiceProvider().GetService(type);
-                foreach (var memberInfo in actionsInfo)
-                {
-                    var paths = memberInfo.GetCustomAttributes<ApiActionAttribute>().Select(e => e.Path).ToList();
-                    foreach (var path in paths)
-                    {
-                        var pathLower = path.ToLower();
-                        var delegateAction = new DelegateAction(pathLower, controller, memberInfo, memberInfo.GetParameters());
-                        var authAttr = memberInfo.GetCustomAttribute<AuthorizeAttribute>();
-                        if (authAttr != null)
-                        {
-                            delegateAction.RequiredAuthentication = true;
-                            delegateAction.Claim = authAttr.Claim;
-                        }
-                        _apiActions.Add(pathLower, delegateAction);
-                    }
-                }
-            }
-            return _apiActions;
-        }
-
-        public void RegisterController<T>() where T : class
-        {
-            var type = typeof(T);
-            _controllerTypes.Add(type);
-            _container.AddTransient<T>();
-        }
-    }
-
-    [AttributeUsage(AttributeTargets.Method, Inherited = true, AllowMultiple = true)]
-    public sealed class ApiActionAttribute : Attribute
-    {
-        public ApiActionAttribute(string path)
-            : this(path, HttpMethod.Get)
-        {
-
-        }
-
-        public ApiActionAttribute(string path, HttpMethod httpMethod)
-        {
-            Path = path;
-            HttpMethod = httpMethod;
-        }
-
-        public string Path { get; }
-        public HttpMethod HttpMethod { get; set; }
-
-
     }
 }

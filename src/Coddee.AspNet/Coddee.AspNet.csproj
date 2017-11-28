@@ -251,9 +251,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApiActionAttribute.cs" />
     <Compile Include="ApiControllerBase.cs" />
+    <Compile Include="CoddeeControllersManager.cs" />
     <Compile Include="CoddeeDynamicApi.cs" />
+    <Compile Include="DelegateAction.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="IApiAction.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
