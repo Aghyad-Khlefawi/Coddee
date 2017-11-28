@@ -31,18 +31,7 @@ namespace Coddee.WPF
             };
         }
 
-        public static string Combine(this IEnumerable<string> collection, string seperator)
-        {
-            if (!collection.Any())
-                return null;
-
-            var sb = new StringBuilder();
-            foreach (var item in collection)
-            {
-                sb.Append($"{item}{seperator}");
-            }
-            return sb.ToString(0, sb.Length - seperator.Length);
-        }
+      
         public static Task InitializeAll(this IEnumerable<IViewModel> items, bool forceInitialization = false)
         {
             return Task.WhenAll(items.Where(e => forceInitialization || !e.IsInitialized).Select(e => e.Initialize()));

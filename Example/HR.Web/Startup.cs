@@ -3,8 +3,10 @@
 
 using System;
 using System.IO;
+using System.Threading.Tasks;
 using Coddee.AspNet;
 using Coddee.Loggers;
+using Coddee.Security;
 using HR.Data.LinqToSQL;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -31,12 +33,18 @@ namespace HR.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var dbLocation = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..\\", "..\\", "..\\", "..\\","..\\", "HR.Clients.WPF", "DB"));
+            var dbLocation = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..\\", "..\\", "..\\", "..\\", "..\\", "HR.Clients.WPF", "DB"));
             AppDomain.CurrentDomain.SetData("DataDirectory", dbLocation);
 
             services.AddLogger(LoggerTypes.DebugOutput, LogRecordTypes.Debug);
             services.AddILObjectMapper();
             services.AddLinqRepositoryManager<HRDBManager>(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\HRDatabase.mdf;Integrated Security=True;Connect Timeout=30", "HR.Data.LinqToSQL");
+
+
+            services.AddCoddeeControllers(config =>
+            {
+                config.RegisterController<AuthController>();
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -46,6 +54,15 @@ namespace HR.Web
             loggerFactory.AddDebug();
 
             app.UseCoddeeDynamicApi();
+        }
+    }
+
+    public class AuthController
+    {
+        [ApiAction("Auth/Authenticate")]
+        public async Task<AuthenticationResponse> Authenticate(string username, string password)
+        {
+            return new AuthenticationResponse { Status = AuthenticationStatus.Successfull };
         }
     }
 }

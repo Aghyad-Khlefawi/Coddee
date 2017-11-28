@@ -56,6 +56,7 @@
     <Compile Include="AppBuilder\IApplicationBuilder.cs" />
     <Compile Include="AppBuilder\IApplicationIdentifier.cs" />
     <Compile Include="AsyncLinq.cs" />
+    <Compile Include="Attributes\Authorize.cs" />
     <Compile Include="Attributes\NameAttribute.cs" />
     <Compile Include="ConfigKeys.cs" />
     <Compile Include="EventRoutingStrategy.cs" />

@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
 using Coddee.Attributes;
 using Coddee.Data;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -18,11 +20,14 @@ namespace Coddee.AspNet
         private readonly RequestDelegate _next;
         private readonly IRepositoryManager _repositoryManager;
 
-        public CoddeeDynamicApi(RequestDelegate next, IRepositoryManager repositoryManager)
+        public CoddeeDynamicApi(RequestDelegate next, IRepositoryManager repositoryManager, CoddeeControllersManager controllersManager)
         {
             _next = next;
             _repositoryManager = repositoryManager;
+            _apiActions = controllersManager.GetRegisteredActions();
         }
+
+        private readonly Dictionary<string, IApiAction> _apiActions;
 
         IRepository GetRepositoryByName(string name)
         {
@@ -31,10 +36,12 @@ namespace Coddee.AspNet
             {
                 var reportAttr = repository.GetType().GetCustomAttribute<RepositoryAttribute>();
                 var interType = reportAttr.ImplementedRepository;
-                var nameAttr = interType.GetCustomAttribute<NameAttribute>();
-                if (nameAttr != null && nameAttr.Value.Equals(name, StringComparison.InvariantCultureIgnoreCase))
-                    return repository;
-
+                var nameAttrs = interType.GetCustomAttributes<NameAttribute>();
+                foreach (var nameAttr in nameAttrs)
+                {
+                    if (nameAttr != null && nameAttr.Value.Equals(name, StringComparison.InvariantCultureIgnoreCase))
+                        return repository;
+                }
 
                 var repoName = interType.Name;
                 repoName = repoName.Remove(0, 1);
@@ -59,46 +66,49 @@ namespace Coddee.AspNet
         {
             if (req.Path.HasValue)
             {
-                var path = req.Path.Value.Split('/');
-                var repositoryName = path[2];
-                var actionName = path[3];
-                
-                var repository = GetRepositoryByName(repositoryName);
-                if (repository != null)
+                var pathParts = req.Path.Value.Split('/').Skip(2);
+                var repositoryName = pathParts.ElementAt(0);
+                var actionName = pathParts.ElementAt(1);
+                var path = pathParts.Combine("/").ToLower();
+
+                IApiAction action = null;
+                if (_apiActions.ContainsKey(path))
+                    action = _apiActions[path];
+                else
                 {
-                    var action = repository.GetType().GetMethods().FirstOrDefault(e => e.Name.Equals(actionName, StringComparison.InvariantCultureIgnoreCase));
-                    if (action != null)
+                    var repository = GetRepositoryByName(repositoryName);
+                    if (repository != null)
                     {
-                        var param = action.GetParameters();
-                        IEnumerable<object> args;
-
-                        try
-                        {
-                            args = await ParseParameters(req, param);
-                        }
-                        catch (APIException ex)
-                        {
-                            context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-                            await context.Response.WriteAsync(ex.Message);
-                            return true;
-                        }
-
-                        if (action.ReturnType == typeof(Task))
-                        {
-                            await ((Task)action.Invoke(repository, args.ToArray()));
-                            context.Response.StatusCode = (int)HttpStatusCode.OK;
-                            return true;
-                        }
-                        if (action.ReturnType.GenericTypeArguments.Any())
-                        {
-                            dynamic task = ((Task)action.Invoke(repository, args.ToArray()));
-                            object res = (object)task.Result;
-                            context.Response.StatusCode = (int)HttpStatusCode.OK;
-                            await context.Response.WriteAsync(JsonConvert.SerializeObject(res));
-                            return true;
-                        }
+                        var method = repository.GetType().GetMethods().FirstOrDefault(e => e.Name.Equals(actionName, StringComparison.InvariantCultureIgnoreCase));
+                        var param = method.GetParameters();
+                        action = new DelegateAction(path, repository, method, param);
+                        _apiActions.Add(path, action);
                     }
                 }
+                if (action != null)
+                {
+
+                    IEnumerable<object> args;
+
+                    try
+                    {
+                        args = await ParseParameters(req, action.ParametersInfo);
+                    }
+                    catch (APIException ex)
+                    {
+                        context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                        await context.Response.WriteAsync(ex.Message);
+                        return true;
+                    }
+
+                    var res = await action.Invoke(args);
+                    context.Response.StatusCode = (int)HttpStatusCode.OK;
+                    if (action.RetrunsValue)
+                        await context.Response.WriteAsync(JsonConvert.SerializeObject(res));
+
+                    return true;
+                }
+
             }
 
             return false;
@@ -136,7 +146,7 @@ namespace Coddee.AspNet
                         var queryItemExists = req.Query.Any(e => e.Key.Equals(parameterInfo.Name, StringComparison.InvariantCultureIgnoreCase));
                         if (queryItemExists)
                         {
-                            var val = $"\"{req.Query.First(e => e.Key.Equals(parameterInfo.Name, StringComparison.InvariantCultureIgnoreCase)).Value.ToString()}\"";
+                            var val = $"\"{req.Query.First(e => e.Key.Equals(parameterInfo.Name, StringComparison.InvariantCultureIgnoreCase)).Value}\"";
                             var json = JToken.Parse(val);
                             args.Add(json.ToObject(parameterInfo.ParameterType));
                         }
@@ -149,5 +159,113 @@ namespace Coddee.AspNet
             }
             return args;
         }
+    }
+
+    public interface IApiAction
+    {
+        string Path { get; set; }
+        Task<object> Invoke(IEnumerable<object> param);
+        bool RetrunsValue { get; }
+        ParameterInfo[] ParametersInfo { get; set; }
+    }
+
+    public class DelegateAction : IApiAction
+    {
+        public DelegateAction(string path, object owner, MethodInfo method)
+        {
+            Path = path;
+            Owner = owner;
+            Method = method;
+            ReturnType = method.ReturnType;
+            RetrunsValue = ReturnType != typeof(Task);
+        }
+
+        public DelegateAction(string path, object owner, MethodInfo method, ParameterInfo[] parametersInfo)
+            : this(path, owner, method)
+        {
+            ParametersInfo = parametersInfo;
+        }
+
+        public object Owner { get; set; }
+        public MethodInfo Method { get; set; }
+        public ParameterInfo[] ParametersInfo { get; set; }
+        public Type ReturnType { get; set; }
+        public bool RetrunsValue { get; set; }
+        public string Path { get; set; }
+        public async Task<object> Invoke(IEnumerable<object> param)
+        {
+            if (!RetrunsValue)
+                await (Task)Method.Invoke(Owner, param.ToArray());
+            else
+            {
+                dynamic task = ((Task)Method.Invoke(Owner, param.ToArray()));
+                return (object)task.Result;
+            }
+            return null;
+        }
+
+    }
+
+    public class CoddeeControllersManager
+    {
+        private readonly IServiceCollection _container;
+
+        public CoddeeControllersManager(IServiceCollection container)
+        {
+            _container = container;
+            _apiActions = new Dictionary<string, IApiAction>();
+            _controllerTypes = new List<Type>();
+        }
+
+        private readonly List<Type> _controllerTypes;
+        private readonly Dictionary<string, IApiAction> _apiActions;
+
+        public Dictionary<string, IApiAction> GetRegisteredActions()
+        {
+            foreach (var type in _controllerTypes)
+            {
+                var actionsInfo = type.GetMethods().Where(e => Attribute.IsDefined(e, typeof(ApiActionAttribute)));
+                var controller = _container.BuildServiceProvider().GetService(type);
+                foreach (var memberInfo in actionsInfo)
+                {
+                    var paths = memberInfo.GetCustomAttributes<ApiActionAttribute>().Select(e => e.Path).ToList();
+                    foreach (var path in paths)
+                    {
+                        var pathLower = path.ToLower();
+                        var delegateAction = new DelegateAction(pathLower, controller, memberInfo, memberInfo.GetParameters());
+                        _apiActions.Add(pathLower, delegateAction);
+                    }
+                }
+            }
+            return _apiActions;
+        }
+
+        public void RegisterController<T>() where T : class
+        {
+            var type = typeof(T);
+            _controllerTypes.Add(type);
+            _container.AddTransient<T>();
+        }
+    }
+
+    [AttributeUsage(AttributeTargets.Method, Inherited = true, AllowMultiple = true)]
+    public sealed class ApiActionAttribute : Attribute
+    {
+        public ApiActionAttribute(string path)
+            : this(path, HttpMethod.Get)
+        {
+
+        }
+
+        public ApiActionAttribute(string path, HttpMethod httpMethod)
+        {
+            Path = path;
+            HttpMethod = httpMethod;
+        }
+
+        public string Path { get; }
+        public HttpMethod HttpMethod { get; set; }
+
+
     }
 }
