@@ -28,7 +28,7 @@ namespace Coddee.AspNet
         {
             foreach (var type in _controllerTypes)
             {
-                var actionsInfo = type.GetMethods().Where(e => Attribute.IsDefined((MemberInfo) e, typeof(ApiActionAttribute)));
+                var actionsInfo = type.GetMethods().Where(e => Attribute.IsDefined((MemberInfo)e, typeof(ApiActionAttribute)));
                 var controller = _container.BuildServiceProvider().GetService(type);
                 foreach (var memberInfo in actionsInfo)
                 {
@@ -36,7 +36,9 @@ namespace Coddee.AspNet
                     foreach (var path in paths)
                     {
                         var pathLower = path.ToLower();
-                        var delegateAction = new DelegateAction(pathLower, controller, memberInfo, memberInfo.GetParameters());
+                        var delegateAction = DelegateAction.CreateDelegateAction(controller, memberInfo, pathLower);
+                        if (delegateAction == null)
+                            break;
                         var authAttr = memberInfo.GetCustomAttribute<AuthorizeAttribute>();
                         if (authAttr != null)
                         {
@@ -49,7 +51,7 @@ namespace Coddee.AspNet
             }
             return _apiActions;
         }
-
+        
         public void RegisterController<T>() where T : class
         {
             var type = typeof(T);

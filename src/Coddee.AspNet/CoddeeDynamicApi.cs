@@ -76,24 +76,30 @@ namespace Coddee.AspNet
 
                 if (!_apiActions.TryGetValue(path, out var action))
                     action = CreateAction(repositoryName, actionName, path);
-
-                if (action != null)
+                if (action == null)
                 {
-                    if (action.RequiredAuthentication)
+                    await context.Response.WriteAsync("Unsuported parameter count.");
+                    context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                    return true;
+                }
+
+                if (action.RequiredAuthentication)
+                {
+                    bool authoized = context.User.Identity.IsAuthenticated;
+                    if (!string.IsNullOrWhiteSpace(action.Claim))
+                        authoized = false;
+
+                    if (!authoized)
                     {
-                        bool authoized = context.User.Identity.IsAuthenticated;
-                        if (!string.IsNullOrWhiteSpace(action.Claim))
-                            authoized = false;
-
-                        if (!authoized)
-                        {
-                            context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
-                            await context.Response.WriteAsync("Unauthorize.");
-                            return true;
-                        }
+                        context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                        await context.Response.WriteAsync("Unauthorize.");
+                        return true;
                     }
+                }
 
-                    IEnumerable<object> args;
+                IEnumerable<object> args = null;
+                if (action.ParametersInfo.Count > 0)
+                {
                     try
                     {
                         args = await ParseParameters(req, action.ParametersInfo);
@@ -104,14 +110,16 @@ namespace Coddee.AspNet
                         await context.Response.WriteAsync(ex.Message);
                         return true;
                     }
-
-                    var res = await action.Invoke(args);
-                    context.Response.StatusCode = (int)HttpStatusCode.OK;
-                    if (action.RetrunsValue)
-                        await context.Response.WriteAsync(JsonConvert.SerializeObject(res));
-
-                    return true;
                 }
+
+                var res = await action.Invoke(args);
+                context.Response.StatusCode = (int)HttpStatusCode.OK;
+                if (action.RetrunsValue)
+                {
+                    context.Response.ContentType = "application/json";
+                    await context.Response.WriteAsync(JsonConvert.SerializeObject(res));
+                }
+                return true;
 
             }
 
@@ -136,8 +144,9 @@ namespace Coddee.AspNet
                                                 .GetMethods()
                                                 .FirstOrDefault(e => e.Name.Equals(actionName, StringComparison.InvariantCultureIgnoreCase));
 
-                var param = method.GetParameters();
-                action = new DelegateAction(path, repository, method, param);
+                action = DelegateAction.CreateDelegateAction(repository, method, path);
+                if (action == null)
+                    return null;
                 if (interfaceMethod != null)
                 {
                     var authAttr = interfaceMethod.GetCustomAttribute<AuthorizeAttribute>();

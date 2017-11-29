@@ -28,7 +28,7 @@ namespace Coddee.AspNet
         string Path { get; set; }
         Task<object> Invoke(IEnumerable<object> param);
         bool RetrunsValue { get; }
-        IEnumerable<ActionParameter> ParametersInfo { get; set; }
+        List<ActionParameter> ParametersInfo { get; set; }
         bool RequiredAuthentication { get; set; }
         string Claim { get; set; }
     }
