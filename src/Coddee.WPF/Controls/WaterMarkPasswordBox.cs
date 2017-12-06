@@ -33,7 +33,7 @@ namespace Coddee.WPF.Controls
 
         public string WaterMarkContent
         {
-            get { return (string) GetValue(WaterMarkContentProperty); }
+            get { return (string)GetValue(WaterMarkContentProperty); }
             set { SetValue(WaterMarkContentProperty, value); }
         }
 
@@ -42,31 +42,53 @@ namespace Coddee.WPF.Controls
         {
             base.OnApplyTemplate();
 
-            var passwordBox = (PasswordBox) GetTemplateChild("PART_PASSWORDBOX");
-            var waterMark = (TextBlock) GetTemplateChild("PART_WATERMARK");
+            var passwordBox = (PasswordBox)GetTemplateChild("PART_PASSWORDBOX");
+            var waterMark = (TextBlock)GetTemplateChild("PART_WATERMARK");
             waterMark.Cursor = Cursors.IBeam;
+
             TextChanged += delegate
             {
                 if (passwordBox.Password != Text)
                     passwordBox.Password = Text;
             };
-            GotFocus += delegate { FocusBox(passwordBox); };
+            GotFocus += delegate
+            { FocusBox(passwordBox); };
             passwordBox.PasswordChanged += delegate
             {
                 SetValue(TextProperty, passwordBox.Password);
-                if (!string.IsNullOrEmpty(Text))
-                    waterMark.Visibility = Visibility.Collapsed;
-                else 
-                    waterMark.Visibility = Visibility.Visible;
+                UpdateWatermarkVisibility(waterMark);
+            };
+            MouseLeave += delegate
+            {
+                if (!passwordBox.IsFocused)
+                    UpdateWatermarkVisibility(waterMark);
+            };
+            MouseEnter += delegate
+            {
+                waterMark.Visibility = Visibility.Collapsed;
             };
             passwordBox.LostFocus += delegate
             {
-                if (string.IsNullOrEmpty(Text))
-                    waterMark.Visibility = Visibility.Visible;
+                UpdateWatermarkVisibility(waterMark);
             };
-            passwordBox.GotFocus += delegate { waterMark.Visibility = Visibility.Collapsed; };
-            waterMark.MouseDown += delegate { FocusBox(passwordBox); };
-            waterMark.GotFocus += delegate { FocusBox(passwordBox); };
+            passwordBox.GotFocus += delegate
+            {
+                waterMark.Visibility = Visibility.Collapsed;
+            };
+            waterMark.MouseDown += delegate
+            { FocusBox(passwordBox); };
+            waterMark.MouseLeftButtonDown += delegate
+            { FocusBox(passwordBox); };
+            waterMark.GotFocus += delegate
+            { FocusBox(passwordBox); };
+        }
+
+        private void UpdateWatermarkVisibility(TextBlock waterMark)
+        {
+            if (!string.IsNullOrEmpty(Text))
+                waterMark.Visibility = Visibility.Collapsed;
+            else
+                waterMark.Visibility = Visibility.Visible;
         }
 
         private static void FocusBox(PasswordBox textBox)

@@ -14,7 +14,7 @@ namespace HR.Data.Models
         public Guid ID { get; set; }
         public string Name { get; set; }
         public string StateName { get; set; }
-        public int StateID { get; set; }
+        public int? StateID { get; set; }
 
         [IgnoreDataMember]
         public Guid GetKey => ID;

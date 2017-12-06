@@ -7,8 +7,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Coddee;
 using Coddee.Data;
-using Coddee.Data.LinqToSQL;
-using HR.Data.LinqToSQL.DB;
 using HR.Data.Repositories;
 using Employee = HR.Data.Models.Employee;
 

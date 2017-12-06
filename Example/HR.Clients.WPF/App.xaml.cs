@@ -36,11 +36,11 @@ namespace HR.Clients.WPF
                    .UseToast()
                    .UseDialogs()
                    .UseLocalization("HR.Clients.WPF.Properties.Resources", "HR.Clients.WPF.exe", new[] { "ar-SY", "en-US" }, "ar-SY")
-                   .UseRESTRepositoryManager(config =>
-                   {
-                       return new RESTRepositoryManagerConfig("http://localhost:15297/dapi/", null,"HR.Data.REST");
-                   });
-                 //.UseLinqRepositoryManager<HRDBManager>(connection, "HR.Data.LinqToSQL");
+                   //.UseRESTRepositoryManager(config =>
+                   //{
+                   //    return new RESTRepositoryManagerConfig("http://localhost:15297/dapi/", null,"HR.Data.REST");
+                   //});
+                 .UseLinqRepositoryManager<HRDBManager>(connection, "HR.Data.LinqToSQL");
              }, args);
             base.OnStartup(args);
         }

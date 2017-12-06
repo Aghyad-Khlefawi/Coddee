@@ -30,7 +30,7 @@ namespace Coddee
         /// </summary>
         /// <typeparam name="TSource">Source type</typeparam>
         /// <typeparam name="TTarget">Target type</typeparam>
-        public void RegisterMap<TSource, TTarget>(Action<TSource, TTarget> convert) 
+        public void RegisterMap<TSource, TTarget>(Action<TSource, TTarget> convert)
         {
             var targetType = typeof(TTarget);
             var sourceType = typeof(TSource);
@@ -46,8 +46,13 @@ namespace Coddee
 
             _mappings[targetType][sourceType].ManualConvertAction = (source, target) =>
             {
-                convert((TSource) source, (TTarget) target);
+                convert((TSource)source, (TTarget)target);
             };
+        }
+
+        public void RegisterMap<TSource, TTarget>()
+        {
+            RegisterAutoMap<TSource, TTarget>();
         }
 
         /// <summary>
@@ -55,42 +60,69 @@ namespace Coddee
         /// </summary>
         /// <typeparam name="TSource">Source type</typeparam>
         /// <typeparam name="TTarget">Target type</typeparam>
-        public void RegisterMap<TSource, TTarget>() 
+        public void RegisterAutoMap<TSource, TTarget>(Action<TSource, TTarget> additionalMapping = null)
         {
             var targetType = typeof(TTarget);
             var sourceType = typeof(TSource);
-            var info = new MappingInfo
+            MappingInfo<TSource, TTarget> info = new MappingInfo<TSource, TTarget>
             {
                 SourceType = sourceType,
                 TargetType = targetType
             };
 
-            var propertiesInfo = new List<MapPropertyInfo>();
 
             var sourcePoperties = sourceType.GetTypeInfo().GetProperties();
             var targetPoperties = targetType.GetTypeInfo().GetProperties(e => e.SetMethod != null);
 
-            foreach (var targetProperty in targetPoperties)
+            List<PropertyMapper> props = new List<PropertyMapper>();
+            foreach (var targetPoperty in targetPoperties)
             {
+                bool sourceNullable = false;
+                bool targetNullable = false;
+
                 var sourceProperty =
-                    sourcePoperties.FirstOrDefault(e => e.Name == targetProperty.Name &&
-                                                        e.PropertyType == targetProperty.PropertyType);
+                    sourcePoperties.FirstOrDefault(
+                                                   e => e.Name == targetPoperty.Name &&
+                                                        e.PropertyType == targetPoperty.PropertyType);
+                if (sourceProperty == null &&
+                    targetPoperty.PropertyType.GenericTypeArguments.Any() &&
+                    targetPoperty.PropertyType == typeof(Nullable<>).MakeGenericType(targetPoperty.PropertyType.GenericTypeArguments))
+                {
+                    sourceProperty =
+                        sourcePoperties.FirstOrDefault(e => e.Name == targetPoperty.Name &&
+                        e.PropertyType == targetPoperty.PropertyType.GenericTypeArguments[0]);
+                    targetNullable = true;
+                }
+
+                if (sourceProperty == null)
+                {
+                    sourceProperty =
+                        sourcePoperties.FirstOrDefault(e => e.Name == targetPoperty.Name &&
+                                                            e.PropertyType.GenericTypeArguments.Any() &&
+                                                            e.PropertyType == typeof(Nullable<>).MakeGenericType(targetPoperty.PropertyType));
+                    sourceNullable = true;
+                }
+
                 if (sourceProperty != null)
                 {
-                    propertiesInfo.Add(new MapPropertyInfo
+                    props.Add(new PropertyMapper
                     {
+                        TargetProperty = targetPoperty,
                         SourceProperty = sourceProperty,
-                        TargetProperty = targetProperty
+                        SourceNullable = sourceNullable,
+                        TargetNullable = targetNullable
                     });
                 }
             }
-            info.Properties = propertiesInfo;
+
+            info.Properties = props;
 
             if (!_mappings.ContainsKey(targetType))
                 _mappings[targetType] = new Dictionary<Type, MappingInfo>();
             if (_mappings[targetType].ContainsKey(sourceType))
                 info.ManualConvertAction = _mappings[targetType][sourceType].ManualConvertAction;
 
+            info.SetAdditionalMapping(additionalMapping);
             _mappings[targetType][sourceType] = info;
         }
 
@@ -99,7 +131,7 @@ namespace Coddee
         /// </summary>
         /// <typeparam name="TType1">Type1</typeparam>
         /// <typeparam name="TType2">Type2</typeparam>
-        public void RegisterTwoWayMap<TType1, TType2>() 
+        public void RegisterTwoWayMap<TType1, TType2>()
         {
             RegisterMap<TType1, TType2>();
             RegisterMap<TType2, TType1>();
@@ -156,48 +188,43 @@ namespace Coddee
             }
             foreach (var property in info.Properties)
             {
-                if (!RequireMapping(property.SourceProperty))
+                if (property.SourceNullable == property.TargetNullable || property.TargetNullable)
                     property.TargetProperty.SetValue(target, property.SourceProperty.GetValue(source));
-                else
-                {
-                    var item = (TTarget)Activator.CreateInstance(property.TargetProperty.PropertyType);
-                    MapInstance((TSource)property.SourceProperty.GetValue(source),item);
-                    property.TargetProperty.SetValue(target, item);
-                }
+                else if (property.SourceNullable)
+                    property.TargetProperty.SetValue(target, property.SourceProperty.PropertyType.GetTypeInfo().GetDeclaredMethod("GetValueOrDefault").Invoke(source, null));
             }
+            info.AdditionalMap?.Invoke(source, target);
         }
-
-        private bool RequireMapping(PropertyInfo property)
-        {
-            if (!property.PropertyType.GetTypeInfo().IsClass)
-                return false;
-
-            if (_mappings.ContainsKey(property.PropertyType))
-                return true;
-
-            return false;
-        }
-
-
-        }
+    }
 
     /// <summary>
     /// Hold the information required to map between two types
     /// </summary>
-    class MappingInfo
+    class MappingInfo : IMappingInfo
     {
         public Type SourceType { get; set; }
         public Type TargetType { get; set; }
         public Action<object, object> ManualConvertAction { get; set; }
-        public List<MapPropertyInfo> Properties { get; set; }
+        public List<PropertyMapper> Properties { get; set; }
+        public Action<object, object> AdditionalMap { get; set; }
+        public void SetAdditionalMapping(Action<object, object> map)
+        {
+            AdditionalMap = map;
+        }
     }
-
-    /// <summary>
-    /// Hold the information required to map between to properties
-    /// </summary>
-    class MapPropertyInfo
+    class MappingInfo<TSource, TTarget> : MappingInfo
+    {
+        public void SetAdditionalMapping(Action<TSource, TTarget> map)
+        {
+            AdditionalMap = (source, target) => map((TSource)source, (TTarget)target);
+        }
+    }
+    public class PropertyMapper
     {
         public PropertyInfo SourceProperty { get; set; }
         public PropertyInfo TargetProperty { get; set; }
+        public bool SourceNullable { get; set; }
+        public bool TargetNullable { get; set; }
     }
+
 }

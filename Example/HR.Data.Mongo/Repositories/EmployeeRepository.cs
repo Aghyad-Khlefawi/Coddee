@@ -122,7 +122,7 @@ namespace HR.Data.Mongo.Repositories
                                      {
                                          var company = companyRepo[e.CompanyID].Result;
                                          e.CompanyName = company.Name;
-                                         e.StateName = stateRepo[company.StateID].Result.Name;
+                                         e.StateName = stateRepo[company.StateID.GetValueOrDefault()].Result.Name;
                                          return e;
                                      })
                                      .ToList());

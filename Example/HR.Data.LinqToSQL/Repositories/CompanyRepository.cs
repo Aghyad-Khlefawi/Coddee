@@ -18,7 +18,7 @@ namespace HR.Data.LinqToSQL.Repositories
         public override void RegisterMappings(IObjectMapper mapper)
         {
             base.RegisterMappings(mapper);
-            mapper.RegisterMap<DB.CompaniesView, Company>();
+            mapper.RegisterAutoMap<DB.CompaniesView, Company>();
         }
 
         public override async Task<Company> InsertItem(Company item)

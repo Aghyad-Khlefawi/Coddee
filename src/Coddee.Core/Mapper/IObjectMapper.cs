@@ -27,6 +27,13 @@ namespace Coddee
         /// <typeparam name="TTarget">Target type</typeparam>
         void RegisterMap<TSource, TTarget>();
 
+
+        /// <summary>
+        /// Register mapping information from source to target
+        /// </summary>
+        /// <typeparam name="TSource">Source type</typeparam>
+        /// <typeparam name="TTarget">Target type</typeparam>
+        void RegisterAutoMap<TSource, TTarget>(Action<TSource, TTarget> additionalMapping=null);
         /// <summary>
         /// Register mapping information between two types
         /// </summary>
@@ -59,5 +66,14 @@ namespace Coddee
         /// <param name="target">Target object</param>
         void MapInstance<TSource, TTarget>(TSource source, TTarget target);
 
+    }
+
+    public interface IMappingInfo
+    {
+        void SetAdditionalMapping(Action<object, object> map);
+    }
+    public interface IMappingInfo<TSource, TTarget> : IMappingInfo
+    {
+        void SetAdditionalMapping(Action<TSource, TTarget> map);
     }
 }

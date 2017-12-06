@@ -18,14 +18,24 @@ namespace Coddee.WPF.Controls
 
         public static readonly DependencyProperty WaterMarkContentProperty = DependencyProperty.Register(
                                                                                                          "WaterMarkContent", typeof(string), typeof(WaterMarkTextBox), new PropertyMetadata(default(string)));
+        public static readonly DependencyProperty WaterMarkPaddingProperty = DependencyProperty.Register(
+                                                        "WaterMarkPadding",
+                                                        typeof(Thickness),
+                                                        typeof(WaterMarkTextBox),
+                                                        new PropertyMetadata(new Thickness(10, 0, 0, 0)));
 
+        public Thickness WaterMarkPadding
+        {
+            get { return (Thickness)GetValue(WaterMarkPaddingProperty); }
+            set { SetValue(WaterMarkPaddingProperty, value); }
+        }
         public string WaterMarkContent
         {
             get { return (string)GetValue(WaterMarkContentProperty); }
             set { SetValue(WaterMarkContentProperty, value); }
         }
 
-        
+
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
@@ -33,33 +43,51 @@ namespace Coddee.WPF.Controls
             var textBox = (TextBox)GetTemplateChild("PART_TEXTBOX");
             var waterMark = (TextBlock)GetTemplateChild("PART_WATERMARK");
             waterMark.Cursor = Cursors.IBeam;
+
             GotFocus += delegate
-            {
-                FocusBox(textBox);
-            };
+            { FocusBox(textBox); };
             TextChanged += delegate
-            {
-                if (!string.IsNullOrEmpty(Text) && !string.IsNullOrWhiteSpace(Text))
-                    waterMark.Visibility = Visibility.Collapsed;
-                else
-                    waterMark.Visibility = Visibility.Visible;
-            };
-           
+            { UpdateWatermarkVisibility(waterMark); };
             waterMark.MouseDown += delegate
-            {
-                FocusBox(textBox);
-            };
+            { FocusBox(textBox); };
+            waterMark.MouseLeftButtonDown += delegate
+            { FocusBox(textBox); };
             waterMark.GotFocus += delegate
+            { FocusBox(textBox); };
+            MouseLeave += delegate
             {
-                FocusBox(textBox);
+                if(!textBox.IsFocused)
+                UpdateWatermarkVisibility(waterMark);
             };
-            
+            MouseEnter += delegate
+            {
+                waterMark.Visibility = Visibility.Collapsed;
+            };
+            textBox.LostFocus += delegate
+            {
+                UpdateWatermarkVisibility(waterMark);
+            };
+            textBox.GotFocus += delegate
+            {
+                waterMark.Visibility = Visibility.Collapsed;
+            };
+        }
+
+        private void UpdateWatermarkVisibility(TextBlock waterMark)
+        {
+            if (!string.IsNullOrWhiteSpace(Text))
+                waterMark.Visibility = Visibility.Collapsed;
+            else
+                waterMark.Visibility = Visibility.Visible;
         }
 
         private static void FocusBox(TextBox textBox)
         {
-            textBox.Focus();
-            Keyboard.Focus(textBox);
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                textBox.Focus();
+                Keyboard.Focus(textBox);
+            });
         }
     }
 

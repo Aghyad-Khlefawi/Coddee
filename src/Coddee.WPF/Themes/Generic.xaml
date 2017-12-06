@@ -579,6 +579,8 @@
     </Style>
 
     <Style TargetType="{x:Type local:WaterMarkTextBox}">
+        <Setter Property="IsTabStop" Value="False"/>
+        <Setter Property="Focusable" Value="False"/>
         <Setter Property="Background"
                 Value="White" />
         <Setter Property="VerticalContentAlignment"
@@ -592,6 +594,8 @@
                 <ControlTemplate TargetType="{x:Type local:WaterMarkTextBox}">
                     <Grid>
                         <TextBox x:Name="PART_TEXTBOX"
+                                 Focusable="True"
+                                 IsTabStop="True"
                                  Width="{TemplateBinding Width}"
                                  Height="{TemplateBinding Height}"
                                  AcceptsReturn="{TemplateBinding AcceptsReturn}"
@@ -606,7 +610,7 @@
                         <TextBlock x:Name="PART_WATERMARK"
                                    Foreground="DarkGray"
                                    Text="{TemplateBinding WaterMarkContent}"
-                                   Margin="10 0 0 0"
+                                   Margin="{TemplateBinding WaterMarkPadding}"
                                    VerticalAlignment="Center" />
 
                     </Grid>
@@ -616,6 +620,8 @@
     </Style>
 
     <Style TargetType="{x:Type local:WaterMarkPasswordBox}">
+        <Setter Property="IsTabStop" Value="False"/>
+        <Setter Property="Focusable" Value="False"/>
         <Setter Property="Background"
                 Value="White" />
         <Setter Property="VerticalContentAlignment"
