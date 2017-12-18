@@ -6,14 +6,13 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:toast="clr-namespace:Coddee.Services.Toast"
-             mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             mc:Ignorable="d" >
     <UserControl.Resources>
         <toast:ToastService x:Key="designData" />
         <toast:ToastTemplateSelector x:Key="ToastTemplateSelector"/>
     </UserControl.Resources>
-    <Grid d:DataContext="{StaticResource designData}">
+    <DockPanel d:DataContext="{StaticResource designData}" >
         <ItemsControl ItemsSource="{Binding ToastList}"
                       ItemTemplateSelector="{StaticResource ToastTemplateSelector}"/>
-    </Grid>
+    </DockPanel>
 </UserControl>

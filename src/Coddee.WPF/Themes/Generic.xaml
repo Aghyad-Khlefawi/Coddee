@@ -603,6 +603,7 @@
                                  Background="{TemplateBinding Background}"
                                  BorderBrush="{TemplateBinding BorderBrush}"
                                  HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                 IsReadOnly="{TemplateBinding IsReadOnly}"
                                  VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
                                  BorderThickness="{TemplateBinding BorderThickness}"
                                  Text="{Binding RelativeSource={RelativeSource TemplatedParent},Path=Text,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"

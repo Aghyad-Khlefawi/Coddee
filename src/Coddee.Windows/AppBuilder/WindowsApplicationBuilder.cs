@@ -35,7 +35,7 @@ namespace Coddee.AppBuilder
         {
             BuildActionsCoordinator.AddAction(DefaultBuildActions.ConfigureGlobalVariablesBuildAction(container =>
             {
-                _container.Resolve<IGlobalVariablesService>().SetValue(Globals.ApplicationName, _app.ApplicationName);
+                _container.Resolve<IGlobalVariablesService>().GetVariable<ApplicationNameGlobalVariable>().SetValue(_app.ApplicationName);
             }));
         }
 

@@ -205,7 +205,7 @@ namespace Coddee.AppBuilder
                                                                          IContainer container)
             where TShellViewModel : IShellViewModel
         {
-            container.Resolve<IGlobalVariablesService>().SetValue(Globals.UsingDefaultShell, false);
+            container.Resolve<IGlobalVariablesService>().GetVariable<UsingDefaultShellGlobalVariable>().SetValue(false);
             var vmManager = container.Resolve<IViewModelsManager>();
 
             var shellViewModel = vmManager.CreateViewModel<TShellViewModel>(null);
@@ -226,7 +226,7 @@ namespace Coddee.AppBuilder
 
         private static IDefaultShellViewModel BuildDefaultShell<TContent>(IApplicationBuilder builder, WindowState state, Action<Window> config, IContainer container) where TContent : IPresentable
         {
-            container.Resolve<IGlobalVariablesService>().SetValue(Globals.UsingDefaultShell, true);
+            container.Resolve<IGlobalVariablesService>().GetVariable<UsingDefaultShellGlobalVariable>().SetValue(true);
 
             var vmManager = container.Resolve<IViewModelsManager>();
             var shellViewModel = vmManager.CreateViewModel<DefaultShellViewModel>(null);
@@ -266,7 +266,8 @@ namespace Coddee.AppBuilder
             {
                 var navs = new List<INavigationItem>();
                 var nav = container.Resolve<INavigationService>();
-                if (container.Resolve<IGlobalVariablesService>().TryGetValue(Globals.UsingDefaultShell, out bool usingDefault) && usingDefault)
+                var gud = container.Resolve<IGlobalVariablesService>().GetVariable<UsingDefaultShellGlobalVariable>();
+                if (gud.IsValueSet && gud.GetValue())
                 {
                     var homeNav = new NavigationItem(container.Resolve<IDefaultShellViewModel>().GetMainContent(),
                                                      "Home",
@@ -340,7 +341,7 @@ namespace Coddee.AppBuilder
         {
             builder.BuildActionsCoordinator.AddAction(new BuildAction(BuildActionsKeys.Toast, container =>
             {
-                container.Resolve<IToastService>().Initialize(toastRegion, duration);
+                container.Resolve<IToastService>().Initialize(toastRegion, TimeSpan.FromMilliseconds(duration));
             }));
             return builder;
         }

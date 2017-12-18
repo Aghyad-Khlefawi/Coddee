@@ -65,7 +65,7 @@ namespace Coddee.Loggers
         {
             Log(new LogRecord
             {
-                Content = BuildExceptionString(exception, 0, MinimumLevel == LogRecordTypes.Debug),
+                Content = exception.BuildExceptionString(0, MinimumLevel == LogRecordTypes.Debug),
                 Source = source,
                 Type = LogRecordTypes.Error,
                 Date = date,
@@ -96,35 +96,6 @@ namespace Coddee.Loggers
             if (insertNewLine)
                 eventInfoBuilder.Append(Environment.NewLine);
             return eventInfoBuilder.ToString();
-        }
-
-        /// <summary>
-        /// Build a string that represent the exception object
-        /// </summary>
-        /// <param name="exception">The exception object</param>
-        /// <param name="level">The exception depth for spacing inner exception</param>
-        /// <param name="debuginfo">Show debug information (Source and stack trace)</param>
-        /// <returns></returns>
-        public static string BuildExceptionString(Exception exception, int level = 0, bool debuginfo = false)
-        {
-            var execptionInfoBuilder = new StringBuilder();
-            var append = "";
-            if (level != 0)
-                for (int i = 0; i < level + 1; i++)
-                {
-                    append += "\t";
-                }
-            execptionInfoBuilder.Append($"\n{append}\tException Type : {exception.GetType().Name}");
-            execptionInfoBuilder.Append($"\n{append}\tDetails: {exception.Message}");
-            if (debuginfo)
-            {
-                execptionInfoBuilder.Append($"\n{append}\tSource: {exception.Source}");
-                execptionInfoBuilder.Append($"\n{append}\tTrace: {exception.StackTrace}");
-            }
-            execptionInfoBuilder.Append("\n");
-            if (exception.InnerException != null)
-                execptionInfoBuilder.Append(BuildExceptionString(exception.InnerException, level + 1, debuginfo));
-            return execptionInfoBuilder.ToString();
         }
     }
 }

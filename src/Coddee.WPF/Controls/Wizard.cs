@@ -438,18 +438,13 @@ namespace Coddee.WPF.Controls
         public IPresentableViewModel ViewModel
         {
             get { return (IPresentableViewModel)GetValue(ViewModelProperty); }
-            set
-            {
-                SetValue(ViewModelProperty, value);
-                //UpdateContent();
-                //value.Validated += ViewModelValidated;
-            }
+            set { SetValue(ViewModelProperty, value); }
         }
 
         private void ViewModelValidated(object sender, System.Collections.Generic.IEnumerable<string> res)
         {
             IsValidated = true;
-            Error = res?.Where(e => !string.IsNullOrEmpty(e)).Combine("\n");
+            Error = res?.Where(e => !string.IsNullOrEmpty(e)).GroupBy(b => b).Select(b => b.First()).Combine("\n");
             IsValid = string.IsNullOrWhiteSpace(Error);
         }
 

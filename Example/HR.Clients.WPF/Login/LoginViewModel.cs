@@ -5,6 +5,7 @@ using System;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using Coddee;
 using Coddee.Security;
 using Coddee.WPF;
 using Coddee.WPF.Commands;
@@ -57,12 +58,11 @@ namespace HR.Clients.WPF.Login
 
         private async void Login()
         {
-            //await ((IUserRepository) _authenticationProvider).CreateUser(new User {Username = "user"}, "123");
-
+            
             var res = await _authenticationProvider.AuthenticationUser(Username, Password);
             if (res.Status == AuthenticationStatus.Successfull)
             {
-                _globalVariables.SetValue(Globals.Username, res.Username);
+                _globalVariables.GetVariable<UsernameGlobalVariable>().SetValue(res.Username);
                 LoggedIn?.Invoke(this, res);
             }
             else

@@ -96,10 +96,9 @@ namespace Coddee.WPF.DefaultShell
         
         public IPresentableViewModel SetMainContent(Type defaultPresentable, bool useNavigation)
         {
-            _globalVariables.TryGetValue(Globals.Username, out _username);
-            _applicationName = _globalVariables.GetValue<string>(Globals.ApplicationName);
-
-
+            _username = _globalVariables.GetVariable<UsernameGlobalVariable>().GetValue();
+            _applicationName = _globalVariables.GetVariable<ApplicationNameGlobalVariable>().GetValue();
+            
             UseNavigation = useNavigation;
             _mainViewModel = (IPresentableViewModel)CreateViewModel(defaultPresentable);
             DefaultRegions.ApplicationMainRegion.View((IPresentable)_mainViewModel);

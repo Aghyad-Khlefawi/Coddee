@@ -35,58 +35,72 @@ namespace Coddee.WPF.Controls
             set { SetValue(WaterMarkContentProperty, value); }
         }
 
+        public TextBox InnerTextBox { get; set; }
 
+        private TextBlock _waterMark;
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
 
-            var textBox = (TextBox)GetTemplateChild("PART_TEXTBOX");
-            var waterMark = (TextBlock)GetTemplateChild("PART_WATERMARK");
-            waterMark.Cursor = Cursors.IBeam;
+            InnerTextBox = (TextBox)GetTemplateChild("PART_TEXTBOX");
+            _waterMark = (TextBlock)GetTemplateChild("PART_WATERMARK");
+            _waterMark.Cursor = Cursors.IBeam;
 
             GotFocus += delegate
-            { FocusBox(textBox); };
+            { FocusBox(); };
             TextChanged += delegate
-            { UpdateWatermarkVisibility(waterMark); };
-            waterMark.MouseDown += delegate
-            { FocusBox(textBox); };
-            waterMark.MouseLeftButtonDown += delegate
-            { FocusBox(textBox); };
-            waterMark.GotFocus += delegate
-            { FocusBox(textBox); };
+            { UpdateWatermarkVisibility(); };
+            _waterMark.MouseDown += delegate
+            { FocusBox(); };
+            _waterMark.MouseLeftButtonDown += delegate
+            { FocusBox(); };
+            _waterMark.GotFocus += delegate
+            { FocusBox(); };
             MouseLeave += delegate
             {
-                if(!textBox.IsFocused)
-                UpdateWatermarkVisibility(waterMark);
+                if (!InnerTextBox.IsFocused)
+                    UpdateWatermarkVisibility();
             };
             MouseEnter += delegate
             {
-                waterMark.Visibility = Visibility.Collapsed;
+                _waterMark.Visibility = Visibility.Collapsed;
             };
-            textBox.LostFocus += delegate
+            InnerTextBox.LostFocus += delegate
             {
-                UpdateWatermarkVisibility(waterMark);
+                UpdateWatermarkVisibility();
             };
-            textBox.GotFocus += delegate
+            InnerTextBox.GotFocus += delegate
             {
-                waterMark.Visibility = Visibility.Collapsed;
+                _waterMark.Visibility = Visibility.Collapsed;
             };
+            UpdateWatermarkVisibility();
         }
 
-        private void UpdateWatermarkVisibility(TextBlock waterMark)
+        protected override void OnTextChanged(TextChangedEventArgs e)
         {
-            if (!string.IsNullOrWhiteSpace(Text))
-                waterMark.Visibility = Visibility.Collapsed;
-            else
-                waterMark.Visibility = Visibility.Visible;
+            base.OnTextChanged(e);
+            UpdateWatermarkVisibility();
         }
 
-        private static void FocusBox(TextBox textBox)
+        private void UpdateWatermarkVisibility()
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
-                textBox.Focus();
-                Keyboard.Focus(textBox);
+                if (_waterMark == null)
+                    return;
+                if (!string.IsNullOrWhiteSpace(Text))
+                    _waterMark.Visibility = Visibility.Collapsed;
+                else
+                    _waterMark.Visibility = Visibility.Visible;
+            });
+        }
+
+        public void FocusBox()
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                InnerTextBox.Focus();
+                Keyboard.Focus(InnerTextBox);
             });
         }
     }

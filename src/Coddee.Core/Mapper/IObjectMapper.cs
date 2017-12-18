@@ -39,7 +39,7 @@ namespace Coddee
         /// </summary>
         /// <typeparam name="TType1">Type1</typeparam>
         /// <typeparam name="TType2">Type2</typeparam>
-        void RegisterTwoWayMap<TType1, TType2>();
+        void RegisterTwoWayMap<TType1, TType2>(Action<TType1, TType2> additionalMappingT1T2 = null, Action<TType2, TType1> additionalMappingT2T1 = null);
 
         /// <summary>
         /// Map an object to a specific type

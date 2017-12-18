@@ -204,9 +204,7 @@ namespace Coddee.Services.ApplicationConsole
             _defaultCommandHandlers[DefaultCommands.ExitCommand.Name] =
                 new List<EventHandler<ConsoleCommandArgs>> { OnExitCommand };
 
-            _defaultCommandHandlers[DefaultCommands.ShowGlobalsCommand.Name] =
-                new List<EventHandler<ConsoleCommandArgs>> { OnShowGlobalsCommand };
-
+       
             _defaultCommandHandlers[DefaultCommands.CMDCommand.Name] =
                 new List<EventHandler<ConsoleCommandArgs>> { OnCMDCommand };
 
@@ -488,27 +486,6 @@ namespace Coddee.Services.ApplicationConsole
             };
         }
 
-        private void OnShowGlobalsCommand(object sender, ConsoleCommandArgs e)
-        {
-            var variables = _globalVariables.GetAllGlobals();
-            var builder = new StringBuilder();
-            var maxName = variables.Select(c => c.Key.Length).Max();
-
-            builder.Append(Environment.NewLine);
-            foreach (var variable in variables)
-            {
-                builder.Append(variable.Key);
-                for (int i = 0; i < maxName - variable.Key.Length; i++)
-                {
-                    builder.Append(" ");
-                }
-                builder.Append(" : ");
-                builder.Append(variable.Value);
-                builder.Append(Environment.NewLine);
-            }
-            e.Result.Add(builder.ToString());
-            builder.Append(Environment.NewLine);
-        }
 
         private void OnExitCommand(object sender, ConsoleCommandArgs e)
         {

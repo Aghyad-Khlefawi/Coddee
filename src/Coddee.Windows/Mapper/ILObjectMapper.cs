@@ -19,14 +19,14 @@ namespace Coddee.Windows.Mapper
     {
         public ILObjectsMapper()
         {
-            _mappings = new Dictionary<Type, Dictionary<Type, MappingInfo>>();
+            _mappings = new Dictionary<Type, Dictionary<Type, ILMappingInfo>>();
         }
 
         /// <summary>
         /// A dictionary to hold the mapping information
         /// The key is the target type, the inner dictionary key is the source type
         /// </summary>
-        private readonly Dictionary<Type, Dictionary<Type, MappingInfo>> _mappings;
+        private readonly Dictionary<Type, Dictionary<Type, ILMappingInfo>> _mappings;
 
 
         /// <summary>
@@ -40,15 +40,15 @@ namespace Coddee.Windows.Mapper
             var targetType = typeof(TTarget);
 
             if (!_mappings.ContainsKey(sourceType))
-                _mappings[sourceType] = new Dictionary<Type, MappingInfo>();
+                _mappings[sourceType] = new Dictionary<Type, ILMappingInfo>();
 
-            MappingInfo mappingInfo = _mappings[sourceType].ContainsKey(targetType)
+            ILMappingInfo ilMappingInfo = _mappings[sourceType].ContainsKey(targetType)
                 ? _mappings[sourceType][targetType]
-                : new MappingInfo<TSource, TTarget>();
+                : new IlMappingInfo<TSource, TTarget>();
 
-            mappingInfo.ManualMapper = (s, t) => convert((TSource)s, (TTarget)t);
-            mappingInfo.InstanceMapper = (s, t) => convert((TSource)s, (TTarget)t);
-            _mappings[sourceType][targetType] = mappingInfo;
+            ilMappingInfo.ManualMapper = (s, t) => convert((TSource)s, (TTarget)t);
+            ilMappingInfo.InstanceMapper = (s, t) => convert((TSource)s, (TTarget)t);
+            _mappings[sourceType][targetType] = ilMappingInfo;
 
         }
 
@@ -94,8 +94,6 @@ namespace Coddee.Windows.Mapper
                     {
                         sourceProperty =
                             sourcePoperties.FirstOrDefault(e => e.Name == targetPoperty.Name &&
-                                                                e.PropertyType.GenericTypeArguments.Any() &&
-                                                               !e.PropertyType.GenericTypeArguments[0].IsClass &&
                                                                 e.PropertyType == typeof(Nullable<>).MakeGenericType(targetPoperty.PropertyType));
                         sourceNullable = true;
                     }
@@ -119,21 +117,21 @@ namespace Coddee.Windows.Mapper
             var targetConstrucotr = targetType.GetConstructor(Type.EmptyTypes);
 
             Func<TSource, TTarget> singleItemDelegate = null;
-            Func<MappingInfo, IList<TSource>, TTarget[]> collectionDelegate = null;
+            Func<ILMappingInfo, IList<TSource>, TTarget[]> collectionDelegate = null;
 
             if (!_mappings.ContainsKey(sourceType))
-                _mappings[sourceType] = new Dictionary<Type, MappingInfo>();
+                _mappings[sourceType] = new Dictionary<Type, ILMappingInfo>();
 
-            MappingInfo<TSource, TTarget> mappingInfo = _mappings[sourceType].ContainsKey(targetType)
-                                  ? (MappingInfo<TSource, TTarget>)_mappings[sourceType][targetType]
-                                  : new MappingInfo<TSource, TTarget>();
+            IlMappingInfo<TSource, TTarget> ilMappingInfo = _mappings[sourceType].ContainsKey(targetType)
+                                  ? (IlMappingInfo<TSource, TTarget>)_mappings[sourceType][targetType]
+                                  : new IlMappingInfo<TSource, TTarget>();
 
-            mappingInfo.SetAdditionalMapping(additionalMapping);
+            ilMappingInfo.SetAdditionalMapping(additionalMapping);
 
             if (targetConstrucotr != null)
             {
                 singleItemDelegate = GenerateSingleItemDelegate<TSource, TTarget>(props);
-                collectionDelegate = GenerateCollectionDelegate<TSource, TTarget>(props, mappingInfo);
+                collectionDelegate = GenerateCollectionDelegate<TSource, TTarget>(props, ilMappingInfo);
             }
 
             var instanfceDelegate = GenerateInstanceDelegate<TSource, TTarget>(props);
@@ -142,11 +140,11 @@ namespace Coddee.Windows.Mapper
 
             if (targetConstrucotr != null)
             {
-                mappingInfo.SingleMapper = s => singleItemDelegate((TSource)s);
-                mappingInfo.CollectionMapper = s => collectionDelegate(mappingInfo, (IList<TSource>)s);
+                ilMappingInfo.SingleMapper = s => singleItemDelegate((TSource)s);
+                ilMappingInfo.CollectionMapper = s => collectionDelegate(ilMappingInfo, (IList<TSource>)s);
             }
-            mappingInfo.InstanceMapper = (s, t) => instanfceDelegate((TSource)s, (TTarget)t);
-            _mappings[sourceType][targetType] = mappingInfo;
+            ilMappingInfo.InstanceMapper = (s, t) => instanfceDelegate((TSource)s, (TTarget)t);
+            _mappings[sourceType][targetType] = ilMappingInfo;
         }
 
         /// <summary>
@@ -154,10 +152,10 @@ namespace Coddee.Windows.Mapper
         /// </summary>
         /// <typeparam name="TType1">Type1</typeparam>
         /// <typeparam name="TType2">Type2</typeparam>
-        public void RegisterTwoWayMap<TType1, TType2>()
+        public void RegisterTwoWayMap<TType1, TType2>(Action<TType1, TType2> additionalMappingT1T2 = null, Action<TType2, TType1> additionalMappingT2T1 = null)
         {
-            RegisterAutoMap<TType1, TType2>();
-            RegisterAutoMap<TType2, TType1>();
+            RegisterAutoMap<TType1, TType2>(additionalMappingT1T2);
+            RegisterAutoMap<TType2, TType1>(additionalMappingT2T1);
         }
 
         /// <summary>
@@ -186,6 +184,7 @@ namespace Coddee.Windows.Mapper
             {
                 var res = (TTarget)mappings.SingleMapper(source);
                 mappings.AdditionalMap?.Invoke(source, res);
+                return res;
             }
             throw new
                 InvalidOperationException($"The mapping from {sourceType.Name} to {targetType.Name} was not defined or the target type doesn't have a parameterless constructor");
@@ -274,7 +273,7 @@ namespace Coddee.Windows.Mapper
             var dm = new DynamicMethod($"_MAP_{sourceType.Name}_{targetType.Name}",
                                        typeof(void),
                                        new[] { sourceType, targetType },
-                                       typeof(ILObjectsMapper).Module);
+                                       typeof(TTarget).Module);
             var il = dm.GetILGenerator();
 
             var source = il.DeclareLocal(sourceType);
@@ -286,27 +285,11 @@ namespace Coddee.Windows.Mapper
             il.Emit(OpCodes.Ldarg_1);
             il.Emit(OpCodes.Stloc, target);
 
-            foreach (var propertyPair in properties)
+            foreach (var property in properties)
             {
-                if (propertyPair.SourceNullable == propertyPair.TargetNullable || propertyPair.TargetNullable)
-                {
-                    il.Emit(OpCodes.Ldloc, target);
-                    il.Emit(OpCodes.Ldloc, source);
-                    il.Emit(OpCodes.Call, propertyPair.SourceProperty.GetMethod);
-                    il.Emit(OpCodes.Call, propertyPair.TargetProperty.SetMethod);
-                }
-                else if (propertyPair.SourceNullable)
-                {
-                    var getValOrDefault = propertyPair.SourceProperty.PropertyType.GetMethod("GetValueOrDefault", Type.EmptyTypes);
-                    if (getValOrDefault != null)
-                    {
-                        il.Emit(OpCodes.Ldloc, target);
-                        il.Emit(OpCodes.Ldloc, source);
-                        il.Emit(OpCodes.Call, getValOrDefault);
-                        il.Emit(OpCodes.Call, propertyPair.TargetProperty.SetMethod);
-                    }
-                }
+                EmitPropertyMap(property, il, source, target);
             }
+
 
             il.Emit(OpCodes.Ret);
 
@@ -330,37 +313,20 @@ namespace Coddee.Windows.Mapper
             var dm = new DynamicMethod($"_MAP_{sourceType.Name}_{targetType.Name}",
                                        targetType,
                                        new[] { sourceType },
-                                       typeof(ILObjectsMapper).Module);
+                                       typeof(TTarget).Module);
             var il = dm.GetILGenerator();
 
-            il.DeclareLocal(sourceType);
+            var source = il.DeclareLocal(sourceType);
             il.Emit(OpCodes.Ldarg_0);
-            il.Emit(OpCodes.Stloc_0);
+            il.Emit(OpCodes.Stloc, source);
 
-            il.DeclareLocal(targetType);
+            var target = il.DeclareLocal(targetType);
             il.Emit(OpCodes.Newobj, targetConstrucotr);
-            il.Emit(OpCodes.Stloc_1);
+            il.Emit(OpCodes.Stloc, target);
 
-            foreach (var propertyPair in properties)
+            foreach (var property in properties)
             {
-                if (propertyPair.SourceNullable == propertyPair.TargetNullable || propertyPair.TargetNullable)
-                {
-                    il.Emit(OpCodes.Ldloc_1);
-                    il.Emit(OpCodes.Ldloc_0);
-                    il.Emit(OpCodes.Call, propertyPair.SourceProperty.GetMethod);
-                    il.Emit(OpCodes.Call, propertyPair.TargetProperty.SetMethod);
-                }
-                else if (propertyPair.SourceNullable)
-                {
-                    var getValOrDefault = propertyPair.SourceProperty.PropertyType.GetMethod("GetValueOrDefault", Type.EmptyTypes);
-                    if (getValOrDefault != null)
-                    {
-                        il.Emit(OpCodes.Ldloc_1);
-                        il.Emit(OpCodes.Ldloc_0);
-                        il.Emit(OpCodes.Call, getValOrDefault);
-                        il.Emit(OpCodes.Call, propertyPair.TargetProperty.SetMethod);
-                    }
-                }
+                EmitPropertyMap(property, il, source, target);
             }
 
             il.Emit(OpCodes.Ldloc_1);
@@ -369,10 +335,61 @@ namespace Coddee.Windows.Mapper
             return (Func<TSource, TTarget>)dm.CreateDelegate(typeof(Func<TSource, TTarget>));
         }
 
+        private static void EmitPropertyMap(PropertyMapper propertyPair, ILGenerator il, LocalBuilder sourceVar, LocalBuilder targetVar)
+        {
+
+            if (propertyPair.SourceNullable == propertyPair.TargetNullable)
+            {
+                il.Emit(OpCodes.Ldloc, targetVar);
+                il.Emit(OpCodes.Ldloc, sourceVar);
+                il.Emit(OpCodes.Call, propertyPair.SourceProperty.GetMethod);
+                il.Emit(OpCodes.Call, propertyPair.TargetProperty.SetMethod);
+            }
+            else if (propertyPair.TargetNullable)
+            {
+                il.Emit(OpCodes.Ldloc, targetVar);
+                il.Emit(OpCodes.Ldloc, sourceVar);
+                il.Emit(OpCodes.Callvirt, propertyPair.SourceProperty.GetMethod);
+                il.Emit(OpCodes.Box, propertyPair.TargetProperty.PropertyType);
+                il.Emit(OpCodes.Call, propertyPair.TargetProperty.SetMethod);
+            }
+            else if (propertyPair.SourceNullable)
+            {
+                var hasValue = propertyPair.SourceProperty.PropertyType.GetMethod("get_HasValue");
+                if (hasValue != null)
+                {
+                    var endLabel = il.DefineLabel();
+                    var sourceProp = il.DeclareLocal(propertyPair.SourceProperty.PropertyType);
+                    var hasValueResult = il.DeclareLocal(hasValue.ReturnType);
+
+                    il.Emit(OpCodes.Ldloc, sourceVar);
+                    il.Emit(OpCodes.Callvirt, propertyPair.SourceProperty.GetMethod);
+                    il.Emit(OpCodes.Stloc, sourceProp);
+                    il.Emit(OpCodes.Ldloc, sourceProp);
+                    il.Emit(OpCodes.Box, propertyPair.SourceProperty.PropertyType);
+                    il.Emit(OpCodes.Ldnull);
+                    il.Emit(OpCodes.Ceq);
+                    il.Emit(OpCodes.Stloc, hasValueResult);
+                    il.Emit(OpCodes.Ldloc, hasValueResult);
+
+                    il.Emit(OpCodes.Brtrue, endLabel);
+
+                    il.Emit(OpCodes.Ldloc, targetVar);
+                    il.Emit(OpCodes.Ldloc, sourceProp);
+                    il.Emit(OpCodes.Box, propertyPair.SourceProperty.PropertyType);
+                    il.Emit(OpCodes.Unbox_Any, propertyPair.TargetProperty.PropertyType);
+                    il.Emit(OpCodes.Callvirt, propertyPair.TargetProperty.SetMethod);
+
+                    il.MarkLabel(endLabel);
+                }
+            }
+
+        }
+
         /// <summary>
         /// Generate dynamic method for collection mapping
         /// </summary>
-        Func<MappingInfo, IList<TSource>, TTarget[]> GenerateCollectionDelegate<TSource, TTarget>(List<PropertyMapper> properties, MappingInfo mappingInfo)
+        Func<ILMappingInfo, IList<TSource>, TTarget[]> GenerateCollectionDelegate<TSource, TTarget>(List<PropertyMapper> properties, ILMappingInfo ilMappingInfo)
         {
             var sourceType = typeof(TSource);
             var targetType = typeof(TTarget);
@@ -389,8 +406,8 @@ namespace Coddee.Windows.Mapper
 
             var dm = new DynamicMethod($"_MAP_LIST_{sourceType.Name}_{targetType.Name}",
                                        typeof(TTarget[]),
-                                       new[] { typeof(MappingInfo), typeof(IList<TSource>) },
-                                       typeof(ILObjectsMapper).Module);
+                                       new[] { typeof(ILMappingInfo), typeof(IList<TSource>) },
+                                       typeof(TTarget).Module);
             var il = dm.GetILGenerator();
 
 
@@ -399,7 +416,7 @@ namespace Coddee.Windows.Mapper
 
 
             // Store argument list in local
-            var mappingInfoLocal = il.DeclareLocal(typeof(MappingInfo));
+            var mappingInfoLocal = il.DeclareLocal(typeof(ILMappingInfo));
             var source = il.DeclareLocal(typeof(IList<TSource>));
             var result = il.DeclareLocal(typeof(TTarget[]));
             var count = il.DeclareLocal(typeof(IList<TSource>));
@@ -443,39 +460,15 @@ namespace Coddee.Windows.Mapper
 
 
             // Map properties
-            foreach (var propertyPair in properties)
+            foreach (var property in properties)
             {
-                if (propertyPair.SourceNullable == propertyPair.TargetNullable)
-                {
-                    il.Emit(OpCodes.Ldloc, targetItem);
-                    il.Emit(OpCodes.Ldloc, sourceItem);
-                    il.Emit(OpCodes.Call, propertyPair.SourceProperty.GetMethod);
-                    il.Emit(OpCodes.Call, propertyPair.TargetProperty.SetMethod);
-                }
-                else if (propertyPair.TargetNullable)
-                {
-                    il.Emit(OpCodes.Ldloc, targetItem);
-                    il.Emit(OpCodes.Ldloc, sourceItem);
-                    il.Emit(OpCodes.Call, propertyPair.SourceProperty.GetMethod);
-                    il.Emit(OpCodes.Box, propertyPair.TargetProperty.PropertyType);
-                    il.Emit(OpCodes.Call, propertyPair.TargetProperty.SetMethod);
-                }
-                else if (propertyPair.SourceNullable)
-                {
-                    var getValOrDefault = propertyPair.SourceProperty.PropertyType.GetMethod("GetValueOrDefault", Type.EmptyTypes);
-                    if (getValOrDefault != null)
-                    {
-                        il.Emit(OpCodes.Ldloc, targetItem);
-                        il.Emit(OpCodes.Ldloc, sourceItem);
-                        il.Emit(OpCodes.Call, getValOrDefault);
-                        il.Emit(OpCodes.Call, propertyPair.TargetProperty.SetMethod);
-                    }
-                }
+                EmitPropertyMap(property, il, sourceItem, targetItem);
             }
 
-            if (mappingInfo.AdditionalMap != null)
+
+            if (ilMappingInfo.AdditionalMap != null)
             {
-                var method = mappingInfo.GetType().GetMethod(nameof(MappingInfo.ExecuteAdditionalMap));
+                var method = ilMappingInfo.GetType().GetMethod(nameof(ILMappingInfo.ExecuteAdditionalMap));
                 if (method != null)
                 {
                     il.Emit(OpCodes.Ldloc, mappingInfoLocal);
@@ -510,12 +503,12 @@ namespace Coddee.Windows.Mapper
             il.Emit(OpCodes.Ldloc, result);
             il.Emit(OpCodes.Ret);
 
-            return (Func<MappingInfo, IList<TSource>, TTarget[]>)dm.CreateDelegate(typeof(Func<MappingInfo, IList<TSource>, TTarget[]>));
+            return (Func<ILMappingInfo, IList<TSource>, TTarget[]>)dm.CreateDelegate(typeof(Func<ILMappingInfo, IList<TSource>, TTarget[]>));
         }
     }
 
 
-    class MappingInfo
+    public class ILMappingInfo
     {
         internal Func<object, object> SingleMapper { get; set; }
         internal Func<object, object> CollectionMapper { get; set; }
@@ -534,7 +527,7 @@ namespace Coddee.Windows.Mapper
         }
     }
 
-    class MappingInfo<TSource, TTarget> : MappingInfo
+    class IlMappingInfo<TSource, TTarget> : ILMappingInfo
     {
         public void SetAdditionalMapping(Action<TSource, TTarget> map)
         {

@@ -28,11 +28,7 @@ namespace Coddee.Services.ApplicationConsole
             Description = "Shutdown the application."
         };
 
-        public static ConsoleCommand ShowGlobalsCommand = new ConsoleCommand
-        {
-            Name = "showglobals",
-            Description = "Shows the current values of the global variables."
-        };
+        
         public static ConsoleCommand ClearCommand = new ConsoleCommand
         {
             Name = "clear",
@@ -79,7 +75,6 @@ namespace Coddee.Services.ApplicationConsole
         {
             DefaultCommands.RestartCommand,
             DefaultCommands.HelpCommand,
-            DefaultCommands.ShowGlobalsCommand,
             DefaultCommands.ClearCommand,
             DefaultCommands.CMDCommand,
             DefaultCommands.SetScreenCommand,

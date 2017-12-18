@@ -12,6 +12,7 @@ namespace Coddee.Services.Toast
     /// </summary>
     public class Toast : ViewModelBase
     {
+       
         /// <summary>
         /// Initialize the item timer and information
         /// </summary>
@@ -19,11 +20,11 @@ namespace Coddee.Services.Toast
         /// <param name="type">The toast type</param>
         /// <param name="duration">How long will the toast stay on the screen in milliseconds</param>
         /// <param name="distroy">An action triggered after the duration is over</param>
-        public void Initialize(string message, ToastType type, double duration, Action<Toast> distroy)
+        public void Initialize(string message, ToastType type, TimeSpan duration, Action<Toast> distroy)
         {
             Message = message;
             Type = type;
-            _timer = new DispatcherTimer(TimeSpan.FromMilliseconds(duration),
+            _timer = new DispatcherTimer(duration,
                                          DispatcherPriority.Background,
                                          TimerElapsed,
                                          GetDispatcher());

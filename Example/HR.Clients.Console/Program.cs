@@ -25,32 +25,51 @@ namespace HR.Clients.Console
             var connection = $@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename={dbLocation}\HRDatabase.mdf;Integrated Security=True;Connect Timeout=30";
 
             new ConsoleApplication("HR Application", new CoddeeUnityContainer()).Run(app =>
-             {
-                 app.UseLogger(LoggerTypes.DebugOutput | LoggerTypes.ApplicationConsole, LogRecordTypes.Information)
-                     .UseILMapper()
-                     .UseMain<HRApplication>()
-                     .UseLinqRepositoryManager<HRDBManager>(connection, "HR.Data.LinqToSQL");
-             });
+            {
+                app.UseLogger(LoggerTypes.DebugOutput | LoggerTypes.ApplicationConsole, LogRecordTypes.Information)
+                   .UseILMapper()
+                   .UseMain<HRApplication>();
+                //.UseLinqRepositoryManager<HRDBManager>(connection, "HR.Data.LinqToSQL");
+            });
         }
     }
 
 
     public class HRApplication : IEntryPointClass
     {
-        private readonly IRepositoryManager _repositoryManager;
+        private readonly IObjectMapper _mapper;
 
-        public HRApplication(IRepositoryManager repositoryManager)
+        public HRApplication(IObjectMapper mapper)
         {
-            _repositoryManager = repositoryManager;
+            _mapper = mapper;
         }
 
-        public int Age1 { get; set; }
-        public int? Age2 { get; set; }
+
         public void Start(IContainer container)
         {
-            Age1 = 5;
-            GetType().GetProperty(nameof(Age2)).SetMethod.Invoke(this, new object[]{ GetType().GetProperty(nameof(Age1)).GetMethod.Invoke(this,null) });
+
+            var c2 = new Class2 { Age = 5 };
+            var temp2 = new Class1();
+            if (c2.Age != null)
+            {
+                object temp = c2.Age;
+                temp2.Age = (int)temp;
+            }
+            _mapper.RegisterAutoMap<Class2, Class1>((source, target) =>
+            {
+                target.Age = 10;
+            });
+            var res = _mapper.MapCollection<Class1>(new List<Class2>{ c2 });
+            //var res3 = _mapper.Map<Class1>( c2 );
         }
     }
-   
+
+    public class Class1
+    {
+        public int Age { get; set; }
+    }
+    public class Class2
+    {
+        public int? Age { get; set; }
+    }
 }

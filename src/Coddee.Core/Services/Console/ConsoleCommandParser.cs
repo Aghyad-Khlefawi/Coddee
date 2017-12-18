@@ -119,7 +119,6 @@ namespace Coddee.Services.ApplicationConsole
         }
     }
 
-    [Serializable]
     public class CommandParseException : Exception
     {
         public CommandParseException()
@@ -133,11 +132,6 @@ namespace Coddee.Services.ApplicationConsole
         public CommandParseException(string message, Exception inner) : base(message, inner)
         {
         }
-
-        protected CommandParseException(
-            SerializationInfo info,
-            StreamingContext context) : base(info, context)
-        {
-        }
+        
     }
 }

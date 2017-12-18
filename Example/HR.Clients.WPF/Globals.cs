@@ -3,7 +3,4 @@
 
 namespace HR.Clients.WPF
 {
-    public class Globals:Coddee.Globals
-    {
-    }
 }

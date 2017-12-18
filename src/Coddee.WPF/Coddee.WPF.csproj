@@ -137,7 +137,6 @@
       <DependentUpon>SearchView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Services\ApplicationSearch\SearchViewModel.cs" />
-    <Compile Include="Services\Console\IConsoleCommandParser.cs" />
     <Compile Include="Services\Interfaces\IViewModelsManager.cs" />
     <Compile Include="Localize.cs" />
     <Compile Include="Services\Console\ApplicationConsoleModule.cs" />
@@ -145,9 +144,6 @@
       <DependentUpon>ApplicationConsoleView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Services\Console\ApplicationConsole.cs" />
-    <Compile Include="Services\Console\ConsoleCommand.cs" />
-    <Compile Include="Services\Console\ConsoleCommandArgs.cs" />
-    <Compile Include="Services\Console\ConsoleCommandParser.cs" />
     <Compile Include="Services\Console\DefaultCommands.cs" />
     <Compile Include="Services\Console\StringLogger.cs" />
     <Compile Include="Converters\BoolToVisibilityConverter.cs" />

@@ -3,15 +3,9 @@
 
 namespace Coddee
 {
-    public class Globals
-    {
-        //string
-        public const string Username = nameof(Username);
+    public class UsernameGlobalVariable : GlobalVarialbe<string> { }
+    public class ApplicationNameGlobalVariable : GlobalVarialbe<string> { }
+    public class UsingDefaultShellGlobalVariable : GlobalVarialbe<bool> { }
 
-        //string
-        public const string ApplicationName = nameof(ApplicationName);
-
-        //bool
-        public const string UsingDefaultShell = nameof(UsingDefaultShell);
-    }
+   
 }

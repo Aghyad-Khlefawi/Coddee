@@ -83,7 +83,7 @@ namespace Coddee.Collections
 
         public void Search(string searchValue)
         {
-            var search = searchValue.ToLower();
+            var search = searchValue?.ToLower() ?? string.Empty;
             CollectionView.Filter = e => FilterItem((T)e, search);
         }
 

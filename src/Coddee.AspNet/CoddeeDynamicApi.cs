@@ -86,6 +86,7 @@ namespace Coddee.AspNet
                 if (action.RequiredAuthentication)
                 {
                     bool authoized = context.User.Identity.IsAuthenticated;
+                    //TODO: Check for claimsm
                     if (!string.IsNullOrWhiteSpace(action.Claim))
                         authoized = false;
 

@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Aghyad khlefawi. All rights reserved.  
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
+using System;
 using Coddee.WPF;
 
 namespace Coddee.Services
@@ -19,7 +20,7 @@ namespace Coddee.Services
         /// </summary>
         /// <param name="toastRegion">The region that the toast service the be contained</param>
         /// <param name="duration">The default duration for the toasts</param>
-        void Initialize(Region toastRegion,double duration);
+        void Initialize(Region toastRegion, TimeSpan duration);
 
         /// <summary>
         /// Show a toast
@@ -29,5 +30,6 @@ namespace Coddee.Services
         /// Show a toast
         /// </summary>
         void ShowToast(string message, ToastType type,double duration);
+        void ShowToast(string message, ToastType type, TimeSpan duration);
     }
 }
