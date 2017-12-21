@@ -67,7 +67,6 @@ namespace Coddee.Services.Dialogs
                 OnNo?.Invoke();
                 CloseDialog(dialog);
             };
-
             return ShowDialog(dialog);
         }
 

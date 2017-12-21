@@ -37,18 +37,7 @@ namespace Coddee.WPF
             return Task.WhenAll(items.Where(e => forceInitialization || !e.IsInitialized).Select(e => e.Initialize()));
         }
 
-        public static ReactiveCommandBase<T> ObserveRequiredFields<T>(this ReactiveCommandBase<T> command)
-        {
-            if (command.ObservedObject is IViewModel vm)
-            {
-                foreach (var requiredField in vm.RequiredFields)
-                {
-                    command.ObserveProperty(requiredField.FieldName, requiredField.ValidateField);
-                }
-            }
-            return command;
-        }
-
+        
         public static IEnumerable<SelectableItem<T>> AsSelectable<T>(this IEnumerable<T> collection)
         {
             return collection.Select(e => new SelectableItem<T>(e));
@@ -94,7 +83,7 @@ namespace Coddee.WPF
         {
             var propertyName = ExpressionHelper.GetMemberName(property);
             var type = ExpressionHelper.GetMemberType(property);
-            command.ObserveProperty(propertyName, RequiredFieldValidators.GetValidator(type));
+            command.ObserveProperty(propertyName, Validators.GetValidator(type));
             return command;
         }
 

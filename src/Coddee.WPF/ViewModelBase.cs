@@ -40,19 +40,19 @@ namespace Coddee.WPF
         protected static IEventDispatcher _eventDispatcher;
 
         protected bool _validateOnPropertyChanged;
-        public virtual string __Name { get; protected set; }
+        public string __Name { get; protected set; }
 
         protected ViewModelBase()
         {
-            RequiredFields = new RequiredFieldCollection();
-            _requiredFieldsPropertyInfo = new Dictionary<string, PropertyInfo>();
+            ValidationRules = new List<IValidationRule>();
             _views = new Dictionary<int, UIElement>();
             _viewsTypes = new Dictionary<int, Type>();
 
             __Name = GetType().Name;
+
             if (IsDesignMode())
                 OnDesignMode();
-            Errors = new List<string>();
+
         }
 
         protected UIElement _currentView;
@@ -61,11 +61,9 @@ namespace Coddee.WPF
         public event EventHandler<UIElement> ViewCreated;
 
         private bool _viewsRegistered;
-
-        public List<string> Errors { get; set; }
-        public RequiredFieldCollection RequiredFields { get; }
-
-        protected readonly Dictionary<string, PropertyInfo> _requiredFieldsPropertyInfo;
+        
+        public List<IValidationRule> ValidationRules { get; }
+        public ValidationResult ValidationResult { get; set; }
 
         public event ViewModelEventHandler Initialized;
 
@@ -229,7 +227,7 @@ namespace Coddee.WPF
                     _logger.Log(_eventsSource, $"Failed to initialize ViewModel {__Name} .", LogRecordTypes.Error);
                 }
 
-                RefreshRequiredFields();
+                RefreshValidationRules();
                 PropertyChanged += PropertyChangedHandler;
                 IsBusy = false;
                 OnInitialized(this);
@@ -307,7 +305,7 @@ namespace Coddee.WPF
 
         protected virtual void PropertyChangedHandler(object sender, PropertyChangedEventArgs args)
         {
-            if (_validateOnPropertyChanged && RequiredFields.Any(e => e.FieldName == args.PropertyName))
+            if (_validateOnPropertyChanged && ValidationRules.Any(e => e.FieldName == args.PropertyName))
                 Validate();
         }
 
@@ -321,11 +319,10 @@ namespace Coddee.WPF
             return _repositoryManager.GetRepository<TInterface>();
         }
 
-        protected virtual void RefreshRequiredFields()
+        protected virtual void RefreshValidationRules()
         {
-            RequiredFields.Clear();
-            SetRequiredFields(RequiredFields);
-            GetRequiredPropertiesInfo();
+            ValidationRules.Clear();
+            SetValidationRules(ValidationRules);
         }
 
         protected virtual void OnInitialized(IViewModel sender)
@@ -441,59 +438,18 @@ namespace Coddee.WPF
             }
         }
 
-        protected virtual void SetRequiredFields(RequiredFieldCollection requiredFields)
+        protected virtual void SetValidationRules(List<IValidationRule> validationRules)
         {
-        }
-
-        protected virtual void GetRequiredPropertiesInfo()
-        {
-            var type = GetType();
-            foreach (var requiredField in RequiredFields)
-            {
-                if (_requiredFieldsPropertyInfo.ContainsKey(requiredField.FieldName))
-                    return;
-                if (requiredField.Item == null)
-                    _requiredFieldsPropertyInfo.Add(requiredField.FieldName, type.GetProperty(requiredField.FieldName));
-                else
-                    _requiredFieldsPropertyInfo.Add(requiredField.FieldName, requiredField.Item.GetType().GetProperty(requiredField.FieldName));
-            }
-        }
-
-        protected virtual IEnumerable<string> CheckField(RequiredField field)
-        {
-            var res = new List<string>();
-            if (field != null && _requiredFieldsPropertyInfo.ContainsKey(field.FieldName))
-            {
-                _logger.Log(__Name, $"Checking field {field.FieldName}", LogRecordTypes.Debug);
-                var property = _requiredFieldsPropertyInfo[field.FieldName];
-                if (property != null && field.ValidateField != null)
-                {
-                    try
-                    {
-                        var isValid = field.ValidateField(field.Item == null
-                                                              ? property.GetValue(this)
-                                                              : property.GetValue(field.Item));
-                        if (!isValid)
-                            res.Add(field.ErrorMessage());
-                    }
-                    catch (Exception ex)
-                    {
-                        LogError($"{field.FieldName} Field validator", ex);
-                        res.Add("FieldValidationException");
-                    }
-                }
-            }
-            return res.Any() ? res : null;
         }
 
         protected bool _validating;
 
-        public IEnumerable<string> Validate(bool validateChildren = false)
+        public ValidationResult Validate(bool validateChildren = false)
         {
-            Errors.Clear();
+            ValidationResult = new ValidationResult();
 
             if (_validating)
-                return Errors;
+                return ValidationResult;
 
             _validating = true;
 
@@ -504,39 +460,43 @@ namespace Coddee.WPF
                     if (!childViewModel.ViewModelOptions.IncludeInHierarchicalValidation)
                         continue;
 
-                    var errors = childViewModel.Validate(true);
-                    if (errors != null)
-                        Errors.AddRange(errors);
+                    var result = childViewModel.Validate(true);
+                    if (result != null)
+                        ValidationResult.Append(result);
                 }
             }
 
-            if (RequiredFields != null)
+            if (ValidationRules != null)
             {
-                foreach (var requiredField in RequiredFields)
+                foreach (var validationRule in ValidationRules)
                 {
-                    var error = CheckField(requiredField);
-                    if (error != null)
-                        Errors.AddRange(error);
+                    CheckRule(validationRule);
                 }
             }
 
-            CustomValidation(Errors);
-            IsValid = !Errors.Any();
-            OnValidated(Errors);
+             IsValid = ValidationResult.IsValid;
+            OnValidated(ValidationResult);
             _validating = false;
-            return Errors.Any() ? Errors : null;
+            return ValidationResult;
         }
 
-        public virtual void CustomValidation(List<string> errors)
+        private void CheckRule(IValidationRule validationRule)
         {
+            if (!validationRule.Validate())
+            {
+                if(validationRule.ValidationType == ValidationType.Error)
+                    ValidationResult.Errors.Add(validationRule.GetMessage());
+                else 
+                    ValidationResult.Warnings.Add(validationRule.GetMessage());
+            }
         }
 
-        protected void OnValidated(List<string> errors)
+        protected void OnValidated(ValidationResult res)
         {
-            Validated?.Invoke(this, errors);
+            Validated?.Invoke(this, res);
         }
 
-        public event ViewModelEventHandler<IEnumerable<string>> Validated;
+        public event ViewModelEventHandler<ValidationResult> Validated;
 
         public ReactiveCommand<ViewModelBase> CreateReactiveCommand(Action handler)
         {

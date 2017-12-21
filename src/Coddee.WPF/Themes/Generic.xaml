@@ -954,6 +954,16 @@
                         <Setter Property="Fill"
                                 Value="{DynamicResource ErrorColor}" />
                     </MultiDataTrigger>
+                    <MultiDataTrigger>
+                        <MultiDataTrigger.Conditions>
+                            <Condition Binding="{Binding ValidationResult.HasWarnings}"
+                                       Value="true" />
+                            <Condition Binding="{Binding IsValidated}"
+                                       Value="true" />
+                        </MultiDataTrigger.Conditions>
+                        <Setter Property="Fill"
+                                Value="{DynamicResource WarningColor}" />
+                    </MultiDataTrigger>
                     <DataTrigger Binding="{Binding IsCurrent}"
                                  Value="true">
                         <Setter Property="Fill"
@@ -1005,6 +1015,16 @@
                         <Setter Property="Fill"
                                 Value="{DynamicResource ErrorColor}" />
                     </MultiDataTrigger>
+                    <MultiDataTrigger>
+                        <MultiDataTrigger.Conditions>
+                            <Condition Binding="{Binding ValidationResult.HasWarnings}"
+                                       Value="true" />
+                            <Condition Binding="{Binding IsValidated}"
+                                       Value="true" />
+                        </MultiDataTrigger.Conditions>
+                        <Setter Property="Fill"
+                                Value="{DynamicResource WarningColor}" />
+                    </MultiDataTrigger>
 
                     <DataTrigger Binding="{Binding IsCurrent}"
                                  Value="true">
@@ -1015,20 +1035,26 @@
                 </Style.Triggers>
             </Style>
 
-            <DataTemplate x:Key="FirstStepTemplate">
+            <DataTemplate x:Key="FirstStepTemplate" DataType="local:WizardStep">
                 <StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <Grid>
                             <Ellipse Style="{StaticResource StepEllipse}" />
                             <Grid Visibility="{Binding IsValidated,Converter={StaticResource BoolToVisibilityConverter}}">
-                                <Path Style="{StaticResource Shape_CheckMark}"
-                                      VerticalAlignment="Center"
+                                <Path VerticalAlignment="Center"
+                                      Visibility="{Binding ValidationResult.IsValidWithoutWarrnings,Converter={StaticResource BoolToVisibilityConverter}}"
                                       Height="10"
-                                      Visibility="{Binding IsValid,Converter={StaticResource BoolToVisibilityConverter}}"
+                                      Style="{StaticResource Shape_CheckMark}"
                                       HorizontalAlignment="Center" />
+
                                 <Path Style="{StaticResource Shape_Exit}"
                                       VerticalAlignment="Center"
-                                      Visibility="{Binding IsValid,Converter={StaticResource BoolToVisibilityConverter},ConverterParameter=R}"
+                                      Visibility="{Binding ValidationResult.HasErrors,Converter={StaticResource BoolToVisibilityConverter}}"
+                                      Height="12"
+                                      HorizontalAlignment="Center" />
+                                <Path Style="{StaticResource Shape_Warning_2}"
+                                      VerticalAlignment="Center"
+                                      Visibility="{Binding ValidationResult.HasWarnings,Converter={StaticResource BoolToVisibilityConverter}}"
                                       Height="12"
                                       HorizontalAlignment="Center" />
                             </Grid>
@@ -1040,7 +1066,7 @@
                                Margin="-28 5 0 0" />
                 </StackPanel>
             </DataTemplate>
-            <DataTemplate x:Key="LastStepTemplate">
+            <DataTemplate x:Key="LastStepTemplate" DataType="local:WizardStep">
                 <StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <Rectangle Margin="0 0 -5 0"
@@ -1049,14 +1075,19 @@
                         <Grid>
                             <Ellipse Style="{StaticResource StepEllipse}" />
                             <Grid Visibility="{Binding IsValidated,Converter={StaticResource BoolToVisibilityConverter}}">
-                                <Path Style="{StaticResource Shape_CheckMark}"
-                                      VerticalAlignment="Center"
-                                      Height="10"
-                                      Visibility="{Binding IsValid,Converter={StaticResource BoolToVisibilityConverter}}"
+                                <Path VerticalAlignment="Center"
+                                      Height="10"                         
+                                      Visibility="{Binding ValidationResult.IsValidWithoutWarrnings,Converter={StaticResource BoolToVisibilityConverter}}"
+                                      Style="{StaticResource Shape_CheckMark}"
                                       HorizontalAlignment="Center" />
                                 <Path Style="{StaticResource Shape_Exit}"
                                       VerticalAlignment="Center"
-                                      Visibility="{Binding IsValid,Converter={StaticResource BoolToVisibilityConverter},ConverterParameter=R}"
+                                      Visibility="{Binding ValidationResult.HasErrors,Converter={StaticResource BoolToVisibilityConverter}}"
+                                      Height="12"
+                                      HorizontalAlignment="Center" />
+                                <Path Style="{StaticResource Shape_Warning_2}"
+                                      VerticalAlignment="Center"
+                                      Visibility="{Binding ValidationResult.HasWarnings,Converter={StaticResource BoolToVisibilityConverter}}"
                                       Height="12"
                                       HorizontalAlignment="Center" />
                             </Grid>
@@ -1068,7 +1099,7 @@
                 </StackPanel>
 
             </DataTemplate>
-            <DataTemplate x:Key="StepTemplate">
+            <DataTemplate x:Key="StepTemplate" DataType="local:WizardStep">
                 <StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <Rectangle Style="{StaticResource StepRect}"
@@ -1076,14 +1107,19 @@
                         <Grid>
                             <Ellipse Style="{StaticResource StepEllipse}" />
                             <Grid Visibility="{Binding IsValidated,Converter={StaticResource BoolToVisibilityConverter}}">
-                                <Path Style="{StaticResource Shape_CheckMark}"
-                                      VerticalAlignment="Center"
+                                <Path VerticalAlignment="Center"
+                                      Style="{StaticResource Shape_CheckMark}"
                                       Height="10"
-                                      Visibility="{Binding IsValid,Converter={StaticResource BoolToVisibilityConverter}}"
+                                      Visibility="{Binding ValidationResult.IsValidWithoutWarrnings,Converter={StaticResource BoolToVisibilityConverter}}"
                                       HorizontalAlignment="Center" />
                                 <Path Style="{StaticResource Shape_Exit}"
                                       VerticalAlignment="Center"
-                                      Visibility="{Binding IsValid,Converter={StaticResource BoolToVisibilityConverter},ConverterParameter=R}"
+                                      Visibility="{Binding ValidationResult.HasErrors,Converter={StaticResource BoolToVisibilityConverter}}"
+                                      Height="12"
+                                      HorizontalAlignment="Center" />
+                                <Path Style="{StaticResource Shape_Warning_2}"
+                                      VerticalAlignment="Center"
+                                      Visibility="{Binding ValidationResult.HasWarnings,Converter={StaticResource BoolToVisibilityConverter}}"
                                       Height="12"
                                       HorizontalAlignment="Center" />
                             </Grid>
@@ -1116,7 +1152,7 @@
                 <ControlTemplate TargetType="{x:Type local:WizardStep}">
                     <Button IsTabStop="False"
                             ToolTipService.InitialShowDelay="100"
-                            ToolTip="{TemplateBinding Error}"
+                            ToolTip="{TemplateBinding Message}"
                             FocusVisualStyle="{x:Null}"
                             Foreground="{TemplateBinding Foreground}"
                             Name="PART_BUTTON">

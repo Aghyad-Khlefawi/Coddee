@@ -4,7 +4,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using Concord.HIS1.UI.Converters;
+using Coddee.WPF.Converters;
 
 namespace Coddee.WPF
     {
@@ -29,7 +29,7 @@ namespace Coddee.WPF
                     Converter = new RequiredBrushConverter(),
                     ConverterParameter = value
                 };
-                binding.Bindings.Add(new Binding(nameof(ViewModelBase.RequiredFields)));
+                binding.Bindings.Add(new Binding(nameof(ViewModelBase.ValidationRules)));
                 binding.Bindings.Add(new Binding(value));
                 control.SetBinding(Control.BorderBrushProperty, binding);
             }

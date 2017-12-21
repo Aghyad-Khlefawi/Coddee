@@ -2,6 +2,7 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
 using System;
+using System.Collections.Generic;
 using Coddee;
 
 namespace HR.Data.Models
@@ -18,7 +19,7 @@ namespace HR.Data.Models
         public string StateName { get; set; }
 
         public string FullName => $"{LastName}, {FirstName}";
-
+        public List<Employee> Employees { get; set; }
         public Guid GetKey => ID;
 
         public override string ToString()

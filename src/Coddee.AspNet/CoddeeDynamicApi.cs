@@ -78,7 +78,7 @@ namespace Coddee.AspNet
                     action = CreateAction(repositoryName, actionName, path);
                 if (action == null)
                 {
-                    await context.Response.WriteAsync("Unsuported parameter count.");
+                    await context.Response.WriteAsync("Unsupported parameter count.");
                     context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
                     return true;
                 }
@@ -86,14 +86,14 @@ namespace Coddee.AspNet
                 if (action.RequiredAuthentication)
                 {
                     bool authoized = context.User.Identity.IsAuthenticated;
-                    //TODO: Check for claimsm
+                    //TODO: Check for claims
                     if (!string.IsNullOrWhiteSpace(action.Claim))
                         authoized = false;
 
                     if (!authoized)
                     {
                         context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
-                        await context.Response.WriteAsync("Unauthorize.");
+                        await context.Response.WriteAsync("Unauthorized.");
                         return true;
                     }
                 }

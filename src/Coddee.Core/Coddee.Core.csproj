@@ -59,6 +59,8 @@
     <Compile Include="Attributes\Authorize.cs" />
     <Compile Include="Attributes\NameAttribute.cs" />
     <Compile Include="ConfigKeys.cs" />
+    <Compile Include="DefaultMessages.cs" />
+    <Compile Include="Diff.cs" />
     <Compile Include="Services\Console\ConsoleCommandParser.cs" />
     <Compile Include="EventRoutingStrategy.cs" />
     <Compile Include="Exceptions\CoddeeException.cs" />
@@ -93,8 +95,10 @@
     <Compile Include="Services\IApplicationModulesManager.cs" />
     <Compile Include="Services\IConfigurationFile.cs" />
     <Compile Include="Services\IEventDispatcher.cs" />
-    <Compile Include="Validation\RequiredField.cs" />
-    <Compile Include="Validation\RequiredFieldValidators.cs" />
+    <Compile Include="Validation\IValidationRule.cs" />
+    <Compile Include="Validation\Validators.cs" />
+    <Compile Include="Validation\ValidationResult.cs" />
+    <Compile Include="Validation\ValidationRule.cs" />
     <Compile Include="Validation\Validator.cs" />
     <Compile Include="EditorSaveArgs.cs" />
     <Compile Include="Services\ILocalizationManager.cs" />

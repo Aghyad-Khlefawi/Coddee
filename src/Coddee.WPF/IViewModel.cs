@@ -9,24 +9,25 @@ using Coddee.Validation;
 
 namespace Coddee.WPF
 {
-    public interface IViewModel:IInitializable,IDisposable,INotifyPropertyChanged
+    public interface IViewModel : IInitializable, IDisposable, INotifyPropertyChanged
     {
         string __Name { get; }
-        List<string> Errors { get; }
-        bool IsValid { get; }
 
+        
         ViewModelOptions ViewModelOptions { get; }
         ViewModelOptions DefaultViewModelOptions { get; }
 
         string ViewModelGroup { get; }
         void SetViewModelGroup(string group);
         void SetViewModelOptions(ViewModelOptions options);
-        RequiredFieldCollection RequiredFields { get; }
 
         event ViewModelEventHandler Initialized;
-        event ViewModelEventHandler<IEnumerable<string>> Validated;
+        event ViewModelEventHandler<ValidationResult> Validated;
 
-        IEnumerable<string> Validate(bool validateChildren = false);
+        ValidationResult Validate(bool validateChildren = false);
+        List<IValidationRule> ValidationRules { get; }
+        ValidationResult ValidationResult { get; }
+        bool IsValid { get; }
 
     }
 

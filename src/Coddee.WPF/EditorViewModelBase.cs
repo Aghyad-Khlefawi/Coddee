@@ -1,11 +1,9 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using Coddee.Data;
 using Coddee.Services;
+using Coddee.Validation;
 
 namespace Coddee.WPF
 {
@@ -29,7 +27,7 @@ namespace Coddee.WPF
         public event EventHandler<EditorSaveArgs<TModel>> Canceled;
 
         public override ViewModelOptions DefaultViewModelOptions => ViewModelOptions.Editor;
-
+        private bool _showErrorsOnSave = true;
         private OperationType _operationType;
         public OperationType OperationType
         {
@@ -131,10 +129,13 @@ namespace Coddee.WPF
             try
             {
                 IsBusy = true;
-                var errors = Validate();
-                if (errors != null && errors.Any())
+                var validationResult = Validate();
+                if (validationResult != null && !validationResult.IsValid)
                 {
-                    ShowErrors(errors);
+                    if (_showErrorsOnSave)
+                    {
+                        ShowErrors(validationResult);
+                    }
                     IsBusy = false;
                     return false;
                 }
@@ -157,16 +158,10 @@ namespace Coddee.WPF
             return Task.FromResult(EditedItem);
         }
 
-        protected virtual void ShowErrors(IEnumerable<string> errors)
+        protected virtual void ShowErrors(ValidationResult res)
         {
-            var errorBuilder = new StringBuilder();
-            foreach (var error in errors)
-            {
-                errorBuilder.Append(error);
-                errorBuilder.Append(Environment.NewLine);
-            }
-            var errorMessage = errorBuilder.ToString(0, errorBuilder.Length - Environment.NewLine.Length);
-            _toast.ShowToast(errorMessage, ToastType.Error);
+            res.Errors.ForEach(e=>_toast.ShowToast(e, ToastType.Error));
+            res.Warnings.ForEach(e=>_toast.ShowToast(e, ToastType.Warning));
         }
 
         public virtual void OnSave(object sender, EditorSaveArgs<TModel> e)
@@ -182,8 +177,7 @@ namespace Coddee.WPF
         }
     }
 
-    public abstract class EditorViewModelBase<TEditor, TView, TRepository, TModel,
-        TKey> : EditorViewModelBase<TEditor, TView, TModel>
+    public abstract class EditorViewModelBase<TEditor, TView, TRepository, TModel,TKey> : EditorViewModelBase<TEditor, TView, TModel>
         where TView : UIElement, new()
         where TModel : class, IUniqueObject<TKey>, new()
         where TRepository : class, ICRUDRepository<TModel, TKey>
@@ -201,8 +195,5 @@ namespace Coddee.WPF
         {
             return await _repository.Update(OperationType, EditedItem);
         }
-
-
     }
-
 }

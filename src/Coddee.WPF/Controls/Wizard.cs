@@ -1,7 +1,9 @@
-﻿using System;
+﻿// Copyright (c) Aghyad khlefawi. All rights reserved.  
+// Licensed under the MIT License. See LICENSE file in the project root for full license information.  
+
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
@@ -360,16 +362,30 @@ namespace Coddee.WPF.Controls
 
         public static readonly DependencyProperty IsOnlyStepProperty = IsOnlyStepPropertyKey.DependencyProperty;
 
-        public static readonly DependencyProperty ErrorProperty = DependencyProperty.Register(
-                                                        "Error",
+        public static readonly DependencyProperty MessageProperty = DependencyProperty.Register(
+                                                        "Message",
                                                         typeof(string),
                                                         typeof(WizardStep),
                                                         new PropertyMetadata(default(string)));
 
-        public string Error
+        public static readonly DependencyPropertyKey ValidationResultPropertyKey = DependencyProperty.RegisterReadOnly(
+                                                                      "ValidationResult",
+                                                                      typeof(Validation.ValidationResult),
+                                                                      typeof(WizardStep),
+                                                                      new PropertyMetadata(default(Validation.ValidationResult)));
+
+        public static readonly DependencyProperty ValidationResultProperty = ValidationResultPropertyKey.DependencyProperty;
+
+        public Validation.ValidationResult ValidationResult
         {
-            get { return (string)GetValue(ErrorProperty); }
-            set { SetValue(ErrorProperty, value); }
+            get { return (Validation.ValidationResult)GetValue(ValidationResultProperty); }
+            protected set { SetValue(ValidationResultPropertyKey, value); }
+        }
+
+        public string Message
+        {
+            get { return (string)GetValue(MessageProperty); }
+            set { SetValue(MessageProperty, value); }
         }
 
         public bool IsOnlyStep
@@ -441,11 +457,26 @@ namespace Coddee.WPF.Controls
             set { SetValue(ViewModelProperty, value); }
         }
 
-        private void ViewModelValidated(object sender, System.Collections.Generic.IEnumerable<string> res)
+        private void ViewModelValidated(object sender, Validation.ValidationResult res)
         {
             IsValidated = true;
-            Error = res?.Where(e => !string.IsNullOrEmpty(e)).GroupBy(b => b).Select(b => b.First()).Combine("\n");
-            IsValid = string.IsNullOrWhiteSpace(Error);
+            var builder = new StringBuilder();
+            if (res != null)
+            {
+                foreach (var error in res.Errors.GroupBy(b => b).Select(b => b.First()))
+                {
+                    builder.Append($"(Error) {error}");
+                    builder.Append("\n");
+                }
+                foreach (var warning in res.Warnings.GroupBy(b => b).Select(b => b.First()))
+                {
+                    builder.Append($"(Warning) {warning}");
+                    builder.Append("\n");
+                }
+                Message = builder.Length > 0 ? builder.ToString(0, builder.Length - "\n".Length) : null;
+                IsValid = res.IsValid;
+            }
+            ValidationResult = res;
         }
 
         private static void ViewModelSet(DependencyObject d, DependencyPropertyChangedEventArgs e)

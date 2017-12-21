@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Coddee.Validation
 {
-    public class RequiredFieldValidators
+    public class Validators
     {
         public static Validator StringValidator = e =>
         {

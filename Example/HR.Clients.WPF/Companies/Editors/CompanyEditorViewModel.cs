@@ -2,9 +2,11 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Coddee;
 using Coddee.Collections;
+using Coddee.Services;
 using Coddee.Validation;
 using Coddee.WPF;
 using Coddee.WPF.DefaultShell;
@@ -38,10 +40,13 @@ namespace HR.Clients.WPF.Companies.Editors
             base.PreSave();
         }
 
-        protected override void SetRequiredFields(RequiredFieldCollection requiredFields)
+        protected override void SetValidationRules(List<IValidationRule> validationRules)
         {
-            base.SetRequiredFields(requiredFields);
-            requiredFields.Add(RequiredField.Create(EditedItem, e => e.Name, RequiredFieldValidators.StringValidator));
+            base.SetValidationRules(validationRules);
+            //validationRules.Add(ValidationRule.CreateWarningRule(() => Name));
+            validationRules.Add(ValidationRule.CreateErrorRule(() => Name,
+                                           e => Validators.StringValidator(e) && Validators.StringLengthValidator(0, 10)(e),
+                                           () => ""));
         }
 
         protected override async Task OnInitialization()

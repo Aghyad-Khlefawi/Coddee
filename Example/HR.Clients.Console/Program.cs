@@ -46,30 +46,8 @@ namespace HR.Clients.Console
 
 
         public void Start(IContainer container)
-        {
-
-            var c2 = new Class2 { Age = 5 };
-            var temp2 = new Class1();
-            if (c2.Age != null)
-            {
-                object temp = c2.Age;
-                temp2.Age = (int)temp;
-            }
-            _mapper.RegisterAutoMap<Class2, Class1>((source, target) =>
-            {
-                target.Age = 10;
-            });
-            var res = _mapper.MapCollection<Class1>(new List<Class2>{ c2 });
-            //var res3 = _mapper.Map<Class1>( c2 );
+        { 
         }
     }
 
-    public class Class1
-    {
-        public int Age { get; set; }
-    }
-    public class Class2
-    {
-        public int? Age { get; set; }
-    }
 }
