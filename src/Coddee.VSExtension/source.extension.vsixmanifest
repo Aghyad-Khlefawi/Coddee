@@ -19,6 +19,7 @@
     </Dependencies>
     <Assets>
         <Asset Type="Microsoft.VisualStudio.ItemTemplate" d:Source="Project" d:ProjectName="Coddee.VMTemplate" d:TargetPath="|Coddee.VMTemplate;TemplateProjectOutputGroup|" Path="ItemTemplates" d:VsixSubPath="ItemTemplates" />
+        <Asset Type="Microsoft.VisualStudio.ToolboxControl" d:Source="Project" d:ProjectName="Coddee.CodeTools" Path="|Coddee.CodeTools;PkgdefProjectOutputGroup|" />
     </Assets>
     <Prerequisites>
         <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[15.0,16.0)" DisplayName="Visual Studio core editor" />

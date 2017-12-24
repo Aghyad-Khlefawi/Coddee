@@ -100,6 +100,8 @@ namespace Coddee.Services.Configuration
                 return true;
             if (_defaultValues == null)
             {
+                if (!_file.Directory.Exists)
+                    _file.Directory.Create();
                 _file.Create().Dispose();
                 return false;
             }

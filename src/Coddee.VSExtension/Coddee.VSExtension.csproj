@@ -44,6 +44,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="source.extension.vsixmanifest">
       <SubType>Designer</SubType>
     </None>
@@ -57,6 +58,12 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Coddee.CodeTools\Coddee.CodeTools.csproj">
+      <Project>{46562BDE-391D-4033-9F96-21ED349D5C1E}</Project>
+      <Name>Coddee.CodeTools</Name>
+      <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup%3bBuiltProjectOutputGroupDependencies%3bGetCopyToOutputDirectoryItems%3bSatelliteDllsProjectOutputGroup%3bPkgdefProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+      <IncludeOutputGroupsInVSIXLocalOnly>DebugSymbolsProjectOutputGroup%3b</IncludeOutputGroupsInVSIXLocalOnly>
+    </ProjectReference>
     <ProjectReference Include="..\Coddee.VMTemplate\Coddee.VMTemplate.csproj">
       <Project>{3E50251B-23A6-40BA-8525-A40204BB892A}</Project>
       <Name>Coddee.VMTemplate</Name>

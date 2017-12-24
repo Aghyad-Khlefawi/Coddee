@@ -29,6 +29,7 @@ namespace Coddee.Services.Configuration
                     new ConfigurationFile(_defaultConfigFile,
                                           Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
                                                        $"{_defaultConfigFile}.config"));
+            _configurationFiles.Clear();
             AddConfigurationFile(defaultConfigurationFile);
         }
 

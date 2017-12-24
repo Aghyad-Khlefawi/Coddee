@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using Coddee.Loggers;
@@ -30,7 +31,7 @@ namespace Coddee.AppBuilder
         {
             builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.AppConsoleBuildAction((container) =>
                   {
-                      var shell = container.Resolve<IShell>();
+                      var shell = (ContentControl)container.Resolve<IShell>();
                       if (shell == null)
                           throw new ApplicationBuildException("The method must be called after the UseShell method");
 

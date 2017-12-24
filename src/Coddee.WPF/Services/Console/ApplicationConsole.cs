@@ -148,26 +148,27 @@ namespace Coddee.Services.ApplicationConsole
         /// Initialize the console
         /// </summary>
         /// <param name="shell"></param>
-        public void Initialize(IShell shell, LogRecordTypes logLevel)
+        public void Initialize(ContentControl shell, LogRecordTypes logLevel)
         {
-            var shellWindow = (Window)shell;
             _logger.Initialize(logLevel);
+
+            
             //Check if the root element of the shell is grid
             //if not a grid will be created and the original content added to it
-            var grid = shellWindow.Content as Grid;
+            var grid = shell.Content as Grid;
             if (grid == null)
             {
                 grid = new Grid();
-                var oldContent = shellWindow.Content;
-                shellWindow.Content = null;
+                var oldContent = shell.Content;
+                shell.Content = null;
                 grid.Children.Add((UIElement)oldContent);
-                shellWindow.Content = grid;
+                shell.Content = grid;
             }
             grid.Children.Add(GetView());
 
             //Sets the Shell KeyDown event handler to toggle the console visibility
             //when Ctrl+F12 are pressed
-            shellWindow.KeyDown += (sender, args) =>
+            shell.KeyDown += (sender, args) =>
             {
                 if (_toggleCondition(args))
                     ToggleConsole();

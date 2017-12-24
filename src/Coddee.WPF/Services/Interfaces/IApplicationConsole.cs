@@ -2,6 +2,7 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
 using System;
+using System.Windows.Controls;
 using System.Windows.Input;
 using Coddee.Loggers;
 using Coddee.Services.ApplicationConsole;
@@ -16,7 +17,7 @@ namespace Coddee.Services
         /// </summary>
         /// <param name="shell"></param>
         /// <param name="logLevellogLevel"></param>
-        void Initialize(IShell shell, LogRecordTypes logLevellogLevel);
+        void Initialize(ContentControl shell, LogRecordTypes logLevellogLevel);
 
         /// <summary>
         /// Returns the logger that writes to the console

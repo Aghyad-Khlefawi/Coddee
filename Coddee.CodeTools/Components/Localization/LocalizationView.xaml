@@ -1,0 +1,49 @@
+﻿<UserControl x:Class="Coddee.CodeTools.Components.Localization.LocalizationView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Coddee.CodeTools.Components.Localization"
+             xmlns:global="clr-namespace:"
+             xmlns:coddee="http://schemas.Coddee.com/2017/WPF"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../../Resources.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <local:LocalizationViewModel x:Key="designData" />
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <coddee:BusyIndicator IsBusy="{Binding IsBusy}"  d:DataContext="{StaticResource designData}">
+        <DockPanel>
+            <GroupBox DockPanel.Dock="Top" Header="Keys Watcher">
+                <Grid >
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="30"/>
+                        <ColumnDefinition Width="60"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="30"/>
+                    </Grid.ColumnDefinitions>
+                    <Path Style="{StaticResource Shape_Success}" Fill="ForestGreen" Height="15" Visibility="{Binding IsResxFileValid,Converter={StaticResource BoolToVisibilityConverter}}"/>
+                    <Path Style="{StaticResource Shape_Error}" Fill="{StaticResource ErrorColor}" Height="15" Visibility="{Binding IsResxFileValid,Converter={StaticResource BoolToVisibilityConverter},ConverterParameter=R}"/>
+                    <Label Content="Resx file" Grid.Column="1"/>
+                    <TextBox VerticalContentAlignment="Center" Grid.Row="0" Grid.Column="2" Text="{Binding ResxFile,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                    <Button Grid.Row="0" Grid.Column="3" Content="..." Command="{Binding BrowseResxCommand}"/>
+
+                    <Path VerticalAlignment="Center" Grid.Row="1" Style="{StaticResource Shape_Success}" Fill="ForestGreen" Height="15" Visibility="{Binding IsKeysValueValid,Converter={StaticResource BoolToVisibilityConverter}}"/>
+                    <Path VerticalAlignment="Center" Grid.Row="1" Style="{StaticResource Shape_Error}" Fill="{StaticResource ErrorColor}" Height="15" Visibility="{Binding IsKeysValueValid,Converter={StaticResource BoolToVisibilityConverter},ConverterParameter=R}"/>
+                    <Label Content="Keys file" Grid.Row="1" Grid.Column="1" />
+                    <TextBox VerticalContentAlignment="Center" Grid.Column="2" Grid.Row="1" Text="{Binding KeysFile,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                    <Button Grid.Row="1" Grid.Column="3" Content="..." Command="{Binding BrowseKeysCommand}"/>
+                </Grid>
+            </GroupBox>
+            <DockPanel></DockPanel>
+        </DockPanel>
+    </coddee:BusyIndicator>
+</UserControl>
