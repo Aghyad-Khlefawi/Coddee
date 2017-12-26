@@ -64,7 +64,7 @@ namespace Coddee.CodeTools
            
 
         }
-
+        
         private LogAggregator _logger;
         private IContainer _container;
         private readonly VsHelper _vsHelper;

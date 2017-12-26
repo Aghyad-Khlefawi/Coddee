@@ -2,12 +2,17 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
 using System;
+using System.CodeDom;
+using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Documents;
 using System.Windows.Input;
+using System.Xml;
 using Coddee.Collections;
 using Coddee.Services;
 using Coddee.WPF;
@@ -19,13 +24,15 @@ namespace Coddee.CodeTools.Components.Localization
     public class LocalizationViewModel : ViewModelBase<LocalizationView>
     {
         private readonly ISolutionHelper _solutionHelper;
+        private HashSet<string> _keys;
+        private object _updating = new object();
 
         public LocalizationViewModel()
         {
 
         }
 
-        public LocalizationViewModel(ISolutionEventsHelper solutionEventsHelper, ISolutionHelper solutionHelper)
+        public LocalizationViewModel(ISolutionHelper solutionHelper)
         {
             _solutionHelper = solutionHelper;
         }
@@ -80,6 +87,13 @@ namespace Coddee.CodeTools.Components.Localization
             set { SetProperty(ref _addFileCommand, value); }
         }
 
+        private bool _isWatching;
+        public bool IsWatching
+        {
+            get { return _isWatching; }
+            set { SetProperty(ref _isWatching, value); }
+        }
+
         public async void AddFile()
         {
             LocalizationResourceFile file = await CreateLocalizationResourceFile();
@@ -102,6 +116,7 @@ namespace Coddee.CodeTools.Components.Localization
             {
                 FileLocation = e.ResxFile
             }).ToList());
+            Watch();
             return true;
         }
 
@@ -121,12 +136,86 @@ namespace Coddee.CodeTools.Components.Localization
             Watch();
         }
 
-
+        private List<FileSystemWatcher> _filesWatchers;
         private void Watch()
         {
-            if (IsKeysValueValid)
+            if (IsKeysValueValid && LocalizationResourceFiles.All(e => e.IsResxFileValid))
             {
+                if (_filesWatchers.Any())
+                {
+                    foreach (var filesWatcher in _filesWatchers)
+                    {
+                        filesWatcher.Dispose();
+                    }
+                    _filesWatchers.Clear();
+                }
 
+                foreach (var file in LocalizationResourceFiles)
+                {
+                    var fw = new FileSystemWatcher
+                    {
+                        Path = file.Directory,
+                        Filter = $"{file.ResxFileName}*",//,
+                        EnableRaisingEvents = true,
+                        NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite
+                                       | NotifyFilters.FileName | NotifyFilters.DirectoryName
+                    };
+                    fw.Changed += FileChanged;
+                    _filesWatchers.Add(fw);
+                }
+
+                IsWatching = true;
+            }
+        }
+
+
+        private void FileChanged(object sender, FileSystemEventArgs e)
+        {
+            lock (_updating)
+            {
+                _keys.Clear();
+                Thread.Sleep(300);
+                foreach (var localizationResourceFile in LocalizationResourceFiles)
+                {
+                    var xmlDoc = new XmlDocument();
+
+                    using (var sr = new StreamReader(localizationResourceFile.ResxFile))
+                    {
+                        xmlDoc.Load(sr);
+                        foreach (XmlNode node in xmlDoc.GetElementsByTagName("data"))
+                        {
+                            var key = node.Attributes["name"].Value;
+                            if (!_keys.Contains(key))
+                                _keys.Add(key);
+                        }
+                    }
+                }
+
+                CodeNamespace globalNamespace = new CodeNamespace();
+                var compileUnit = new CodeCompileUnit();
+                var tagetClass = new CodeTypeDeclaration("LocalizationKeys")
+                {
+                    Attributes = MemberAttributes.Public,
+                    IsClass = true
+                };
+
+                foreach (var key in _keys)
+                {
+                    var prop = new CodeSnippetTypeMember { Text = $"\tpublic string {key} {{ get; set; }}\n" };
+                    tagetClass.Members.Add(prop);
+                }
+                globalNamespace.Types.Add(tagetClass);
+                compileUnit.Namespaces.Add(globalNamespace);
+                CodeDomProvider provider = CodeDomProvider.CreateProvider("CSharp");
+                CodeGeneratorOptions options = new CodeGeneratorOptions();
+                options.BlankLinesBetweenMembers = false;
+                options.BracingStyle = "C";
+                using (var sourceWriter = new StringWriter(new StringBuilder()))
+                {
+                    provider.GenerateCodeFromCompileUnit(compileUnit, sourceWriter, options);
+                    sourceWriter.Flush();
+                    File.WriteAllText(KeysFile, sourceWriter.ToString());
+                }
             }
         }
 
@@ -135,6 +224,8 @@ namespace Coddee.CodeTools.Components.Localization
             await base.OnInitialization();
             LocalizationResourceFiles = AsyncObservableCollection<LocalizationResourceFile>.Create();
             _eventDispatcher.GetEvent<SolutionLoadedEvent>().Subscribe(SolutionLoaded);
+            _filesWatchers = new List<FileSystemWatcher>();
+            _keys = new HashSet<string>();
         }
 
         private bool _loading;
@@ -149,6 +240,7 @@ namespace Coddee.CodeTools.Components.Localization
                 KeysFile = keysFile;
             if (config.TryGetValue(ConfigKeys.LocalizationWatcher_ResxFiles, out List<LocalizationResourceFileConfig> resourceFiles))
                 LocalizationResourceFiles.ClearAndFill(resourceFiles.Select(CreateLocalizationResourceFile));
+            Watch();
             _loading = false;
         }
 
@@ -228,7 +320,7 @@ namespace Coddee.CodeTools.Components.Localization
             get { return _browseResxCommand ?? (_browseResxCommand = CreateReactiveCommand(BrowseResx)); }
             set { SetProperty(ref _browseResxCommand, value); }
         }
-
+        public string Directory { get; set; }
         public void BrowseResx()
         {
             var dialog = new OpenFileDialog();
@@ -244,6 +336,8 @@ namespace Coddee.CodeTools.Components.Localization
         {
             var file = new FileInfo(value);
             IsResxFileValid = file.Exists && file.Extension.ToLower() == ".resx" && (FileLocationSet == null || FileLocationSet.Invoke(this));
+            if (IsResxFileValid)
+                Directory = Path.GetDirectoryName(value);
         }
     }
 }

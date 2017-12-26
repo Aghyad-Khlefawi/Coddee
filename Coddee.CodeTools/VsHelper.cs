@@ -38,12 +38,21 @@ namespace Coddee.CodeTools
             _solutionEvents=_dte.Events.SolutionEvents;
             _solutionEvents.Opened += () =>
             {
+                //Array projects = (Array)_dte.ActiveSolutionProjects;
+                //foreach (Project project in projects)
+                //{
+                //    foreach (ProjectItem projectItem in project.ProjectItems)
+                //    {
+                        
+                //    }
+                //}
                 SolutionOpened?.Invoke();
             };
             _solutionEvents.AfterClosing += () =>
             {
                 SolutionClosed?.Invoke();
             };
+
         }
 
 
