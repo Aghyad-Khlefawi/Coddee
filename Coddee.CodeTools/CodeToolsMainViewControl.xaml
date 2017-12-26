@@ -28,9 +28,7 @@
         <TabControl 
             Visibility="{Binding IsSolutionLoaded,Converter={StaticResource BoolToVisibilityConverter}}">
             <!--<TabItem Header="Code generator"/>-->
-            <TabItem Header="Localization"
-                     
-                     Visibility="{Binding IsSolutionLoaded,Converter={StaticResource BoolToVisibilityConverter},ConverterParameter=R}">
+            <TabItem Header="Localization">
                 <controls:ViewModelPresenter ViewModel="{Binding LocalizationVM}"/>
             </TabItem>
         </TabControl>

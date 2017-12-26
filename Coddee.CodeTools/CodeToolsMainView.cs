@@ -2,6 +2,7 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
 using System.Threading;
+using System.Windows;
 using System.Windows.Input;
 using Coddee.Loggers;
 using Coddee.ModuleDefinitions;
@@ -44,14 +45,14 @@ namespace Coddee.CodeTools
 
             UISynchronizationContext.SetContext(SynchronizationContext.Current);
 
-            var container = new CoddeeUnityContainer();
-            container.RegisterInstance<ILogger, LogAggregator>();
-            BuilderHelper.RegisterLoggers(LoggerTypes.ApplicationConsole, LogRecordTypes.Debug, container);
-            var modules = container.Resolve<ApplicationModulesManager>();
-            var logger = (LogAggregator)container.Resolve<ILogger>();
-            _vsHelper = container.RegisterInstance<VsHelper, VsHelper>();
-            container.RegisterInstance<ISolutionEventsHelper>(_vsHelper);
-            container.RegisterInstance<ISolutionHelper>(_vsHelper);
+            _container = new CoddeeUnityContainer();
+            _container.RegisterInstance<ILogger, LogAggregator>();
+            BuilderHelper.RegisterLoggers(LoggerTypes.ApplicationConsole, LogRecordTypes.Debug, _container);
+            var modules = _container.Resolve<ApplicationModulesManager>();
+            _logger = (LogAggregator)_container.Resolve<ILogger>();
+            _vsHelper = _container.RegisterInstance<VsHelper, VsHelper>();
+            _container.RegisterInstance<ISolutionEventsHelper>(_vsHelper);
+            _container.RegisterInstance<ISolutionHelper>(_vsHelper);
 
 
             modules.RegisterModule(CoreModuleDefinitions.Modules);
@@ -60,27 +61,29 @@ namespace Coddee.CodeTools
             modules.InitializeAutoModules().Wait();
 
             //Initialize View model
-            ViewModelBase.SetContainer(container);
-            var vm = container.Resolve<CodeToolsMainViewModel>();
-            vm.Initialize();
-            var view = vm.GetDefaultView();
-            var applicationConsole = container.Resolve<IApplicationConsole>();
-            applicationConsole.Initialize(view, logger.MinimumLevel);
-            applicationConsole.SetToggleCondition(e => e.Key == Key.F12);
-            logger.AddLogger(applicationConsole.GetLogger(), LoggerTypes.ApplicationConsole);
-
-
-
-            this.Content = view;
+           
 
         }
 
+        private LogAggregator _logger;
+        private IContainer _container;
         private readonly VsHelper _vsHelper;
         protected override void Initialize()
         {
             base.Initialize();
             _vsHelper.GetService = GetService;
             _vsHelper.Initialize();
+
+            ViewModelBase.SetContainer(_container);
+            var vm = _container.Resolve<CodeToolsMainViewModel>();
+            vm.Initialize();
+            var view = vm.GetDefaultView();
+            var applicationConsole = _container.Resolve<IApplicationConsole>();
+            applicationConsole.Initialize(view, _logger.MinimumLevel);
+            applicationConsole.SetToggleCondition(e => e.Key == Key.F12);
+            _logger.AddLogger(applicationConsole.GetLogger(), LoggerTypes.ApplicationConsole);
+            
+            this.Content = view;
         }
 
     }

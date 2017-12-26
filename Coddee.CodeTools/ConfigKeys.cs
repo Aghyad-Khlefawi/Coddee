@@ -9,6 +9,6 @@ namespace Coddee.CodeTools
     public class ConfigKeys
     {
         public const string LocalizationWatcher_KeysFile = nameof(LocalizationWatcher_KeysFile);
-        public const string LocalizationWatcher_ResxFile = nameof(LocalizationWatcher_ResxFile);
+        public const string LocalizationWatcher_ResxFiles = nameof(LocalizationWatcher_ResxFiles);
     }
 }

@@ -18,30 +18,35 @@
     </UserControl.Resources>
     <coddee:BusyIndicator IsBusy="{Binding IsBusy}"  d:DataContext="{StaticResource designData}">
         <DockPanel>
-            <GroupBox DockPanel.Dock="Top" Header="Keys Watcher">
-                <Grid >
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="30"/>
-                        <ColumnDefinition Width="60"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="30"/>
-                    </Grid.ColumnDefinitions>
-                    <Path Style="{StaticResource Shape_Success}" Fill="ForestGreen" Height="15" Visibility="{Binding IsResxFileValid,Converter={StaticResource BoolToVisibilityConverter}}"/>
-                    <Path Style="{StaticResource Shape_Error}" Fill="{StaticResource ErrorColor}" Height="15" Visibility="{Binding IsResxFileValid,Converter={StaticResource BoolToVisibilityConverter},ConverterParameter=R}"/>
-                    <Label Content="Resx file" Grid.Column="1"/>
-                    <TextBox VerticalContentAlignment="Center" Grid.Row="0" Grid.Column="2" Text="{Binding ResxFile,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
-                    <Button Grid.Row="0" Grid.Column="3" Content="..." Command="{Binding BrowseResxCommand}"/>
+            <GroupBox DockPanel.Dock="Top" Header="Files">
+                <StackPanel >
+                    <DockPanel>
+                        <Grid>
+                            <Path VerticalAlignment="Center"  Style="{StaticResource Shape_Success}" Fill="ForestGreen" Height="15" Visibility="{Binding IsKeysValueValid,Converter={StaticResource BoolToVisibilityConverter}}"/>
+                            <Path VerticalAlignment="Center"  Style="{StaticResource Shape_Error}" Fill="{StaticResource ErrorColor}" Height="15" Visibility="{Binding IsKeysValueValid,Converter={StaticResource BoolToVisibilityConverter},ConverterParameter=R}"/>
+                        </Grid>
+                        <Label Width="60" Content="Keys file"   />
+                        <Button Width="40" DockPanel.Dock="Right"  Content="..." Command="{Binding BrowseKeysCommand}"/>
+                        <TextBox VerticalContentAlignment="Center"  IsReadOnly="True"  Margin="5 0" Text="{Binding KeysFileName,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                    </DockPanel>
 
-                    <Path VerticalAlignment="Center" Grid.Row="1" Style="{StaticResource Shape_Success}" Fill="ForestGreen" Height="15" Visibility="{Binding IsKeysValueValid,Converter={StaticResource BoolToVisibilityConverter}}"/>
-                    <Path VerticalAlignment="Center" Grid.Row="1" Style="{StaticResource Shape_Error}" Fill="{StaticResource ErrorColor}" Height="15" Visibility="{Binding IsKeysValueValid,Converter={StaticResource BoolToVisibilityConverter},ConverterParameter=R}"/>
-                    <Label Content="Keys file" Grid.Row="1" Grid.Column="1" />
-                    <TextBox VerticalContentAlignment="Center" Grid.Column="2" Grid.Row="1" Text="{Binding KeysFile,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
-                    <Button Grid.Row="1" Grid.Column="3" Content="..." Command="{Binding BrowseKeysCommand}"/>
-                </Grid>
+                    <ItemsControl ItemsSource="{Binding LocalizationResourceFiles}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="local:LocalizationResourceFile">
+                                <DockPanel Margin="0 3 0 0">
+                                    <Grid>
+                                        <Path Style="{StaticResource Shape_Success}" Fill="ForestGreen" Height="15" Visibility="{Binding IsResxFileValid,Converter={StaticResource BoolToVisibilityConverter}}"/>
+                                        <Path Style="{StaticResource Shape_Error}" Fill="{StaticResource ErrorColor}" Height="15" Visibility="{Binding IsResxFileValid,Converter={StaticResource BoolToVisibilityConverter},ConverterParameter=R}"/>
+                                    </Grid>
+                                    <Label Width="60" Content="Resx file" />
+                                    <Button  Width="40" DockPanel.Dock="Right" Content="..." Command="{Binding BrowseResxCommand}"/>
+                                    <TextBox VerticalContentAlignment="Center" IsReadOnly="True" Margin="5 0" Text="{Binding ResxFileName,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                                </DockPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    <Button Content="Add file" Margin="0 5 0 0" Command="{Binding AddFileCommand}"/>
+                </StackPanel>
             </GroupBox>
             <DockPanel></DockPanel>
         </DockPanel>

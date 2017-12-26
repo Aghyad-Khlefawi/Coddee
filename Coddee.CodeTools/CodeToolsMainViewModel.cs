@@ -25,7 +25,7 @@ namespace Coddee.CodeTools
         {
             _solutionHelper = solutionHelper;
             _configurationManager = configurationManager;
-            solutionEventsHelper.SolutionLoaded += OnSolutionLoaded;
+            solutionEventsHelper.SolutionOpened += OnSolutionOpened;
             solutionEventsHelper.SolutionClosed += OnSolutionClosed;
         }
 
@@ -66,7 +66,7 @@ namespace Coddee.CodeTools
 
         }
 
-        private void OnSolutionLoaded()
+        private void OnSolutionOpened()
         {
             IsSolutionLoaded = true;
         }
