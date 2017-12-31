@@ -89,7 +89,7 @@ namespace HR.Clients.WPF.Main
                 Text = null;
 
                 IsVisible = 2;
-                _toast.ShowToast("Ah and yea nor in from when and losel almost scape plain he that flash had but his olden night", ToastType.Error, 100000);
+              
             }
             catch (Exception e)
             {

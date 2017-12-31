@@ -15,7 +15,7 @@ using Coddee.WPF.Events;
 using Coddee.Services.Navigation;
 using Coddee.WPF;
 using Coddee.WPF.Security;
-
+using Coddee.WPF.Services.Dialogs;
 
 namespace Coddee.AppBuilder
 {
@@ -298,13 +298,13 @@ namespace Coddee.AppBuilder
         /// </summary>
         /// <returns></returns>
         public static IApplicationBuilder UseDialogs(this IApplicationBuilder builder,
-                                                        Region dialogRegion,
-                                                        SolidColorBrush dialogBorderBrush)
+                                                        Region dialogRegion)
         {
             builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.DialogServiceBuildAction(
                                                                                                    (container) =>
                      {
-                         container.Resolve<IDialogService>().Initialize(dialogRegion, dialogBorderBrush);
+                         container.Resolve<IDialogService>().Initialize(dialogRegion);
+                         container.Resolve<IDialogExplorer>().Initialize();
                      }));
             return builder;
         }
@@ -315,7 +315,7 @@ namespace Coddee.AppBuilder
         /// <returns></returns>
         public static IApplicationBuilder UseDialogs(this IApplicationBuilder builder)
         {
-            return builder.UseDialogs(DefaultRegions.DialogRegion, new SolidColorBrush(Colors.WhiteSmoke));
+            return builder.UseDialogs(DefaultRegions.DialogRegion);
         }
 
         /// <summary>

@@ -1,0 +1,91 @@
+﻿<UserControl x:Class="Coddee.WPF.Services.Dialogs.DialogsExplorerView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:Coddee.WPF.Services.Dialogs"
+             d:DesignHeight="100"
+             Name="Root"
+             mc:Ignorable="d">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../../Resources.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <local:DialogsExplorerViewModel x:Key="designData" />
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid d:DataContext="{StaticResource designData}">
+        <Button Width="30" x:Name="ExplorerButton"
+                Height="31"
+                Command="{Binding ToggleCommand}"
+                VerticalAlignment="Top">
+            <Path Style="{StaticResource Shape_Dialogs}"
+
+                  VerticalAlignment="Center" />
+        </Button>
+        <Popup Placement="AbsolutePoint"
+               VerticalOffset="35"
+               PopupAnimation="Fade"
+               PlacementTarget="{Binding ElementName=ExplorerButton}"
+               AllowsTransparency="True"
+               StaysOpen="False"
+               IsOpen="{Binding IsOpen}"
+               Width="{Binding RelativeSource={RelativeSource AncestorType=Window,Mode=FindAncestor},Path=Width,FallbackValue=300}">
+            <Border BorderThickness="0 0 0 2"
+                    BorderBrush="Black">
+                <Grid>
+                    <Border Background="Black"
+                            Opacity=".8" />
+                    <ScrollViewer VerticalScrollBarVisibility="Disabled"
+                                  HorizontalScrollBarVisibility="Auto">
+                        <ItemsControl Margin="5"
+                                  MinHeight="80"
+                                  ItemsSource="{Binding Dialogs}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Horizontal" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Button Cursor="Hand"
+                                        Margin="0 0 10 0"
+                                        Command="{Binding ElementName=Root,Path=DataContext.ShowCommand}"
+                                        CommandParameter="{Binding}">
+                                        <Button.Template>
+                                            <ControlTemplate>
+                                                <Grid>
+                                                    <Border Background="WhiteSmoke"
+                                                        BorderThickness="1"
+                                                        BorderBrush="DimGray" />
+                                                    <DockPanel Width="200"
+
+                                                           Height="80">
+                                                        <Border DockPanel.Dock="Bottom"
+                                                            Background="DimGray">
+                                                            <TextBlock Foreground="White"
+                                                                   HorizontalAlignment="Center"
+                                                                   Text="{Binding Title}" />
+                                                        </Border>
+                                                        <Border Margin="10">
+                                                            <Border.Background>
+                                                                <VisualBrush Stretch="Uniform" Visual="{Binding Content}" />
+                                                            </Border.Background>
+                                                        </Border>
+                                                    </DockPanel>
+                                                </Grid>
+
+                                            </ControlTemplate>
+                                        </Button.Template>
+                                    </Button>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </Grid>
+            </Border>
+
+        </Popup>
+    </Grid>
+</UserControl>

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using Coddee.WPF.Commands;
+using Coddee.WPF.Services.Dialogs;
 
 namespace Coddee.WPF.DefaultShell
 {
@@ -61,6 +62,12 @@ namespace Coddee.WPF.DefaultShell
 
         #endregion
 
+        private IDialogExplorer _dialogExplorer;
+        public IDialogExplorer DialogExplorer
+        {
+            get { return _dialogExplorer; }
+            set { SetProperty(ref _dialogExplorer, value); }
+        }
 
         private bool _useNavigation;
         public bool UseNavigation
@@ -92,6 +99,7 @@ namespace Coddee.WPF.DefaultShell
             await base.OnInitialization();
             if (!_mainViewModel.IsInitialized)
                 await _mainViewModel.Initialize();
+            DialogExplorer = Resolve<IDialogExplorer>();
         }
         
         public IPresentableViewModel SetMainContent(Type defaultPresentable, bool useNavigation)

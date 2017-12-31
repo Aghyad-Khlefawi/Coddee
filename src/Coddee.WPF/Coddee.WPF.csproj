@@ -146,6 +146,18 @@
       <DependentUpon>SearchView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Services\ApplicationSearch\SearchViewModel.cs" />
+    <Compile Include="Services\Dialogs\CloseActionCommand.cs" />
+    <Compile Include="Services\Dialogs\DialogContainerView.xaml.cs">
+      <DependentUpon>DialogContainerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Services\Dialogs\DialogContainerViewModel.cs" />
+    <Compile Include="Services\Dialogs\DialogOptions.cs" />
+    <Compile Include="Services\Dialogs\DialogsExplorerView.xaml.cs">
+      <DependentUpon>DialogsExplorerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Services\Dialogs\DialogsExplorerViewModel.cs" />
+    <Compile Include="Services\Dialogs\DialogState.cs" />
+    <Compile Include="Services\Dialogs\IDialogExplorer.cs" />
     <Compile Include="Services\Interfaces\IViewModelsManager.cs" />
     <Compile Include="Localize.cs" />
     <Compile Include="Services\Console\ApplicationConsoleModule.cs" />
@@ -161,32 +173,12 @@
     </Compile>
     <Compile Include="DefaultShell\DefaultShellViewModel.cs" />
     <Compile Include="IPresentable.cs" />
-    <Compile Include="Services\Dialogs\ConfirmationDialogView.xaml.cs">
-      <DependentUpon>ConfirmationDialogView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Services\Dialogs\ContentDialogView.xaml.cs">
-      <DependentUpon>ContentDialogView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Services\Dialogs\ContentDialogViewModel.cs" />
-    <Compile Include="Services\Dialogs\EditorDialogView.xaml.cs">
-      <DependentUpon>EditorDialogView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Services\Dialogs\EditorDialogViewModel.cs" />
-    <Compile Include="Services\Dialogs\ConfirmationDialogViewModel.cs" />
-    <Compile Include="Services\Dialogs\DialogContainer.xaml.cs">
-      <DependentUpon>DialogContainer.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Services\Dialogs\DialogService.cs" />
     <Compile Include="Services\Dialogs\DialogServiceView.xaml.cs">
       <DependentUpon>DialogServiceView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Services\Dialogs\DialogServicsModule.cs" />
-    <Compile Include="Services\Dialogs\DialogViewModelBase.cs" />
     <Compile Include="Services\Dialogs\IDialog.cs" />
-    <Compile Include="Services\Dialogs\MessageDialog.cs" />
-    <Compile Include="Services\Dialogs\MessageDialogView.xaml.cs">
-      <DependentUpon>MessageDialogView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Services\Interfaces\IDebugTool.cs" />
     <Compile Include="Services\Interfaces\IDialogService.cs" />
     <Compile Include="Services\Interfaces\INavigationService.cs" />
@@ -302,15 +294,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Services\Dialogs\ConfirmationDialogView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Services\Dialogs\ContentDialogView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Services\Dialogs\DialogContainer.xaml">
+    <Page Include="Services\Dialogs\DialogContainerView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -318,11 +302,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Services\Dialogs\EditorDialogView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Services\Dialogs\MessageDialogView.xaml">
+    <Page Include="Services\Dialogs\DialogsExplorerView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

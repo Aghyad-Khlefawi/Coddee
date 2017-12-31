@@ -3,136 +3,122 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media;
+using Coddee.Collections;
 using Coddee.WPF;
+using Coddee.WPF.Services.Dialogs;
 
 namespace Coddee.Services.Dialogs
 {
     public class DialogService : ViewModelBase<DialogServiceView>, IDialogService
     {
-        public DialogService()
+        private int _maxZindex;
+
+        private AsyncObservableCollection<IDialog> _activeDialogs;
+        public AsyncObservableCollection<IDialog> ActiveDialogs
         {
-            _dialogs = new Dictionary<IDialog, UIElement>();
-        }
-
-        private Region _dialogsRegion;
-        private readonly Dictionary<IDialog, UIElement> _dialogs;
-        private SolidColorBrush _dialogBorderBrush;
-
-        public event EventHandler<IDialog> DialogDisplayed;
-        public event EventHandler<IDialog> DialogClosed;
-
-        public void Initialize(Region dialogsRegion, SolidColorBrush dialogBorderBrush)
-        {
-            _dialogsRegion = dialogsRegion;
-            _dialogBorderBrush = dialogBorderBrush;
-            _dialogsRegion.View(this);
-        }
-
-        public IDialog ShowContent(IPresentable content, bool showCloseButton = false, HorizontalAlignment horizontalAlignment = HorizontalAlignment.Center)
-        {
-            return ShowContent(content.GetView(), showCloseButton, horizontalAlignment);
-        }
-
-        public IDialog ShowContent(UIElement content, bool showCloseButton = false, HorizontalAlignment horizontalAlignment = HorizontalAlignment.Center)
-        {
-            var dialog = CreateDialog<ContentDialogViewModel>(horizontalAlignment);
-            dialog.ShowCloseButton = showCloseButton;
-            dialog.View.Presenter.HorizontalAlignment = horizontalAlignment;
-            dialog.Content = content;
-            return ShowDialog(dialog);
-        }
-
-        public IDialog ShowMessage(string message)
-        {
-            var dialog = CreateDialog<MessageDialog>();
-            dialog.Message = message;
-            return ShowDialog(dialog);
-        }
-
-        public IDialog ShowConfirmation(string message, Action OnYes, Action OnNo = null)
-        {
-            var dialog = CreateDialog<ConfirmationDialogViewModel>();
-            dialog.Message = message;
-            dialog.OnYes += () =>
-            {
-                OnYes?.Invoke();
-                CloseDialog(dialog);
-            };
-            dialog.OnNo += () =>
-            {
-                OnNo?.Invoke();
-                CloseDialog(dialog);
-            };
-            return ShowDialog(dialog);
-        }
-
-        public IDialog ShowEditorDialog(UIElement content, Func<Task<bool>> OnSave, Action OnCancel = null, HorizontalAlignment horizontalAlignment = HorizontalAlignment.Center)
-        {
-            var dialog = CreateDialog<EditorDialogViewModel>(horizontalAlignment);
-            dialog.View.Presenter.HorizontalAlignment = horizontalAlignment;
-            dialog.Content = content;
-            dialog.OnSave += async () =>
-            {
-                if (await OnSave?.Invoke())
-                    CloseDialog(dialog);
-            };
-            dialog.OnCancel += () =>
-            {
-                OnCancel?.Invoke();
-                CloseDialog(dialog);
-            };
-            return ShowDialog(dialog);
-        }
-
-        public IDialog ShowEditorDialog(IEditorViewModel editor, HorizontalAlignment horizontalAlignment = HorizontalAlignment.Center)
-        {
-            return ShowEditorDialog(editor.GetView(), editor.Save, editor.Cancel, horizontalAlignment);
+            get { return _activeDialogs; }
+            set { SetProperty(ref _activeDialogs, value); }
         }
 
 
-        public IDialog ShowDialog(IDialog dialog)
+        private AsyncObservableCollection<IDialog> _minimizedDialogs;
+        public AsyncObservableCollection<IDialog> MinimizedDialogs
         {
-            dialog.ZIndex = _dialogs.Count;
-            _dialogs[dialog] = dialog.Container;
-            View.DialogsContainer.Children.Add(dialog.Container);
-            DialogDisplayed?.Invoke(this, dialog);
+            get { return _minimizedDialogs; }
+            set { SetProperty(ref _minimizedDialogs, value); }
+        }
+
+        public event EventHandler<IDialog> DialogStateChanged;
+
+        public async Task<IDialog> CreateDialog(string title, UIElement content, DialogOptions options, params ActionCommand[] commands)
+        {
+            var container = CreateViewModel<DialogContainerViewModel>();
+            container.ZIndex = _maxZindex;
+            await container.Initialize();
+            container.SetDialogOptions(options);
+            container.SetCommands(commands);
+            container.SetContent(content);
+            container.StateChanged += OnDialogStateChanged;
+            container.Title = title;
+            container.Closed += ContainerClosed;
+            Interlocked.Increment(ref _maxZindex);
+            return container;
+        }
+
+        public Task<IDialog> CreateDialog(string title, UIElement content, params ActionCommand[] actions)
+        {
+            return CreateDialog(title, content, DialogOptions.Default, actions);
+        }
+
+        public async Task<IDialog> CreateDialog(string title, IEditorViewModel editor, DialogOptions options)
+        {
+            var dialog = await CreateDialog(title,
+                                editor.GetView(),
+                                options,
+                                new CloseActionCommand(_localization.GetValue("Save"), async () => { await editor.Save(); }),
+                                new CloseActionCommand(_localization.GetValue("Cancel")));
             return dialog;
         }
 
-
-        public TType CreateDialog<TType>(HorizontalAlignment horizontalAlignment = HorizontalAlignment.Center) where TType : IDialog
+        public Task<IDialog> CreateDialog(string title, IEditorViewModel editor)
         {
-            var container = new DialogContainer
+            return CreateDialog(title, editor, DialogOptions.Default);
+        }
+
+        private void ContainerClosed(object sender, EventArgs e)
+        {
+            if (sender is IDialog dialog)
             {
-                DialogBorder = { Background = _dialogBorderBrush },
-                Presenter = { HorizontalAlignment = horizontalAlignment }
-            };
-            return CreateDialog<TType>(container, container.Presenter);
+                MinimizedDialogs.RemoveIfExists(dialog);
+                ActiveDialogs.RemoveIfExists(dialog);
+            }
         }
 
-        public TType CreateDialog<TType>(UserControl container, ContentPresenter presenter) where TType : IDialog
+        public void Initialize(Region dialogRegion)
         {
-            var dialog = Resolve<TType>();
-            return CreateDialog(dialog, container, presenter);
+            dialogRegion.View(this);
+            ActiveDialogs = AsyncObservableCollection<IDialog>.Create();
+            MinimizedDialogs = AsyncObservableCollection<IDialog>.Create();
         }
 
-        public TType CreateDialog<TType>(TType content, UserControl container, ContentPresenter presenter) where TType : IDialog
+        public IEnumerable<IDialog> GetActiveDialogs()
         {
-            content.CloseRequested += CloseDialog;
-            presenter.Content = content.GetView();
-            content.Container = container;
-            return content;
+            return ActiveDialogs.ToList();
         }
 
-        public void CloseDialog(IDialog dialog)
+        public IEnumerable<IDialog> GetMinimizedDialogs()
         {
-            View.DialogsContainer.Children.Remove(_dialogs[dialog]);
-            _dialogs.Remove(dialog);
-            DialogClosed?.Invoke(this, dialog);
+            return MinimizedDialogs.ToList();
+        }
+
+        private void OnDialogStateChanged(object sender, DialogState e)
+        {
+            if (sender is IDialog dialog)
+            {
+
+                switch (e)
+                {
+                    case DialogState.Active:
+                        if (ActiveDialogs.Contains(dialog))
+                            return;
+                        MinimizedDialogs.RemoveIfExists(dialog);
+                        ActiveDialogs.Add(dialog);
+                        break;
+                    case DialogState.Minimized:
+                        if (MinimizedDialogs.Contains(dialog))
+                            return;
+                        ActiveDialogs.RemoveIfExists(dialog);
+                        MinimizedDialogs.Add(dialog);
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(e), e, null);
+                }
+                DialogStateChanged?.Invoke(this, dialog);
+            }
         }
     }
 }

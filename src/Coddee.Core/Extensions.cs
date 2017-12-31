@@ -25,8 +25,10 @@ namespace Coddee
             for (int ix = 0; ix < s.Length; ++ix)
             {
                 char ch = s[ix];
-                if (ch <= 0x7f) retval[ix] = (byte)ch;
-                else retval[ix] = (byte)'?';
+                if (ch <= 0x7f)
+                    retval[ix] = (byte)ch;
+                else
+                    retval[ix] = (byte)'?';
             }
             return retval;
         }
@@ -227,6 +229,12 @@ namespace Coddee
                 collection.Remove(item);
         }
 
+        public static void RemoveIfExists<T>(this IList<T> collection, T item)
+        {
+            if (collection.Contains(item))
+                collection.Remove(item);
+        }
+
         public static Task WhenAll(this IEnumerable<Task> tasks)
         {
             return Task.WhenAll(tasks);
@@ -237,7 +245,7 @@ namespace Coddee
             return task.ContinueWith(t => action(t.Result));
         }
 
-        public static Task ContinueWithResultAs<T,TResult>(this Task<IEnumerable<T>> task, Action<IEnumerable<TResult>> action)
+        public static Task ContinueWithResultAs<T, TResult>(this Task<IEnumerable<T>> task, Action<IEnumerable<TResult>> action)
         {
             return task.ContinueWith(t => action(t.Result.CastAs<TResult>()));
         }

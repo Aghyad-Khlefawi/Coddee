@@ -18,8 +18,13 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid d:DataContext="{StaticResource designData}"
-          x:Name="DialogsContainer">
-        
-    </Grid>
+    <ItemsControl d:DataContext="{StaticResource designData}"
+                  ItemTemplate="{StaticResource ViewModelDataTemplate}"
+          ItemsSource="{Binding ActiveDialogs}">
+        <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+                <Grid/>
+            </ItemsPanelTemplate>
+        </ItemsControl.ItemsPanel>
+    </ItemsControl>
 </UserControl>

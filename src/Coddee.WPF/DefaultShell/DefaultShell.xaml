@@ -42,6 +42,7 @@
                 <DockPanel Background="{DynamicResource ApplicationAccentColor}"
                            x:Name="ToolBar"
                            Margin="0 0 0 0"
+                           LastChildFill="False"
                            Dock="Top"
                            Height="35">
                     <Label Content="{Binding ApplicationName}"
@@ -86,7 +87,15 @@
                                   Width="15" />
                         </Button>
                     </DockPanel>
-                    <ContentPresenter Content="{Binding ToolbarContent}"/>
+
+                    <ContentPresenter Content="{Binding ToolbarContent}"
+                                      DockPanel.Dock="Right"
+                                      HorizontalAlignment="Right"/>
+                    <controls:ViewModelPresenter ViewModel="{Binding DialogExplorer}" 
+                                                 DockPanel.Dock="Right"
+                                                 Margin="0 0 5 0"
+                                                 HorizontalAlignment="Right"
+                                                 VerticalAlignment="Center"/>
                 </DockPanel>
                 <Grid>
 

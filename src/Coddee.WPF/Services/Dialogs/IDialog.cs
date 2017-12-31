@@ -4,14 +4,21 @@
 using System;
 using System.Windows;
 using Coddee.WPF;
+using Coddee.WPF.Services.Dialogs;
 
 namespace Coddee.Services.Dialogs
 {
-    public interface IDialog:IPresentable
+    public interface IDialog : IPresentable
     {
-        int ZIndex { get; set; }
-        UIElement Container { get; set; }
-        event Action<IDialog> CloseRequested;
+        event EventHandler Closed;
+        event EventHandler<DialogState> StateChanged;
+
+        int ZIndex { get; }
+        string Title { get; set; }
+        DialogState State { get; }
+
+        void SetState(DialogState newState);
+        void Show();
         void Close();
     }
 }

@@ -52,6 +52,7 @@
     <Content Include="LICENSE.txt" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActionCommand.cs" />
     <Compile Include="AppBuilder\ApplicationTypes.cs" />
     <Compile Include="AppBuilder\BuildAction.cs" />
     <Compile Include="AppBuilder\BuildActions.cs" />
@@ -67,6 +68,8 @@
     <Compile Include="ConfigKeys.cs" />
     <Compile Include="DefaultMessages.cs" />
     <Compile Include="Diff.cs" />
+    <Compile Include="Exceptions\ValidationException.cs" />
+    <Compile Include="Position.cs" />
     <Compile Include="Services\Console\ConsoleCommandParser.cs" />
     <Compile Include="EventRoutingStrategy.cs" />
     <Compile Include="Exceptions\CoddeeException.cs" />

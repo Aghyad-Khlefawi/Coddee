@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Coddee.Services.Dialogs
+namespace Coddee.WPF.Services.Dialogs
 {
     /// <summary>
-    /// Interaction logic for ContentDialogViewView.xaml
+    /// Interaction logic for DialogsExplorerViewView.xaml
     /// </summary>
-    public partial class ContentDialogView : UserControl
+    public partial class DialogsExplorerView : UserControl
     {
-        public ContentDialogView()
+        public DialogsExplorerView()
         {
             InitializeComponent();
         }

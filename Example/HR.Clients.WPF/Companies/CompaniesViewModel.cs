@@ -2,15 +2,16 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Coddee;
 using Coddee.Collections;
 using Coddee.Services;
+using Coddee.Services.Dialogs;
 using Coddee.WPF;
 using Coddee.WPF.Collections;
 using Coddee.WPF.Commands;
+using Coddee.WPF.Services.Dialogs;
 using HR.Clients.WPF.Companies.Editors;
 using HR.Data.Models;
 using HR.Data.Repositories;
@@ -56,13 +57,14 @@ namespace HR.Clients.WPF.Companies
 
         private void DeleteEmployee()
         {
-            Resolve<IDialogService>()
-                .ShowConfirmation($"Are you sure you want to delete '{Employees.SelectedItem.FullName}'?",
-                                  async () =>
-                                  {
-                                      await Resolve<IEmployeeRepository>().DeleteItem(Employees.SelectedItem);
-                                      Employees.Remove(Employees.SelectedItem);
-                                  });
+            //TODO update
+            //Resolve<IDialogService>()
+            //    .ShowConfirmation($"Are you sure you want to delete '{Employees.SelectedItem.FullName}'?",
+            //                      async () =>
+            //                      {
+            //                          await Resolve<IEmployeeRepository>().DeleteItem(Employees.SelectedItem);
+            //                          Employees.Remove(Employees.SelectedItem);
+            //                      });
         }
 
         private void EditEmployee()
@@ -70,31 +72,38 @@ namespace HR.Clients.WPF.Companies
             _employeeEditor.Edit(Employees.SelectedItem, Companies.SelectedItem);
         }
 
-        private void AddEmployee()
+        private async void AddEmployee()
         {
             _employeeEditor.Add(Companies.SelectedItem);
+            var dialog = await Resolve<IDialogService>().CreateDialog("Add employee", _employeeEditor, DialogOptions.DefaultMinimizable);
+            dialog.Show();
         }
         private void DeleteCompany()
         {
-            Resolve<IDialogService>()
-                .ShowConfirmation($"Are you sure you want to delete '{Companies.SelectedItem.Name}'?",
-                                  async () =>
-                                  {
-                                      await Resolve<ICompanyRepository>().DeleteItem(Companies.SelectedItem);
-                                      Companies.Remove(Companies.SelectedItem);
-                                  });
+            //TODO update
+            //Resolve<IDialogService>()
+            //    .ShowConfirmation($"Are you sure you want to delete '{Companies.SelectedItem.Name}'?",
+            //                      async () =>
+            //                      {
+            //                          await Resolve<ICompanyRepository>().DeleteItem(Companies.SelectedItem);
+            //                          Companies.Remove(Companies.SelectedItem);
+            //                      });
         }
 
         private void EditCompany()
         {
             _companyEditor.Edit(Companies.SelectedItem);
-            Resolve<IDialogService>().ShowEditorDialog(_companyEditor);
+            //TODO update
+            //Resolve<IDialogService>().ShowEditorDialog(_companyEditor);
         }
 
-        private void AddCompany()
+        private IDialog _companyDialog;
+        private async void AddCompany()
         {
             _companyEditor.Add();
-            Resolve<IDialogService>().ShowEditorDialog(_companyEditor);
+            if (_companyDialog == null)
+                _companyDialog = await Resolve<IDialogService>().CreateDialog("Add company", _companyEditor, DialogOptions.DefaultMinimizable);
+            _companyDialog.Show();
         }
 
         protected override async Task OnInitialization()
@@ -151,6 +160,6 @@ namespace HR.Clients.WPF.Companies
                 Employees.Remove(e => e.ID == args.Item.ID);
             ToastSuccess();
         }
-        
+
     }
 }

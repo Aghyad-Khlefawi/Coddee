@@ -2,7 +2,9 @@ using System;
 using System.Threading.Tasks;
 using System.Windows;
 using Coddee.Data;
+using Coddee.Exceptions;
 using Coddee.Services;
+using Coddee.Services.Dialogs;
 using Coddee.Validation;
 
 namespace Coddee.WPF
@@ -124,7 +126,7 @@ namespace Coddee.WPF
             MapEditorToEditedItem(EditedItem);
         }
 
-        public virtual async Task<bool> Save()
+        public virtual async Task Save()
         {
             try
             {
@@ -137,13 +139,12 @@ namespace Coddee.WPF
                         ShowErrors(validationResult);
                     }
                     IsBusy = false;
-                    return false;
+                    throw new ValidationException(validationResult);
                 }
 
                 PreSave();
                 Saved?.Invoke(this, new EditorSaveArgs<TModel>(OperationType, await SaveItem()));
                 IsBusy = false;
-                return true;
             }
             catch (Exception ex)
             {
@@ -160,8 +161,8 @@ namespace Coddee.WPF
 
         protected virtual void ShowErrors(ValidationResult res)
         {
-            res.Errors.ForEach(e=>_toast.ShowToast(e, ToastType.Error));
-            res.Warnings.ForEach(e=>_toast.ShowToast(e, ToastType.Warning));
+            res.Errors.ForEach(e => _toast.ShowToast(e, ToastType.Error));
+            res.Warnings.ForEach(e => _toast.ShowToast(e, ToastType.Warning));
         }
 
         public virtual void OnSave(object sender, EditorSaveArgs<TModel> e)
@@ -171,13 +172,17 @@ namespace Coddee.WPF
         public virtual void OnCanceled(object sender, EditorSaveArgs<TModel> e)
         {
         }
-        public virtual void Show()
+
+        private IDialog _dialog;
+        public virtual async void Show()
         {
-            _dialogService.ShowEditorDialog(this);
+            if (_dialog == null)
+                _dialog = await _dialogService.CreateDialog(Title, this);
+            _dialog.Show();
         }
     }
 
-    public abstract class EditorViewModelBase<TEditor, TView, TRepository, TModel,TKey> : EditorViewModelBase<TEditor, TView, TModel>
+    public abstract class EditorViewModelBase<TEditor, TView, TRepository, TModel, TKey> : EditorViewModelBase<TEditor, TView, TModel>
         where TView : UIElement, new()
         where TModel : class, IUniqueObject<TKey>, new()
         where TRepository : class, ICRUDRepository<TModel, TKey>

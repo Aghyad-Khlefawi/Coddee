@@ -17,7 +17,7 @@ namespace Coddee.WPF
         
         void Add();
         void Cancel();
-        Task<bool> Save();
+        Task Save();
         void Show();
     }
 

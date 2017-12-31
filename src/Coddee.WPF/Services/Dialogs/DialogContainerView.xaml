@@ -1,0 +1,93 @@
+﻿<UserControl x:Class="Coddee.WPF.Services.Dialogs.DialogContainerView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:Coddee.WPF.Services.Dialogs"
+             xmlns:global="clr-namespace:"
+             xmlns:coddee="http://schemas.Coddee.com/2017/WPF"
+             mc:Ignorable="d"
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../../Resources.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <local:DialogContainerViewModel x:Key="designData"
+                                            Title="Dialog"
+                                            CanMinimize="True"
+                                            VerticalAlignment="Center"
+                                            HorizontalAlignment="Center" />
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid d:DataContext="{StaticResource designData}">
+        <Border Background="Black"
+                Opacity=".6" />
+        <Border 
+            BorderBrush="{DynamicResource ApplicationAccentColorDarker}"
+            BorderThickness="1"
+            Margin="0 20"
+            MinWidth="300"
+            VerticalAlignment="{Binding VerticalAlignment}"
+            HorizontalAlignment="{Binding HorizontalAlignment}">
+            <DockPanel >
+                <Border DockPanel.Dock="Top"
+                    Background="{DynamicResource ApplicationAccentColor}"
+                    BorderBrush="{DynamicResource ApplicationAccentColorDarker}"
+                    BorderThickness="0 0 0 1"
+                    Height="30">
+                    <DockPanel>
+                        <Button 
+                            Visibility="{Binding CanMinimize,Converter={StaticResource BoolToVisibilityConverter}}"
+                            Command="{Binding MinimizeCommand}"
+                            DockPanel.Dock="Right" Width="30"
+                                Margin="2">
+                            <Path Style="{StaticResource Shape_Minimize}" VerticalAlignment="Bottom"
+                              Height="3"
+                              Width="15" 
+                              Margin="0 0 0 -5" />
+                        </Button>
+                        <Label Content="{Binding Title}"
+                           Foreground="White"
+                           VerticalAlignment="Center" />
+                    </DockPanel>
+                </Border>
+                <Border
+                Background="WhiteSmoke">
+                    <DockPanel
+                    Margin="10 10">
+                        <ItemsControl DockPanel.Dock="Bottom"
+                                      Margin="0 10 0 0"
+                                  ItemsSource="{Binding Commands}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <DockPanel LastChildFill="False" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemContainerStyle>
+                                <Style>
+                                    <Setter Property="DockPanel.Dock"
+                                        Value="{Binding HorizontalPosition}" />
+                                </Style>
+                            </ItemsControl.ItemContainerStyle>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Button Style="{StaticResource DialogButton}"
+                                        IsEnabled="{Binding CanExecute}"
+                                        Content="{Binding Title}"
+                                        Margin="5"
+                                        Command="{Binding Command}" />
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        <ContentPresenter 
+                        VerticalAlignment="{Binding ContentVerticalAlignment}"
+                        HorizontalAlignment="{Binding ContentHorizontalAlignment}"
+                        Content="{Binding Content}"  Margin="10 10 0 10" />
+                    </DockPanel>
+                </Border>
+            </DockPanel>
+        </Border>
+    </Grid>
+
+</UserControl>
