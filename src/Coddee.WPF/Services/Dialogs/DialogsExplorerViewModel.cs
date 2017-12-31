@@ -18,7 +18,7 @@ namespace Coddee.WPF.Services.Dialogs
         private IReactiveCommand _showCommand;
         public IReactiveCommand ShowCommand
         {
-            get { return _showCommand ?? (_showCommand = CreateReactiveCommand<DialogsExplorerViewModel,DialogContainerViewModel>(this, Show)); }
+            get { return _showCommand ?? (_showCommand = CreateReactiveCommand<DialogsExplorerViewModel, DialogContainerViewModel>(this, Show)); }
             set { SetProperty(ref _showCommand, value); }
         }
 
@@ -47,6 +47,13 @@ namespace Coddee.WPF.Services.Dialogs
         {
             get { return _isOpen; }
             set { SetProperty(ref _isOpen, value); }
+        }
+
+        private int _dialogsCount;
+        public int DialogsCount
+        {
+            get { return _dialogsCount; }
+            set { SetProperty(ref _dialogsCount, value); }
         }
 
         protected override void OnDesignMode()
@@ -86,6 +93,11 @@ namespace Coddee.WPF.Services.Dialogs
         {
             await base.OnInitialization();
             Dialogs = AsyncObservableCollection<DialogContainerViewModel>.Create(_dialogService.GetMinimizedDialogs().Cast<DialogContainerViewModel>());
+            DialogsCount = Dialogs.Count;
+            Dialogs.CollectionChanged += delegate
+            {
+                DialogsCount = Dialogs.Count;
+            };
             _dialogService.DialogStateChanged += DialogServiceDialogStateChanged;
             _dialogService.DialogClosed += DialogClosed;
         }
