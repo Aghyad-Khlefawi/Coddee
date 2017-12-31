@@ -40,7 +40,7 @@
                     <ScrollViewer VerticalScrollBarVisibility="Disabled"
                                   HorizontalScrollBarVisibility="Auto">
                         <ItemsControl Margin="5"
-                                  MinHeight="80"
+                                  MinHeight="120"
                                   ItemsSource="{Binding Dialogs}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
@@ -55,19 +55,35 @@
                                         CommandParameter="{Binding}">
                                         <Button.Template>
                                             <ControlTemplate>
-                                                <Grid>
+                                                <Grid  x:Name="TemplateRoot">
                                                     <Border Background="WhiteSmoke"
                                                         BorderThickness="1"
-                                                        BorderBrush="DimGray" />
-                                                    <DockPanel Width="200"
-
-                                                           Height="80">
-                                                        <Border DockPanel.Dock="Bottom"
-                                                            Background="DimGray">
-                                                            <TextBlock Foreground="White"
-                                                                   HorizontalAlignment="Center"
+                                                        BorderBrush="Gray" />
+                                                    <DockPanel Width="200">
+                                                        <DockPanel DockPanel.Dock="Top" Height="25">
+                                                            <Button Command="{Binding CloseCommand}" Background="Gray" DockPanel.Dock="Right">
+                                                                <Button.Style>
+                                                                    <Style TargetType="Button"
+                                                                           BasedOn="{StaticResource HighlightButton}">
+                                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                                        <Style.Triggers>
+                                                                            <DataTrigger Binding="{Binding ElementName=TemplateRoot,Path=IsMouseOver}"
+                                                                                     Value="True">
+                                                                                <Setter Property="Visibility" Value="Visible"/>
+                                                                            </DataTrigger>
+                                                                        </Style.Triggers>
+                                                                    </Style>
+                                                                </Button.Style>
+                                                                <Path Style="{StaticResource Shape_Exit}"/>
+                                                            </Button>
+                                                            <Border Background="DimGray">
+                                                                <TextBlock Foreground="White"
+                                                                           VerticalAlignment="Center"
+                                                                           Margin="5 0"
+                                                                           TextTrimming="CharacterEllipsis"
                                                                    Text="{Binding Title}" />
-                                                        </Border>
+                                                            </Border>
+                                                        </DockPanel>
                                                         <Border Margin="10">
                                                             <Border.Background>
                                                                 <VisualBrush Stretch="Uniform" Visual="{Binding Content}" />

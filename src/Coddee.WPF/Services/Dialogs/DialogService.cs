@@ -33,6 +33,7 @@ namespace Coddee.Services.Dialogs
         }
 
         public event EventHandler<IDialog> DialogStateChanged;
+        public event EventHandler<IDialog> DialogClosed;
 
         public async Task<IDialog> CreateDialog(string title, UIElement content, DialogOptions options, params ActionCommand[] commands)
         {
@@ -75,6 +76,7 @@ namespace Coddee.Services.Dialogs
             {
                 MinimizedDialogs.RemoveIfExists(dialog);
                 ActiveDialogs.RemoveIfExists(dialog);
+                DialogClosed?.Invoke(this, dialog);
             }
         }
 

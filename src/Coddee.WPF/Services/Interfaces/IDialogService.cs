@@ -14,6 +14,7 @@ namespace Coddee.Services
     public interface IDialogService
     {
         event EventHandler<IDialog> DialogStateChanged;
+        event EventHandler<IDialog> DialogClosed;
 
 
         Task<IDialog> CreateDialog(string title, UIElement content, DialogOptions options, params ActionCommand[] actions);

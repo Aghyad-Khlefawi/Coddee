@@ -103,7 +103,14 @@ namespace Coddee.WPF.Services.Dialogs
             get { return _showCommand ?? (_showCommand = CreateReactiveCommand(Show)); }
             set { SetProperty(ref _showCommand, value); }
         }
-        
+
+        private IReactiveCommand _closeCommand;
+        public IReactiveCommand CloseCommand
+        {
+            get { return _closeCommand ?? (_closeCommand = CreateReactiveCommand(Close)); }
+            set { SetProperty(ref _closeCommand, value); }
+        }
+
         public void Minimize()
         {
             SetState(DialogState.Minimized);

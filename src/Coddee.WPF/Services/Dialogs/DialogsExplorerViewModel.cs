@@ -87,6 +87,13 @@ namespace Coddee.WPF.Services.Dialogs
             await base.OnInitialization();
             Dialogs = AsyncObservableCollection<DialogContainerViewModel>.Create(_dialogService.GetMinimizedDialogs().Cast<DialogContainerViewModel>());
             _dialogService.DialogStateChanged += DialogServiceDialogStateChanged;
+            _dialogService.DialogClosed += DialogClosed;
+        }
+
+        private void DialogClosed(object sender, Coddee.Services.Dialogs.IDialog e)
+        {
+            var dialog = e as DialogContainerViewModel;
+            Dialogs.RemoveIfExists(dialog);
         }
 
         private void DialogServiceDialogStateChanged(object sender, Coddee.Services.Dialogs.IDialog e)
