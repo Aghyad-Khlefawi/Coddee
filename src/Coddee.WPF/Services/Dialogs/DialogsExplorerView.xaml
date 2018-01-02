@@ -17,9 +17,7 @@
     </UserControl.Resources>
     <Grid d:DataContext="{StaticResource designData}">
         <Button x:Name="ExplorerButton"
-                Height="31"
-                Command="{Binding ToggleCommand}"
-                VerticalAlignment="Top">
+                Command="{Binding ToggleCommand}">
             <StackPanel Orientation="Horizontal">
                 <TextBlock Foreground="{DynamicResource ApplicationAccentColorDarker}"
                            Text="{Binding DialogsCount}"
@@ -29,17 +27,18 @@
                            FontSize="14"
                            Margin="5 0"/>
                 <Path Style="{StaticResource Shape_Dialogs}"
-                  VerticalAlignment="Center" />
+                  VerticalAlignment="Center" 
+                      Height="20"/>
             </StackPanel>
         </Button>
         <Popup Placement="AbsolutePoint"
-               VerticalOffset="35"
+               VerticalOffset="{Binding VerticalOffset}"
                PopupAnimation="Fade"
-               PlacementTarget="{Binding ElementName=ExplorerButton}"
                AllowsTransparency="True"
                StaysOpen="False"
+               HorizontalOffset="{Binding HorizontalOffset}"
                IsOpen="{Binding IsOpen}"
-               Width="{Binding RelativeSource={RelativeSource AncestorType=Window,Mode=FindAncestor},Path=Width,FallbackValue=300}">
+               Width="{Binding Width}">
             <Border BorderThickness="0 0 0 2"
                     BorderBrush="Black">
                 <Grid>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using Coddee.Collections;
@@ -40,6 +41,27 @@ namespace Coddee.WPF.Services.Dialogs
         {
             get { return _toggleCommand ?? (_toggleCommand = CreateReactiveCommand(Toggle)); }
             set { SetProperty(ref _toggleCommand, value); }
+        }
+
+        private double _horizontalOffset;
+        public double HorizontalOffset
+        {
+            get { return _horizontalOffset; }
+            set { SetProperty(ref _horizontalOffset, value); }
+        }
+
+        private double _verticalOffset;
+        public double VerticalOffset
+        {
+            get { return _verticalOffset; }
+            set { SetProperty(ref _verticalOffset, value); }
+        }
+
+        private double _width;
+        public double Width
+        {
+            get { return _width; }
+            set { SetProperty(ref _width, value); }
         }
 
         private bool _isOpen;
@@ -100,6 +122,34 @@ namespace Coddee.WPF.Services.Dialogs
             };
             _dialogService.DialogStateChanged += DialogServiceDialogStateChanged;
             _dialogService.DialogClosed += DialogClosed;
+
+            var shell = (Window)Resolve<IShell>();
+            SetPopupOffset(shell);
+            ExecuteOnUIContext(() =>
+            {
+                shell.SizeChanged += delegate
+                {
+                    SetPopupOffset(shell);
+                };
+                shell.StateChanged += delegate
+                {
+                    SetPopupOffset(shell);
+                };
+                shell.LocationChanged += delegate
+                {
+                    SetPopupOffset(shell);
+                };
+            });
+        }
+
+        private void SetPopupOffset(Window shell)
+        {
+            ExecuteOnUIContext(() =>
+            {
+                HorizontalOffset = shell.Left;
+                VerticalOffset = shell.Top + 35;
+                Width = shell.ActualWidth;
+            });
         }
 
         private void DialogClosed(object sender, Coddee.Services.Dialogs.IDialog e)

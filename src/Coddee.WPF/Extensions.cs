@@ -10,8 +10,11 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using Coddee.Collections;
+using Coddee.Services;
+using Coddee.Services.Dialogs;
 using Coddee.Validation;
 using Coddee.WPF.Commands;
+using Coddee.WPF.Services.Dialogs;
 
 namespace Coddee.WPF
 {
@@ -31,13 +34,13 @@ namespace Coddee.WPF
             };
         }
 
-      
+
         public static Task InitializeAll(this IEnumerable<IViewModel> items, bool forceInitialization = false)
         {
             return Task.WhenAll(items.Where(e => forceInitialization || !e.IsInitialized).Select(e => e.Initialize()));
         }
 
-        
+
         public static IEnumerable<SelectableItem<T>> AsSelectable<T>(this IEnumerable<T> collection)
         {
             return collection.Select(e => new SelectableItem<T>(e));
@@ -101,6 +104,111 @@ namespace Coddee.WPF
         public static async Task<AsyncObservableCollectionView<T>> ToAsyncObservableCollectionView<T>(this Task<IEnumerable<T>> collection, FilterHandler<T> filterPredicate)
         {
             return AsyncObservableCollectionView<T>.Create(filterPredicate, await collection);
+        }
+
+        public static IDialog ShowDialog(this IDialogService dialogs, string title, UIElement content, DialogOptions options, params ActionCommand[] actions)
+        {
+            var dialog = dialogs.CreateDialog(title, content, options, actions);
+            dialog.Show();
+            return dialog;
+        }
+
+        public static IDialog ShowDialog(this IDialogService dialogs, UIElement content, DialogOptions options, params ActionCommand[] actions)
+        {
+            var dialog = dialogs.CreateDialog(content, options, actions);
+            dialog.Show();
+            return dialog;
+        }
+
+        public static IDialog ShowDialog(this IDialogService dialogs, string title, UIElement content, params ActionCommand[] actions)
+        {
+            var dialog = dialogs.CreateDialog(title, content, actions);
+            dialog.Show();
+            return dialog;
+        }
+
+        public static IDialog ShowDialog(this IDialogService dialogs, UIElement content, params ActionCommand[] actions)
+        {
+            var dialog = dialogs.CreateDialog(content, actions);
+            dialog.Show();
+            return dialog;
+        }
+
+        public static IDialog ShowDialog(this IDialogService dialogs, string title, IEditorViewModel editor, DialogOptions options)
+        {
+            var dialog = dialogs.CreateDialog(title, editor, options);
+            dialog.Show();
+            return dialog;
+        }
+
+        public static IDialog ShowDialog(this IDialogService dialogs, IEditorViewModel editor, DialogOptions options)
+        {
+            var dialog = dialogs.CreateDialog(editor, options);
+            dialog.Show();
+            return dialog;
+        }
+
+        public static IDialog ShowDialog(this IDialogService dialogs, string title, IEditorViewModel editor)
+        {
+            var dialog = dialogs.CreateDialog(title, editor);
+            dialog.Show();
+            return dialog;
+        }
+
+        public static IDialog ShowDialog(this IDialogService dialogs, IEditorViewModel editor)
+        {
+            var dialog = dialogs.CreateDialog(editor);
+            dialog.Show();
+            return dialog;
+        }
+
+        public static IDialog ShowConfirmation(this IDialogService dialogs, string message, Action yesAction, Action noAction = null)
+        {
+            var dialog = dialogs.CreateConfirmation(message, yesAction, noAction);
+            dialog.Show();
+            return dialog;
+        }
+
+        public static IDialog ShowDialog(this IDialogService dialogs, IPresentable presentable)
+        {
+            var dialog = dialogs.CreateDialog(presentable);
+            dialog.Show();
+            return dialog;
+        }
+
+        public static IDialog ShowDialog(this IDialogService dialogs, IPresentable presentable, DialogOptions options)
+        {
+            var dialog = dialogs.CreateDialog(presentable, options);
+            dialog.Show();
+            return dialog;
+        }
+
+        public static IDialog ShowDialog(this IDialogService dialogs, IPresentable presentable, DialogOptions options, params ActionCommand[] actions)
+        {
+            var dialog = dialogs.CreateDialog(presentable, options, actions);
+            dialog.Show();
+            return dialog;
+        }
+
+        public static IDialog ShowDialog(this IDialogService dialogs,string title, IPresentable presentable)
+        {
+            var dialog = dialogs.CreateDialog(title,presentable);
+            dialog.Show();
+            return dialog;
+        }
+
+        public static IDialog ShowDialog(this IDialogService dialogs, string title, IPresentable presentable, DialogOptions options)
+        {
+            var dialog = dialogs.CreateDialog(title, presentable, options);
+            dialog.Show();
+            return dialog;
+        }
+
+        public static IDialog ShowDialog(this IDialogService dialogs, string title, IPresentable presentable, DialogOptions options, params ActionCommand[] actions)
+        {
+            var dialog = dialogs.CreateDialog(title, presentable, options, actions);
+            dialog.Show();
+            return dialog;
         }
     }
 }

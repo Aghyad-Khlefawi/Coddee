@@ -16,7 +16,15 @@ namespace Coddee.WPF.Services.Dialogs
             CanMinimize = false,
             InitialState = DialogState.Active
         };
-
+        public static DialogOptions StretchedContent = new DialogOptions
+        {
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            VerticalAlignment = VerticalAlignment.Center,
+            ContentHorizontalAlignment = HorizontalAlignment.Stretch,
+            ContentVerticalAlignment = VerticalAlignment.Stretch,
+            CanMinimize = false,
+            InitialState = DialogState.Active
+        };
         public static DialogOptions DefaultMinimizable = new DialogOptions
         {
             HorizontalAlignment = HorizontalAlignment.Center,
@@ -26,7 +34,15 @@ namespace Coddee.WPF.Services.Dialogs
             CanMinimize = true,
             InitialState = DialogState.Active
         };
-
+        public static DialogOptions StretchedContentMinimizable = new DialogOptions
+        {
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+            VerticalAlignment = VerticalAlignment.Center,
+            ContentHorizontalAlignment = HorizontalAlignment.Stretch,
+            ContentVerticalAlignment = VerticalAlignment.Stretch,
+            CanMinimize = true,
+            InitialState = DialogState.Active
+        };
         public VerticalAlignment ContentVerticalAlignment { get; set; }
         public HorizontalAlignment ContentHorizontalAlignment { get; set; }
         public VerticalAlignment VerticalAlignment { get; set; }

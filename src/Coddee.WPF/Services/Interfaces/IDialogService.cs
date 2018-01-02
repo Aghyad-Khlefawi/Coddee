@@ -17,10 +17,23 @@ namespace Coddee.Services
         event EventHandler<IDialog> DialogClosed;
 
 
-        Task<IDialog> CreateDialog(string title, UIElement content, DialogOptions options, params ActionCommand[] actions);
-        Task<IDialog> CreateDialog(string title, UIElement content,  params ActionCommand[] actions);
-        Task<IDialog> CreateDialog(string title, IEditorViewModel editor, DialogOptions options);
-        Task<IDialog> CreateDialog(string title, IEditorViewModel editor);
+        IDialog CreateDialog(string title, UIElement content, DialogOptions options, params ActionCommand[] actions);
+        IDialog CreateDialog(UIElement content, DialogOptions options, params ActionCommand[] actions);
+        IDialog CreateDialog(string title, UIElement content, params ActionCommand[] actions);
+        IDialog CreateDialog(UIElement content, params ActionCommand[] actions);
+        IDialog CreateDialog(string title, IEditorViewModel editor, DialogOptions options);
+        IDialog CreateDialog(IEditorViewModel editor, DialogOptions options);
+        IDialog CreateDialog(string title, IEditorViewModel editor);
+        IDialog CreateDialog(IEditorViewModel editor);
+
+        IDialog CreateDialog(IPresentable presentable);
+        IDialog CreateDialog(string title,IPresentable presentable);
+        IDialog CreateDialog(IPresentable presentable, DialogOptions options);
+        IDialog CreateDialog(string title,IPresentable presentable, DialogOptions options);
+        IDialog CreateDialog(IPresentable presentable, DialogOptions options, params ActionCommand[] actions);
+        IDialog CreateDialog(string title,IPresentable presentable, DialogOptions options, params ActionCommand[] actions);
+
+        IDialog CreateConfirmation(string message, Action yesAction, Action noAction = null);
         void Initialize(Region dialogRegion);
 
 

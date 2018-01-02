@@ -2,6 +2,7 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
 using System;
+using Coddee.Services;
 
 namespace Coddee.WPF.Services.Dialogs
 {
@@ -14,5 +15,7 @@ namespace Coddee.WPF.Services.Dialogs
         public CloseActionCommand(string title, Action aditionalAction) : base(title, aditionalAction)
         {
         }
+
+        public static CloseActionCommand Default = new CloseActionCommand(LocalizationManager.DefaultLocalizationManager["Close"]);
     }
 }

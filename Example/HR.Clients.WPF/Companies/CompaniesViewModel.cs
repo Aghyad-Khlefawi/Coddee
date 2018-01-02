@@ -72,37 +72,36 @@ namespace HR.Clients.WPF.Companies
             _employeeEditor.Edit(Employees.SelectedItem, Companies.SelectedItem);
         }
 
-        private async void AddEmployee()
+        private void AddEmployee()
         {
             _employeeEditor.Add(Companies.SelectedItem);
-            var dialog = await Resolve<IDialogService>().CreateDialog("Add employee", _employeeEditor, DialogOptions.DefaultMinimizable);
+            var dialog = Resolve<IDialogService>().CreateDialog("Add employee", _employeeEditor, DialogOptions.DefaultMinimizable);
             dialog.Show();
         }
         private void DeleteCompany()
         {
-            //TODO update
-            //Resolve<IDialogService>()
-            //    .ShowConfirmation($"Are you sure you want to delete '{Companies.SelectedItem.Name}'?",
-            //                      async () =>
-            //                      {
-            //                          await Resolve<ICompanyRepository>().DeleteItem(Companies.SelectedItem);
-            //                          Companies.Remove(Companies.SelectedItem);
-            //                      });
+            Resolve<IDialogService>()
+               .CreateConfirmation($"Are you sure you want to delete '{Companies.SelectedItem.Name}'?",
+                                 async () =>
+                                 {
+                                     await Resolve<ICompanyRepository>().DeleteItem(Companies.SelectedItem);
+                                     Companies.Remove(Companies.SelectedItem);
+                                 }).Show();
         }
 
         private void EditCompany()
         {
             _companyEditor.Edit(Companies.SelectedItem);
             //TODO update
-            //Resolve<IDialogService>().ShowEditorDialog(_companyEditor);
+            Resolve<IDialogService>().CreateDialog("Edit company", _companyEditor).Show();
         }
 
         private IDialog _companyDialog;
-        private async void AddCompany()
+        private void AddCompany()
         {
             _companyEditor.Add();
             if (_companyDialog == null)
-                _companyDialog = await Resolve<IDialogService>().CreateDialog("Add company", _companyEditor, DialogOptions.DefaultMinimizable);
+                _companyDialog = Resolve<IDialogService>().CreateDialog("Add company", _companyEditor, DialogOptions.DefaultMinimizable);
             _companyDialog.Show();
         }
 

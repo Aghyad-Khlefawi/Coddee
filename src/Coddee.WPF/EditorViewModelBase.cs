@@ -71,7 +71,7 @@ namespace Coddee.WPF
             OperationType = OperationType.Add;
             Clear();
             OnAdd();
-            FullTitle = _localization["AddTemplate"].Replace("$Name$", Title);
+            FullTitle = _localization["AddTemplate"].Replace("$Name$", _localization[Title]);
         }
 
         public virtual void Clear()
@@ -84,7 +84,7 @@ namespace Coddee.WPF
             FillingValues = true;
             OperationType = OperationType.Edit;
             Clear();
-            FullTitle = _localization["EditTemplate"].Replace("$Name$", Title);
+            FullTitle = _localization["EditTemplate"].Replace("$Name$", _localization[Title]);
             EditedItem = _mapper.Map<TModel>(item);
             OnEdit(item);
             FillingValues = false;
@@ -174,10 +174,10 @@ namespace Coddee.WPF
         }
 
         private IDialog _dialog;
-        public virtual async void Show()
+        public virtual void Show()
         {
             if (_dialog == null)
-                _dialog = await _dialogService.CreateDialog(Title, this);
+                _dialog = _dialogService.CreateDialog(Title, this);
             _dialog.Show();
         }
     }

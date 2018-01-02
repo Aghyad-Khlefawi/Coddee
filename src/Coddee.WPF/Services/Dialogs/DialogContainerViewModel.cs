@@ -16,6 +16,11 @@ namespace Coddee.WPF.Services.Dialogs
 {
     public class DialogContainerViewModel : ViewModelBase<DialogContainerView>, IDialog
     {
+        public DialogContainerViewModel()
+        {
+            Commands = AsyncObservableCollection<ActionCommandWrapper>.Create();
+        }
+
         public event EventHandler Closed;
         public event EventHandler<DialogState> StateChanged;
 
@@ -115,12 +120,7 @@ namespace Coddee.WPF.Services.Dialogs
         {
             SetState(DialogState.Minimized);
         }
-
-        protected override async Task OnInitialization()
-        {
-            await base.OnInitialization();
-            Commands = AsyncObservableCollection<ActionCommandWrapper>.Create();
-        }
+        
 
         public void SetCommands(params ActionCommand[] commands)
         {

@@ -13,8 +13,8 @@ namespace Coddee.WPF
     public interface IEditorViewModel : IViewModel,IPresentable
     {
         string Title { get; set; }
+        string FullTitle { get; }
 
-        
         void Add();
         void Cancel();
         Task Save();

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using Coddee.Collections;
 using Coddee.WPF;
 using Coddee.WPF.Services.Dialogs;
@@ -35,11 +36,10 @@ namespace Coddee.Services.Dialogs
         public event EventHandler<IDialog> DialogStateChanged;
         public event EventHandler<IDialog> DialogClosed;
 
-        public async Task<IDialog> CreateDialog(string title, UIElement content, DialogOptions options, params ActionCommand[] commands)
+        public IDialog CreateDialog(string title, UIElement content, DialogOptions options, params ActionCommand[] commands)
         {
             var container = CreateViewModel<DialogContainerViewModel>();
             container.ZIndex = _maxZindex;
-            await container.Initialize();
             container.SetDialogOptions(options);
             container.SetCommands(commands);
             container.SetContent(content);
@@ -49,25 +49,88 @@ namespace Coddee.Services.Dialogs
             Interlocked.Increment(ref _maxZindex);
             return container;
         }
+        public IDialog CreateDialog(UIElement content, DialogOptions options, params ActionCommand[] commands)
+        {
+            return CreateDialog(null, content, options, commands);
+        }
 
-        public Task<IDialog> CreateDialog(string title, UIElement content, params ActionCommand[] actions)
+        public IDialog CreateDialog(string title, UIElement content, params ActionCommand[] actions)
         {
             return CreateDialog(title, content, DialogOptions.Default, actions);
         }
-
-        public async Task<IDialog> CreateDialog(string title, IEditorViewModel editor, DialogOptions options)
+        public IDialog CreateDialog(UIElement content, params ActionCommand[] actions)
         {
-            var dialog = await CreateDialog(title,
+            return CreateDialog(null, content, actions);
+        }
+
+        public IDialog CreateDialog(string title, IEditorViewModel editor, DialogOptions options)
+        {
+            var dialog = CreateDialog(title,
                                 editor.GetView(),
                                 options,
                                 new CloseActionCommand(_localization.GetValue("Save"), async () => { await editor.Save(); }),
                                 new CloseActionCommand(_localization.GetValue("Cancel")));
             return dialog;
         }
+        public IDialog CreateDialog(IEditorViewModel editor, DialogOptions options)
+        {
+            return CreateDialog(editor.FullTitle, editor, options);
+        }
 
-        public Task<IDialog> CreateDialog(string title, IEditorViewModel editor)
+        public IDialog CreateDialog(string title, IEditorViewModel editor)
         {
             return CreateDialog(title, editor, DialogOptions.Default);
+        }
+        public IDialog CreateDialog(IEditorViewModel editor)
+        {
+            return CreateDialog(editor.FullTitle, editor);
+        }
+
+        public IDialog CreateDialog(IPresentable presentable)
+        {
+            return CreateDialog(null, presentable, DialogOptions.Default);
+        }
+        public IDialog CreateDialog(IPresentable presentable, DialogOptions options)
+        {
+            return CreateDialog(null, presentable, options);
+        }
+        public IDialog CreateDialog(IPresentable presentable, DialogOptions options, params ActionCommand[] actions)
+        {
+            return CreateDialog(null,presentable, options, actions);
+        }
+
+        public IDialog CreateDialog(string title,IPresentable presentable)
+        {
+            return CreateDialog(title, presentable.GetView(), DialogOptions.Default);
+        }
+        public IDialog CreateDialog(string title, IPresentable presentable, DialogOptions options)
+        {
+            return CreateDialog(title, presentable.GetView(), options);
+        }
+        public IDialog CreateDialog(string title, IPresentable presentable, DialogOptions options, params ActionCommand[] actions)
+        {
+            return CreateDialog(title,presentable.GetView(), options, actions);
+        }
+
+        public IDialog CreateConfirmation(string message, Action yesAction, Action noAction = null)
+        {
+            return CreateDialog(_localization["Confirmation"],
+                                new TextBlock
+                                {
+                                    TextAlignment = TextAlignment.Center,
+                                    Text = message
+                                },
+                                new DialogOptions
+                                {
+                                    HorizontalAlignment = HorizontalAlignment.Center,
+                                    VerticalAlignment = VerticalAlignment.Center,
+                                    ContentVerticalAlignment = VerticalAlignment.Center,
+                                    ContentHorizontalAlignment = HorizontalAlignment.Center,
+                                    CanMinimize = false,
+                                    InitialState = DialogState.Active
+                                },
+                                new CloseActionCommand(_localization["No"], noAction),
+                                new CloseActionCommand(_localization["Yes"], yesAction));
         }
 
         private void ContainerClosed(object sender, EventArgs e)

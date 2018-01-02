@@ -159,6 +159,8 @@ namespace Coddee.Services
         {
             if (string.IsNullOrEmpty(culture))
                 culture = DefaultCulture;
+            if (string.IsNullOrWhiteSpace(key))
+                return null;
 
             if (!_localziationValues.ContainsKey(key) || !_localziationValues[key].ContainsKey(culture))
             {
