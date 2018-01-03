@@ -23,6 +23,7 @@ namespace HR.Data.LinqToSQL.Repositories
 
         public override async Task<Company> InsertItem(Company item)
         {
+            throw new DBException(0, "Test");
             var res = await base.InsertItem(item);
             return await Execute(db => { return _mapper.Map<Company>(db.CompaniesViews.First(e => e.ID == res.ID)); });
         }

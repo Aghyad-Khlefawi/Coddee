@@ -15,12 +15,13 @@ namespace Coddee.Data
         }
 
         public APIException(Exception inner)
-            : base(0, inner.Message)
+            : base(0, inner.Message, inner)
         {
             if (inner is DBException dbException)
                 Code = dbException.Code;
 
             InnerExceptionSeriailized = JsonConvert.SerializeObject(inner);
+            InnerExceptionType = inner.GetType();
         }
 
         public APIException(int code)
@@ -32,11 +33,13 @@ namespace Coddee.Data
         {
         }
 
-        public APIException(int code, string message, Exception inner) : base(code, message)
+        public APIException(int code, string message, Exception inner) : base(code, message, inner)
         {
             InnerExceptionSeriailized = JsonConvert.SerializeObject(inner);
+            InnerExceptionType = inner.GetType();
         }
 
         public string InnerExceptionSeriailized { get; set; }
+        public Type InnerExceptionType { get; set; }
     }
 }

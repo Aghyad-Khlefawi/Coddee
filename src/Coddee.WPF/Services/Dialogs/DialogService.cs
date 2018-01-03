@@ -68,8 +68,8 @@ namespace Coddee.Services.Dialogs
             var dialog = CreateDialog(title,
                                 editor.GetView(),
                                 options,
-                                new CloseActionCommand(_localization.GetValue("Save"), async () => { await editor.Save(); }),
-                                new CloseActionCommand(_localization.GetValue("Cancel")));
+                                new CloseActionCommand(_localization.GetValue("Cancel")),
+                                new CloseActionCommand(_localization.GetValue("Save"), async () => { await editor.Save(); }));
             return dialog;
         }
         public IDialog CreateDialog(IEditorViewModel editor, DialogOptions options)
@@ -96,10 +96,10 @@ namespace Coddee.Services.Dialogs
         }
         public IDialog CreateDialog(IPresentable presentable, DialogOptions options, params ActionCommand[] actions)
         {
-            return CreateDialog(null,presentable, options, actions);
+            return CreateDialog(null, presentable, options, actions);
         }
 
-        public IDialog CreateDialog(string title,IPresentable presentable)
+        public IDialog CreateDialog(string title, IPresentable presentable)
         {
             return CreateDialog(title, presentable.GetView(), DialogOptions.Default);
         }
@@ -109,7 +109,7 @@ namespace Coddee.Services.Dialogs
         }
         public IDialog CreateDialog(string title, IPresentable presentable, DialogOptions options, params ActionCommand[] actions)
         {
-            return CreateDialog(title,presentable.GetView(), options, actions);
+            return CreateDialog(title, presentable.GetView(), options, actions);
         }
 
         public IDialog CreateConfirmation(string message, Action yesAction, Action noAction = null)

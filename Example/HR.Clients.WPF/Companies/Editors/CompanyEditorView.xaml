@@ -16,8 +16,8 @@
         <controls:Form>
             <controls:FormField Title="Name">
                 <TextBox Text="{Binding Name,UpdateSourceTrigger=PropertyChanged}"
-                         controls:InputMask.InputType="Alphabetic"
-                         controls:Validate.FieldName="Name" />
+                         controls:Validate.FieldName="Name"
+                            controls:InputMask.InputType="Alphabetic" />
             </controls:FormField>
             <controls:FormField Title="State">
                 <ComboBox ItemsSource="{Binding States}"

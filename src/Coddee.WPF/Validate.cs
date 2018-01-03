@@ -17,28 +17,10 @@ namespace Coddee.WPF
                                                                 "FieldName",
                                                                 typeof(string),
                                                                 typeof(Validate),
-                                                                new PropertyMetadata(default(string),ValueSet));
-
-        private static void ValueSet(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            if (d is Control control)
-            {
-                var value = e.NewValue as string;
-                var binding = new MultiBinding
-                {
-                    Converter = new RequiredBrushConverter(),
-                    ConverterParameter = value
-                };
-                binding.Bindings.Add(new Binding(nameof(ViewModelBase.ValidationRules)));
-                binding.Bindings.Add(new Binding(value));
-                control.SetBinding(Control.BorderBrushProperty, binding);
-            }
-        }
-
+                                                                new PropertyMetadata(default(string)));
         public static void SetFieldName(DependencyObject element, string value)
         {
             element.SetValue(FieldNameProperty, value);
-            
         }
 
         public static string GetFieldName(DependencyObject element)

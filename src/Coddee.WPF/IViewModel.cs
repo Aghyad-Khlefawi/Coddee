@@ -22,13 +22,13 @@ namespace Coddee.WPF
         void SetViewModelOptions(ViewModelOptions options);
 
         event ViewModelEventHandler Initialized;
+        event ViewModelEventHandler<IEnumerable<IValidationRule>> ValidationRulesSet;
         event ViewModelEventHandler<ValidationResult> Validated;
 
         ValidationResult Validate(bool validateChildren = false);
         List<IValidationRule> ValidationRules { get; }
         ValidationResult ValidationResult { get; }
         bool IsValid { get; }
-
     }
 
     public interface IPresentableViewModel : IViewModel, IPresentable

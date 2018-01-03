@@ -87,6 +87,7 @@
     <Compile Include="Controls\GlowBorder.cs" />
     <Compile Include="Controls\RegionControl.cs" />
     <Compile Include="Controls\TabsPanel.cs" />
+    <Compile Include="Controls\ValidationBorder.cs" />
     <Compile Include="Controls\ViewModelPresenter.cs" />
     <Compile Include="Controls\WaterMarkPasswordBox.cs" />
     <Compile Include="Controls\WaterMarkTextBox.cs" />

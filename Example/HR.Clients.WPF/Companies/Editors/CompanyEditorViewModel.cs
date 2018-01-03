@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Coddee;
 using Coddee.Collections;
+using Coddee.Data;
 using Coddee.Services;
 using Coddee.Validation;
 using Coddee.WPF;
@@ -45,14 +46,35 @@ namespace HR.Clients.WPF.Companies.Editors
             base.SetValidationRules(validationRules);
             //validationRules.Add(ValidationRule.CreateWarningRule(() => Name));
             validationRules.Add(ValidationRule.CreateErrorRule(() => Name,
-                                           e => Validators.StringValidator(e) && Validators.StringLengthValidator(0, 10)(e),
-                                           () => ""));
+                                           () => "Name field is required"));
+        }
+
+        protected override async Task<Company> SaveItem()
+        {
+            try
+            {
+                return await base.SaveItem();
+            }
+            catch (DBException ex)
+            {
+                LogError(ex);
+                return null;
+            }
         }
 
         protected override async Task OnInitialization()
         {
             await base.OnInitialization();
             States = AsyncObservableCollection<State>.Create(await Resolve<IStateRepository>().GetItems());
+        }
+
+        protected override void OnDesignMode()
+        {
+            base.OnDesignMode();
+            ValidationRules = new List<IValidationRule>
+            {
+                ValidationRule.CreateWarningRule(()=>Name,e=>false)
+            };
         }
     }
 }

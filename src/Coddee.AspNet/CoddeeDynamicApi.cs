@@ -113,17 +113,44 @@ namespace Coddee.AspNet
                     }
                 }
 
-                var res = await action.Invoke(args);
-                context.Response.StatusCode = (int)HttpStatusCode.OK;
-                if (action.RetrunsValue)
+                try
                 {
-                    context.Response.ContentType = "application/json";
-                    await context.Response.WriteAsync(JsonConvert.SerializeObject(res));
+                    var res = await action.Invoke(args);
+                    context.Response.StatusCode = (int)HttpStatusCode.OK;
+                    if (action.RetrunsValue)
+                    {
+                        context.Response.ContentType = "application/json";
+                        await context.Response.WriteAsync(JsonConvert.SerializeObject(res));
+                    }
+                }
+                catch (Exception e)
+                {
+
+
+                    if (e.InnerException is DBException dbexc)
+                    {
+                        var apiEx = new APIException(dbexc);
+                        var ex = JsonConvert.SerializeObject(apiEx);
+                        context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                        await context.Response.WriteAsync(ex);
+                    }
+                    else if (e.InnerException is AggregateException aggregate && aggregate.InnerExceptions.First() is DBException adbexc)
+                    {
+                        var apiEx = new APIException(adbexc);
+                        var ex = JsonConvert.SerializeObject(apiEx);
+                        context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                        await context.Response.WriteAsync(ex);
+                    }
+                    else
+                    {
+                        var ex = JsonConvert.SerializeObject(new APIException(e));
+                        context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                        await context.Response.WriteAsync(ex);
+                    }
+
                 }
                 return true;
-
             }
-
             return false;
         }
 

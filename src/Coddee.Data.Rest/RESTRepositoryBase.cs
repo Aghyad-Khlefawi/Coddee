@@ -83,7 +83,14 @@ namespace Coddee.Data.REST
         protected virtual Exception HandleBadRequest(string ex)
         {
             var exception = JsonConvert.DeserializeObject<APIException>(ex);
-            return new DBException(exception.Code, exception.Message);
+            if (exception.InnerExceptionType == typeof(DBException))
+            {
+                var jo = JObject.Parse(exception.InnerExceptionSeriailized);
+                var code = exception.Code;
+                var message = jo[nameof(DBException.Message)].Value<string>();
+                return new DBException(code, message);
+            }
+            return exception;
         }
 
         /// <summary>
@@ -327,7 +334,7 @@ namespace Coddee.Data.REST
         where TModel : IUniqueObject<TKey>
     {
         protected readonly string _identifier;
-        
+
 
         protected RESTRepositoryBase()
         {
@@ -360,7 +367,7 @@ namespace Coddee.Data.REST
             base.SetSyncService(syncService, sendSyncRequests);
             ItemsChanged += OnItemsChanged;
         }
-        
+
         protected virtual void OnItemsChanged(object sender, RepositoryChangeEventArgs<TModel> e)
         {
             if (!e.FromSync && _sendSyncRequests)

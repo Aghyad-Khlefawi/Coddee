@@ -17,8 +17,10 @@ namespace Coddee.WPF.Controls
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(FormField), new FrameworkPropertyMetadata(typeof(FormField)));
             VisibilityProperty.OverrideMetadata(typeof(FormField), new PropertyMetadata(System.Windows.Visibility.Visible, OnVisiblityChanged));
+            ValidatedPropertyNameProperty = ValidationBorder.ValidatedPropertyNameProperty.AddOwner(typeof(FormField));
         }
 
+        public static readonly DependencyProperty ValidatedPropertyNameProperty;
 
         public static readonly DependencyProperty TitleProperty = DependencyProperty.Register(
             "Title", typeof(string), typeof(FormField), new PropertyMetadata(default(string)));
@@ -30,12 +32,25 @@ namespace Coddee.WPF.Controls
             "IsBusy", typeof(bool), typeof(FormField), new PropertyMetadata(default(bool)));
 
         public static readonly DependencyProperty ContentProperty = DependencyProperty.Register(
-            "Content", typeof(object), typeof(FormField), new PropertyMetadata(default(object)));
+            "Content", typeof(object), typeof(FormField), new PropertyMetadata(default(object), ContentPropertyChanged));
+
+        private static void ContentPropertyChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs dependencyPropertyChangedEventArgs)
+        {
+            if (dependencyObject is FormField formField)
+                formField.OnContentPropertyChanged();
+
+        }
+
         public static readonly DependencyProperty TitleStyleProperty = DependencyProperty.Register(
                                                         "TitleStyle",
                                                         typeof(Style),
                                                         typeof(FormField),
                                                         new PropertyMetadata(default(Style)));
+        public string ValidatedPropertyName
+        {
+            get { return (string)GetValue(ValidatedPropertyNameProperty); }
+            set { SetValue(ValidatedPropertyNameProperty, value); }
+        }
 
         public Style TitleStyle
         {
@@ -44,9 +59,11 @@ namespace Coddee.WPF.Controls
         }
         public object Content
         {
-            get { return (object)GetValue(ContentProperty); }
+            get { return GetValue(ContentProperty); }
             set { SetValue(ContentProperty, value); }
         }
+
+
         public bool IsBusy
         {
             get { return (bool)GetValue(IsBusyProperty); }
@@ -73,13 +90,27 @@ namespace Coddee.WPF.Controls
             base.OnApplyTemplate();
             TitleControl = (Label)GetTemplateChild("PART_TITLE");
             TitleControl.SizeChanged += (s, e) => TitleControlSet?.Invoke();
-        }
 
+            if (string.IsNullOrWhiteSpace(ValidatedPropertyName) && Content is Control control)
+            {
+                Dispatcher.Invoke(() =>
+                {
+                    var val = Validate.GetFieldName(control);
+                    if (!string.IsNullOrWhiteSpace(val))
+                        ValidatedPropertyName = val;
+                });
+            }
+        }
 
         private static void OnVisiblityChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (d is FormField field)
                 field.VisbilityChanged?.Invoke();
+        }
+
+        private void OnContentPropertyChanged()
+        {
+            
         }
     }
 

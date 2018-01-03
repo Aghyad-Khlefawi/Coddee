@@ -61,11 +61,12 @@ namespace Coddee.WPF
         public event EventHandler<UIElement> ViewCreated;
 
         private bool _viewsRegistered;
-        
-        public List<IValidationRule> ValidationRules { get; }
+
+        public List<IValidationRule> ValidationRules { get; protected set; }
         public ValidationResult ValidationResult { get; set; }
 
         public event ViewModelEventHandler Initialized;
+        public event ViewModelEventHandler<IEnumerable<IValidationRule>> ValidationRulesSet;
 
         private bool _isValid;
         public bool IsValid
@@ -323,6 +324,7 @@ namespace Coddee.WPF
         {
             ValidationRules.Clear();
             SetValidationRules(ValidationRules);
+            ValidationRulesSet?.Invoke(this, ValidationRules);
         }
 
         protected virtual void OnInitialized(IViewModel sender)
@@ -474,7 +476,7 @@ namespace Coddee.WPF
                 }
             }
 
-             IsValid = ValidationResult.IsValid;
+            IsValid = ValidationResult.IsValid;
             OnValidated(ValidationResult);
             _validating = false;
             return ValidationResult;
@@ -484,9 +486,9 @@ namespace Coddee.WPF
         {
             if (!validationRule.Validate())
             {
-                if(validationRule.ValidationType == ValidationType.Error)
+                if (validationRule.ValidationType == ValidationType.Error)
                     ValidationResult.Errors.Add(validationRule.GetMessage());
-                else 
+                else
                     ValidationResult.Warnings.Add(validationRule.GetMessage());
             }
         }
