@@ -199,8 +199,11 @@ namespace Coddee.CodeTools.Components.Localization
 
                 foreach (var key in _keys)
                 {
-                    var prop = new CodeSnippetTypeMember { Text = $"\tpublic string {key} {{ get; set; }}\n" };
-                    tagetClass.Members.Add(prop);
+                    //var prop = new CodeSnippetTypeMember { Text = $"\tpublic static string {key} = nameof({key});\n" };
+                    var stat = new CodeMemberField(typeof(string),key);
+                    stat.Attributes = MemberAttributes.Static | MemberAttributes.Public;
+                    stat.InitExpression = new CodeSnippetExpression($"nameof({key})");
+                    tagetClass.Members.Add(stat);
                 }
                 globalNamespace.Types.Add(tagetClass);
                 compileUnit.Namespaces.Add(globalNamespace);
