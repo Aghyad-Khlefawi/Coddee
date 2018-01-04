@@ -86,11 +86,14 @@ namespace Coddee.Services.Configuration
             {
                 json = sr.ReadToEnd();
             }
-            if (_cryptoProvider != null)
+            if (!string.IsNullOrWhiteSpace(json))
             {
-                json = _cryptoProvider.Decryptor(json);
+                if (_cryptoProvider != null)
+                {
+                    json = _cryptoProvider.Decryptor(json);
+                }
+                _configurations = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
             }
-            _configurations = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
             _isLoaded = true;
         }
 

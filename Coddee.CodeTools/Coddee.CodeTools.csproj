@@ -61,11 +61,25 @@
     </Compile>
     <Compile Include="CodeToolsMainViewModel.cs" />
     <Compile Include="CodeToolsMainViewPackage.cs" />
+    <Compile Include="Components\Data\CsProject.cs" />
+    <Compile Include="Components\Data\SqlLinqConfigurationView.xaml.cs">
+      <DependentUpon>SqlLinqConfigurationView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Components\Data\SqlLinqConfigurationViewModel.cs" />
+    <Compile Include="Components\Data\SqlLinqOperationsView.xaml.cs">
+      <DependentUpon>SqlLinqOperationsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Components\Data\SqlLinqOperationsViewModel.cs" />
     <Compile Include="Components\Events.cs" />
     <Compile Include="Components\Localization\LocalizationView.xaml.cs">
       <DependentUpon>LocalizationView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Components\Localization\LocalizationViewModel.cs" />
+    <Compile Include="Components\Data\SqlLinqView.xaml.cs">
+      <DependentUpon>SqlLinqView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Components\Data\SqlLinqViewModel.cs" />
+    <Compile Include="Components\VsViewModelBase.cs" />
     <Compile Include="ConfigKeys.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VsHelper.cs" />
@@ -207,7 +221,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Components\Data\SqlLinqConfigurationView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Components\Data\SqlLinqOperationsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Components\Localization\LocalizationView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Components\Data\SqlLinqView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

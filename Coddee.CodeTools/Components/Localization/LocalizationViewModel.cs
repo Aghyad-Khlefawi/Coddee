@@ -10,8 +10,6 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Xml;
 using Coddee.Collections;
 using Coddee.Services;
@@ -21,11 +19,11 @@ using Microsoft.Win32;
 
 namespace Coddee.CodeTools.Components.Localization
 {
-    public class LocalizationViewModel : ViewModelBase<LocalizationView>
+    public class LocalizationViewModel : VsViewModelBase<LocalizationView>
     {
         private readonly ISolutionHelper _solutionHelper;
-        private HashSet<string> _keys;
-        private object _updating = new object();
+        private readonly object _updating = new object();
+        private  HashSet<string> _keys;
 
         public LocalizationViewModel()
         {
@@ -223,7 +221,6 @@ namespace Coddee.CodeTools.Components.Localization
         {
             await base.OnInitialization();
             LocalizationResourceFiles = AsyncObservableCollection<LocalizationResourceFile>.Create();
-            _eventDispatcher.GetEvent<SolutionLoadedEvent>().Subscribe(SolutionLoaded);
             _filesWatchers = new List<FileSystemWatcher>();
             _keys = new HashSet<string>();
         }
@@ -231,7 +228,7 @@ namespace Coddee.CodeTools.Components.Localization
         private bool _loading;
         private IConfigurationFile _config;
 
-        private void SolutionLoaded(IConfigurationFile config)
+        protected override void SolutionLoaded(IConfigurationFile config)
         {
             _loading = true;
             _config = config;

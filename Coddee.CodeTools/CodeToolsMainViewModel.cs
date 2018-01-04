@@ -5,6 +5,7 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 using Coddee.CodeTools.Components;
+using Coddee.CodeTools.Components.Data;
 using Coddee.CodeTools.Components.Localization;
 using Coddee.Services;
 using Coddee.Services.Configuration;
@@ -30,15 +31,21 @@ namespace Coddee.CodeTools
         }
 
         private LocalizationViewModel _localizationVM;
-
         public LocalizationViewModel LocalizationVM
         {
             get { return _localizationVM; }
             set { SetProperty(ref _localizationVM, value); }
         }
 
-        private bool _isSolutionLoaded;
+        private SqlLinqViewModel _sqlLinq;
+        public SqlLinqViewModel SqlLinq
+        {
+            get { return _sqlLinq; }
+            set { SetProperty(ref _sqlLinq, value); }
+        }
 
+
+        private bool _isSolutionLoaded;
         public bool IsSolutionLoaded
         {
             get { return _isSolutionLoaded; }
@@ -61,9 +68,11 @@ namespace Coddee.CodeTools
         protected override async Task OnInitialization()
         {
             await base.OnInitialization();
-            LocalizationVM = await InitializeViewModel<LocalizationViewModel>();
-            IsSolutionLoaded = _solutionHelper.IsSolutionLoaded();
+            LocalizationVM = CreateViewModel<LocalizationViewModel>();
+            SqlLinq = CreateViewModel<SqlLinqViewModel>();
 
+            IsSolutionLoaded = _solutionHelper.IsSolutionLoaded();
+            await InitializeChildViewModels();
         }
 
         private void OnSolutionOpened()

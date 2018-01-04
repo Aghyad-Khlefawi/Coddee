@@ -8,6 +8,8 @@
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="pack://application:,,,/Coddee.WPF;component/Resources.xaml" />
     </ResourceDictionary.MergedDictionaries>
-    <Style TargetType="TextBox"></Style>
+    <Style TargetType="TextBox">
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+    </Style>
     <Style TargetType="Button"></Style>
 </ResourceDictionary>

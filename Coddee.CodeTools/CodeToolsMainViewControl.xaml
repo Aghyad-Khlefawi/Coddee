@@ -27,9 +27,11 @@
                Visibility="{Binding IsSolutionLoaded,Converter={StaticResource BoolToVisibilityConverter},ConverterParameter=R}"/>
         <TabControl 
             Visibility="{Binding IsSolutionLoaded,Converter={StaticResource BoolToVisibilityConverter}}">
-            <!--<TabItem Header="Code generator"/>-->
             <TabItem Header="Localization">
                 <controls:ViewModelPresenter ViewModel="{Binding LocalizationVM}"/>
+            </TabItem>
+            <TabItem Header="SQL LinQ">
+                <controls:ViewModelPresenter ViewModel="{Binding SqlLinq}"/>
             </TabItem>
         </TabControl>
     </Grid>

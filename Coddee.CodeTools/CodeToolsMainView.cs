@@ -75,7 +75,7 @@ namespace Coddee.CodeTools
             _vsHelper.Initialize();
 
             ViewModelBase.SetContainer(_container);
-            var vm = _container.Resolve<CodeToolsMainViewModel>();
+            var vm = _container.Resolve<IViewModelsManager>().CreateViewModel<CodeToolsMainViewModel>(null);
             vm.Initialize();
             var view = vm.GetDefaultView();
             var applicationConsole = _container.Resolve<IApplicationConsole>();

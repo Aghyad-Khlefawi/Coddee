@@ -1197,5 +1197,22 @@
             </Setter.Value>
         </Setter>
     </Style>
+    <Style TargetType="{x:Type local:FileBrowser}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:FileBrowser}">
+                    <DockPanel>
+                        <Grid>
+                            <Path VerticalAlignment="Center"  Style="{StaticResource Shape_Success}" Fill="ForestGreen" Height="15" Visibility="{TemplateBinding IsValidFile,Converter={StaticResource BoolToVisibilityConverter}}"/>
+                            <Path VerticalAlignment="Center"  Style="{StaticResource Shape_Error}" Fill="{StaticResource ErrorColor}" Height="15" Visibility="{TemplateBinding IsValidFile,Converter={StaticResource BoolToVisibilityConverter},ConverterParameter=R}"/>
+                        </Grid>
+                        <Label Width="{TemplateBinding TitleWidth}" Content="{TemplateBinding Title}"   />
+                        <Button Width="40" DockPanel.Dock="Right"  Content="..." Command="{Binding RelativeSource={RelativeSource TemplatedParent},Path=BrowseCommand}"/>
+                        <Label VerticalContentAlignment="Center"  Margin="5 0" Content="{TemplateBinding FileName}"/>
+                    </DockPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 </ResourceDictionary>
     
