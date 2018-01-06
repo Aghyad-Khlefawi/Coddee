@@ -11,5 +11,11 @@
     <Style TargetType="TextBox">
         <Setter Property="VerticalContentAlignment" Value="Center"/>
     </Style>
-    <Style TargetType="Button"></Style>
+
+    <SolidColorBrush x:Key="ApplicationAccentColorLighter"
+                     Color="#444F5A" />
+    <SolidColorBrush x:Key="ApplicationAccentColor"
+                     Color="#283645" />
+    <SolidColorBrush x:Key="ApplicationAccentColorDarker"
+                     Color="#151824" />
 </ResourceDictionary>

@@ -59,6 +59,7 @@ namespace Coddee.WPF.Controls
                                                                       new PropertyMetadata(default(string)));
 
         public static readonly DependencyProperty MessageProperty = MessagePropertyKey.DependencyProperty;
+       
 
         public string Message
         {

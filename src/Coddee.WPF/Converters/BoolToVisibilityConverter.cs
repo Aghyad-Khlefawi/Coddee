@@ -19,7 +19,7 @@ namespace Coddee.WPF.Converters
         {
             var val = value as bool?;
             if (val == null)
-                throw new ArgumentException("The provided value must be of type Boolean");
+                return Visibility.Collapsed;
 
             if (!string.IsNullOrEmpty(parameter?.ToString()))
             {

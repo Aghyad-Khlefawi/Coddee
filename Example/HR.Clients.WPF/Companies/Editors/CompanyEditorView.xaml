@@ -19,6 +19,11 @@
                          controls:Validate.FieldName="Name"
                             controls:InputMask.InputType="Alphabetic" />
             </controls:FormField>
+            <controls:FormField Title="Name">
+                <TextBlock  Text="fdasdases"
+                            controls:Validate.FieldName="Name"
+                            controls:InputMask.InputType="Alphabetic" />
+            </controls:FormField>
             <controls:FormField Title="State">
                 <ComboBox ItemsSource="{Binding States}"
                           SelectedItem="{Binding States.SelectedItem}"

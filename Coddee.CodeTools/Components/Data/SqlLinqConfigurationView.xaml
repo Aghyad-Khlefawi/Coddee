@@ -56,7 +56,30 @@
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
+            <GroupBox Header="Linq repositories">
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <CheckBox VerticalAlignment="Center"
+                              IsChecked="{Binding IsCustomLinqBase}"  Content="Custom linq Crud Base type"/>
+                        <ComboBox ItemsSource="{Binding LinqBaseRepositoryTypes}"
+                              IsEnabled="{Binding IsCustomLinqBase}"
+                              Width="200"
+                              Margin="5 0 0 0"
+                              SelectedItem="{Binding SelectedLinqBaseRepositoryType}"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <CheckBox VerticalAlignment="Center"
+                                  IsChecked="{Binding IsCustomLinqReadonlyBase}"  Content="Custom linq Readonly Base type"/>
+                        <ComboBox ItemsSource="{Binding LinqBaseRepositoryTypes}"
+                                  IsEnabled="{Binding IsCustomLinqReadonlyBase}"
+                                  Width="200"
+                                  Margin="5 0 0 0"
+                                  SelectedItem="{Binding SelectedLinqReadonlyBaseRepositoryType}"/>
+                    </StackPanel>
+                </StackPanel>
+            </GroupBox>
             <Button Margin="0 5 0 0" Content="Save" Command="{Binding SaveCommand}"/>
         </StackPanel>
     </coddee:BusyIndicator>
 </UserControl>
+

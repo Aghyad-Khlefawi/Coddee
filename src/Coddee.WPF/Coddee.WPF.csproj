@@ -102,6 +102,7 @@
     <Compile Include="Converters\NullToVisibilityConverter.cs" />
     <Compile Include="Converters\RequiredBrushConverter.cs" />
     <Compile Include="Converters\EqualityVisibilityConverter.cs" />
+    <Compile Include="Converters\ValidationBorderShowConverter.cs" />
     <Compile Include="DebugTool\DebugToolModule.cs" />
     <Compile Include="DebugTool\DebugToolViewModel.cs" />
     <Compile Include="DebugTool\DebugToolView.xaml.cs">

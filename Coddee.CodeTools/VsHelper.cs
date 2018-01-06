@@ -21,6 +21,7 @@ namespace Coddee.CodeTools
         string GetCurrentSolutionName();
         bool IsSolutionLoaded();
         string GetCurrentSolutionPath();
+        string GetActiveConfiguration();
     }
 
     public class VsHelper : ISolutionEventsHelper, ISolutionHelper
@@ -52,7 +53,7 @@ namespace Coddee.CodeTools
             {
                 SolutionClosed?.Invoke();
             };
-
+            
         }
 
 
@@ -71,6 +72,10 @@ namespace Coddee.CodeTools
         {
             return new FileInfo(_dte.Solution.FileName).Directory.FullName;
         }
-        
+
+        public string GetActiveConfiguration()
+        {
+            return _dte.Solution.Projects.Item(1).ConfigurationManager.ActiveConfiguration.ConfigurationName;
+        }
     }
 }

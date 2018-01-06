@@ -1,9 +1,14 @@
 ﻿// Copyright (c) Aghyad khlefawi. All rights reserved.  
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
+using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.IO;
+using System.Reflection;
 using System.Xml;
 using Coddee.Collections;
+using Coddee.Data.LinqToSQL;
 using Coddee.Services;
 using Coddee.SQL;
 using Coddee.WPF;
@@ -98,15 +103,88 @@ namespace Coddee.CodeTools.Components.Data
             set { SetProperty(ref _saveCommand, value); }
         }
 
+        private bool _isCustomLinqBase;
+        public bool IsCustomLinqBase
+        {
+            get { return _isCustomLinqBase; }
+            set
+            {
+                SetProperty(ref _isCustomLinqBase, value);
+                if (value && LinqBaseRepositoryTypes == null)
+                    LoadLinqBaseTypes();
+            }
+        }
+
+        private bool _isCustomLinqReadonlyBase;
+        public bool IsCustomLinqReadonlyBase
+        {
+            get { return _isCustomLinqReadonlyBase; }
+            set
+            {
+                SetProperty(ref _isCustomLinqReadonlyBase, value);
+                if (value && LinqBaseRepositoryTypes == null)
+                    LoadLinqBaseTypes();
+            }
+        }
+
+        private List<Type> _linqBaseRepositoryTypes;
+        public List<Type> LinqBaseRepositoryTypes
+        {
+            get { return _linqBaseRepositoryTypes; }
+            set { SetProperty(ref _linqBaseRepositoryTypes, value); }
+        }
+
+        private Type _selectedLinqBaseRepositoryType;
+        public Type SelectedLinqBaseRepositoryType
+        {
+            get { return _selectedLinqBaseRepositoryType; }
+            set { SetProperty(ref _selectedLinqBaseRepositoryType, value); }
+        }
+
+        private Type _selectedLinqReadonlyBaseRepositoryType;
+        public Type SelectedLinqReadonlyBaseRepositoryType
+        {
+            get { return _selectedLinqReadonlyBaseRepositoryType; }
+            set { SetProperty(ref _selectedLinqReadonlyBaseRepositoryType, value); }
+        }
+
+        private void LoadLinqBaseTypes()
+        {
+            LinqBaseRepositoryTypes = new List<Type>();
+            if (_currentSolutionConfigFile.TryGetValue(ConfigKeys.SqlLinq_Projects_LinQ, out CsProject proj))
+            {
+                var activeConfig = _solutionHelper.GetActiveConfiguration();
+                var assemblyPath = proj.GetAssemblyName();
+                if (!string.IsNullOrWhiteSpace(assemblyPath))
+                {
+                    var path = Path.Combine(Path.GetDirectoryName(proj.ProjectPath), "bin", activeConfig, assemblyPath + ".dll");
+                    var assembly = Assembly.LoadFrom(path);
+                    foreach (var type in assembly.GetTypes())
+                    {
+                        if (type.IsGenericType && type.BaseType.GetGenericTypeDefinition() == typeof(CRUDLinqRepositoryBase<,,,>) ||
+                            type.IsGenericType && type.BaseType.GetGenericTypeDefinition() == typeof(ReadOnlyLinqRepositoryBase<,,,>) ||
+                            type.IsGenericType && type.BaseType.GetGenericTypeDefinition() == typeof(LinqRepositoryBase<,,,>) ||
+                            type.IsGenericType && type.BaseType.GetGenericTypeDefinition() == typeof(LinqRepositoryBase<,>) ||
+                            type.IsGenericType && type.BaseType.GetGenericTypeDefinition() == typeof(LinqRepositoryBase<>))
+                        {
+                            LinqBaseRepositoryTypes.Add(type);
+                        }
+                    }
+                }
+            }
+        }
+
         public void Save()
         {
             if (IsDbValid && !string.IsNullOrWhiteSpace(DbmlPath))
             {
                 _currentSolutionConfigFile.SetValue(ConfigKeys.SqlLinq_DbConnection, DbConnection);
                 _currentSolutionConfigFile.SetValue(ConfigKeys.SqlLinq_DbmlPath, DbmlPath);
+                _currentSolutionConfigFile.SetValue(ConfigKeys.SqlLinq_LinqCrudBase, SelectedLinqBaseRepositoryType?.Name);
+                _currentSolutionConfigFile.SetValue(ConfigKeys.SqlLinq_LinqReadonlyBase, SelectedLinqReadonlyBaseRepositoryType?.Name);
                 foreach (var csProjectConfig in Projects)
                 {
-                    _currentSolutionConfigFile.SetValue($"ConfigKeys.SqlLinq_Projects_{csProjectConfig.Title}", (CsProject)csProjectConfig);
+                    _currentSolutionConfigFile.SetValue($"SqlLinq_Projects_{csProjectConfig.Title}", (CsProject)csProjectConfig);
                 }
                 ConfigurationCompleted?.Invoke(this);
             }
@@ -116,6 +194,7 @@ namespace Coddee.CodeTools.Components.Data
         {
             base.SolutionLoaded(config);
             InitialDirectory = _solutionHelper.GetCurrentSolutionPath();
+            LinqBaseRepositoryTypes = null;
 
             {
                 if (_currentSolutionConfigFile.TryGetValue(ConfigKeys.SqlLinq_DbConnection, out string val))
@@ -125,11 +204,28 @@ namespace Coddee.CodeTools.Components.Data
                 if (_currentSolutionConfigFile.TryGetValue(ConfigKeys.SqlLinq_DbmlPath, out string val))
                     DbmlPath = val;
             }
-
+            {
+                if (_currentSolutionConfigFile.TryGetValue(ConfigKeys.SqlLinq_LinqReadonlyBase, out string val) && !string.IsNullOrWhiteSpace(val))
+                {
+                    if (LinqBaseRepositoryTypes == null)
+                        LoadLinqBaseTypes();
+                    SelectedLinqReadonlyBaseRepositoryType = LinqBaseRepositoryTypes.Find(e => e.Name == val);
+                    IsCustomLinqReadonlyBase = true;
+                }
+            }
+            {
+                if (_currentSolutionConfigFile.TryGetValue(ConfigKeys.SqlLinq_LinqCrudBase, out string val) && !string.IsNullOrWhiteSpace(val))
+                {
+                    if (LinqBaseRepositoryTypes == null)
+                        LoadLinqBaseTypes();
+                    SelectedLinqBaseRepositoryType = LinqBaseRepositoryTypes.Find(e => e.Name == val);
+                    IsCustomLinqBase = true;
+                }
+            }
             foreach (var csProjectConfig in Projects)
             {
                 {
-                    if (_currentSolutionConfigFile.TryGetValue($"ConfigKeys.SqlLinq_Projects_{csProjectConfig.Title}", out CsProject val))
+                    if (_currentSolutionConfigFile.TryGetValue($"SqlLinq_Projects_{csProjectConfig.Title}", out CsProject val))
                         csProjectConfig.SetValues(val);
                 }
             }
@@ -187,10 +283,12 @@ namespace Coddee.CodeTools.Components.Data
                     if (rootNamespace.Count > 0)
                     {
                         DefaultNamespace = $"{rootNamespace.Item(0).LastChild.Value}.{Folder}";
+                        break;
                     }
                 }
             }
         }
+
 
         public void SetValues(CsProject val)
         {

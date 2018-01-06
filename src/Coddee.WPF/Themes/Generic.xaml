@@ -11,6 +11,7 @@
         <ResourceDictionary Source="pack://application:,,,/Coddee.WPF;component/Resources.xaml" />
     </ResourceDictionary.MergedDictionaries>
     <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+    <converters:ValidationBorderShowConverter x:Key="ValidationBorderShowConverter" />
 
     <Style TargetType="{x:Type local:RegionControl}">
         <Setter Property="IsTabStop"
@@ -537,6 +538,7 @@
     </Style>
 
     <Style TargetType="{x:Type local:FormField}">
+
         <Setter Property="IsTabStop"
                 Value="False" />
         <Setter Property="Template">
@@ -555,9 +557,17 @@
                                                  HideText="true"
                                                  HideContentOnBusy="True"
                                                  Background="Transparent">
-                                <local:ValidationBorder Child="{TemplateBinding Content}"
+                                <Grid>
+                                    <local:ValidationBorder 
+                                                        Visibility="{Binding RelativeSource={RelativeSource TemplatedParent},Path=ShowValidationBorder,Converter={StaticResource BoolToVisibilityConverter}}"
+                                                        Child="{TemplateBinding Content}"
                                                         ValidatedPropertyName="{TemplateBinding ValidatedPropertyName}"
                                                         HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" />
+                                    <ContentPresenter
+                                        Visibility="{Binding RelativeSource={RelativeSource TemplatedParent},Path=ShowValidationBorder,Converter={StaticResource BoolToVisibilityConverter},ConverterParameter=R}"
+                                        Content="{TemplateBinding Content}"
+                                        HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" />
+                                </Grid>
                             </local:BusyIndicator>
                         </DockPanel>
                     </Border>
@@ -565,6 +575,7 @@
             </Setter.Value>
         </Setter>
     </Style>
+
 
     <Style TargetType="{x:Type local:Form}">
         <Setter Property="Template">
@@ -1189,8 +1200,8 @@
                             BorderThickness="{TemplateBinding BorderThickness}">
                         <Grid>
                             <ContentPresenter Content="{TemplateBinding Child}"/>
-                            <Path Margin="0 -1 -1 0"  Visibility="{TemplateBinding HasWarning,Converter={StaticResource BoolToVisibilityConverter}}"  Data="M233,173l169.5,169.5V173H233z M356.2,185.1l-1.5,57.9H346l-1.7-57.9H356.2z M357,261	c-0.4,0.9-0.9,1.7-1.6,2.3c-0.7,0.7-1.4,1.2-2.3,1.6c-0.9,0.4-1.9,0.6-2.9,0.6c-1,0-2-0.2-2.9-0.6s-1.7-0.9-2.4-1.6	c-0.7-0.7-1.2-1.4-1.6-2.3c-0.4-0.9-0.6-1.9-0.6-2.9s0.2-2,0.6-2.9c0.4-0.9,0.9-1.7,1.6-2.4c0.7-0.7,1.5-1.2,2.4-1.6	c0.9-0.4,1.9-0.6,2.9-0.6c1,0,2,0.2,2.9,0.6c0.9,0.4,1.7,0.9,2.3,1.6c0.7,0.7,1.2,1.5,1.6,2.4c0.4,0.9,0.6,1.9,0.6,2.9	S357.4,260.1,357,261z" Fill="{StaticResource WarningColor}" Stretch="Uniform" HorizontalAlignment="Right" Height="20" VerticalAlignment="Top" ToolTip="{TemplateBinding Message}"/>
-                            <Path Margin="0 -1 -1 0"  Visibility="{TemplateBinding HasError,Converter={StaticResource BoolToVisibilityConverter}}"  Data="M233,173l169.5,169.5V173H233z M370.6,251.9l-13.9-23.1l-14,23.1H333l19-29.2l-17.5-28h9.2l13.1,21.5	l13.2-21.5h9l-17.5,27.6l19,29.6H370.6z" Fill="{StaticResource ErrorColor}" Stretch="Uniform" HorizontalAlignment="Right" Height="20" VerticalAlignment="Top" ToolTip="{TemplateBinding Message}"/>
+                                <Path Margin="0 -1 -1 0"  Visibility="{TemplateBinding HasWarning,Converter={StaticResource BoolToVisibilityConverter}}"  Data="M233,173l169.5,169.5V173H233z M356.2,185.1l-1.5,57.9H346l-1.7-57.9H356.2z M357,261	c-0.4,0.9-0.9,1.7-1.6,2.3c-0.7,0.7-1.4,1.2-2.3,1.6c-0.9,0.4-1.9,0.6-2.9,0.6c-1,0-2-0.2-2.9-0.6s-1.7-0.9-2.4-1.6	c-0.7-0.7-1.2-1.4-1.6-2.3c-0.4-0.9-0.6-1.9-0.6-2.9s0.2-2,0.6-2.9c0.4-0.9,0.9-1.7,1.6-2.4c0.7-0.7,1.5-1.2,2.4-1.6	c0.9-0.4,1.9-0.6,2.9-0.6c1,0,2,0.2,2.9,0.6c0.9,0.4,1.7,0.9,2.3,1.6c0.7,0.7,1.2,1.5,1.6,2.4c0.4,0.9,0.6,1.9,0.6,2.9	S357.4,260.1,357,261z" Fill="{StaticResource WarningColor}" Stretch="Uniform" HorizontalAlignment="Right" Height="20" VerticalAlignment="Top" ToolTip="{TemplateBinding Message}"/>
+                                <Path Margin="0 -1 -1 0"  Visibility="{TemplateBinding HasError,Converter={StaticResource BoolToVisibilityConverter}}"  Data="M233,173l169.5,169.5V173H233z M370.6,251.9l-13.9-23.1l-14,23.1H333l19-29.2l-17.5-28h9.2l13.1,21.5	l13.2-21.5h9l-17.5,27.6l19,29.6H370.6z" Fill="{StaticResource ErrorColor}" Stretch="Uniform" HorizontalAlignment="Right" Height="20" VerticalAlignment="Top" ToolTip="{TemplateBinding Message}"/>
                         </Grid>
                     </Border>
                 </ControlTemplate>

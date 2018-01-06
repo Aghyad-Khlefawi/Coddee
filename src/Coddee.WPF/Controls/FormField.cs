@@ -46,6 +46,18 @@ namespace Coddee.WPF.Controls
                                                         typeof(Style),
                                                         typeof(FormField),
                                                         new PropertyMetadata(default(Style)));
+
+        public static readonly DependencyProperty ShowValidationBorderProperty = DependencyProperty.Register(
+                                                        "ShowValidationBorder",
+                                                        typeof(bool?),
+                                                        typeof(FormField),
+                                                        new PropertyMetadata(null));
+
+        public bool? ShowValidationBorder
+        {
+            get { return (bool?)GetValue(ShowValidationBorderProperty); }
+            set { SetValue(ShowValidationBorderProperty, value); }
+        }
         public string ValidatedPropertyName
         {
             get { return (string)GetValue(ValidatedPropertyNameProperty); }
@@ -110,7 +122,8 @@ namespace Coddee.WPF.Controls
 
         private void OnContentPropertyChanged()
         {
-            
+            if(ShowValidationBorder==null)
+                ShowValidationBorder = !(Content is Label) && !(Content is TextBlock) && !(Content is Panel);
         }
     }
 

@@ -4,6 +4,7 @@
 using System.Threading;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
 using Coddee.Loggers;
 using Coddee.ModuleDefinitions;
 using Coddee.Services;
@@ -61,10 +62,11 @@ namespace Coddee.CodeTools
             modules.InitializeAutoModules().Wait();
 
             //Initialize View model
-           
-
+            Application.Current.Resources.Add("ApplicationAccentColorLighter",new SolidColorBrush((Color)ColorConverter.ConvertFromString("#444F5A")));
+            Application.Current.Resources.Add("ApplicationAccentColor", new SolidColorBrush((Color)ColorConverter.ConvertFromString("#283645")));
+            Application.Current.Resources.Add("ApplicationAccentColorDarker", new SolidColorBrush((Color)ColorConverter.ConvertFromString("#151824")));
         }
-        
+
         private LogAggregator _logger;
         private IContainer _container;
         private readonly VsHelper _vsHelper;
@@ -76,13 +78,16 @@ namespace Coddee.CodeTools
 
             ViewModelBase.SetContainer(_container);
             var vm = _container.Resolve<IViewModelsManager>().CreateViewModel<CodeToolsMainViewModel>(null);
-            vm.Initialize();
+
             var view = vm.GetDefaultView();
             var applicationConsole = _container.Resolve<IApplicationConsole>();
             applicationConsole.Initialize(view, _logger.MinimumLevel);
             applicationConsole.SetToggleCondition(e => e.Key == Key.F12);
             _logger.AddLogger(applicationConsole.GetLogger(), LoggerTypes.ApplicationConsole);
-            
+
+            var dialog = _container.Resolve<IDialogService>();
+            dialog.Initialize(WPF.DefaultShell.DefaultRegions.DialogRegion);
+            vm.Initialize();
             this.Content = view;
         }
 
