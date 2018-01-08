@@ -5,8 +5,6 @@ using System;
 using System.IO;
 using EnvDTE;
 using EnvDTE80;
-using Microsoft.VisualStudio;
-using Microsoft.VisualStudio.Shell.Interop;
 
 namespace Coddee.CodeTools
 {
