@@ -1,10 +1,11 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
+using Coddee.CodeTools.Components.Data.Generators;
 using Coddee.CodeTools.Sql.Queries;
 using Coddee.Collections;
 using Coddee.Data;
@@ -16,6 +17,8 @@ namespace Coddee.CodeTools.Components.Data
 {
     public class ImportWizardViewModel : VsViewModelBase<ImportWizardView>
     {
+        private ModelCodeGenerator _modelGenerator;
+        private RepositoryInterfaceCodeGenerator _repositoryInterfaceGenerator;
         private AsyncObservableCollection<TableImportArgumentsViewModel> _importArgumentes;
         public AsyncObservableCollection<TableImportArgumentsViewModel> ImportArgumentes
         {
@@ -27,6 +30,8 @@ namespace Coddee.CodeTools.Components.Data
         {
             await base.OnInitialization();
             ImportArgumentes = AsyncObservableCollection<TableImportArgumentsViewModel>.Create();
+            _modelGenerator = new ModelCodeGenerator();
+            _repositoryInterfaceGenerator = new RepositoryInterfaceCodeGenerator();
         }
 
         protected override void OnDesignMode()
@@ -67,6 +72,11 @@ namespace Coddee.CodeTools.Components.Data
             var linqBaseTypes = GetLinqBaseType();
             _globalVariables.GetVariable<LinqBaseTypeGlobal>().SetValue(linqBaseTypes);
             ImportArgumentes.ClearAndFill(await tables.Select(async e => await CreateImportArgs(e)));
+            foreach (var importArgument in ImportArgumentes)
+            {
+                if (importArgument.Columns.Count(e => e.IsPrimaryKey) != 1)
+                    importArgument.ImportTable = false;
+            }
         }
 
         private async Task<TableImportArgumentsViewModel> CreateImportArgs(SqlTableViewModel sqlTableViewModel)
@@ -118,7 +128,38 @@ namespace Coddee.CodeTools.Components.Data
 
         private void Generate()
         {
+            foreach (var table in ImportArgumentes)
+            {
+                if (table.ImportModel)
+                {
+                    var project = _solution.ModelProjectConfiguration;
+                    var file = Path.Combine(project.ProjectFolder, project.GeneratedCodeFolder, $"{table.SingularName}.cs");
+                    GenerateFile(file, project, table, _modelGenerator);
+                }
+                if (table.ImportRepository)
+                {
+                    var project = _solution.DataProjectConfiguration;
+                    var file = Path.Combine(project.ProjectFolder, project.GeneratedCodeFolder, $"I{table.SingularName}Repository.cs");
+                    GenerateFile(file, project, table, _repositoryInterfaceGenerator);
+                }
+            }
+        }
 
+        void GenerateFile(string file, ProjectConfiguration project, TableImportArgumentsViewModel table, TypeCodeGenerator generator)
+        {
+            if (!File.Exists(file))
+            {
+                using (var stream = File.Create(file))
+                {
+                    generator.Generate(_solution, project, table, stream);
+                }
+                _solution.AddExistedFileToProject(project.ProjectPath, file);
+            }
+            else
+            {
+                var data = generator.Generate(_solution, project, table);
+                File.WriteAllBytes(file, data);
+            }
         }
     }
 
@@ -130,7 +171,7 @@ namespace Coddee.CodeTools.Components.Data
         {
             _table = table;
             TableName = table.TableName;
-
+            SingularName = table.SingularName;
             BaseRepositoryTypes = new List<Type>
             {
                 typeof(ICRUDRepository<,>),
@@ -141,7 +182,7 @@ namespace Coddee.CodeTools.Components.Data
             SelectedBaseRepositoryType = BaseRepositoryTypes[0];
         }
 
-
+        public string SingularName { get; set; }
 
         private bool _isCustomLinqBase;
         public bool IsCustomLinqBase
@@ -182,7 +223,14 @@ namespace Coddee.CodeTools.Components.Data
         public bool ImportTable
         {
             get { return _importTable; }
-            set { SetProperty(ref _importTable, value); }
+            set
+            {
+                SetProperty(ref _importTable, value);
+                ImportModel = value;
+                ImportRepository = value;
+                ImportLinqRepository = value;
+                ImportRestRepository = value;
+            }
         }
 
         private bool _importModel = true;
@@ -190,6 +238,12 @@ namespace Coddee.CodeTools.Components.Data
         {
             get { return _importModel; }
             set { SetProperty(ref _importModel, value); }
+        }
+        private bool _importRepository = true;
+        public bool ImportRepository
+        {
+            get { return _importRepository; }
+            set { SetProperty(ref _importRepository, value); }
         }
 
         private List<Type> _baseRepositoryTypes;
@@ -257,6 +311,12 @@ namespace Coddee.CodeTools.Components.Data
             return argumentsViewModel;
         }
 
+        public Type GetPrimaryKeyType()
+        {
+            if (Columns.Count(e => e.IsPrimaryKey) != 1)
+                return null;
+            return Columns.First(e => e.IsPrimaryKey).Type;
+        }
     }
 
     public class ColumnImportArgumentsViewModel : ViewModelBase
@@ -274,13 +334,17 @@ namespace Coddee.CodeTools.Components.Data
             switch (column.ColumnType)
             {
                 case "smallint":
+                case "tinyint":
                 case "int":
                     return typeof(Int32);
+                case "nchar":
+                case "varchar":
                 case "nvarchar":
                     return typeof(string);
                 case "bit":
                     return typeof(bool);
                 case "datetime":
+                case "date":
                 case "datetime2":
                     return typeof(DateTime);
                 case "char":
@@ -330,5 +394,4 @@ namespace Coddee.CodeTools.Components.Data
         }
     }
 
-    public class LinqBaseTypeGlobal : GlobalVarialbe<IEnumerable<Type>> { }
 }

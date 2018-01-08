@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using Coddee.Collections;
+using Coddee.Exceptions;
 using Coddee.WPF;
 using Coddee.WPF.Services.Dialogs;
 
@@ -36,7 +37,7 @@ namespace Coddee.Services.Dialogs
         public event EventHandler<IDialog> DialogStateChanged;
         public event EventHandler<IDialog> DialogClosed;
 
-        public IDialog CreateDialog(string title, UIElement content, DialogOptions options, params ActionCommand[] commands)
+        public IDialog CreateDialog(string title, UIElement content, DialogOptions options, params ActionCommandBase[] commands)
         {
             var container = CreateViewModel<DialogContainerViewModel>();
             container.ZIndex = _maxZindex;
@@ -49,16 +50,16 @@ namespace Coddee.Services.Dialogs
             Interlocked.Increment(ref _maxZindex);
             return container;
         }
-        public IDialog CreateDialog(UIElement content, DialogOptions options, params ActionCommand[] commands)
+        public IDialog CreateDialog(UIElement content, DialogOptions options, params ActionCommandBase[] commands)
         {
             return CreateDialog(null, content, options, commands);
         }
 
-        public IDialog CreateDialog(string title, UIElement content, params ActionCommand[] actions)
+        public IDialog CreateDialog(string title, UIElement content, params ActionCommandBase[] actions)
         {
             return CreateDialog(title, content, DialogOptions.Default, actions);
         }
-        public IDialog CreateDialog(UIElement content, params ActionCommand[] actions)
+        public IDialog CreateDialog(UIElement content, params ActionCommandBase[] actions)
         {
             return CreateDialog(null, content, actions);
         }
@@ -69,7 +70,19 @@ namespace Coddee.Services.Dialogs
                                 editor.GetView(),
                                 options,
                                 new CloseActionCommand(_localization.GetValue("Cancel")),
-                                new CloseActionCommand(_localization.GetValue("Save"), async () => { await editor.Save(); }));
+                                new AsyncActionCommand(_localization.GetValue("Save"),
+                                                  async () =>
+                                                  {
+                                                      try
+                                                      {
+                                                          await editor.Save();
+                                                          return true;
+                                                      }
+                                                      catch (ValidationException e)
+                                                      {
+                                                          return false;
+                                                      }
+                                                  }));
             return dialog;
         }
         public IDialog CreateDialog(IEditorViewModel editor, DialogOptions options)
@@ -94,7 +107,7 @@ namespace Coddee.Services.Dialogs
         {
             return CreateDialog(null, presentable, options);
         }
-        public IDialog CreateDialog(IPresentable presentable, DialogOptions options, params ActionCommand[] actions)
+        public IDialog CreateDialog(IPresentable presentable, DialogOptions options, params ActionCommandBase[] actions)
         {
             return CreateDialog(null, presentable, options, actions);
         }
@@ -107,7 +120,7 @@ namespace Coddee.Services.Dialogs
         {
             return CreateDialog(title, presentable.GetView(), options);
         }
-        public IDialog CreateDialog(string title, IPresentable presentable, DialogOptions options, params ActionCommand[] actions)
+        public IDialog CreateDialog(string title, IPresentable presentable, DialogOptions options, params ActionCommandBase[] actions)
         {
             return CreateDialog(title, presentable.GetView(), options, actions);
         }

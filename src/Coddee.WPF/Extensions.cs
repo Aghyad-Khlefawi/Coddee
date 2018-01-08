@@ -106,28 +106,28 @@ namespace Coddee.WPF
             return AsyncObservableCollectionView<T>.Create(filterPredicate, await collection);
         }
 
-        public static IDialog ShowDialog(this IDialogService dialogs, string title, UIElement content, DialogOptions options, params ActionCommand[] actions)
+        public static IDialog ShowDialog(this IDialogService dialogs, string title, UIElement content, DialogOptions options, params ActionCommandBase[] actions)
         {
             var dialog = dialogs.CreateDialog(title, content, options, actions);
             dialog.Show();
             return dialog;
         }
 
-        public static IDialog ShowDialog(this IDialogService dialogs, UIElement content, DialogOptions options, params ActionCommand[] actions)
+        public static IDialog ShowDialog(this IDialogService dialogs, UIElement content, DialogOptions options, params ActionCommandBase[] actions)
         {
             var dialog = dialogs.CreateDialog(content, options, actions);
             dialog.Show();
             return dialog;
         }
 
-        public static IDialog ShowDialog(this IDialogService dialogs, string title, UIElement content, params ActionCommand[] actions)
+        public static IDialog ShowDialog(this IDialogService dialogs, string title, UIElement content, params ActionCommandBase[] actions)
         {
             var dialog = dialogs.CreateDialog(title, content, actions);
             dialog.Show();
             return dialog;
         }
 
-        public static IDialog ShowDialog(this IDialogService dialogs, UIElement content, params ActionCommand[] actions)
+        public static IDialog ShowDialog(this IDialogService dialogs, UIElement content, params ActionCommandBase[] actions)
         {
             var dialog = dialogs.CreateDialog(content, actions);
             dialog.Show();
@@ -183,7 +183,7 @@ namespace Coddee.WPF
             return dialog;
         }
 
-        public static IDialog ShowDialog(this IDialogService dialogs, IPresentable presentable, DialogOptions options, params ActionCommand[] actions)
+        public static IDialog ShowDialog(this IDialogService dialogs, IPresentable presentable, DialogOptions options, params ActionCommandBase[] actions)
         {
             var dialog = dialogs.CreateDialog(presentable, options, actions);
             dialog.Show();
@@ -204,7 +204,7 @@ namespace Coddee.WPF
             return dialog;
         }
 
-        public static IDialog ShowDialog(this IDialogService dialogs, string title, IPresentable presentable, DialogOptions options, params ActionCommand[] actions)
+        public static IDialog ShowDialog(this IDialogService dialogs, string title, IPresentable presentable, DialogOptions options, params ActionCommandBase[] actions)
         {
             var dialog = dialogs.CreateDialog(title, presentable, options, actions);
             dialog.Show();

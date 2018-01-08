@@ -57,7 +57,23 @@ namespace Coddee.CodeTools.Components.Data
             get { return _getInfoCommand ?? (_getInfoCommand = CreateReactiveCommand(async () => await GetInfo())); }
             set { SetProperty(ref _getInfoCommand, value); }
         }
-
+        private IReactiveCommand _importAllCommand;
+        public IReactiveCommand ImportAllCommand
+        {
+            get { return _importAllCommand ?? (_importAllCommand = CreateReactiveCommand(ImportAll)); }
+            set { SetProperty(ref _importAllCommand, value); }
+        }
+        private int _tablesCount;
+        public int TablesCount
+        {
+            get { return _tablesCount; }
+            set { SetProperty(ref _tablesCount, value); }
+        }
+        public async void ImportAll()
+        {
+            await _importWizardViewModel.SetTables(Tables.ToArray());
+            _importWizardViewModel.Show();
+        }
         protected override async Task OnInitialization()
         {
             await base.OnInitialization();
@@ -107,7 +123,8 @@ namespace Coddee.CodeTools.Components.Data
                 var tables = await GetDbTables(conn, SqlDatabase);
                 SqlDatabase.Tables.AddRange(tables);
                 conn.Dispose();
-                Tables.ClearAndFill(await SqlDatabase.Tables.Select(CreateSqlTableViewModel));
+                Tables.ClearAndFill(await SqlDatabase.Tables.OrderBy(e => e.TableName).Select(CreateSqlTableViewModel));
+                TablesCount = Tables.Count;
                 ValidateTables(Tables);
 
             }
@@ -128,13 +145,15 @@ namespace Coddee.CodeTools.Components.Data
 
         private void ValidateTables(IEnumerable<SqlTableViewModel> sqlTables)
         {
-            CsProject modeslProj = _currentSolutionConfigFile.GetValue<CsProject>(ConfigKeys.SqlLinq_Projects_Models);
-            var directory = new DirectoryInfo(Path.Combine(Path.GetDirectoryName(modeslProj.ProjectPath), modeslProj.Folder));
-            var models = directory.GetFiles();
+            var models = new DirectoryInfo(Path.Combine(_solution.ModelProjectConfiguration.ProjectFolder, _solution.ModelProjectConfiguration.GeneratedCodeFolder)).GetFiles();
+            var repositories = new DirectoryInfo(Path.Combine(_solution.DataProjectConfiguration.ProjectFolder, _solution.DataProjectConfiguration.GeneratedCodeFolder)).GetFiles();
+
+
             foreach (var table in sqlTables)
             {
                 table.SingularName = _pluralizationServices.Singularize(table.TableName);
-                table.IsModelValid = models.Any(e => e.Name == $"{table.SingularName}.cs");
+                table.IsModelValid = models.Any(e => e.Name == table.GetModelFileName());
+                table.IsRepositoryInterfaceValid = repositories.Any(e => e.Name == table.GetRepsotioryInterfaceFileName());
             }
         }
 

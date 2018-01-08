@@ -9,22 +9,19 @@ using Coddee.CodeTools.Components.Data;
 using Coddee.CodeTools.Components.Localization;
 using Coddee.Services;
 using Coddee.Services.Configuration;
-using Coddee.WPF;
 
 namespace Coddee.CodeTools
 {
-    public class CodeToolsMainViewModel : ViewModelBase<CodeToolsMainViewControl>
+    public class CodeToolsMainViewModel : VsViewModelBase<CodeToolsMainViewControl>
     {
-        private readonly ISolutionHelper _solutionHelper;
         private readonly IConfigurationManager _configurationManager;
 
         public CodeToolsMainViewModel()
         {
 
         }
-        public CodeToolsMainViewModel(ISolutionHelper solutionHelper, ISolutionEventsHelper solutionEventsHelper, IConfigurationManager configurationManager)
+        public CodeToolsMainViewModel(ISolutionEventsHelper solutionEventsHelper, IConfigurationManager configurationManager)
         {
-            _solutionHelper = solutionHelper;
             _configurationManager = configurationManager;
             solutionEventsHelper.SolutionOpened += OnSolutionOpened;
             solutionEventsHelper.SolutionClosed += OnSolutionClosed;
@@ -78,6 +75,7 @@ namespace Coddee.CodeTools
         private void OnSolutionOpened()
         {
             IsSolutionLoaded = true;
+            _solution.UpdateCurrentSolution();
         }
 
         private void OnSolutionClosed()

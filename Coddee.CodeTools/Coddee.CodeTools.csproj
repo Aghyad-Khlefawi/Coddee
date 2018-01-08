@@ -54,6 +54,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="CoddeeSolutionInfo.cs" />
     <Compile Include="CodeToolsMainView.cs" />
     <Compile Include="CodeToolsMainViewCommand.cs" />
     <Compile Include="CodeToolsMainViewControl.xaml.cs">
@@ -61,7 +62,12 @@
     </Compile>
     <Compile Include="CodeToolsMainViewModel.cs" />
     <Compile Include="CodeToolsMainViewPackage.cs" />
+    <Compile Include="Components\Data\Generators\ClassCodeGenerator.cs" />
+    <Compile Include="Components\Data\Generators\InterfaceCodeGenerator.cs" />
+    <Compile Include="Components\Data\Generators\TypeCodeGenerator.cs" />
+    <Compile Include="Config\DataProjectConfiguration.cs" />
     <Compile Include="Components\Data\CsProject.cs" />
+    <Compile Include="Components\Data\Generators\ModelCodeGenerator.cs" />
     <Compile Include="Components\Data\ImportWizardView.xaml.cs">
       <DependentUpon>ImportWizardView.xaml</DependentUpon>
     </Compile>
@@ -85,6 +91,9 @@
     </Compile>
     <Compile Include="Components\Data\SqlLinqViewModel.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="Globals.cs" />
+    <Compile Include="Config\ModelProjectConfiguration.cs" />
+    <Compile Include="Config\ProjectConfiguration.cs" />
     <Compile Include="Sql\Queries\GetTableColumnsQuery.cs" />
     <Compile Include="Sql\Queries\SqlTableColumn.cs" />
     <Compile Include="Sql\SqlDatabase.cs" />
@@ -97,7 +106,6 @@
     <Compile Include="Sql\Queries\GetDbTablesQuery.cs" />
     <Compile Include="Sql\SqlQuery.cs" />
     <Compile Include="Sql\Queries\UseDatabaseQuery.cs" />
-    <Compile Include="VsHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -195,6 +203,7 @@
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Activities" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data.Entity.Design" />
@@ -207,6 +216,10 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Coddee.VsExtensibility\Coddee.VsExtensibility.csproj">
+      <Project>{3D3A4B83-F935-49EE-B08F-B71AEE2BE705}</Project>
+      <Name>Coddee.VsExtensibility</Name>
+    </ProjectReference>
     <ProjectReference Include="..\src\Coddee.Core\Coddee.Core.csproj">
       <Project>{200805c2-e25c-4d1b-ac1e-0dbb5869aeb9}</Project>
       <Name>Coddee.Core</Name>

@@ -146,6 +146,10 @@ namespace Coddee.WPF
                 Saved?.Invoke(this, new EditorSaveArgs<TModel>(OperationType, await SaveItem()));
                 IsBusy = false;
             }
+            catch (ValidationException)
+            {
+                throw;
+            }
             catch (Exception ex)
             {
                 _logger?.Log(_eventsSource, ex);

@@ -22,60 +22,63 @@ namespace Coddee.CodeTools
         bool IsSolutionLoaded();
         string GetCurrentSolutionPath();
         string GetActiveConfiguration();
+        void AddExistedFileToProject(string projectPath, string fileName);
     }
 
     public class VsHelper : ISolutionEventsHelper, ISolutionHelper
     {
         public Func<Type, object> GetService { get; set; }
+        public DTE2 Dte { get; private set; }
 
 
         public event Action SolutionOpened;
         public event Action SolutionClosed;
-        private DTE2 _dte;
+        private Solution2 _solution;
         private SolutionEvents _solutionEvents;
         public void Initialize()
         {
-            _dte = (DTE2)GetService(typeof(DTE));
-            _solutionEvents=_dte.Events.SolutionEvents;
+            Dte = (DTE2)GetService(typeof(DTE));
+            _solution = (Solution2)Dte.Solution;
+            _solutionEvents = Dte.Events.SolutionEvents;
             _solutionEvents.Opened += () =>
             {
-                //Array projects = (Array)_dte.ActiveSolutionProjects;
-                //foreach (Project project in projects)
-                //{
-                //    foreach (ProjectItem projectItem in project.ProjectItems)
-                //    {
-                        
-                //    }
-                //}
                 SolutionOpened?.Invoke();
             };
             _solutionEvents.AfterClosing += () =>
             {
                 SolutionClosed?.Invoke();
             };
-            
+
         }
-
-
-
         public string GetCurrentSolutionName()
         {
-            return Path.GetFileName(_dte.Solution.FileName).Replace(".sln", "");
+            return Path.GetFileName(Dte.Solution.FileName).Replace(".sln", "");
         }
 
         public bool IsSolutionLoaded()
         {
-            return _dte.Solution.IsOpen;
+            return Dte.Solution.IsOpen;
         }
 
+        public void AddExistedFileToProject(string projectPath, string fileName)
+        {
+            foreach (Project project in Dte.Solution.Projects)
+            {
+                if (project.FullName == projectPath)
+                {
+                    project.ProjectItems.AddFromFile(fileName);
+                    break;
+                }
+            }
+        }
         public string GetCurrentSolutionPath()
         {
-            return new FileInfo(_dte.Solution.FileName).Directory.FullName;
+            return new FileInfo(Dte.Solution.FileName).Directory.FullName;
         }
 
         public string GetActiveConfiguration()
         {
-            return _dte.Solution.Projects.Item(1).ConfigurationManager.ActiveConfiguration.ConfigurationName;
+            return Dte.Solution.Projects.Item(1).ConfigurationManager.ActiveConfiguration.ConfigurationName;
         }
     }
 }

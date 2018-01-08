@@ -9,6 +9,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Coddee.Collections;
+using Coddee.Exceptions;
 using Coddee.Services.Dialogs;
 using Coddee.WPF.Commands;
 
@@ -120,15 +121,15 @@ namespace Coddee.WPF.Services.Dialogs
         {
             SetState(DialogState.Minimized);
         }
-        
 
-        public void SetCommands(params ActionCommand[] commands)
+
+        public void SetCommands(params ActionCommandBase[] commands)
         {
             Commands.ClearAndFill(commands.Select(e =>
             {
                 if (e is CloseActionCommand closeAction)
                     return new ActionCommandWrapper(closeAction, this);
-                return new ActionCommandWrapper(e);
+                return new ActionCommandWrapper(e, this);
             }));
         }
 
@@ -185,10 +186,29 @@ namespace Coddee.WPF.Services.Dialogs
             CanExecute = true;
         }
 
-        public ActionCommandWrapper(ActionCommand action)
+        public ActionCommandWrapper(ActionCommandBase action, IDialog dialog)
         {
-            if (action.Action != null)
-                Command = new RelayCommand(action.Action);
+            if (action is ActionCommand ac)
+            {
+                if (ac.Action != null)
+                    Command = new RelayCommand(ac.Action);
+            }
+            else if (action is AsyncActionCommand asc)
+            {
+                if (asc.Action != null)
+                    Command = new RelayCommand(async () =>
+                    {
+                        try
+                        {
+                            var res = await asc.Action();
+                            if (res)
+                                dialog.Close();
+                        }
+                        catch (ValidationException)
+                        {
+                        }
+                    });
+            }
             Title = action.Title;
             HorizontalPosition = action.HorizontalPosition == Coddee.HorizontalPosition.Left ? Dock.Left : Dock.Right;
             action.CanExecuteChanged += ActionCanExecuteChanged;
@@ -196,13 +216,22 @@ namespace Coddee.WPF.Services.Dialogs
         }
 
         public ActionCommandWrapper(CloseActionCommand action, IDialog dialog)
-            : this(action)
         {
             Command = new RelayCommand(() =>
             {
-                action.Action?.Invoke();
-                dialog.Close();
+                try
+                {
+                    action.Action?.Invoke();
+                    dialog.Close();
+                }
+                catch (ValidationException)
+                {
+                }
             });
+            Title = action.Title;
+            HorizontalPosition = action.HorizontalPosition == Coddee.HorizontalPosition.Left ? Dock.Left : Dock.Right;
+            action.CanExecuteChanged += ActionCanExecuteChanged;
+            CanExecute = action.CanExecute;
         }
 
 

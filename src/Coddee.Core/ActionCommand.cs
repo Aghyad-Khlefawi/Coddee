@@ -2,22 +2,23 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
 using System;
+using System.Threading.Tasks;
 
 namespace Coddee
 {
-    public class ActionCommand
+
+    public abstract class ActionCommandBase
     {
-        public ActionCommand(string title, Action action)
+        public ActionCommandBase(string title)
         {
             CanExecute = true;
             Title = title;
-            Action = action;
         }
 
         public event EventHandler<bool> CanExecuteChanged;
 
         public string Title { get; set; }
-        public Action Action { get; set; }
+
         public HorizontalPosition HorizontalPosition { get; set; } = HorizontalPosition.Right;
 
         public bool CanExecute { get; private set; }
@@ -27,5 +28,26 @@ namespace Coddee
             CanExecute = value;
             CanExecuteChanged?.Invoke(this, value);
         }
+    }
+
+    public class ActionCommand : ActionCommandBase
+    {
+        public ActionCommand(string title, Action action)
+            : base(title)
+        {
+            Action = action;
+        }
+        public Action Action { get; set; }
+
+    }
+    public class AsyncActionCommand : ActionCommandBase
+    {
+        public AsyncActionCommand(string title, Func<Task<bool>> action)
+            : base(title)
+        {
+            Action = action;
+        }
+        public Func<Task<bool>> Action { get; set; }
+
     }
 }

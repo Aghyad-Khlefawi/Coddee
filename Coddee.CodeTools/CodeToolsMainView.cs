@@ -5,6 +5,7 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
+using Coddee.CodeTools.Components;
 using Coddee.Loggers;
 using Coddee.ModuleDefinitions;
 using Coddee.Services;
@@ -75,7 +76,7 @@ namespace Coddee.CodeTools
             base.Initialize();
             _vsHelper.GetService = GetService;
             _vsHelper.Initialize();
-
+            VsViewModelBase.CreateSolutionInfo(_vsHelper);
             ViewModelBase.SetContainer(_container);
             var vm = _container.Resolve<IViewModelsManager>().CreateViewModel<CodeToolsMainViewModel>(null);
 

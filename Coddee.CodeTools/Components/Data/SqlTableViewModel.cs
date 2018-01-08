@@ -65,6 +65,14 @@ namespace Coddee.CodeTools.Components.Data
             await _importWizardViewModel.SetTables(this);
             _importWizardViewModel.Show();
         }
-        
+
+        public string GetModelFileName()
+        {
+            return $"{SingularName}.cs";
+        }
+        public string GetRepsotioryInterfaceFileName()
+        {
+            return $"I{SingularName}Repository.cs";
+        }
     }
 }

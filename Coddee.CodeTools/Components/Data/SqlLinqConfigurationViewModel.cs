@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.IO;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Xml;
 using Coddee.Collections;
 using Coddee.Data.LinqToSQL;
@@ -19,17 +20,10 @@ namespace Coddee.CodeTools.Components.Data
     public class SqlLinqConfigurationViewModel : VsViewModelBase<SqlLinqConfigurationView>
     {
         private readonly ISQLDBBrowser _sqldbBrowser;
-        private readonly ISolutionHelper _solutionHelper;
 
         public SqlLinqConfigurationViewModel()
         {
-            Projects = AsyncObservableCollection<CsProjectConfig>.Create(new[]
-            {
-                new CsProjectConfig{Title = "Models",Folder = "Models"},
-                new CsProjectConfig{Title = "Data",Folder="Repositories"},
-                new CsProjectConfig{Title = "LinQ",Folder="Repositories"},
-                new CsProjectConfig{Title = "Rest",Folder="Repositories"},
-            });
+
         }
 
         public SqlLinqConfigurationViewModel(ISQLDBBrowser sqldbBrowser, ISolutionHelper solutionHelper)
@@ -39,13 +33,32 @@ namespace Coddee.CodeTools.Components.Data
             _solutionHelper = solutionHelper;
         }
 
+
         public event ViewModelEventHandler ConfigurationCompleted;
 
-        private AsyncObservableCollection<CsProjectConfig> _projects;
-        public AsyncObservableCollection<CsProjectConfig> Projects
+        private ModelProjectConfiguration _modelConfigurations;
+        public ModelProjectConfiguration ModelConfigurations
         {
-            get { return _projects; }
-            set { SetProperty(ref _projects, value); }
+            get { return _modelConfigurations; }
+            set
+            {
+                SetProperty(ref _modelConfigurations, value);
+                if (_solution != null)
+                    _solution.ModelProjectConfiguration = value;
+            }
+        }
+
+        private DataProjectConfiguration _dataConfigurations;
+        public DataProjectConfiguration DataConfigurations
+        {
+            get { return _dataConfigurations; }
+            set
+            {
+                SetProperty(ref _dataConfigurations, value);
+                if (_solution != null)
+                    _solution.DataProjectConfiguration = value;
+                    
+            }
         }
 
         private string _dbmlPath;
@@ -147,6 +160,27 @@ namespace Coddee.CodeTools.Components.Data
             get { return _selectedLinqReadonlyBaseRepositoryType; }
             set { SetProperty(ref _selectedLinqReadonlyBaseRepositoryType, value); }
         }
+        protected override void OnDesignMode()
+        {
+            base.OnDesignMode();
+            ModelConfigurations = new ModelProjectConfiguration
+            {
+                AdditionalProperties = new AsyncObservableCollection<ModelAdditionalProperty>
+                {
+                    new ModelAdditionalProperty
+                    {
+                        Type = "System.String",
+                        Name = "DisplayMember"
+                    },
+                    new ModelAdditionalProperty
+                    {
+                        Type = "System.String",
+                        Name = "DisplayMember2"
+                    }
+                }
+            };
+
+        }
 
         private void LoadLinqBaseTypes()
         {
@@ -174,18 +208,22 @@ namespace Coddee.CodeTools.Components.Data
             }
         }
 
+        protected override async Task OnInitialization()
+        {
+            await base.OnInitialization();
+
+        }
+
         public void Save()
         {
             if (IsDbValid && !string.IsNullOrWhiteSpace(DbmlPath))
             {
                 _currentSolutionConfigFile.SetValue(ConfigKeys.SqlLinq_DbConnection, DbConnection);
                 _currentSolutionConfigFile.SetValue(ConfigKeys.SqlLinq_DbmlPath, DbmlPath);
-                _currentSolutionConfigFile.SetValue(ConfigKeys.SqlLinq_LinqCrudBase, SelectedLinqBaseRepositoryType?.Name);
-                _currentSolutionConfigFile.SetValue(ConfigKeys.SqlLinq_LinqReadonlyBase, SelectedLinqReadonlyBaseRepositoryType?.Name);
-                foreach (var csProjectConfig in Projects)
-                {
-                    _currentSolutionConfigFile.SetValue($"SqlLinq_Projects_{csProjectConfig.Title}", (CsProject)csProjectConfig);
-                }
+
+                _currentSolutionConfigFile.SetValue(ConfigKeys.SqlLinq_Projects_Models, (ModelProjectConfigurationSerializable)ModelConfigurations);
+                _currentSolutionConfigFile.SetValue(ConfigKeys.SqlLinq_Projects_Data, (DataProjectConfigurationSerializable)DataConfigurations);
+
                 ConfigurationCompleted?.Invoke(this);
             }
         }
@@ -200,34 +238,23 @@ namespace Coddee.CodeTools.Components.Data
                 if (_currentSolutionConfigFile.TryGetValue(ConfigKeys.SqlLinq_DbConnection, out string val))
                     DbConnection = val;
             }
+
             {
                 if (_currentSolutionConfigFile.TryGetValue(ConfigKeys.SqlLinq_DbmlPath, out string val))
                     DbmlPath = val;
             }
+
             {
-                if (_currentSolutionConfigFile.TryGetValue(ConfigKeys.SqlLinq_LinqReadonlyBase, out string val) && !string.IsNullOrWhiteSpace(val))
-                {
-                    if (LinqBaseRepositoryTypes == null)
-                        LoadLinqBaseTypes();
-                    SelectedLinqReadonlyBaseRepositoryType = LinqBaseRepositoryTypes.Find(e => e.Name == val);
-                    IsCustomLinqReadonlyBase = true;
-                }
+                if (_currentSolutionConfigFile.TryGetValue(ConfigKeys.SqlLinq_Projects_Models, out ModelProjectConfigurationSerializable val))
+                    ModelConfigurations = (ModelProjectConfiguration)val;
+                else
+                    ModelConfigurations = new ModelProjectConfiguration();
             }
             {
-                if (_currentSolutionConfigFile.TryGetValue(ConfigKeys.SqlLinq_LinqCrudBase, out string val) && !string.IsNullOrWhiteSpace(val))
-                {
-                    if (LinqBaseRepositoryTypes == null)
-                        LoadLinqBaseTypes();
-                    SelectedLinqBaseRepositoryType = LinqBaseRepositoryTypes.Find(e => e.Name == val);
-                    IsCustomLinqBase = true;
-                }
-            }
-            foreach (var csProjectConfig in Projects)
-            {
-                {
-                    if (_currentSolutionConfigFile.TryGetValue($"SqlLinq_Projects_{csProjectConfig.Title}", out CsProject val))
-                        csProjectConfig.SetValues(val);
-                }
+                if (_currentSolutionConfigFile.TryGetValue(ConfigKeys.SqlLinq_Projects_Data, out DataProjectConfigurationSerializable val))
+                    DataConfigurations = (DataProjectConfiguration)val;
+                else
+                    DataConfigurations = new DataProjectConfiguration();
             }
         }
 
@@ -237,75 +264,4 @@ namespace Coddee.CodeTools.Components.Data
         }
     }
 
-    public class CsProjectConfig : BindableBase
-    {
-        private string _title;
-        public string Title
-        {
-            get { return _title; }
-            set { SetProperty(ref _title, value); }
-        }
-
-        private string _projectPath;
-        public string ProjectPath
-        {
-            get { return _projectPath; }
-            set
-            {
-                SetProperty(ref _projectPath, value);
-                SetDefaultNameSpace();
-            }
-        }
-
-        private string _folder;
-        public string Folder
-        {
-            get { return _folder; }
-            set { SetProperty(ref _folder, value); }
-        }
-
-        private string _defaultNamespace;
-        public string DefaultNamespace
-        {
-            get { return _defaultNamespace; }
-            set { SetProperty(ref _defaultNamespace, value); }
-        }
-
-        private void SetDefaultNameSpace()
-        {
-            if (string.IsNullOrWhiteSpace(DefaultNamespace) && !string.IsNullOrWhiteSpace(DefaultNamespace))
-            {
-                var xml = new XmlDocument();
-                xml.Load(ProjectPath);
-                foreach (XmlElement propertyGroup in xml.GetElementsByTagName("PropertyGroup"))
-                {
-                    var rootNamespace = propertyGroup.GetElementsByTagName("RootNamespace");
-                    if (rootNamespace.Count > 0)
-                    {
-                        DefaultNamespace = $"{rootNamespace.Item(0).LastChild.Value}.{Folder}";
-                        break;
-                    }
-                }
-            }
-        }
-
-
-        public void SetValues(CsProject val)
-        {
-            DefaultNamespace = val.DefaultNamespace;
-            Folder = val.Folder;
-            ProjectPath = val.ProjectPath;
-        }
-
-        public static explicit operator CsProject(CsProjectConfig item)
-        {
-            return new CsProject
-            {
-                Title = item.Title,
-                ProjectPath = item.ProjectPath,
-                DefaultNamespace = item.DefaultNamespace,
-                Folder = item.Folder
-            };
-        }
-    }
 }

@@ -1,15 +1,21 @@
 ﻿// Copyright (c) Aghyad khlefawi. All rights reserved.  
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
+using System;
 using System.Threading.Tasks;
 using System.Windows;
+using Coddee.CodeTools.Components.Data;
 using Coddee.Services;
+using Coddee.VsExtensibility;
 using Coddee.WPF;
+using EnvDTE;
+using EnvDTE80;
 
 namespace Coddee.CodeTools.Components
 {
     public abstract class VsViewModelBase : ViewModelBase
     {
+        protected static CoddeeSolutionInfo _solution;
         protected static IConfigurationFile _currentSolutionConfigFile;
         protected ISolutionHelper _solutionHelper;
         protected override async Task OnInitialization()
@@ -22,6 +28,16 @@ namespace Coddee.CodeTools.Components
         protected virtual void SolutionLoaded(IConfigurationFile config)
         {
             _currentSolutionConfigFile = config;
+        }
+
+        public CsProject GetProject(string key)
+        {
+            return _currentSolutionConfigFile.GetValue<CsProject>(key);
+        }
+
+        public static void CreateSolutionInfo(VsHelper vsHelper)
+        {
+            _solution = new CoddeeSolutionInfo(vsHelper);
         }
     }
 
