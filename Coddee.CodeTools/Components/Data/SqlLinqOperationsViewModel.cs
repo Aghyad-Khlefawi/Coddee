@@ -21,11 +21,6 @@ namespace Coddee.CodeTools.Components.Data
     {
         private static PluralizationService _pluralizationServices;
 
-        public SqlLinqOperationsViewModel()
-        {
-
-        }
-
         private ImportWizardViewModel _importWizardViewModel;
 
         public event ViewModelEventHandler ConfigureCliked;
@@ -71,7 +66,11 @@ namespace Coddee.CodeTools.Components.Data
         }
         public async void ImportAll()
         {
-            await _importWizardViewModel.SetTables(Tables.ToArray());
+            Task ImportAllInternal()
+            {
+                return _importWizardViewModel.SetTables(Tables.ToArray());
+            }
+            await ToggleBusyAsync(Task.Run(ImportAllInternal));
             _importWizardViewModel.Show();
         }
         protected override async Task OnInitialization()
@@ -80,6 +79,10 @@ namespace Coddee.CodeTools.Components.Data
             Tables = AsyncObservableCollection<SqlTableViewModel>.Create();
             _pluralizationServices = PluralizationService.CreateService(CultureInfo.GetCultureInfo("en-us"));
             _importWizardViewModel = await InitializeViewModel<ImportWizardViewModel>();
+            _eventDispatcher.GetEvent<SqlLinqConfigurationUpdatedEvents>().Subscribe(e =>
+            {
+                GetDbTitle();
+            });
         }
         public void Configure()
         {
@@ -109,26 +112,30 @@ namespace Coddee.CodeTools.Components.Data
 
         public async Task GetInfo()
         {
-            IsBusy = true;
-            if (_currentSolutionConfigFile.TryGetValue(ConfigKeys.SqlLinq_DbConnection, out string connection))
+            async Task GetInfoInternal()
             {
-                var sqlConnBuilder = new SqlConnectionStringBuilder(connection);
-                var conn = new SqlConnection(connection);
-                var SqlDatabase = new SqlDatabase
+                if (_solution.DatabaseConfigurations.IsDbValid)
                 {
-                    DatabaseName = sqlConnBuilder.InitialCatalog,
-                    ConnectionString = connection,
-                    Tables = new List<SqlDbTable>()
-                };
-                var tables = await GetDbTables(conn, SqlDatabase);
-                SqlDatabase.Tables.AddRange(tables);
-                conn.Dispose();
-                Tables.ClearAndFill(await SqlDatabase.Tables.OrderBy(e => e.TableName).Select(CreateSqlTableViewModel));
-                TablesCount = Tables.Count;
-                ValidateTables(Tables);
+                    var connection = _solution.DatabaseConfigurations.DbConnection;
+                    var sqlConnBuilder = new SqlConnectionStringBuilder(connection);
+                    var conn = new SqlConnection(connection);
+                    var SqlDatabase = new SqlDatabase
+                    {
+                        DatabaseName = sqlConnBuilder.InitialCatalog,
+                        ConnectionString = connection,
+                        Tables = new List<SqlDbTable>()
+                    };
+                    var tables = await GetDbTables(conn, SqlDatabase);
+                    SqlDatabase.Tables.AddRange(tables);
+                    conn.Dispose();
+                    Tables.ClearAndFill(await SqlDatabase.Tables.OrderBy(e => e.TableName).Select(CreateSqlTableViewModel));
+                    TablesCount = Tables.Count;
+                    ValidateTables(Tables);
 
+                }
             }
-            IsBusy = false;
+
+            await ToggleBusyAsync(Task.Run(GetInfoInternal));
         }
 
         public async Task<SqlTableViewModel> CreateSqlTableViewModel(SqlDbTable table)
@@ -147,6 +154,8 @@ namespace Coddee.CodeTools.Components.Data
         {
             var models = new DirectoryInfo(Path.Combine(_solution.ModelProjectConfiguration.ProjectFolder, _solution.ModelProjectConfiguration.GeneratedCodeFolder)).GetFiles();
             var repositories = new DirectoryInfo(Path.Combine(_solution.DataProjectConfiguration.ProjectFolder, _solution.DataProjectConfiguration.GeneratedCodeFolder)).GetFiles();
+            var linqRepositories = new DirectoryInfo(Path.Combine(_solution.LinqProjectConfiguration.ProjectFolder, _solution.DataProjectConfiguration.GeneratedCodeFolder)).GetFiles();
+            var restRepositories = new DirectoryInfo(Path.Combine(_solution.RestProjectConfiguration.ProjectFolder, _solution.DataProjectConfiguration.GeneratedCodeFolder)).GetFiles();
 
 
             foreach (var table in sqlTables)
@@ -154,6 +163,8 @@ namespace Coddee.CodeTools.Components.Data
                 table.SingularName = _pluralizationServices.Singularize(table.TableName);
                 table.IsModelValid = models.Any(e => e.Name == table.GetModelFileName());
                 table.IsRepositoryInterfaceValid = repositories.Any(e => e.Name == table.GetRepsotioryInterfaceFileName());
+                table.IsLinqRepositoryValid = linqRepositories.Any(e => e.Name == table.GetRepsotioryFileName());
+                table.IsRestRepositoryValid = restRepositories.Any(e => e.Name == table.GetRepsotioryFileName());
             }
         }
 
@@ -171,8 +182,14 @@ namespace Coddee.CodeTools.Components.Data
         protected override void SolutionLoaded(IConfigurationFile config)
         {
             base.SolutionLoaded(config);
-            if (_currentSolutionConfigFile.TryGetValue(ConfigKeys.SqlLinq_DbConnection, out string connection))
+            GetDbTitle();
+        }
+
+        private void GetDbTitle()
+        {
+            if (_solution.DatabaseConfigurations.IsDbValid)
             {
+                var connection = _solution.DatabaseConfigurations.DbConnection;
                 var sqlConnBuilder = new SqlConnectionStringBuilder(connection);
                 DatabaseName = $"{sqlConnBuilder.InitialCatalog} ({sqlConnBuilder.DataSource})";
             }

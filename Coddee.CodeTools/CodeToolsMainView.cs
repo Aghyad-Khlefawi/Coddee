@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Aghyad khlefawi. All rights reserved.  
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
+using System;
 using System.Threading;
 using System.Windows;
 using System.Windows.Input;
@@ -9,8 +10,8 @@ using Coddee.CodeTools.Components;
 using Coddee.Loggers;
 using Coddee.ModuleDefinitions;
 using Coddee.Services;
-using Coddee.Services.Configuration;
 using Coddee.Unity;
+using Coddee.VsExtensibility;
 using Coddee.Windows.AppBuilder;
 using Coddee.WPF;
 
@@ -33,6 +34,12 @@ namespace Coddee.CodeTools
     [Guid("267a7439-6669-459d-962f-fefee1509676")]
     public class CodeToolsMainView : ToolWindowPane
     {
+
+
+        private readonly LogAggregator _logger;
+        private readonly IContainer _container;
+        private readonly VsHelper _vsHelper;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="CodeToolsMainView"/> class.
         /// </summary>
@@ -63,19 +70,17 @@ namespace Coddee.CodeTools
             modules.InitializeAutoModules().Wait();
 
             //Initialize View model
-            Application.Current.Resources.Add("ApplicationAccentColorLighter",new SolidColorBrush((Color)ColorConverter.ConvertFromString("#444F5A")));
+            Application.Current.Resources.Add("ApplicationAccentColorLighter", new SolidColorBrush((Color)ColorConverter.ConvertFromString("#444F5A")));
             Application.Current.Resources.Add("ApplicationAccentColor", new SolidColorBrush((Color)ColorConverter.ConvertFromString("#283645")));
             Application.Current.Resources.Add("ApplicationAccentColorDarker", new SolidColorBrush((Color)ColorConverter.ConvertFromString("#151824")));
         }
 
-        private LogAggregator _logger;
-        private IContainer _container;
-        private readonly VsHelper _vsHelper;
-        protected override void Initialize()
+
+        protected override async void Initialize()
         {
             base.Initialize();
-            _vsHelper.GetService = GetService;
-            _vsHelper.Initialize();
+            _vsHelper.Initialize(this);
+            SolutionInfo.SetServiceProvider(this);
             VsViewModelBase.CreateSolutionInfo(_vsHelper);
             ViewModelBase.SetContainer(_container);
             var vm = _container.Resolve<IViewModelsManager>().CreateViewModel<CodeToolsMainViewModel>(null);
@@ -86,10 +91,12 @@ namespace Coddee.CodeTools
             applicationConsole.SetToggleCondition(e => e.Key == Key.F12);
             _logger.AddLogger(applicationConsole.GetLogger(), LoggerTypes.ApplicationConsole);
 
-            var dialog = _container.Resolve<IDialogService>();
-            dialog.Initialize(WPF.DefaultShell.DefaultRegions.DialogRegion);
-            vm.Initialize();
-            this.Content = view;
+            _container.Resolve<IDialogService>().Initialize(WPF.DefaultShell.DefaultRegions.DialogRegion);
+            _container.Resolve<IToastService>().Initialize(WPF.DefaultShell.DefaultRegions.ToastRegion, TimeSpan.FromSeconds(3));
+
+            Content = view;
+
+            await vm.Initialize();
         }
 
     }

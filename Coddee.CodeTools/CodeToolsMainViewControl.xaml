@@ -37,6 +37,9 @@
 
         </TabControl>
         <coddee:RegionControl Region="{x:Static defaultShell:DefaultRegions.DialogRegion}"/>
+        <coddee:RegionControl Region="{x:Static defaultShell:DefaultRegions.ToastRegion}" 
+                              HorizontalAlignment="Right"
+                              Width="250"/>
     </Grid>
 </UserControl>
 

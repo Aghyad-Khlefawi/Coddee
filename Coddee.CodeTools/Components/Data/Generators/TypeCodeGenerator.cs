@@ -21,7 +21,6 @@ namespace Coddee.CodeTools.Components.Data.Generators
             var nameSpace = new CodeNamespace(project.DefaultNamespace);
             var usingsNamespace = new CodeNamespace();
             usingsNamespace.Imports.Add(new CodeNamespaceImport("System"));
-            usingsNamespace.Imports.Add(new CodeNamespaceImport("System.Runtime.Serialization"));
             usingsNamespace.Imports.Add(new CodeNamespaceImport("Coddee"));
             AddNamepaceImports(usingsNamespace);
             var type = CreateType(args);

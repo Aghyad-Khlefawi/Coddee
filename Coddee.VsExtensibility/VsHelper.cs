@@ -25,7 +25,6 @@ namespace Coddee.CodeTools
 
     public class VsHelper : ISolutionEventsHelper, ISolutionHelper
     {
-        public Func<Type, object> GetService { get; set; }
         public DTE2 Dte { get; private set; }
 
 
@@ -33,9 +32,12 @@ namespace Coddee.CodeTools
         public event Action SolutionClosed;
         private Solution2 _solution;
         private SolutionEvents _solutionEvents;
-        public void Initialize()
+        private IServiceProvider _serviceProvider;
+
+        public void Initialize(IServiceProvider serviceProvider)
         {
-            Dte = (DTE2)GetService(typeof(DTE));
+            _serviceProvider = serviceProvider;
+            Dte = (DTE2)serviceProvider.GetService(typeof(DTE));
             _solution = (Solution2)Dte.Solution;
             _solutionEvents = Dte.Events.SolutionEvents;
             _solutionEvents.Opened += () =>

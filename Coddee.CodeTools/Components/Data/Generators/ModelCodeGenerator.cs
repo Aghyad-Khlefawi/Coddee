@@ -7,33 +7,6 @@ using System.Linq;
 
 namespace Coddee.CodeTools.Components.Data.Generators
 {
-    public class RepositoryInterfaceCodeGenerator : InterfaceCodeGenerator
-    {
-        protected override void AddNamepaceImports(CodeNamespace usingsNamespace)
-        {
-
-            base.AddNamepaceImports(usingsNamespace);
-            usingsNamespace.Imports.Add(new CodeNamespaceImport("System.Collections.Generic"));
-            usingsNamespace.Imports.Add(new CodeNamespaceImport("System.Threading.Tasks"));
-            usingsNamespace.Imports.Add(new CodeNamespaceImport("Coddee.Data"));
-            usingsNamespace.Imports.Add(new CodeNamespaceImport(_solution.ModelProjectConfiguration.DefaultNamespace));
-
-
-        }
-
-        protected override string GetClassName(TableImportArgumentsViewModel args)
-        {
-            return $"I{args.SingularName}Repository";
-        }
-
-        protected override void AddBaseTypes(CodeTypeDeclaration type, TableImportArgumentsViewModel args)
-        {
-            base.AddBaseTypes(type, args);
-            var primaryKeyType = args.GetPrimaryKeyType();
-            if (primaryKeyType != null)
-                type.BaseTypes.Add(new CodeTypeReference(args.SelectedBaseRepositoryType.Name, new CodeTypeReference(args.SingularName), new CodeTypeReference(primaryKeyType)));
-        }
-    }
     public class ModelCodeGenerator : ClassCodeGenerator
     {
         protected override void AddMembers(CodeTypeDeclaration type, TableImportArgumentsViewModel args)
@@ -63,6 +36,12 @@ namespace Coddee.CodeTools.Components.Data.Generators
                 GenerateEqualsIUniqueMethod(type, unique, primary.Type);
                 GenerateEqualsModelMethod(type, primary.Type);
             }
+        }
+
+        protected override void AddNamepaceImports(CodeNamespace usingsNamespace)
+        {
+            base.AddNamepaceImports(usingsNamespace);
+            usingsNamespace.Imports.Add(new CodeNamespaceImport("System.Runtime.Serialization"));
         }
 
         protected override void AddBaseTypes(CodeTypeDeclaration type, TableImportArgumentsViewModel args)

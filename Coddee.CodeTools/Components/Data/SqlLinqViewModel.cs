@@ -2,6 +2,7 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
 using System.Threading.Tasks;
+using Coddee.CodeTools.Config;
 using Coddee.Services;
 using Coddee.WPF;
 using Coddee.WPF.Commands;
@@ -86,12 +87,11 @@ namespace Coddee.CodeTools.Components.Data
 
         private void ReadConfig()
         {
-            if (_currentSolutionConfigFile.TryGetValue(ConfigKeys.SqlLinq_DbmlPath, out string dbmlPath) &&
-                _currentSolutionConfigFile.TryGetValue(ConfigKeys.SqlLinq_DbConnection, out string dbConnection))
+            if (_currentSolutionConfigFile.TryGetValue(ConfigKeys.SqlLinq_Dbml, out DatabaseConfigurationSerializable dbmlConfig))
             {
                 IsConfigured = true;
-                DbConnection = dbConnection;
-                DbmlPath = dbmlPath;
+                DbConnection = dbmlConfig.DbConnection;
+                DbmlPath = dbmlConfig.DbmlPath;
                 ContentVm = _operationsViewModel;
             }
             else

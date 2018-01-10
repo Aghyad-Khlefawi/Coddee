@@ -8,7 +8,7 @@ namespace Coddee.CodeTools
 {
     public static class Extensions
     {
-        public static string GetAssemblyName(this CsProject csProject)
+        public static string GetAssemblyName(this ProjectConfiguration csProject)
         {
             var xml = new XmlDocument();
             xml.Load(csProject.ProjectPath);

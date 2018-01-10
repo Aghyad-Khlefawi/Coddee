@@ -1,15 +1,8 @@
 ﻿// Copyright (c) Aghyad khlefawi. All rights reserved.  
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
-using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.IO;
-using System.Reflection;
-using System.Threading.Tasks;
-using System.Xml;
+using Coddee.CodeTools.Config;
 using Coddee.Collections;
-using Coddee.Data.LinqToSQL;
 using Coddee.Services;
 using Coddee.SQL;
 using Coddee.WPF;
@@ -57,16 +50,34 @@ namespace Coddee.CodeTools.Components.Data
                 SetProperty(ref _dataConfigurations, value);
                 if (_solution != null)
                     _solution.DataProjectConfiguration = value;
-                    
+
             }
         }
 
-        private string _dbmlPath;
-        public string DbmlPath
+        private LinqProjectConfiguration _linqConfigurations;
+        public LinqProjectConfiguration LinqConfigurations
         {
-            get { return _dbmlPath; }
-            set { SetProperty(ref _dbmlPath, value); }
+            get { return _linqConfigurations; }
+            set
+            {
+                SetProperty(ref _linqConfigurations, value);
+                if (_solution != null)
+                    _solution.LinqProjectConfiguration = value;
+
+            }
         }
+        private RestProjectConfiguration _restConfigurations;
+        public RestProjectConfiguration RestConfigurations
+        {
+            get { return _restConfigurations; }
+            set
+            {
+                SetProperty(ref _restConfigurations, value);
+                if (_solution != null)
+                    _solution.RestProjectConfiguration = value;
+            }
+        }
+
 
         private string _initialDirectory;
         public string InitialDirectory
@@ -75,31 +86,17 @@ namespace Coddee.CodeTools.Components.Data
             set { SetProperty(ref _initialDirectory, value); }
         }
 
-        private string _dbConnection;
-        public string DbConnection
+
+        private DatabaseConfiguration _databaseConfigurations;
+        public DatabaseConfiguration DatabaseConfigurations
         {
-            get { return _dbConnection; }
+            get { return _databaseConfigurations; }
             set
             {
-                SetProperty(ref _dbConnection, value);
-                SqlConnectionStringBuilder connection = new SqlConnectionStringBuilder(DbConnection);
-                IsDbValid = true;
-                DbTitle = $"{connection.InitialCatalog} ({connection.DataSource})";
+                SetProperty(ref _databaseConfigurations, value);
+                if (_solution != null)
+                    _solution.DatabaseConfigurations = value;
             }
-        }
-
-        private string _dbTitle;
-        public string DbTitle
-        {
-            get { return _dbTitle; }
-            set { SetProperty(ref _dbTitle, value); }
-        }
-
-        private bool _isDbValid;
-        public bool IsDbValid
-        {
-            get { return _isDbValid; }
-            set { SetProperty(ref _isDbValid, value); }
         }
 
         private IReactiveCommand _browseDbCommand;
@@ -116,50 +113,7 @@ namespace Coddee.CodeTools.Components.Data
             set { SetProperty(ref _saveCommand, value); }
         }
 
-        private bool _isCustomLinqBase;
-        public bool IsCustomLinqBase
-        {
-            get { return _isCustomLinqBase; }
-            set
-            {
-                SetProperty(ref _isCustomLinqBase, value);
-                if (value && LinqBaseRepositoryTypes == null)
-                    LoadLinqBaseTypes();
-            }
-        }
 
-        private bool _isCustomLinqReadonlyBase;
-        public bool IsCustomLinqReadonlyBase
-        {
-            get { return _isCustomLinqReadonlyBase; }
-            set
-            {
-                SetProperty(ref _isCustomLinqReadonlyBase, value);
-                if (value && LinqBaseRepositoryTypes == null)
-                    LoadLinqBaseTypes();
-            }
-        }
-
-        private List<Type> _linqBaseRepositoryTypes;
-        public List<Type> LinqBaseRepositoryTypes
-        {
-            get { return _linqBaseRepositoryTypes; }
-            set { SetProperty(ref _linqBaseRepositoryTypes, value); }
-        }
-
-        private Type _selectedLinqBaseRepositoryType;
-        public Type SelectedLinqBaseRepositoryType
-        {
-            get { return _selectedLinqBaseRepositoryType; }
-            set { SetProperty(ref _selectedLinqBaseRepositoryType, value); }
-        }
-
-        private Type _selectedLinqReadonlyBaseRepositoryType;
-        public Type SelectedLinqReadonlyBaseRepositoryType
-        {
-            get { return _selectedLinqReadonlyBaseRepositoryType; }
-            set { SetProperty(ref _selectedLinqReadonlyBaseRepositoryType, value); }
-        }
         protected override void OnDesignMode()
         {
             base.OnDesignMode();
@@ -182,66 +136,32 @@ namespace Coddee.CodeTools.Components.Data
 
         }
 
-        private void LoadLinqBaseTypes()
-        {
-            LinqBaseRepositoryTypes = new List<Type>();
-            if (_currentSolutionConfigFile.TryGetValue(ConfigKeys.SqlLinq_Projects_LinQ, out CsProject proj))
-            {
-                var activeConfig = _solutionHelper.GetActiveConfiguration();
-                var assemblyPath = proj.GetAssemblyName();
-                if (!string.IsNullOrWhiteSpace(assemblyPath))
-                {
-                    var path = Path.Combine(Path.GetDirectoryName(proj.ProjectPath), "bin", activeConfig, assemblyPath + ".dll");
-                    var assembly = Assembly.LoadFrom(path);
-                    foreach (var type in assembly.GetTypes())
-                    {
-                        if (type.IsGenericType && type.BaseType.GetGenericTypeDefinition() == typeof(CRUDLinqRepositoryBase<,,,>) ||
-                            type.IsGenericType && type.BaseType.GetGenericTypeDefinition() == typeof(ReadOnlyLinqRepositoryBase<,,,>) ||
-                            type.IsGenericType && type.BaseType.GetGenericTypeDefinition() == typeof(LinqRepositoryBase<,,,>) ||
-                            type.IsGenericType && type.BaseType.GetGenericTypeDefinition() == typeof(LinqRepositoryBase<,>) ||
-                            type.IsGenericType && type.BaseType.GetGenericTypeDefinition() == typeof(LinqRepositoryBase<>))
-                        {
-                            LinqBaseRepositoryTypes.Add(type);
-                        }
-                    }
-                }
-            }
-        }
-
-        protected override async Task OnInitialization()
-        {
-            await base.OnInitialization();
-
-        }
 
         public void Save()
         {
-            if (IsDbValid && !string.IsNullOrWhiteSpace(DbmlPath))
-            {
-                _currentSolutionConfigFile.SetValue(ConfigKeys.SqlLinq_DbConnection, DbConnection);
-                _currentSolutionConfigFile.SetValue(ConfigKeys.SqlLinq_DbmlPath, DbmlPath);
 
-                _currentSolutionConfigFile.SetValue(ConfigKeys.SqlLinq_Projects_Models, (ModelProjectConfigurationSerializable)ModelConfigurations);
-                _currentSolutionConfigFile.SetValue(ConfigKeys.SqlLinq_Projects_Data, (DataProjectConfigurationSerializable)DataConfigurations);
+            _currentSolutionConfigFile.SetValue(ConfigKeys.SqlLinq_Dbml, (DatabaseConfigurationSerializable)DatabaseConfigurations);
+            _currentSolutionConfigFile.SetValue(ConfigKeys.SqlLinq_Projects_Models, (ModelProjectConfigurationSerializable)ModelConfigurations);
+            _currentSolutionConfigFile.SetValue(ConfigKeys.SqlLinq_Projects_Data, (DataProjectConfigurationSerializable)DataConfigurations);
+            _currentSolutionConfigFile.SetValue(ConfigKeys.SqlLinq_Projects_LinQ, (LinqProjectConfigurationSerializable)LinqConfigurations);
+            _currentSolutionConfigFile.SetValue(ConfigKeys.SqlLinq_Projects_Rest, (RestProjectConfigurationSerializable)RestConfigurations);
 
-                ConfigurationCompleted?.Invoke(this);
-            }
+            ConfigurationCompleted?.Invoke(this);
+            _eventDispatcher.GetEvent<SqlLinqConfigurationUpdatedEvents>().Raise(_solution);
         }
 
         protected override void SolutionLoaded(IConfigurationFile config)
         {
             base.SolutionLoaded(config);
             InitialDirectory = _solutionHelper.GetCurrentSolutionPath();
-            LinqBaseRepositoryTypes = null;
+
+
 
             {
-                if (_currentSolutionConfigFile.TryGetValue(ConfigKeys.SqlLinq_DbConnection, out string val))
-                    DbConnection = val;
-            }
-
-            {
-                if (_currentSolutionConfigFile.TryGetValue(ConfigKeys.SqlLinq_DbmlPath, out string val))
-                    DbmlPath = val;
+                if (_currentSolutionConfigFile.TryGetValue(ConfigKeys.SqlLinq_Dbml, out DatabaseConfigurationSerializable val))
+                    DatabaseConfigurations = (DatabaseConfiguration)val;
+                else
+                    DatabaseConfigurations = new DatabaseConfiguration();
             }
 
             {
@@ -256,11 +176,23 @@ namespace Coddee.CodeTools.Components.Data
                 else
                     DataConfigurations = new DataProjectConfiguration();
             }
+            {
+                if (_currentSolutionConfigFile.TryGetValue(ConfigKeys.SqlLinq_Projects_LinQ, out LinqProjectConfigurationSerializable val))
+                    LinqConfigurations = (LinqProjectConfiguration)val;
+                else
+                    LinqConfigurations = new LinqProjectConfiguration();
+            }
+            {
+                if (_currentSolutionConfigFile.TryGetValue(ConfigKeys.SqlLinq_Projects_Rest, out RestProjectConfigurationSerializable val))
+                    RestConfigurations = (RestProjectConfiguration)val;
+                else
+                    RestConfigurations = new RestProjectConfiguration();
+            }
         }
 
         public void BrowseDb()
         {
-            DbConnection = _sqldbBrowser.GetDatabaseConnectionString();
+            DatabaseConfigurations.DbConnection = _sqldbBrowser.GetDatabaseConnectionString();
         }
     }
 

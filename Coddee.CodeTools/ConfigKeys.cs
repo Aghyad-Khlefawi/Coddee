@@ -5,10 +5,7 @@ namespace Coddee.CodeTools
 {
     public class ConfigKeys
     {
-        public const string SqlLinq_DbmlPath = nameof(SqlLinq_DbmlPath);
-        public const string SqlLinq_LinqCrudBase = nameof(SqlLinq_LinqCrudBase);
-        public const string SqlLinq_LinqReadonlyBase = nameof(SqlLinq_LinqReadonlyBase);
-        public const string SqlLinq_DbConnection = nameof(SqlLinq_DbConnection);
+        public const string SqlLinq_Dbml = nameof(SqlLinq_Dbml);
 
         public const string SqlLinq_Projects_Models = nameof(SqlLinq_Projects_Models);
         public const string SqlLinq_Projects_Data = nameof(SqlLinq_Projects_Data);

@@ -7,8 +7,7 @@
              xmlns:global="clr-namespace:"
              xmlns:coddee="http://schemas.Coddee.com/2017/WPF"
              mc:Ignorable="d" 
-             Name="ViewRoot"
-             d:DesignHeight="400">
+             Name="ViewRoot">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -19,7 +18,7 @@
     </UserControl.Resources>
     <coddee:BusyIndicator IsBusy="{Binding IsBusy}"  d:DataContext="{StaticResource designData}">
         <StackPanel>
-            <GroupBox Header="Database">
+            <GroupBox Header="Database" DataContext="{Binding DatabaseConfigurations}">
                 <StackPanel>
                     <coddee:FileBrowser
                 Title="Dbml file"
@@ -33,7 +32,7 @@
                             <Path VerticalAlignment="Center"  Style="{StaticResource Shape_Error}" Fill="{StaticResource ErrorColor}" Height="15" Visibility="{Binding IsDbValid,Converter={StaticResource BoolToVisibilityConverter},ConverterParameter=R}"/>
                         </Grid>
                         <Label Width="60" Content="Database"   />
-                        <Button Width="40" DockPanel.Dock="Right"  Content="..." Command="{Binding BrowseDbCommand}"/>
+                        <Button Width="40" DockPanel.Dock="Right"  Content="..." Command="{Binding ElementName=ViewRoot,Path=DataContext.BrowseDbCommand}"/>
                         <Label VerticalContentAlignment="Center"  Margin="5 0" Content="{Binding DbTitle}"/>
                     </DockPanel>
                 </StackPanel>
@@ -103,6 +102,54 @@
                         FileFilter="CSharp project|*.csproj"
                         InitialDirectory="{Binding ElementName=ViewRoot,Path=DataContext.InitialDirectory}"
                         FilePath="{Binding ProjectPath}"/>
+                    <DockPanel Margin="15 0 0 3">
+                        <Label Width="130" Content="Default namespace"/>
+                        <TextBox  Text="{Binding DefaultNamespace,UpdateSourceTrigger=PropertyChanged}"/>
+                    </DockPanel>
+                    <DockPanel Margin="15 0 0 3">
+                        <Label Width="130" Content="Generated code folder"/>
+                        <TextBox Text="{Binding GeneratedCodeFolder,UpdateSourceTrigger=PropertyChanged}"/>
+                    </DockPanel>
+                </StackPanel>
+            </GroupBox>
+            <GroupBox Name="LinqGroup" DataContext="{Binding LinqConfigurations}" Header="Linq">
+                <StackPanel Margin="0 3 0 0" >
+                    <coddee:FileBrowser Margin="0 0 0 3"
+                                        TitleWidth="130"
+                                        Title="Linq project file"
+                                        FileFilter="CSharp project|*.csproj"
+                                        InitialDirectory="{Binding ElementName=ViewRoot,Path=DataContext.InitialDirectory}"
+                                        FilePath="{Binding ProjectPath}"/>
+                    <DockPanel Margin="15 0 0 3">
+                        <Label Width="130" Content="Default namespace"/>
+                        <TextBox  Text="{Binding DefaultNamespace,UpdateSourceTrigger=PropertyChanged}"/>
+                    </DockPanel>
+                    <DockPanel Margin="15 0 0 3">
+                        <Label Width="130" Content="Generated code folder"/>
+                        <TextBox Text="{Binding GeneratedCodeFolder,UpdateSourceTrigger=PropertyChanged}"/>
+                    </DockPanel>
+                    <DockPanel Margin="15 0 0 3">
+                        <CheckBox VerticalAlignment="Center" IsChecked="{Binding UseCutomCrudBase}" Width="130" Content="Custom Crud base"/>
+                        <ComboBox ItemsSource="{Binding LinqBaseTypes}"
+                                  IsEnabled="{Binding UseCutomCrudBase}"
+                                  SelectedItem="{Binding SelectedLinqCrudBase}"  Width="auto"/>
+                    </DockPanel>
+                    <DockPanel Margin="15 0 0 3">
+                        <CheckBox VerticalAlignment="Center" IsChecked="{Binding UseCutomReadBase}" Width="130" Content="Custom read base"/>
+                        <ComboBox ItemsSource="{Binding LinqBaseTypes}"
+                                  IsEnabled="{Binding UseCutomReadBase}"
+                                  SelectedItem="{Binding SelectedLinqReadBase}"  Width="auto"/>
+                    </DockPanel>
+                </StackPanel>
+            </GroupBox>
+            <GroupBox Name="RestGroup" DataContext="{Binding RestConfigurations}" Header="Rest">
+                <StackPanel Margin="0 3 0 0" >
+                    <coddee:FileBrowser Margin="0 0 0 3"
+                                        TitleWidth="130"
+                                        Title="Rest project file"
+                                        FileFilter="CSharp project|*.csproj"
+                                        InitialDirectory="{Binding ElementName=ViewRoot,Path=DataContext.InitialDirectory}"
+                                        FilePath="{Binding ProjectPath}"/>
                     <DockPanel Margin="15 0 0 3">
                         <Label Width="130" Content="Default namespace"/>
                         <TextBox  Text="{Binding DefaultNamespace,UpdateSourceTrigger=PropertyChanged}"/>

@@ -171,7 +171,7 @@ namespace Coddee.WPF
         /// </summary>
         protected Dispatcher GetDispatcher()
         {
-            return IsDesignMode() ? Application.Current.Dispatcher : _app.GetSystemApplication().Dispatcher;
+            return  Application.Current.Dispatcher;
         }
 
         /// <summary>

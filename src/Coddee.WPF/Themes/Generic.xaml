@@ -36,6 +36,7 @@
     </Style>
 
     <Style TargetType="{x:Type local:BusyIndicator}">
+        <Setter Property="FillColor" Value="{DynamicResource ApplicationAccentColor}"/>
         <Setter Property="IsTabStop"
                 Value="False" />
         <Setter Property="Template">
@@ -79,7 +80,6 @@
                                            HorizontalAlignment="Center"
                                            Foreground="{TemplateBinding FillColor}"
                                            TextAlignment="Center"
-                                           FontFamily="pack://application:,,,/Concord.DIS.Controls;component/Fonts/#Ara Hamah 1964 R Light"
                                            Margin="0 0 0 5" />
                                 <StackPanel Orientation="Horizontal"
                                             HorizontalAlignment="Center">

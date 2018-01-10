@@ -62,9 +62,16 @@
     </Compile>
     <Compile Include="CodeToolsMainViewModel.cs" />
     <Compile Include="CodeToolsMainViewPackage.cs" />
+    <Compile Include="Components\Data\ColumnImportArgumentsViewModel.cs" />
     <Compile Include="Components\Data\Generators\ClassCodeGenerator.cs" />
     <Compile Include="Components\Data\Generators\InterfaceCodeGenerator.cs" />
+    <Compile Include="Components\Data\Generators\RestRepositoryCodeGenerator.cs" />
+    <Compile Include="Components\Data\Generators\RepositoryInterfaceCodeGenerator.cs" />
+    <Compile Include="Components\Data\Generators\LinqRepositoryCodeGenerator.cs" />
     <Compile Include="Components\Data\Generators\TypeCodeGenerator.cs" />
+    <Compile Include="Components\Data\TableImportArgumentsViewModel.cs" />
+    <Compile Include="Config\DatabaseConfiguration.cs" />
+    <Compile Include="Config\RestProjectConfiguration.cs" />
     <Compile Include="Config\DataProjectConfiguration.cs" />
     <Compile Include="Components\Data\CsProject.cs" />
     <Compile Include="Components\Data\Generators\ModelCodeGenerator.cs" />
@@ -90,6 +97,9 @@
       <DependentUpon>SqlLinqView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Components\Data\SqlLinqViewModel.cs" />
+    <Compile Include="Config\LinqProjectConfiguration.cs" />
+    <Compile Include="DbmlCompare.cs" />
+    <Compile Include="Events.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Globals.cs" />
     <Compile Include="Config\ModelProjectConfiguration.cs" />
@@ -227,6 +237,10 @@
     <ProjectReference Include="..\src\Coddee.Data.Linq\Coddee.Data.LinqToSQL.csproj">
       <Project>{B7F174A8-5037-4C30-9E8B-9896315AE855}</Project>
       <Name>Coddee.Data.LinqToSQL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\src\Coddee.Data.Rest\Coddee.Data.REST.csproj">
+      <Project>{d37a3baf-2c12-4947-aa65-c737dacc5b54}</Project>
+      <Name>Coddee.Data.REST</Name>
     </ProjectReference>
     <ProjectReference Include="..\src\Coddee.Data\Coddee.Data.csproj">
       <Project>{9541018b-0cc1-4237-8370-df8f20940eed}</Project>

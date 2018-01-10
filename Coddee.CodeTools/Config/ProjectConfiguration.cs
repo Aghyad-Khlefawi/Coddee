@@ -19,7 +19,12 @@ namespace Coddee.CodeTools
                 SetProperty(ref _projectPath, value);
                 SetDefaultNameSpace();
                 ProjectFolder = Path.GetDirectoryName(value);
+                OnProjectPathChanged();
             }
+        }
+
+        protected virtual void OnProjectPathChanged()
+        {
         }
 
         private string _projectFolder;

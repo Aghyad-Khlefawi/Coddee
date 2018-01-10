@@ -9,7 +9,7 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/Concord.WIS.Client.WPF;component/Resources.xaml" />
+                <ResourceDictionary Source="../Resources.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <local:NotificationService x:Key="datacontext" />
         </ResourceDictionary>

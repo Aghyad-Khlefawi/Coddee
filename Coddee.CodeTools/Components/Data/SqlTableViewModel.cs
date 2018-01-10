@@ -76,5 +76,10 @@ namespace Coddee.CodeTools.Components.Data
         {
             return $"I{SingularName}Repository.cs";
         }
+
+        public string GetRepsotioryFileName()
+        {
+            return $"{SingularName}Repository.cs";
+        }
     }
 }

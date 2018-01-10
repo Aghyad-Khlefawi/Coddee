@@ -13,7 +13,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="../../Resources.xaml" />
             </ResourceDictionary.MergedDictionaries>
-            <local:SqlLinqOperationsViewModel x:Key="designData" />
+            <local:SqlLinqOperationsViewModel x:Key="designData"/>
         </ResourceDictionary>
     </UserControl.Resources>
     <coddee:BusyIndicator IsBusy="{Binding IsBusy}" d:DataContext="{StaticResource designData}">
@@ -67,7 +67,7 @@
                                         <Button DockPanel.Dock="Right"
                                                 
                                                 Command="{Binding ConfigureTableCommand}">
-                                            <Path Style="{DynamicResource Shape_Settings}" 
+                                            <Path Style="{DynamicResource Shape_Import}" 
                                                   Height="20"
                                                   />
                                         </Button>
