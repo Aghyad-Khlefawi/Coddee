@@ -10,6 +10,6 @@ namespace Coddee.CodeTools.Sql
     {
         public string DatabaseName { get; set; }
         public string ConnectionString { get; set; }
-        public List<SqlDbTable> Tables { get; set; }
+        public List<SqlTable> Tables { get; set; }
     }
 }

@@ -8,9 +8,9 @@ using Coddee.CodeTools.Components;
 
 namespace Coddee.CodeTools.Sql
 {
-    public class GetDbTablesQuery:SqlQuery<SqlDbTable>
+    public class GetDbTablesQuery:SqlQuery<SqlTable>
     {
-        public Task<IEnumerable<SqlDbTable>> Execute (SqlConnection connection)
+        public Task<IEnumerable<SqlTable>> Execute (SqlConnection connection)
         {
             return Execute(connection, null);
         }

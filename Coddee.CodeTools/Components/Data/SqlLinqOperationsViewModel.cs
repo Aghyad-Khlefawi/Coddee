@@ -22,6 +22,7 @@ namespace Coddee.CodeTools.Components.Data
         private static PluralizationService _pluralizationServices;
 
         private ImportWizardViewModel _importWizardViewModel;
+        private DbmlCompare _dbmlCompare;
 
         public event ViewModelEventHandler ConfigureCliked;
 
@@ -79,6 +80,7 @@ namespace Coddee.CodeTools.Components.Data
             Tables = AsyncObservableCollection<SqlTableViewModel>.Create();
             _pluralizationServices = PluralizationService.CreateService(CultureInfo.GetCultureInfo("en-us"));
             _importWizardViewModel = await InitializeViewModel<ImportWizardViewModel>();
+            _dbmlCompare = new DbmlCompare();
             _eventDispatcher.GetEvent<SqlLinqConfigurationUpdatedEvents>().Subscribe(e =>
             {
                 GetDbTitle();
@@ -123,9 +125,10 @@ namespace Coddee.CodeTools.Components.Data
                     {
                         DatabaseName = sqlConnBuilder.InitialCatalog,
                         ConnectionString = connection,
-                        Tables = new List<SqlDbTable>()
+                        Tables = new List<SqlTable>()
                     };
                     var tables = await GetDbTables(conn, SqlDatabase);
+                    var compareRes = _dbmlCompare.Compare(_solution.DatabaseConfigurations.DbmlPath, tables);
                     SqlDatabase.Tables.AddRange(tables);
                     conn.Dispose();
                     Tables.ClearAndFill(await SqlDatabase.Tables.OrderBy(e => e.TableName).Select(CreateSqlTableViewModel));
@@ -138,7 +141,7 @@ namespace Coddee.CodeTools.Components.Data
             await ToggleBusyAsync(Task.Run(GetInfoInternal));
         }
 
-        public async Task<SqlTableViewModel> CreateSqlTableViewModel(SqlDbTable table)
+        public async Task<SqlTableViewModel> CreateSqlTableViewModel(SqlTable table)
         {
             var sqlTableViewModel = new SqlTableViewModel(_importWizardViewModel)
             {
@@ -168,13 +171,13 @@ namespace Coddee.CodeTools.Components.Data
             }
         }
 
-        private async Task<IEnumerable<SqlDbTable>> GetDbTables(SqlConnection conn, SqlDatabase db)
+        private async Task<IEnumerable<SqlTable>> GetDbTables(SqlConnection conn, SqlDatabase db)
         {
             await SqlQueries.UseDatabase.ExecuteNonQuery(conn, db.DatabaseName);
             var tables = await SqlQueries.GetDatabaseTables.Execute(conn);
             foreach (var table in tables)
             {
-                table.Columns = new List<SqlTableColumn>(await SqlQueries.GetTableColumns.Execute(conn, table.TableName));
+                table.Columns = new List<SqlTableColumn>(await SqlQueries.GetTableColumns.Execute(conn, table.TableName).ForEach(e => e.Table = table));
             }
             return tables;
         }

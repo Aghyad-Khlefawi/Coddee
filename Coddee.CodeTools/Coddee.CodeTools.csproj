@@ -98,7 +98,7 @@
     </Compile>
     <Compile Include="Components\Data\SqlLinqViewModel.cs" />
     <Compile Include="Config\LinqProjectConfiguration.cs" />
-    <Compile Include="DbmlCompare.cs" />
+    <Compile Include="Sql\DbmlCompare.cs" />
     <Compile Include="Events.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Globals.cs" />
@@ -107,7 +107,7 @@
     <Compile Include="Sql\Queries\GetTableColumnsQuery.cs" />
     <Compile Include="Sql\Queries\SqlTableColumn.cs" />
     <Compile Include="Sql\SqlDatabase.cs" />
-    <Compile Include="Sql\SqlDbTable.cs" />
+    <Compile Include="Sql\SqlTable.cs" />
     <Compile Include="Sql\SqlMapIgnore.cs" />
     <Compile Include="Sql\SqlQueries.cs" />
     <Compile Include="Components\VsViewModelBase.cs" />

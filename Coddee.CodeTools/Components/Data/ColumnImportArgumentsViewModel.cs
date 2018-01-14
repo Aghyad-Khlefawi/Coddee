@@ -19,35 +19,46 @@ namespace Coddee.CodeTools.Components.Data
 
         private Type GetCSharpType(SqlTableColumn column)
         {
-            switch (column.ColumnType)
+            var baseType = GetBaseType();
+            if (column.IsNullable)
             {
-                case "smallint":
-                case "tinyint":
-                case "int":
-                    return typeof(Int32);
-                case "nchar":
-                case "varchar":
-                case "nvarchar":
-                    return typeof(string);
-                case "bit":
-                    return typeof(bool);
-                case "datetime":
-                case "date":
-                case "datetime2":
-                    return typeof(DateTime);
-                case "char":
-                    return typeof(char);
-                case "float":
-                    return typeof(float);
-                case "decimal":
-                    return typeof(decimal);
-                case "uniqueidentifier":
-                    return typeof(Guid);
-                case "varbinary":
-                case "image":
-                    return typeof(byte[]);
+                if (baseType.IsClass)
+                    return baseType;
+                return typeof(Nullable<>).MakeGenericType(baseType);
             }
-            return typeof(object);
+            return baseType;
+            Type GetBaseType()
+            {
+                switch (column.ColumnType)
+                {
+                    case "smallint":
+                    case "tinyint":
+                    case "int":
+                        return typeof(Int32);
+                    case "nchar":
+                    case "varchar":
+                    case "nvarchar":
+                        return typeof(string);
+                    case "bit":
+                        return typeof(bool);
+                    case "datetime":
+                    case "date":
+                    case "datetime2":
+                        return typeof(DateTime);
+                    case "char":
+                        return typeof(char);
+                    case "float":
+                        return typeof(float);
+                    case "decimal":
+                        return typeof(decimal);
+                    case "uniqueidentifier":
+                        return typeof(Guid);
+                    case "varbinary":
+                    case "image":
+                        return typeof(byte[]);
+                }
+                return typeof(object);
+            }
         }
 
         private bool _isPrimaryKey;
