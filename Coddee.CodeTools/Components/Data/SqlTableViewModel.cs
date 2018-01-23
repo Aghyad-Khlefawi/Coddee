@@ -24,7 +24,7 @@ namespace Coddee.CodeTools.Components.Data
         
         public string TableName { get; set; }
         public string SchemaName { get; set; }
-        public List<SqlTableColumn> Columns { get; set; }
+        public List<SqlColumn> Columns { get; set; }
         public string SingularName { get; set; }
 
         private bool _isModelValid;

@@ -13,7 +13,7 @@ using Coddee.WPF;
 
 namespace Coddee.Services.ViewModelManager
 {
-    
+
     public class ViewModelsManager : IViewModelsManager
     {
         private const string _eventsSource = "ViewModelsManager";
@@ -29,7 +29,7 @@ namespace Coddee.Services.ViewModelManager
             _viewModels = new ConcurrentDictionary<IViewModel, ViewModelInfo>();
             _viewModelGroups = new ConcurrentDictionary<string, List<IViewModel>>();
         }
-        
+
 
         public event EventHandler<ViewModelInfo> ViewModelCreated;
 
@@ -50,6 +50,18 @@ namespace Coddee.Services.ViewModelManager
         public IEnumerable<IViewModel> GetGroupViewModels(string group)
         {
             return _viewModelGroups[group];
+        }
+
+        public void RemoveViewModel(IViewModel viewModel)
+        {
+            lock (_viewModels)
+            {
+                if (_viewModels.ContainsKey(viewModel))
+                {
+                    _viewModels.TryRemove(viewModel, out ViewModelInfo deleted);
+                    deleted?.ParentViewModel?.ChildViewModels.Remove(deleted);
+                }
+            }
         }
 
         public IViewModel CreateViewModel(Type viewModelType, IViewModel parentVM)

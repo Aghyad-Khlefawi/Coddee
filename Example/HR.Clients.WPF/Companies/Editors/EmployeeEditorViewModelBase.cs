@@ -23,6 +23,7 @@ namespace HR.Clients.WPF.Companies.Editors
         public void Edit(Employee item, Company companiesSelectedItem)
         {
             _selectedCompany = companiesSelectedItem;
+            Dispose();
             base.Edit(item);
         }
 

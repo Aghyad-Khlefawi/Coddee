@@ -177,7 +177,7 @@ namespace Coddee.CodeTools.Components.Data
             var tables = await SqlQueries.GetDatabaseTables.Execute(conn);
             foreach (var table in tables)
             {
-                table.Columns = new List<SqlTableColumn>(await SqlQueries.GetTableColumns.Execute(conn, table.TableName).ForEach(e => e.Table = table));
+                table.Columns = new List<SqlColumn>(await SqlQueries.GetTableColumns.Execute(conn, table.TableName).ForEach(e => e.Table = table));
             }
             return tables;
         }

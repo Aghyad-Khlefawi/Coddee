@@ -9,7 +9,7 @@ namespace Coddee.CodeTools.Components.Data
 {
     public class ColumnImportArgumentsViewModel : ViewModelBase
     {
-        public ColumnImportArgumentsViewModel(SqlTableColumn column)
+        public ColumnImportArgumentsViewModel(SqlColumn column)
         {
             Name = column.ColumnName;
             SqlType = column.ColumnType;
@@ -17,7 +17,7 @@ namespace Coddee.CodeTools.Components.Data
             Type = GetCSharpType(column);
         }
 
-        private Type GetCSharpType(SqlTableColumn column)
+        private Type GetCSharpType(SqlColumn column)
         {
             var baseType = GetBaseType();
             if (column.IsNullable)
@@ -48,7 +48,7 @@ namespace Coddee.CodeTools.Components.Data
                     case "char":
                         return typeof(char);
                     case "float":
-                        return typeof(float);
+                        return typeof(double);
                     case "decimal":
                         return typeof(decimal);
                     case "uniqueidentifier":

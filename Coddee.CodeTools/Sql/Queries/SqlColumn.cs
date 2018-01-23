@@ -6,7 +6,7 @@ using Coddee.CodeTools.Components;
 
 namespace Coddee.CodeTools.Sql.Queries
 {
-    public class SqlTableColumn:IEquatable<SqlTableColumn>
+    public class SqlColumn:IEquatable<SqlColumn>
     {
         public string ColumnName { get; set; }
         public string ColumnType { get; set; }
@@ -18,7 +18,7 @@ namespace Coddee.CodeTools.Sql.Queries
         [SqlMapIgnore]
         public SqlTable Table { get; set; }
 
-        public bool Equals(SqlTableColumn other)
+        public bool Equals(SqlColumn other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
@@ -30,7 +30,7 @@ namespace Coddee.CodeTools.Sql.Queries
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != this.GetType()) return false;
-            return Equals((SqlTableColumn) obj);
+            return Equals((SqlColumn) obj);
         }
 
         public override int GetHashCode()

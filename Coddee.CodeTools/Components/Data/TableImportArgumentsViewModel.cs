@@ -131,7 +131,7 @@ namespace Coddee.CodeTools.Components.Data
             Columns = await _table.Columns.Select(CreateColumn).ToAsyncObservableCollection();
         }
 
-        private async Task<ColumnImportArgumentsViewModel> CreateColumn(SqlTableColumn arg)
+        private async Task<ColumnImportArgumentsViewModel> CreateColumn(SqlColumn arg)
         {
             var argumentsViewModel = new ColumnImportArgumentsViewModel(arg);
             await argumentsViewModel.Initialize();

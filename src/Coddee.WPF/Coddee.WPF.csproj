@@ -160,6 +160,7 @@
     </Compile>
     <Compile Include="Services\Dialogs\DialogsExplorerViewModel.cs" />
     <Compile Include="Services\Dialogs\DialogState.cs" />
+    <Compile Include="Services\Dialogs\DialogViewModel.cs" />
     <Compile Include="Services\Dialogs\IDialogExplorer.cs" />
     <Compile Include="Services\Interfaces\IViewModelsManager.cs" />
     <Compile Include="Localize.cs" />

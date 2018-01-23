@@ -104,9 +104,11 @@
     <Compile Include="Globals.cs" />
     <Compile Include="Config\ModelProjectConfiguration.cs" />
     <Compile Include="Config\ProjectConfiguration.cs" />
+    <Compile Include="Sql\DbmlXmlTags.cs" />
     <Compile Include="Sql\Queries\GetTableColumnsQuery.cs" />
-    <Compile Include="Sql\Queries\SqlTableColumn.cs" />
+    <Compile Include="Sql\Queries\SqlColumn.cs" />
     <Compile Include="Sql\SqlDatabase.cs" />
+    <Compile Include="Sql\SqlFunction.cs" />
     <Compile Include="Sql\SqlTable.cs" />
     <Compile Include="Sql\SqlMapIgnore.cs" />
     <Compile Include="Sql\SqlQueries.cs" />

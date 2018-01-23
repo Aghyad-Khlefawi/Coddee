@@ -187,11 +187,11 @@ namespace Coddee.AppBuilder
                     loginViewModel.LoggedIn += (s, args) =>
                     {
                         loggedIn = true;
+                        wpfApplication.ShowWindow();
                         shellViewModel.Initialize().ContinueWith((t) =>
                         {
                             container.Resolve<IEventDispatcher>().GetEvent<ApplicationStartedEvent>().Raise(wpfApplication);
                         });
-                        wpfApplication.ShowWindow();
                         loginView.Close();
                     };
                     wpfApplication.GetSystemApplication()

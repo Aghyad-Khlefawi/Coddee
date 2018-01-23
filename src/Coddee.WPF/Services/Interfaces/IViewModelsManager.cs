@@ -26,5 +26,6 @@ namespace Coddee.Services
 
         void AddViewModelToGroup(string group, IViewModel viewModel);
         IEnumerable<IViewModel> GetGroupViewModels(string group);
+        void RemoveViewModel(IViewModel viewModel);
     }
 }

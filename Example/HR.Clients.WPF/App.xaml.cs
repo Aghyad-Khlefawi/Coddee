@@ -8,6 +8,7 @@ using System.Windows.Input;
 using Coddee.AppBuilder;
 using Coddee.Loggers;
 using Coddee.Unity;
+using Coddee.Windows.AppBuilder;
 using Coddee.WPF;
 using HR.Clients.WPF.Login;
 using HR.Clients.WPF.Main;
@@ -27,7 +28,7 @@ namespace HR.Clients.WPF
 
             new WPFApplication("HR application", new CoddeeUnityContainer()).Run(app =>
             {
-                app.UseLogger(LoggerTypes.ApplicationConsole | LoggerTypes.DebugOutput, LogRecordTypes.Debug)
+                app.UseLogger(new LoggerOptions(LoggerTypes.ApplicationConsole | LoggerTypes.DebugOutput, LogRecordTypes.Debug))
                    .UseApplicationConsole(e => e.Key == Key.F12)
                    .UseCoddeeDebugTool(e => e.Key == Key.F11)
                    .UseILMapper()
@@ -36,8 +37,8 @@ namespace HR.Clients.WPF
                    .UseToast()
                    .UseDialogs()
                    .UseLocalization("HR.Clients.WPF.Properties.Resources", "HR.Clients.WPF.exe", new[] { "ar-SY", "en-US" }, "ar-SY")
-                   .UseRESTRepositoryManager(config => new RESTRepositoryManagerConfig("http://localhost:15297/dapi/", null, "HR.Data.REST"));
-                //.UseLinqRepositoryManager<HRDBManager>(connection, "HR.Data.LinqToSQL");
+                  // .UseRESTRepositoryManager(config => new RESTRepositoryManagerConfig("http://localhost:15297/dapi/", null, "HR.Data.REST"));
+                .UseLinqRepositoryManager<HRDBManager>(connection, "HR.Data.LinqToSQL");
             }, args);
             base.OnStartup(args);
         }

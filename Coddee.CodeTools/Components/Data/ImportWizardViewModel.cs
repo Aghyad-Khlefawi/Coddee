@@ -53,13 +53,13 @@ namespace Coddee.CodeTools.Components.Data
                 {
                     Columns = new AsyncObservableCollection<ColumnImportArgumentsViewModel>
                     {
-                        new ColumnImportArgumentsViewModel(new SqlTableColumn
+                        new ColumnImportArgumentsViewModel(new SqlColumn
                         {
                             ColumnName = "ID",
                             ColumnType = "uniqueidentifier",
                             IsPrimaryKey = true,
                         }),
-                        new ColumnImportArgumentsViewModel(new SqlTableColumn
+                        new ColumnImportArgumentsViewModel(new SqlColumn
                         {
                             ColumnName = "Column1",
                             ColumnType = "nvarchar",

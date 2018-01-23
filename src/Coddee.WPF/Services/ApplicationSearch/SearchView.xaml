@@ -17,14 +17,14 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="../../Resources.xaml" />
                 <ResourceDictionary>
-                    <local:SearchViewModel x:Key="designData" />
+                    <local:SearchViewModel x:Key="designData" IsBusy="True"/>
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid d:DataContext="{StaticResource designData}">
         <controls:BusyIndicator IsBusy="{Binding IsBusy}"
-                                Text="Initializing quick search..."
+                                HideText="True"
                                 HideContentOnBusy="True"
                                 FillColor="white">
             <Grid Width="225">

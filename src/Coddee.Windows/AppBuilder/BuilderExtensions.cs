@@ -73,16 +73,13 @@ namespace Coddee.AppBuilder
         /// <summary>
         /// Sets the minimum log level to show to the user
         /// </summary>
-        /// <param name="loggerType">Specify which logger to use. Uses Enum flags to specify multiple values</param>
-        /// <param name="level">The minimum log level</param>
         /// <returns></returns>
         public static IApplicationBuilder UseLogger(this IApplicationBuilder builder,
-                                                    LoggerTypes loggerType,
-                                                    LogRecordTypes level)
+                                                    LoggerOptions options)
         {
             builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.LoggerBuildAction((container) =>
             {
-                BuilderHelper.RegisterLoggers(loggerType, level, container);
+                BuilderHelper.RegisterLoggers(options, container);
             }));
             return builder;
         }

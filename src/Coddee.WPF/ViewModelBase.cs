@@ -171,7 +171,7 @@ namespace Coddee.WPF
         /// </summary>
         protected Dispatcher GetDispatcher()
         {
-            return  Application.Current.Dispatcher;
+            return Application.Current.Dispatcher;
         }
 
         /// <summary>
@@ -200,26 +200,21 @@ namespace Coddee.WPF
         /// Called when the ViewModel is ready to be presented
         /// </summary>
         /// <returns></returns>
-        public async Task Initialize(bool forceInitialize = false)
+        public Task Initialize(bool forceInitialize = false)
         {
-            bool skip = false;
             lock (_initializationLock)
             {
-                if (IsInitialized && !forceInitialize)
-                {
-                    skip = true;
-                }
+                _logger?.Log(_eventsSource, $"ViewModel {__Name} initializing", LogRecordTypes.Debug);
+                bool skip = IsInitialized && !forceInitialize;
                 IsInitialized = true;
+                if (skip)
+                {
+                    _logger?.Log(_eventsSource, $"ViewModel {__Name} is initialized skipping initialization", LogRecordTypes.Debug);
+                    return completedTask;
+                }
             }
 
-            if (skip)
-            {
-                _logger?.Log(_eventsSource, $"ViewModel {__Name} is initialized skipping initialization", LogRecordTypes.Debug);
-                return;
-            }
-
-            _logger?.Log(_eventsSource, $"ViewModel {__Name} initializing", LogRecordTypes.Debug);
-            await Task.Run(OnInitialization).ContinueWith(t =>
+            return Task.Run(OnInitialization).ContinueWith(t =>
             {
                 if (t.IsFaulted)
                 {
@@ -434,7 +429,13 @@ namespace Coddee.WPF
 
         public virtual void Dispose()
         {
-            foreach (var child in GetChildViewModels())
+            DisposeChildren();
+            _vmManager.RemoveViewModel(this);
+        }
+
+        protected virtual void DisposeChildren()
+        {
+            foreach (var child in GetChildViewModels().ToList())
             {
                 child.Dispose();
             }

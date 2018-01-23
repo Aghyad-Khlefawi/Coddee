@@ -56,7 +56,7 @@ namespace Coddee.CodeTools
 
             _container = new CoddeeUnityContainer();
             _container.RegisterInstance<ILogger, LogAggregator>();
-            BuilderHelper.RegisterLoggers(LoggerTypes.ApplicationConsole, LogRecordTypes.Debug, _container);
+            BuilderHelper.RegisterLoggers(new LoggerOptions(LoggerTypes.ApplicationConsole, LogRecordTypes.Debug), _container);
             var modules = _container.Resolve<ApplicationModulesManager>();
             _logger = (LogAggregator)_container.Resolve<ILogger>();
             _vsHelper = _container.RegisterInstance<VsHelper, VsHelper>();

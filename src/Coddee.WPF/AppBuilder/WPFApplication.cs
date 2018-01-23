@@ -120,7 +120,6 @@ namespace Coddee.WPF
         public void ShowWindow()
         {
             _systemApplication.MainWindow.Show();
-            _container.Resolve<IEventDispatcher>().GetEvent<ApplicationStartedEvent>().Raise(this);
         }
     }
 }

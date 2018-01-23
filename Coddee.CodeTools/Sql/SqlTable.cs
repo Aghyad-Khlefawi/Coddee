@@ -16,7 +16,7 @@ namespace Coddee.CodeTools.Components
         [SqlMapIgnore]
         public string ClassName { get; set; }
         [SqlMapIgnore]
-        public List<SqlTableColumn> Columns { get; set; }
+        public List<SqlColumn> Columns { get; set; }
 
         public bool Equals(SqlTable other)
         {

@@ -13,6 +13,8 @@ namespace Coddee.Loggers
         {
             base.Initialize(type);
             _file = new FileInfo(fileName);
+            if (!_file.Directory.Exists)
+                _file.Directory.Create();
             if (!_file.Exists)
                 _file.Create().Dispose();
         }
@@ -22,7 +24,7 @@ namespace Coddee.Loggers
             lock (_file)
                 using (var sw = _file.AppendText())
                 {
-                    sw.Write(BuildEvent(record));
+                    sw.WriteLine(BuildEvent(record));
                 }
         }
     }

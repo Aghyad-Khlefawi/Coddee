@@ -44,7 +44,7 @@ namespace Coddee.CodeTools.Sql
             if (paramteres != null)
             {
                 command.Parameters.Clear();
-                command.Parameters.AddRange(paramteres);
+                command.Parameters.AddRange(paramteres.Select(e=>new System.Data.SqlClient.SqlParameter(e.Name,e.Value)).ToArray());
             }
         }
 
