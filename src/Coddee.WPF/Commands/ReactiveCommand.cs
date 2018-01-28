@@ -75,12 +75,16 @@ namespace Coddee.WPF.Commands
         bool CanExecute();
     }
 
+    public interface IReactiveCommand<TObserved> : IReactiveCommand
+    {
+        IReactiveCommand<TObserved> ObserveProperty<TProperty>(string propertyName, Validator<TProperty> validator);
+    }
 
     /// <summary>
     /// A command that updates the CanExecute property based on properties changes.
     /// </summary>
     /// <typeparam name="TObserved">The observed object(ViewModel) Type</typeparam>
-    public abstract class ReactiveCommandBase<TObserved> : IReactiveCommand
+    public abstract class ReactiveCommandBase<TObserved> : IReactiveCommand<TObserved>
     {
         protected ReactiveCommandBase(TObserved observedObject)
         {
@@ -103,7 +107,6 @@ namespace Coddee.WPF.Commands
                 {
                     UpdateCanExecute();
                 }
-
             };
         }
 
@@ -116,7 +119,7 @@ namespace Coddee.WPF.Commands
             UpdateCanExecute();
             return this;
         }
-        public IReactiveCommand ObserveProperty<TProperty>(string propertyName, Validator<TProperty> validator)
+        public IReactiveCommand<TObserved> ObserveProperty<TProperty>(string propertyName, Validator<TProperty> validator)
         {
             _observedProperties.Add(new ObservedProperty<TObserved, TProperty>(ObservedObject, propertyName, validator));
             UpdateCanExecute();
@@ -175,6 +178,7 @@ namespace Coddee.WPF.Commands
         {
             _handler = handler;
         }
+
         public static ReactiveCommand<TObserved> Create(TObserved observedObject, Action handler)
         {
             var reactiveCommand = new ReactiveCommand<TObserved>(observedObject, handler);
@@ -183,14 +187,7 @@ namespace Coddee.WPF.Commands
             return reactiveCommand;
         }
 
-        public IReactiveCommand ObserveProperty<TProperty>(Expression<Func<TObserved, TProperty>> propertyName, Validator<TProperty> validator)
-        {
-            return ObserveProperty(ExpressionHelper.GetMemberName(propertyName), validator);
-        }
-        public IReactiveCommand ObserveProperty(Expression<Func<TObserved, object>> propertyName, Validator validator)
-        {
-            return ObserveProperty(ExpressionHelper.GetMemberName(propertyName), validator);
-        }
+        
         public override void Execute(object parameter)
         {
             _handler?.Invoke();

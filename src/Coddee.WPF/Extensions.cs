@@ -82,14 +82,21 @@ namespace Coddee.WPF
             return collection.Where(e => e.IsSelected).Select(e => e.Item.GetKey).ToList();
         }
 
-        public static ReactiveCommand<TObserved> ObserveProperty<TObserved>(this ReactiveCommand<TObserved> command, Expression<Func<TObserved, object>> property)
+        public static IReactiveCommand<TObserved> ObserveProperty<TObserved>(this IReactiveCommand<TObserved> command, Expression<Func<TObserved, object>> property)
         {
             var propertyName = ExpressionHelper.GetMemberName(property);
             var type = ExpressionHelper.GetMemberType(property);
             command.ObserveProperty(propertyName, Validators.GetValidator(type));
             return command;
         }
-
+        public static IReactiveCommand<TObserved> ObserveProperty<TObserved,TProperty>(this IReactiveCommand<TObserved> command, Expression<Func<TObserved, TProperty>> propertyName, Validator<TProperty> validator)
+        {
+            return command.ObserveProperty(ExpressionHelper.GetMemberName(propertyName), validator);
+        }
+        public static IReactiveCommand ObserveProperty<TObserved>(this IReactiveCommand<TObserved> command, Expression<Func<TObserved, object>> propertyName, Validator validator)
+        {
+            return command.ObserveProperty(ExpressionHelper.GetMemberName(propertyName), validator);
+        }
         public static async Task EnsureInitialization(this IViewModel vm)
         {
             if (!vm.IsInitialized)
