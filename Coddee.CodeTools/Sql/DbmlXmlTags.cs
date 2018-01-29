@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Coddee.CodeTools.Sql
+﻿namespace Coddee.CodeTools.Sql
 {
     public class DbmlXmlTags
     {

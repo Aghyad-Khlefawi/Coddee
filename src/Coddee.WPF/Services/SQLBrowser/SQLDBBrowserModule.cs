@@ -2,9 +2,6 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
 using System.Threading.Tasks;
-using Coddee.WPF;
-using Coddee.WPF.Modules;
-
 
 namespace Coddee.SQL
 {

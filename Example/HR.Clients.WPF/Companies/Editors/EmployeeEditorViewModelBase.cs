@@ -2,8 +2,6 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
 using System;
-using Coddee;
-using Coddee.Validation;
 using Coddee.WPF;
 using HR.Data.Models;
 using HR.Data.Repositories;

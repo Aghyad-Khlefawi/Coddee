@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Windows;
 using Coddee.Services.Dialogs;
 using Coddee.WPF;

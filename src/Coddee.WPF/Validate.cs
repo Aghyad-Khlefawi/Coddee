@@ -2,9 +2,6 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using Coddee.WPF.Converters;
 
 namespace Coddee.WPF
     {

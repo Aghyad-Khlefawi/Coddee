@@ -4,13 +4,10 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Coddee;
 using Coddee.Collections;
 using Coddee.Data;
-using Coddee.Services;
 using Coddee.Validation;
 using Coddee.WPF;
-using Coddee.WPF.DefaultShell;
 using HR.Data.Models;
 using HR.Data.Repositories;
 

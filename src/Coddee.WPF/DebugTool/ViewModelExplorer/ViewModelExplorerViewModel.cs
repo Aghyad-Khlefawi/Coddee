@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using Coddee.Collections;
 using Coddee.Services;
 using Coddee.Services.ViewModelManager;
-using Coddee.WPF;
 using Coddee.WPF.Commands;
 
 namespace Coddee.WPF.DebugTool

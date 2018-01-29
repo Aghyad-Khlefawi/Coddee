@@ -1,15 +1,11 @@
 ﻿// Copyright (c) Aghyad khlefawi. All rights reserved.  
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
-using System;
 using System.Threading.Tasks;
 using System.Windows;
 using Coddee.CodeTools.Components.Data;
 using Coddee.Services;
-using Coddee.VsExtensibility;
 using Coddee.WPF;
-using EnvDTE;
-using EnvDTE80;
 
 namespace Coddee.CodeTools.Components
 {

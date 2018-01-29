@@ -9,8 +9,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Resources;
-using Coddee.Loggers;
-using Coddee.ModuleDefinitions;
 using Coddee.Services;
 using Coddee.Services.Configuration;
 using Coddee.Windows.AppBuilder;

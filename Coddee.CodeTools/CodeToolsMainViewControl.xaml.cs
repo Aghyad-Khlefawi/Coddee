@@ -1,17 +1,5 @@
-﻿using System;
-using System.Threading;
-using System.Windows.Input;
-using Coddee.Loggers;
-using Coddee.ModuleDefinitions;
-using Coddee.Services;
-using Coddee.Unity;
-using Coddee.Windows.AppBuilder;
-using Coddee.WPF;
-
-namespace Coddee.CodeTools
+﻿namespace Coddee.CodeTools
 {
-    using System.Diagnostics.CodeAnalysis;
-    using System.Windows;
     using System.Windows.Controls;
 
     /// <summary>

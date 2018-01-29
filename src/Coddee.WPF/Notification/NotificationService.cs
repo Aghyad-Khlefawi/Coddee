@@ -8,6 +8,9 @@ using Coddee.WPF;
 
 namespace Coddee.Notification
 {
+    /// <summary>
+    /// Application notification service.
+    /// </summary>
     public class NotificationService : ViewModelBase<NotificationServiceView>, INotificationService
     {
         private double _notificationDuration;

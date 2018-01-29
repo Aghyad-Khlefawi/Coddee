@@ -6,8 +6,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Security;
-using System.Security.Policy;
 using Coddee.Data.LinqToSQL;
 using Coddee.VsExtensibility;
 

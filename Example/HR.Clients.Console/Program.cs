@@ -1,19 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Reflection;
 using Coddee;
 using Coddee.AppBuilder;
-using Coddee.Collections;
-using Coddee.Data;
 using Coddee.Loggers;
 using Coddee.Unity;
 using Coddee.Windows.AppBuilder;
-using HR.Data.LinqToSQL;
-using HR.Data.Models;
-using HR.Data.Repositories;
 
 namespace HR.Clients.Console
 {

@@ -2,12 +2,7 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
-using Coddee.Attributes;
 using Coddee.Data;
 using Coddee.Data.LinqToSQL;
 using Coddee.Data.MongoDB;
@@ -15,9 +10,6 @@ using Coddee.Loggers;
 using Coddee.Windows.Mapper;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using IApplicationBuilder = Microsoft.AspNetCore.Builder.IApplicationBuilder;
 
 namespace Coddee.AspNet

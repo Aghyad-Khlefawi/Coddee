@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
-using Coddee.Services;
 using Coddee.Services.ApplicationSearch;
 using Coddee.WPF;
 using HR.Clients.WPF.Companies;

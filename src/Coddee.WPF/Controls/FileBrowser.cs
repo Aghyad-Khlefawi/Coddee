@@ -1,4 +1,7 @@
-﻿using System.IO;
+﻿// Copyright (c) Aghyad khlefawi. All rights reserved.  
+// Licensed under the MIT License. See LICENSE file in the project root for full license information.  
+
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
