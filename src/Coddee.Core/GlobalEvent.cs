@@ -6,6 +6,10 @@ using System.Collections.Generic;
 
 namespace Coddee
 {
+    /// <summary>
+    /// An event that can be raised or subscribed to from anywhere in the application
+    /// </summary>
+    /// <typeparam name="TPayload"></typeparam>
     public class GlobalEvent<TPayload> : IEvent
     {
         public GlobalEvent()

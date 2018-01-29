@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace Coddee.Data
@@ -11,19 +10,6 @@ namespace Coddee.Data
     public class RepositoryConfigurations
     {
         public string EncrpyionKey { get; set; }
-    }
-
-
-    public class Condition<TModel, T>
-    {
-        public Condition(Expression<Func<TModel, T>> property, T value)
-        {
-            Property = property;
-            Value = value;
-        }
-
-        public Expression<Func<TModel, T>> Property { get; set; }
-        public T Value { get; set; }
     }
 
     /// <summary>
@@ -102,9 +88,6 @@ namespace Coddee.Data
         /// </summary>
         /// <returns></returns>
         Task<IEnumerable<TModel>> GetItems();
-        Task<IEnumerable<TModel>> GetItems<T>(params Condition<TModel, T>[] conditions);
-        
-        Condition<TModel, T> Condition<T>(Expression<Func<TModel, T>> Property, T value);
     }
 
     /// <summary>

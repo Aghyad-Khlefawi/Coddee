@@ -51,10 +51,10 @@ namespace Coddee.CodeTools.Components
             RegisterViewType<TView>(0);
         }
 
-        protected override void OnViewCreated(UIElement e)
+        protected override void OnViewCreated(UIElement view)
         {
-            base.OnViewCreated(e);
-            if (e is TView defaultView)
+            base.OnViewCreated(view);
+            if (view is TView defaultView)
                 OnDefaultViewCreated(defaultView);
         }
 

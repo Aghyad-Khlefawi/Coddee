@@ -2,14 +2,11 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
 using System;
-using System.Diagnostics;
 using System.Linq;
-using System.Reflection;
 using System.Threading;
 using System.Windows;
 using Coddee.AppBuilder;
 using Coddee.ModuleDefinitions;
-using Coddee.Services;
 
 namespace Coddee.WPF
 {

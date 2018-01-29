@@ -80,7 +80,6 @@ namespace Coddee.Data.LinqToSQL
         /// The action will be wrapped with a transaction 
         /// The caller is reasonable for calling transaction.Commit
         /// </summary>
-        /// <param name="action"></param>
         protected async Task TransactionalExecute(Action<TDataContext, DbTransaction> action)
         {
             using (var context = _dbManager.CreateContext())
@@ -90,6 +89,11 @@ namespace Coddee.Data.LinqToSQL
             }
         }
 
+        /// <summary>
+        /// Execute an action on the database context without returning a value
+        /// The action will be wrapped with a transaction 
+        /// The caller is reasonable for calling transaction.Commit
+        /// </summary>
         protected Task TransactionalExecute(TDataContext context, Action<TDataContext, DbTransaction> action)
         {
             return Task.Run(() =>
@@ -216,6 +220,11 @@ namespace Coddee.Data.LinqToSQL
             }
         }
 
+        /// <summary>
+        /// Execute an action on the database context without returning a value
+        /// The action will be wrapped with a transaction 
+        /// The caller is reasonable for calling transaction.Commit
+        /// </summary>
         protected Task<TResult> TransactionalExecute<TResult>(TDataContext context, DbTransaction transaction, Func<TDataContext, Table<TTable>, DbTransaction, TResult> action)
         {
             var table = context.GetTable<TTable>();
@@ -254,6 +263,11 @@ namespace Coddee.Data.LinqToSQL
             }
         }
 
+        /// <summary>
+        /// Execute an action on the database context without returning a value
+        /// The action will be wrapped with a transaction 
+        /// The caller is reasonable for calling transaction.Commit
+        /// </summary>
         protected Task TransactionalExecute(TDataContext context, DbTransaction transaction, Action<TDataContext, Table<TTable>, DbTransaction> action)
         {
             return Task.Run(() =>
@@ -306,6 +320,9 @@ namespace Coddee.Data.LinqToSQL
             _identifier = typeof(TModel).Name;
         }
 
+        /// <summary>
+        /// Called when the <see cref="IRepositorySyncService"/> receives a sync request
+        /// </summary>
         public override void SyncServiceSyncReceived(string identifier, RepositorySyncEventArgs args)
         {
             base.SyncServiceSyncReceived(identifier, args);
@@ -314,16 +331,28 @@ namespace Coddee.Data.LinqToSQL
                                   new RepositoryChangeEventArgs<TModel>(args.OperationType, ((JObject)args.Item).ToObject<TModel>(), true));
         }
 
+        /// <summary>
+        /// Called when the repository content is changed
+        /// </summary>
         protected virtual void RaiseItemsChanged(object sender, RepositoryChangeEventArgs<TModel> args)
         {
             ItemsChanged?.Invoke(this, args);
         }
 
+        /// <summary>
+        /// Calls the <see cref="IRepository.SetSyncService"/> on the registered repositories
+        /// </summary>
+        /// <param name="syncService">The sync service to use</param>
+        /// <param name="sendSyncRequests">if set to true the repository will send sync requests when insert, edit and delete</param>
         public override void SetSyncService(IRepositorySyncService syncService, bool sendSyncRequests = true)
         {
             base.SetSyncService(syncService, sendSyncRequests);
             ItemsChanged += OnItemsChanged;
         }
+
+        /// <summary>
+        /// Default handler for <see cref="ItemsChanged"/> event
+        /// </summary>
         private void OnItemsChanged(object sender, RepositoryChangeEventArgs<TModel> e)
         {
             if (!e.FromSync && _sendSyncRequests)
@@ -372,40 +401,7 @@ namespace Coddee.Data.LinqToSQL
             return GetItemFromDB();
         }
 
-        public Task<IEnumerable<TModel>> GetItems<T>(params Condition<TModel, T>[] conditions)
-        {
-            return Execute((db, table) =>
-            {
-                IQueryable<TTable> query = table;
-                query = BuildConditionQuery(conditions, query);
-                return TableToModelMapping(query.ToList());
-            });
-        }
-        protected static IQueryable<TTable> BuildConditionQuery<TTable, TModel, T>(Condition<TModel, T>[] conditions, IQueryable<TTable> query)
-        {
-            foreach (var condition in conditions)
-            {
-                var param = Expression.Parameter(typeof(TTable), "e");
-                var value = Expression.Constant(condition.Value);
-
-                var propertyName = ((MemberExpression)condition.Property.Body).Member.Name;
-                var property = typeof(TTable).GetProperty(propertyName);
-                if (property == null)
-                    throw new ArgumentException($"There is no property named {propertyName} on type {typeof(TTable).FullName}");
-
-                var prop = Expression.MakeMemberAccess(param, property);
-                var body = Expression.Equal(prop, value);
-                var expressions = Expression.Lambda<Func<TTable, bool>>(body, param);
-                query = query.Where(expressions);
-            }
-
-            return query;
-        }
-        public Condition<TModel, T> Condition<T>(Expression<Func<TModel, T>> property, T value)
-        {
-            return new Condition<TModel, T>(property, value);
-        }
-
+        
         /// <summary>
         /// Execute a function on the targeted SQL table and then returning a value
         /// </summary>

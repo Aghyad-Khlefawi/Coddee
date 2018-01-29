@@ -5,6 +5,9 @@ using System;
 
 namespace Coddee.Notification
 {
+    /// <summary>
+    /// A default implementation for <see cref="INotification"/>
+    /// </summary>
     public abstract class NotificationBase:INotification
     {
         protected NotificationBase(string title, string description, DateTime date,int type)

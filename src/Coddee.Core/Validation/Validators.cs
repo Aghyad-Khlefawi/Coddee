@@ -6,14 +6,23 @@ using System.Linq;
 
 namespace Coddee.Validation
 {
-    public class Validators
+    public static class Validators
     {
+        /// <summary>
+        /// A string validator that checks for Null and white space
+        /// </summary>
         public static Validator StringValidator = e =>
         {
             var value = e as string;
             return !string.IsNullOrEmpty(value?.Trim()) && !string.IsNullOrWhiteSpace(value.Trim());
         };
 
+        /// <summary>
+        /// A string validator that checks the length of the string.
+        /// </summary>
+        /// <param name="min">Minimum allowed length</param>
+        /// <param name="max">Maximum allowed length</param>
+        /// <returns></returns>
         public static Validator StringLengthValidator(int min, int max)
         {
             return e =>
@@ -23,13 +32,23 @@ namespace Coddee.Validation
             };
         }
 
+        /// <summary>
+        /// Combines two or more validators
+        /// </summary>
         public static Validator CombinedValidator(params Validator[] validators)
         {
             return obj => validators.All(e => e(obj));
         }
 
-        public static Validator NullableValidator = e => e != null;
 
+        /// <summary>
+        /// Checks if the validated object is null
+        /// </summary>
+        public static Validator NullableValidator = e => !e.Equals(null);
+
+        /// <summary>
+        /// Get validator by name
+        /// </summary>
         public static Validator GetValidator(string name)
         {
             switch (name)
@@ -43,6 +62,9 @@ namespace Coddee.Validation
             return null;
         }
 
+        /// <summary>
+        /// Get default validator by type
+        /// </summary>
         public static Validator GetValidator(Type type)
         {
             if (type == typeof(string))

@@ -13,8 +13,10 @@ namespace Coddee.AppBuilder
     {
         private const string EventsSource = "ApplicationBuilder";
 
-       
 
+        /// <summary>
+        /// Register LinQ repositories and adds a <see cref="LinqRepositoryInitializer"/> to the <see cref="IRepositoryManager"/>
+        /// </summary>
         public static IApplicationBuilder UseLinqRepositoryManager<TDBManager>(
             this IApplicationBuilder builder,
             Func<IContainer,string> GetSQLDBConnection,
@@ -37,6 +39,9 @@ namespace Coddee.AppBuilder
             return builder;
         }
 
+        /// <summary>
+        /// Register LinQ repositories and adds a <see cref="LinqRepositoryInitializer"/> to the <see cref="IRepositoryManager"/>
+        /// </summary>
         public static IApplicationBuilder UseLinqRepositoryManager<TDBManager>(
             this IApplicationBuilder builder,
             string connectionString,

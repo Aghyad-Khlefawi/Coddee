@@ -6,12 +6,15 @@ using Newtonsoft.Json;
 
 namespace Coddee.Data
 {
+    /// <summary>
+    /// An exception wrapper for exceptions occurring in a Web-API 
+    /// </summary>
     [JsonObject]
     public class APIException : CoddeeException
     {
         public APIException()
         {
-            
+
         }
 
         public APIException(Exception inner)
@@ -25,11 +28,11 @@ namespace Coddee.Data
         }
 
         public APIException(int code)
-            :base(code)
+            : base(code)
         {
         }
 
-        public APIException(int code, string message) : base(code,message)
+        public APIException(int code, string message) : base(code, message)
         {
         }
 
@@ -39,7 +42,14 @@ namespace Coddee.Data
             InnerExceptionType = inner.GetType();
         }
 
+        /// <summary>
+        /// The wrapped exception in a JSON format
+        /// </summary>
         public string InnerExceptionSeriailized { get; set; }
+
+        /// <summary>
+        /// The type of wrapped exception
+        /// </summary>
         public Type InnerExceptionType { get; set; }
     }
 }

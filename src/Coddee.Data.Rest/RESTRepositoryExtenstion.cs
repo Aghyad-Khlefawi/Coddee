@@ -10,9 +10,19 @@ using Coddee.Services;
 
 namespace Coddee.AppBuilder
 {
-    public class RESTRepositoryManagerConfig
+    /// <summary>
+    /// Repository
+    /// </summary>
+    public class RESTInitializerConfig
     {
-        public RESTRepositoryManagerConfig(string apiUrl, Action unauthorizedRequestHandler, string repositoriesAssembly, bool registerTheRepositoresInContainer = true)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="apiUrl">The API base URL</param>
+        /// <param name="unauthorizedRequestHandler">An action called when an unauthorized response code received</param>
+        /// <param name="repositoriesAssembly">The assembly name containing the repository <remarks>Without extension</remarks></param>
+        /// <param name="registerTheRepositoresInContainer">Register the repositories in the dependency container</param>
+        public RESTInitializerConfig(string apiUrl, Action unauthorizedRequestHandler, string repositoriesAssembly, bool registerTheRepositoresInContainer = true)
         {
             ApiUrl = apiUrl;
             UnauthorizedRequestHandler = unauthorizedRequestHandler;
@@ -20,18 +30,37 @@ namespace Coddee.AppBuilder
             RegisterTheRepositoresInContainer = registerTheRepositoresInContainer;
         }
 
+        /// <summary>
+        /// The API base URL
+        /// </summary>
         public string ApiUrl { get; set; }
+
+        /// <summary>
+        /// An action called when an unauthorized response code received
+        /// </summary>
         public Action UnauthorizedRequestHandler { get; set; }
+
+        /// <summary>
+        /// The assembly name containing the repository
+        /// <remarks>Without extension</remarks>
+        /// </summary>
         public string RepositoriesAssembly { get; set; }
+
+        /// <summary>
+        /// Register the repositories in the dependency container
+        /// </summary>
         public bool RegisterTheRepositoresInContainer { get; set; }
     }
     public static class RESTRepositoryExtenstion
     {
         private const string EventsSource = "ApplicationBuilder";
 
+        /// <summary>
+        /// Register REST repositories and adds a <see cref="RESTRepositoryInitializer"/> to the <see cref="IRepositoryManager"/>
+        /// </summary>
         public static IApplicationBuilder UseRESTRepositoryManager(
             this IApplicationBuilder builder,
-            Func<IConfigurationManager, RESTRepositoryManagerConfig> config)
+            Func<IConfigurationManager, RESTInitializerConfig> config)
         {
             builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.RESTRepositoryBuildAction((container) =>
             {

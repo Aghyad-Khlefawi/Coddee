@@ -3,16 +3,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
 using Coddee.AppBuilder;
 using Coddee.Loggers;
-using Coddee.Services;
 using Coddee.Services.ApplicationConsole;
-using Coddee.WPF.Events;
-
 
 namespace Coddee.WPF
 {

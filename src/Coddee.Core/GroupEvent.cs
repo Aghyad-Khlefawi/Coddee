@@ -1,9 +1,16 @@
-﻿using System;
+﻿// Copyright (c) Aghyad khlefawi. All rights reserved.  
+// Licensed under the MIT License. See LICENSE file in the project root for full license information.  
+
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Coddee
 {
+    /// <summary>
+    /// An event that when triggered only executed the handlers in the same group.
+    /// </summary>
+    /// <typeparam name="TPayload"></typeparam>
     public class GroupEvent<TPayload> : IEvent
     {
         public GroupEvent()

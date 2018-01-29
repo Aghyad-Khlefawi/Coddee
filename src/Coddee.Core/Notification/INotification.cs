@@ -5,6 +5,9 @@ using System;
 
 namespace Coddee.Notification
 {
+    /// <summary>
+    /// An application notification
+    /// </summary>
     public interface INotification
     {
         string Title { get; set; }
@@ -15,6 +18,9 @@ namespace Coddee.Notification
         string Parameter { get; set; }
     }
 
+    /// <summary>
+    /// An application notification that can be interacted with
+    /// </summary>
     public interface IInteractiveNotification : INotification
     {
         event Action<INotification> Opened;

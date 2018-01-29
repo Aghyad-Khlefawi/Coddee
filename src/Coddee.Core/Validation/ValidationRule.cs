@@ -6,47 +6,106 @@ using System.Linq.Expressions;
 
 namespace Coddee.Validation
 {
+    /// <summary>
+    /// Default implementation for <see cref="IValidationRule"/>
+    /// </summary>
     public class ValidationRule : IValidationRule
     {
+        /// <summary>
+        /// Create a new validation warning rule
+        /// </summary>
+        /// <param name="validator">The validation function</param>
+        /// <param name="message">Warning message in case the validation function returned false.</param>
         public static ValidationRule CreateWarningRule(Validator validator, Func<string> message)
         {
             return new ValidationRule(ValidationType.Warning, validator, message);
         }
+
+        /// <summary>
+        /// Create a new validation warning rule
+        /// </summary>
+        /// <param name="validator">The validation function</param>
+        /// <param name="validatedField">The field targeted by the validation rule.</param>
         public static ValidationRule CreateWarningRule<T>(Expression<Func<T>> validatedField, Validator<T> validator)
         {
             return new ValidationRule(ValidationType.Warning, e => validator((T)e), ExpressionHelper.GetMemberName(validatedField), () => validatedField.Compile()());
         }
+
+        /// <summary>
+        /// Create a new validation warning rule
+        /// </summary>
+        /// <param name="validator">The validation function</param>
+        /// <param name="validatedField">The field targeted by the validation rule.</param>
+        /// <param name="message">Warning message in case the validation function returned false.</param>
         public static ValidationRule CreateWarningRule<T>(Expression<Func<T>> validatedField, Validator<T> validator, Func<string> message)
         {
             return new ValidationRule(ValidationType.Warning, e => validator((T)e), message, ExpressionHelper.GetMemberName(validatedField), () => validatedField.Compile()());
         }
+
+        /// <summary>
+        /// Create a new validation warning rule
+        /// </summary>
+        /// <param name="validatedField">The field targeted by the validation rule.</param>
+        /// <param name="message">Warning message in case the validation function returned false.</param>
         public static ValidationRule CreateWarningRule<T>(Expression<Func<T>> validatedField, Func<string> message)
         {
             return new ValidationRule(ValidationType.Warning, e => Validators.GetValidator(typeof(T))(e), message, ExpressionHelper.GetMemberName(validatedField), () => validatedField.Compile()());
         }
+
+        /// <summary>
+        /// Create a new validation warning rule
+        /// </summary>
+        /// <param name="validatedField">The field targeted by the validation rule.</param>
         public static ValidationRule CreateWarningRule<T>(Expression<Func<T>> validatedField)
         {
             return new ValidationRule(ValidationType.Warning, e => Validators.GetValidator(typeof(T))(e), ExpressionHelper.GetMemberName(validatedField), () => validatedField.Compile()());
         }
 
+        /// <summary>
+        /// Create a new validation error rule
+        /// </summary>
+        /// <param name="validator">The validation function</param>
+        /// <param name="message">Error message in case the validation function returned false.</param>
         public static ValidationRule CreateErrorRule(Validator validator, Func<string> message)
         {
             return new ValidationRule(ValidationType.Error, validator, message);
         }
 
-        public static ValidationRule CreateErrorRule<T>(Expression<Func<T>> validatedField, Validator<T> validator, Func<string> message)
-        {
-            return new ValidationRule(ValidationType.Error, e => validator((T)e), message, ExpressionHelper.GetMemberName(validatedField), () => validatedField.Compile()());
-        }
+        /// <summary>
+        /// Create a new validation error rule
+        /// </summary>
+        /// <param name="validator">The validation function</param>
+        /// <param name="validatedField">The field targeted by the validation rule.</param>
         public static ValidationRule CreateErrorRule<T>(Expression<Func<T>> validatedField, Validator<T> validator)
         {
             return new ValidationRule(ValidationType.Error, e => validator((T)e), ExpressionHelper.GetMemberName(validatedField), () => validatedField.Compile()());
         }
+
+        /// <summary>
+        /// Create a new validation error rule
+        /// </summary>
+        /// <param name="validator">The validation function</param>
+        /// <param name="validatedField">The field targeted by the validation rule.</param>
+        /// <param name="message">Error message in case the validation function returned false.</param>
+        public static ValidationRule CreateErrorRule<T>(Expression<Func<T>> validatedField, Validator<T> validator, Func<string> message)
+        {
+            return new ValidationRule(ValidationType.Error, e => validator((T)e), message, ExpressionHelper.GetMemberName(validatedField), () => validatedField.Compile()());
+        }
+
+        /// <summary>
+        /// Create a new validation error rule
+        /// </summary>
+        /// <param name="validatedField">The field targeted by the validation rule.</param>
+        /// <param name="message">Error message in case the validation function returned false.</param>
         public static ValidationRule CreateErrorRule<T>(Expression<Func<T>> validatedField, Func<string> message)
         {
             return new ValidationRule(ValidationType.Error, e => Validators.GetValidator(typeof(T))(e), message, ExpressionHelper.GetMemberName(validatedField), () => validatedField.Compile()());
         }
 
+        /// <summary>
+        /// Create a new validation error rule
+        /// </summary>
+        /// <param name="validatedField">The field targeted by the validation rule.</param>
         public static ValidationRule CreateErrorRule<T>(Expression<Func<T>> validatedField)
         {
             return new ValidationRule(ValidationType.Error, e => Validators.GetValidator(typeof(T))(e), ExpressionHelper.GetMemberName(validatedField), () => validatedField.Compile()());

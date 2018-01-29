@@ -70,7 +70,6 @@ namespace Coddee.Data
         /// Register the provided repositories
         /// </summary>
         /// <param name="repositories">The repositories to register</param>
-        /// <returns></returns>
         public virtual void RegisterRepositories(params KeyValuePair<Type, Type>[] repositories)
         {
             foreach (var repository in repositories)
@@ -90,6 +89,11 @@ namespace Coddee.Data
             }
         }
 
+        /// <summary>
+        /// Add an <see cref="IRepository"/> to the available repositories
+        /// </summary>
+        /// <param name="repository"></param>
+        /// <param name="implementedRepository"></param>
         public void AddRepository(IRepository repository, Type implementedRepository)
         {
             _repositories[implementedRepository] = repository;
@@ -97,6 +101,11 @@ namespace Coddee.Data
                 repository.SetSyncService(_syncService);
         }
 
+        /// <summary>
+        /// Calls the <see cref="IRepository.SetSyncService"/> on the registered repositories
+        /// </summary>
+        /// <param name="syncService">The sync service to use</param>
+        /// <param name="sendSyncRequests">if set to true the repositories will send sync requests when insert, edit and delete</param>
         public void SetSyncService(IRepositorySyncService syncService, bool sendSyncRequests = true)
         {
             _syncService = syncService;
@@ -106,6 +115,9 @@ namespace Coddee.Data
             }
         }
 
+        /// <summary>
+        /// Calls the <see cref="IRepository.Initialize"/> method for a repository
+        /// </summary>
         public virtual void InitializeRepository(IRepository repo, Type implementedInterface)
         {
             if (!_repositoryInitializers.ContainsKey(repo.RepositoryType))
@@ -114,6 +126,10 @@ namespace Coddee.Data
             _repositoryInitializers[repo.RepositoryType].InitializeRepository(this, repo, implementedInterface);
         }
 
+        /// <summary>
+        /// Add an <see cref="IRepositoryInitializer"/>
+        /// </summary>
+        /// <param name="initializer"></param>
         public void AddRepositoryInitializer(IRepositoryInitializer initializer)
         {
             _repositoryInitializers[initializer.RepositoryType] = initializer;

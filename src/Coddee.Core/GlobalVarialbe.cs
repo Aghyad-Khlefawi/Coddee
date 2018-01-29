@@ -9,11 +9,23 @@ namespace Coddee
     {
 
     }
+
+    /// <summary>
+    /// A global variable that can be Get or Set from anywhere in the application
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class GlobalVarialbe<T> : IGlobaleVariable
     {
-        protected T _value;
+        /// <summary>
+        /// if false then the variable has the default value (<see langword="default"/>>(T))
+        /// </summary>
         public bool IsValueSet { get; private set; }
 
+        protected T _value;
+
+        /// <summary>
+        /// Triggered when <see cref="SetValue"/> is called.
+        /// </summary>
         public event EventHandler<T> ValueChanged;
 
         public void SetValue(T value)
@@ -23,10 +35,21 @@ namespace Coddee
             ValueChanged?.Invoke(this, value);
         }
 
+        /// <summary>
+        /// Returns the value of the variable
+        /// </summary>
+        /// <remarks>If <see cref="IsValueSet"/> is false then the default value will be returned.</remarks>
+        /// <returns></returns>
         public T GetValue()
         {
             return _value;
         }
+
+        /// <summary>
+        /// Returns the value of the variable if its value was set
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public bool TryGetValue(out T value)
         {
             value = IsValueSet ? _value : default(T);

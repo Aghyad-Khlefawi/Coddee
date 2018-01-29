@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Net;
 using System.Net.Http;
 using System.Runtime.CompilerServices;
@@ -61,7 +60,7 @@ namespace Coddee.Data.REST
         /// <summary>
         /// Send a post request that doesn't return a result
         /// </summary>
-        /// <param name="url">The request url</param>
+        /// <param name="url">The request URL</param>
         /// <param name="param">optional parameter will be sent as a JSON object</param>
         /// <returns></returns>
         protected async Task Post(string url,
@@ -97,7 +96,7 @@ namespace Coddee.Data.REST
         /// Send a post request that returns a result
         /// </summary>
         /// <typeparam name="T">The result type</typeparam>
-        /// <param name="url">The request url</param>
+        /// <param name="url">The request URL</param>
         /// <param name="param">optional parameter will be sent as a JSON object</param>
         /// <returns></returns>
         protected async Task<T> Post<T>(string url,
@@ -149,7 +148,7 @@ namespace Coddee.Data.REST
         /// <summary>
         /// Send a Put request that doesn't return a result
         /// </summary>
-        /// <param name="url">The request url</param>
+        /// <param name="url">The request URL</param>
         /// <param name="param">optional parameter will be sent as a JSON object</param>
         /// <returns></returns>
         protected async Task Put(string url,
@@ -172,7 +171,7 @@ namespace Coddee.Data.REST
         /// Send a Put request that returns a result
         /// </summary>
         /// <typeparam name="T">The result type</typeparam>
-        /// <param name="url">The request url</param>
+        /// <param name="url">The request URL</param>
         /// <param name="param">optional parameter will be sent as a JSON object</param>
         /// <returns></returns>
         protected async Task<T> Put<T>(string url,
@@ -210,7 +209,7 @@ namespace Coddee.Data.REST
         /// Sends a get request
         /// </summary>
         /// <typeparam name="T">The result type</typeparam>
-        /// <param name="url">The request url</param>
+        /// <param name="url">The request URL</param>
         /// <param name="param">optional parameter will be sent as a query string</param>
         /// <returns></returns>
         protected async Task<T> Get<T>(string url,
@@ -245,7 +244,7 @@ namespace Coddee.Data.REST
         /// Sends a get request
         /// </summary>
         /// <typeparam name="T">The result type</typeparam>
-        /// <param name="url">The request url</param>
+        /// <param name="url">The request URL</param>
         /// <param name="param">optional parameter will be sent as a query string</param>
         /// <returns></returns>
         protected Task<T> Get<T>(string url,
@@ -286,7 +285,7 @@ namespace Coddee.Data.REST
         /// Sends a Delete request
         /// </summary>
         /// <typeparam name="T">The result type</typeparam>
-        /// <param name="url">The request url</param>
+        /// <param name="url">The request URL</param>
         /// <param name="id">The resource id</param>
         /// <returns></returns>
         protected async Task Delete(string url,
@@ -341,6 +340,9 @@ namespace Coddee.Data.REST
             _identifier = typeof(TModel).Name;
         }
 
+        /// <summary>
+        /// Called when the <see cref="IRepositorySyncService"/> receives a sync request
+        /// </summary>
         public override void SyncServiceSyncReceived(string identifier, RepositorySyncEventArgs args)
         {
             base.SyncServiceSyncReceived(identifier, args);
@@ -352,22 +354,28 @@ namespace Coddee.Data.REST
             }
         }
 
-        public Condition<TModel, T> Condition<T>(Expression<Func<TModel, T>> property, T value)
-        {
-            return new Condition<TModel, T>(property, value);
-        }
-
+        /// <summary>
+        /// Called when the repository content is changed
+        /// </summary>
         protected virtual void RaiseItemsChanged(object sender, RepositoryChangeEventArgs<TModel> args)
         {
             ItemsChanged?.Invoke(this, args);
         }
 
+        /// <summary>
+        /// Calls the <see cref="IRepository.SetSyncService"/> on the registered repositories
+        /// </summary>
+        /// <param name="syncService">The sync service to use</param>
+        /// <param name="sendSyncRequests">if set to true the repository will send sync requests when insert, edit and delete</param>
         public override void SetSyncService(IRepositorySyncService syncService, bool sendSyncRequests = true)
         {
             base.SetSyncService(syncService, sendSyncRequests);
             ItemsChanged += OnItemsChanged;
         }
 
+        /// <summary>
+        /// Default handler for <see cref="ItemsChanged"/> event
+        /// </summary>
         protected virtual void OnItemsChanged(object sender, RepositoryChangeEventArgs<TModel> e)
         {
             if (!e.FromSync && _sendSyncRequests)
@@ -393,7 +401,7 @@ namespace Coddee.Data.REST
         public string ControllerName { get; }
 
         /// <summary>
-        /// Return the name of the targeted controller
+        /// Sends a get request to the targeted controller
         /// </summary>
         /// <returns></returns>
         protected Task<T> GetFromController<T>([CallerMemberName]string action = "",
@@ -402,10 +410,19 @@ namespace Coddee.Data.REST
             return Get<T>(ControllerName, action, param);
         }
 
+        /// <summary>
+        /// Sends a get request to the targeted controller
+        /// </summary>
+        /// <returns></returns>
         protected Task<T> GetFromController<T>(KeyValuePair<string, string> param, [CallerMemberName]string action = "")
         {
             return Get<T>(ControllerName, action, param);
         }
+
+        /// <summary>
+        /// Sends a get request to the targeted controller
+        /// </summary>
+        /// <returns></returns>
         protected Task<T> GetFromController<T>(IDictionary<string, string> param, [CallerMemberName]string action = "")
         {
             return Get<T>(ControllerName, action, param);
@@ -420,10 +437,6 @@ namespace Coddee.Data.REST
             return GetFromController<IEnumerable<TModel>>(ApiCommonActions.GetItems);
         }
 
-        public Task<IEnumerable<TModel>> GetItems<T>(params Condition<TModel, T>[] conditions)
-        {
-            throw new NotImplementedException("This functions is not yes implemented in REST repositories.");
-        }
     }
 
     /// <summary>
@@ -439,30 +452,45 @@ namespace Coddee.Data.REST
         {
         }
 
+        /// <summary>
+        /// Sends a POST request to the targeted controller
+        /// </summary>
         protected virtual Task PostToController(string action,
                                         object param = null)
         {
             return Post(ControllerName, action, param);
         }
 
+        /// <summary>
+        /// Sends a POST request to the targeted controller
+        /// </summary>
         protected virtual Task<T> PostToController<T>(string action,
                                               object param = null)
         {
             return Post<T>(ControllerName, action, param);
         }
 
+        /// <summary>
+        /// Sends a POST request to the targeted controller
+        /// </summary>
         protected virtual Task PutToController(string action,
                                        object param = null)
         {
             return Put(ControllerName, action, param);
         }
 
+        /// <summary>
+        /// Sends a POST request to the targeted controller
+        /// </summary>
         protected virtual Task<T> PutToController<T>(string action,
                                              object param = null)
         {
             return Put<T>(ControllerName, action, param);
         }
 
+        /// <summary>
+        /// Sends a DELETE request to the targeted controller
+        /// </summary>
         protected virtual Task DeleteFromController(string action, TKey id)
         {
             return Delete(ControllerName, action, id.ToString());

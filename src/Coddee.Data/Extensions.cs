@@ -86,6 +86,9 @@ namespace Coddee.Data
             repo.ItemsChanged += collection.Update;
         }
 
+        /// <summary>
+        /// Creates an <see cref="AsyncObservableCollection{T}"/> and binds the repository changes to the collection
+        /// </summary>
         public static async Task<AsyncObservableCollection<T>> ToAsyncObservableCollection<T, TKey>(this ICRUDRepository<T, TKey> repo)
             where T : IUniqueObject<TKey>
         {

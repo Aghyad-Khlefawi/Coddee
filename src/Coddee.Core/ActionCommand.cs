@@ -9,7 +9,7 @@ namespace Coddee
 
     public abstract class ActionCommandBase
     {
-        public ActionCommandBase(string title)
+        protected ActionCommandBase(string title)
         {
             CanExecute = true;
             Title = title;

@@ -2,9 +2,6 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
 using System;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection;
 
 namespace Coddee.Data
 {
@@ -64,10 +61,7 @@ namespace Coddee.Data
     }
 
     public abstract class RepositoryBase<TModel> : RepositoryBase
-    {
-        public virtual Condition<TModel, T> Condition<T>(Expression<Func<TModel, T>> property, T value)
-        {
-            return new Condition<TModel, T>(property, value);
-        }
+    { 
+
     }
 }

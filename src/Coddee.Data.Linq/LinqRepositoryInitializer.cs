@@ -5,6 +5,9 @@ using System;
 
 namespace Coddee.Data.LinqToSQL
 {
+    /// <summary>
+    /// A repository initializer that should provide the LinQ repositories with their dependencies to operate.
+    /// </summary>
     public class LinqRepositoryInitializer : IRepositoryInitializer 
     {
         private readonly ILinqDBManager _dbManager;
