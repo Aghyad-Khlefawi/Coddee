@@ -174,26 +174,7 @@ namespace Coddee.Data.MongoDB
             return (await _collection.Find(e => true).ToListAsync()).AsEnumerable();
         }
 
-        public async Task<IEnumerable<TModel>> GetItems<T>(params Condition<TModel, T>[] conditions)
-        {
-            FilterDefinition<TModel> query = BuildConditionFilter(conditions);
-            return (await _collection.Find(query).ToListAsync()).AsEnumerable();
-        }
-
-        private static FilterDefinition<TModel> BuildConditionFilter<T>(Condition<TModel, T>[] conditions)
-        {
-            FilterDefinition<TModel> query = null;
-            foreach (var condition in conditions)
-            {
-                var filter = Builders<TModel>.Filter.Eq(condition.Property, condition.Value);
-                if (query == null)
-                    query = filter;
-                else
-                    query = query & filter;
-            }
-
-            return query;
-        }
+        
     }
 
 

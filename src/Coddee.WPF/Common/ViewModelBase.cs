@@ -484,7 +484,7 @@ namespace Coddee.WPF
         /// </summary>
         protected void ToastError(string message = "An error occurred.")
         {
-            _toast.ShowToast(message, ToastType.Error);
+            _toast?.ShowToast(message, ToastType.Error);
         }
 
         /// <summary>
@@ -492,7 +492,7 @@ namespace Coddee.WPF
         /// </summary>
         protected void ToastSuccess(string message = "Operation completed successfully.")
         {
-            _toast.ShowToast(message, ToastType.Success);
+            _toast?.ShowToast(message, ToastType.Success);
         }
 
         /// <summary>
@@ -500,7 +500,7 @@ namespace Coddee.WPF
         /// </summary>
         protected void ToastWarning(string message)
         {
-            _toast.ShowToast(message, ToastType.Warning);
+            _toast?.ShowToast(message, ToastType.Warning);
         }
 
         /// <summary>
@@ -841,11 +841,22 @@ namespace Coddee.WPF
     public class ViewModelBase<TView> : ViewModelBase, IPresentable<TView>
         where TView : UIElement, new()
     {
+        
+        protected TView _view;
 
         /// <summary>
         /// The default view
         /// </summary>
-        public TView View => (TView)GetView();
+        public TView View
+        {
+            get
+            {
+                if(_view==null)
+                    ExecuteOnUIContext(() => { _view = GetDefaultView(); });
+                return _view ;
+            }
+            set { SetProperty(ref _view, value); }
+        }
 
         protected override void RegisterViews()
         {

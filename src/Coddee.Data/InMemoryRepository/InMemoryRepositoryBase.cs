@@ -62,34 +62,6 @@ namespace Coddee.Data
         {
             return Task.FromResult(_collection);
         }
-
-        public Task<IEnumerable<TModel>> GetItems<T>(params Condition<TModel, T>[] conditions)
-        {
-            var query = _collection.AsQueryable();
-            query = BuildConditionQuery(conditions, query);
-            return Task.FromResult(query.ToList().AsEnumerable());
-        }
-
-        protected static IQueryable<TModel> BuildConditionQuery<T>(Condition<TModel, T>[] conditions, IQueryable<TModel> query)
-        {
-            foreach (var condition in conditions)
-            {
-                var param = Expression.Parameter(typeof(TModel), "e");
-                var value = Expression.Constant(condition.Value);
-
-                var propertyName = ((MemberExpression)condition.Property.Body).Member.Name;
-                var property = typeof(TModel).GetTypeInfo().GetProperty(propertyName);
-                if (property == null)
-                    throw new ArgumentException($"There is no property named {propertyName} on type {typeof(TModel).FullName}");
-
-                var prop = Expression.MakeMemberAccess(param, property);
-                var body = Expression.Equal(prop, value);
-                var expressions = Expression.Lambda<Func<TModel, bool>>(body, param);
-                query = query.Where(expressions);
-            }
-
-            return query;
-        }
     }
 
     public class CRUDInMemoryRepositoryBase<TModel, TKey> : ReadOnlyInMemoryRepositoryBase<TModel, TKey>, ICRUDRepository<TModel, TKey> where TModel : IUniqueObject<TKey>

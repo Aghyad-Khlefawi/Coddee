@@ -52,6 +52,20 @@ namespace Coddee.Data.LinqToSQL
                 }
             });
         }
+        /// <summary>
+        /// Execute an task on the database context without returning a value
+        /// </summary>
+        protected Task ExecuteAsync(Func<TDataContext, Task> action)
+        {
+            return Task.Run(() =>
+            {
+                using (var context = _dbManager.CreateContext())
+                {
+                    action(context).Wait();
+                    context.SubmitChanges();
+                }
+            });
+        }
 
         protected DbTransaction CreateTransaction(TDataContext context)
         {
@@ -75,6 +89,21 @@ namespace Coddee.Data.LinqToSQL
             });
         }
 
+        /// <summary>
+        /// Execute a function on the database context and then return a value
+        /// </summary>
+        protected Task<TResult> ExecuteAsync<TResult>(Func<TDataContext, Task<TResult>> action)
+        {
+            return Task.Run(() =>
+            {
+                using (var context = _dbManager.CreateContext())
+                {
+                    var res = action(context).Result;
+                    context.SubmitChanges();
+                    return res;
+                }
+            });
+        }
         /// <summary>
         /// Execute an action on the database context without returning a value
         /// The action will be wrapped with a transaction 
@@ -401,7 +430,7 @@ namespace Coddee.Data.LinqToSQL
             return GetItemFromDB();
         }
 
-        
+
         /// <summary>
         /// Execute a function on the targeted SQL table and then returning a value
         /// </summary>
@@ -544,7 +573,7 @@ namespace Coddee.Data.LinqToSQL
             using (var context = _dbManager.CreateContext())
             {
                 var transcation = CreateTransaction(context);
-                var res= await UpdateItem(item, context);
+                var res = await UpdateItem(item, context);
                 transcation.Commit();
                 return res;
             }
@@ -625,11 +654,11 @@ namespace Coddee.Data.LinqToSQL
         /// </summary>
         public virtual async Task DeleteItemByKey(TKey ID, TDataContext context)
         {
-           await TransactionalExecute(context, (db, table) =>
-           {
-               TModel item = DeleteFromDB(ID, db);
-               RaiseItemsChanged(this, new RepositoryChangeEventArgs<TModel>(OperationType.Delete, item, false));
-           });
+            await TransactionalExecute(context, (db, table) =>
+            {
+                TModel item = DeleteFromDB(ID, db);
+                RaiseItemsChanged(this, new RepositoryChangeEventArgs<TModel>(OperationType.Delete, item, false));
+            });
         }
 
         protected virtual TModel DeleteFromDB(TKey ID, TDataContext db)

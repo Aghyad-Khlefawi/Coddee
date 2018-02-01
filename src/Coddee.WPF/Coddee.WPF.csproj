@@ -69,17 +69,14 @@
     <Compile Include="AppBuilder\IShellViewModel.cs" />
     <Compile Include="AppBuilder\WPFApplication.cs" />
     <Compile Include="AppBuilder\WPFApplicationBuilder.cs" />
-    <Compile Include="Behaviors\BubbleScrollEvent.cs" />
-    <Compile Include="Behaviors\EmptyOnZeroBehavior.cs" />
-    <Compile Include="Behaviors\InputAlphabetMaskBehavior.cs" />
-    <Compile Include="Behaviors\InputNumbersMaskBehavior.cs" />
-    <Compile Include="BindableBase.cs" />
+    <Compile Include="Common\BindableBase.cs" />
     <Compile Include="Collections\AsyncObservableDictionaryView.cs" />
     <Compile Include="Collections\AsyncObservableCollectionView.cs" />
     <Compile Include="Commands\KeyDownCommand.cs" />
     <Compile Include="Commands\OnEnterCommand.cs" />
     <Compile Include="Commands\ReactiveCommand.cs" />
     <Compile Include="Commands\RelayCommand.cs" />
+    <Compile Include="Common\EditorFieldAttribute.cs" />
     <Compile Include="Controls\BusyIndicator.cs" />
     <Compile Include="Controls\CoddeeControl.cs" />
     <Compile Include="Controls\FileBrowser.cs" />
@@ -123,13 +120,13 @@
     <Compile Include="DebugTool\ViewModelExplorer\ViewModelPropertyTemplateSelector.cs" />
     <Compile Include="DefaultNavigations.cs" />
     <Compile Include="DefaultShell\DefaultRegions.cs" />
-    <Compile Include="Delegates.cs" />
-    <Compile Include="EditorViewModelBase.cs" />
+    <Compile Include="Common\Delegates.cs" />
+    <Compile Include="Common\EditorViewModelBase.cs" />
     <Compile Include="Events\ApplicationStartedEvent.cs" />
-    <Compile Include="Extensions.cs" />
-    <Compile Include="IEditorViewModel.cs" />
-    <Compile Include="InputMask.cs" />
-    <Compile Include="IViewModel.cs" />
+    <Compile Include="Common\Extensions.cs" />
+    <Compile Include="Common\IEditorViewModel.cs" />
+    <Compile Include="XamlHelpers\InputMask.cs" />
+    <Compile Include="Common\IViewModel.cs" />
     <Compile Include="Notification\NotificationModule.cs" />
     <Compile Include="Notification\NotificationPopupViewModel.cs" />
     <Compile Include="Notification\NotificationService.cs" />
@@ -163,7 +160,7 @@
     <Compile Include="Services\Dialogs\DialogViewModel.cs" />
     <Compile Include="Services\Dialogs\IDialogExplorer.cs" />
     <Compile Include="Services\Interfaces\IViewModelsManager.cs" />
-    <Compile Include="Localize.cs" />
+    <Compile Include="Common\Localize.cs" />
     <Compile Include="Services\Console\ApplicationConsoleModule.cs" />
     <Compile Include="Services\Console\ApplicationConsoleView.xaml.cs">
       <DependentUpon>ApplicationConsoleView.xaml</DependentUpon>
@@ -176,7 +173,7 @@
       <DependentUpon>DefaultShell.xaml</DependentUpon>
     </Compile>
     <Compile Include="DefaultShell\DefaultShellViewModel.cs" />
-    <Compile Include="IPresentable.cs" />
+    <Compile Include="Common\IPresentable.cs" />
     <Compile Include="Services\Dialogs\DialogService.cs" />
     <Compile Include="Services\Dialogs\DialogServiceView.xaml.cs">
       <DependentUpon>DialogServiceView.xaml</DependentUpon>
@@ -213,7 +210,7 @@
     <Compile Include="Services\Navigation\NavigationItem.cs" />
     <Compile Include="Services\ViewModelManager\ViewModelInfo.cs" />
     <Compile Include="Services\ViewModelManager\ViewModelManagerModule.cs" />
-    <Compile Include="PasswordBoxText.cs" />
+    <Compile Include="XamlHelpers\PasswordBoxText.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -230,16 +227,17 @@
     <Compile Include="Regions\Region.cs" />
     <Compile Include="Regions\RegionManager.cs" />
     <Compile Include="Security\ILoginViewModel.cs" />
-    <Compile Include="SelectableItem.cs" />
-    <Compile Include="UpdatableMarkupExtension.cs" />
-    <Compile Include="Validate.cs" />
-    <Compile Include="ViewModelBase.cs" />
+    <Compile Include="Common\SelectableItem.cs" />
+    <Compile Include="XamlHelpers\UpdatableMarkupExtension.cs" />
+    <Compile Include="Common\Validate.cs" />
+    <Compile Include="Common\ViewModelBase.cs" />
     <Compile Include="Services\ViewModelManager\ViewModelsManager.cs" />
-    <Compile Include="ViewModelEvent.cs" />
-    <Compile Include="ViewModelOptions.cs" />
-    <Compile Include="ViewModelsGroupEvent.cs" />
+    <Compile Include="Common\ViewModelEvent.cs" />
+    <Compile Include="Common\ViewModelOptions.cs" />
+    <Compile Include="Common\ViewModelsGroupEvent.cs" />
     <Compile Include="WPFModulesDefnitions.cs" />
     <Compile Include="XamlHelpers\FocusOnLoad.cs" />
+    <Compile Include="XamlHelpers\RelayScroll.cs" />
     <Compile Include="XamlHelpers\VisibilityConditions.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

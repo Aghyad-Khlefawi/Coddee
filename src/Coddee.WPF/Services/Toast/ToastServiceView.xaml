@@ -8,11 +8,21 @@
              xmlns:toast="clr-namespace:Coddee.Services.Toast"
              mc:Ignorable="d" >
     <UserControl.Resources>
-        <toast:ToastService x:Key="designData" />
-        <toast:ToastTemplateSelector x:Key="ToastTemplateSelector"/>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../../Resources.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <toast:ToastService x:Key="designData" />
+            <toast:ToastTemplateSelector x:Key="ToastTemplateSelector"
+                                         ErrorTemplate="{StaticResource ToastErrorTemplate}"
+                                         SuccessTemplate="{StaticResource ToastSuccessTemplate}"
+                                         WarningTemplate="{StaticResource ToastWarningTemplate}"
+                                         InformationTemplate="{StaticResource ToastInformationTemplate}"/>
+        </ResourceDictionary>
     </UserControl.Resources>
     <DockPanel d:DataContext="{StaticResource designData}" >
         <ItemsControl ItemsSource="{Binding ToastList}"
-                      ItemTemplateSelector="{StaticResource ToastTemplateSelector}"/>
+                      ItemTemplateSelector="{StaticResource ToastTemplateSelector}"
+                      />
     </DockPanel>
 </UserControl>

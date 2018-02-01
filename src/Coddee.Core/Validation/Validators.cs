@@ -44,7 +44,7 @@ namespace Coddee.Validation
         /// <summary>
         /// Checks if the validated object is null
         /// </summary>
-        public static Validator NullableValidator = e => !e.Equals(null);
+        public static Validator NullableValidator = e => !object.ReferenceEquals(e, null);
 
         /// <summary>
         /// Get validator by name

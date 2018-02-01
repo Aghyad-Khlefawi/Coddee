@@ -65,11 +65,7 @@ namespace HR.Data.Mongo.Repositories
                 .AsEnumerable();
         }
 
-        public Task<IEnumerable<Employee>> GetItems<T>(params Condition<Employee, T>[] conditions)
-        {
-            throw new NotImplementedException();
-        }
-
+       
         public event EventHandler<RepositoryChangeEventArgs<Employee>> ItemsChanged;
 
         public async Task<Employee> UpdateItem(Employee item)

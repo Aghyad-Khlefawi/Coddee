@@ -11,6 +11,11 @@ namespace Coddee.Services.Toast
     /// </summary>
     public class ToastTemplateSelector : DataTemplateSelector
     {
+
+        public DataTemplate InformationTemplate { get; set; }
+        public DataTemplate SuccessTemplate { get; set; }
+        public DataTemplate WarningTemplate { get; set; }
+        public DataTemplate ErrorTemplate { get; set; }
         public override DataTemplate SelectTemplate(object item, DependencyObject container)
         {
             var toast = item as Toast;
@@ -19,13 +24,13 @@ namespace Coddee.Services.Toast
                 switch (toast.Type)
                 {
                     case ToastType.Information:
-                        return (DataTemplate) Application.Current.FindResource("ToastInformationTemplate");
+                        return InformationTemplate;
                     case ToastType.Success:
-                        return (DataTemplate) Application.Current.FindResource("ToastSuccessTemplate");
+                        return SuccessTemplate;
                     case ToastType.Warning:
-                        return (DataTemplate) Application.Current.FindResource("ToastWarningTemplate");
+                        return WarningTemplate;
                     case ToastType.Error:
-                        return (DataTemplate) Application.Current.FindResource("ToastErrorTemplate");
+                        return ErrorTemplate;
                 }
             }
             return null;

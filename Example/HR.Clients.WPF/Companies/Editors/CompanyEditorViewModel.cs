@@ -23,14 +23,15 @@ namespace HR.Clients.WPF.Companies.Editors
             get { return _states; }
             set { SetProperty(ref this._states, value); }
         }
+
         private string _name;
+        [EditorField]
         public string Name
         {
             get { return _name; }
             set { SetProperty(ref this._name, value); }
         }
-
-
+        
         public override void PreSave()
         {
             EditedItem.StateID = States.SelectedItem.ID;
@@ -41,7 +42,6 @@ namespace HR.Clients.WPF.Companies.Editors
         protected override void SetValidationRules(List<IValidationRule> validationRules)
         {
             base.SetValidationRules(validationRules);
-            //validationRules.Add(ValidationRule.CreateWarningRule(() => Name));
             validationRules.Add(ValidationRule.CreateErrorRule(() => Name,
                                            () => "Name field is required"));
         }
@@ -65,13 +65,5 @@ namespace HR.Clients.WPF.Companies.Editors
             States = AsyncObservableCollection<State>.Create(await Resolve<IStateRepository>().GetItems());
         }
 
-        protected override void OnDesignMode()
-        {
-            base.OnDesignMode();
-            ValidationRules = new List<IValidationRule>
-            {
-                ValidationRule.CreateWarningRule(()=>Name,e=>false)
-            };
-        }
     }
 }
