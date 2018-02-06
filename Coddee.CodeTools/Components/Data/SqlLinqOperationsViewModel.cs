@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Aghyad khlefawi. All rights reserved.  
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
+using System;
 using System.Collections.Generic;
 using System.Data.Entity.Design.PluralizationServices;
 using System.Data.SqlClient;
@@ -65,13 +66,74 @@ namespace Coddee.CodeTools.Components.Data
             get { return _tablesCount; }
             set { SetProperty(ref _tablesCount, value); }
         }
+        private IReactiveCommand _importModelsCommand;
+        public IReactiveCommand ImportModelsCommand
+        {
+            get { return _importModelsCommand ?? (_importModelsCommand = CreateReactiveCommand(ImportModels)); }
+            set { SetProperty(ref _importModelsCommand, value); }
+        }
+        private IReactiveCommand _importRepositoriesCommand;
+        public IReactiveCommand ImportRepositoriesCommand
+        {
+            get { return _importRepositoriesCommand ?? (_importRepositoriesCommand = CreateReactiveCommand(ImportRepositories)); }
+            set { SetProperty(ref _importRepositoriesCommand, value); }
+        }
+        private IReactiveCommand _importLinqCommand;
+        public IReactiveCommand ImportLinqCommand
+        {
+            get { return _importLinqCommand ?? (_importLinqCommand = CreateReactiveCommand(ImportLinq)); }
+            set { SetProperty(ref _importLinqCommand, value); }
+        }
+        private IReactiveCommand _importRestCommand;
+        public IReactiveCommand ImportRestCommand
+        {
+            get { return _importRestCommand ?? (_importRestCommand = CreateReactiveCommand(ImportRest)); }
+            set { SetProperty(ref _importRestCommand, value); }
+        }
+
+        public async void ImportRest()
+        {
+            void ImportAllInternal()
+            {
+                _importWizardViewModel.SetTables(new TableImportArguments{ImprotRestRepository = true},Tables.ToArray());
+            }
+            await ToggleBusyAsync(Task.Run(new Action(ImportAllInternal)));
+            _importWizardViewModel.Show();
+        }
+        public async void ImportLinq()
+        {
+            void ImportAllInternal()
+            {
+                _importWizardViewModel.SetTables(new TableImportArguments { ImprotLinqRepository = true }, Tables.ToArray());
+            }
+            await ToggleBusyAsync(Task.Run(new Action(ImportAllInternal)));
+            _importWizardViewModel.Show();
+        }
+        public async void ImportRepositories()
+        {
+            void ImportAllInternal()
+            {
+                _importWizardViewModel.SetTables(new TableImportArguments { ImprotRepository = true }, Tables.ToArray());
+            }
+            await ToggleBusyAsync(Task.Run(new Action(ImportAllInternal)));
+            _importWizardViewModel.Show();
+        }
+        public async void ImportModels()
+        {
+            void ImportAllInternal()
+            {
+                _importWizardViewModel.SetTables(new TableImportArguments { ImprotModel = true }, Tables.ToArray());
+            }
+            await ToggleBusyAsync(Task.Run(new Action(ImportAllInternal)));
+            _importWizardViewModel.Show();
+        }
         public async void ImportAll()
         {
-            Task ImportAllInternal()
+            void ImportAllInternal()
             {
-                return _importWizardViewModel.SetTables(Tables.ToArray());
+                _importWizardViewModel.SetTables(TableImportArguments.All, Tables.ToArray());
             }
-            await ToggleBusyAsync(Task.Run(ImportAllInternal));
+            await ToggleBusyAsync(Task.Run(new Action(ImportAllInternal)));
             _importWizardViewModel.Show();
         }
         protected override async Task OnInitialization()
@@ -155,10 +217,10 @@ namespace Coddee.CodeTools.Components.Data
 
         private void ValidateTables(IEnumerable<SqlTableViewModel> sqlTables)
         {
-            var models = new DirectoryInfo(Path.Combine(_solution.ModelProjectConfiguration.ProjectFolder, _solution.ModelProjectConfiguration.GeneratedCodeFolder)).GetFiles();
-            var repositories = new DirectoryInfo(Path.Combine(_solution.DataProjectConfiguration.ProjectFolder, _solution.DataProjectConfiguration.GeneratedCodeFolder)).GetFiles();
-            var linqRepositories = new DirectoryInfo(Path.Combine(_solution.LinqProjectConfiguration.ProjectFolder, _solution.DataProjectConfiguration.GeneratedCodeFolder)).GetFiles();
-            var restRepositories = new DirectoryInfo(Path.Combine(_solution.RestProjectConfiguration.ProjectFolder, _solution.DataProjectConfiguration.GeneratedCodeFolder)).GetFiles();
+            var models = new DirectoryInfo(!string.IsNullOrEmpty(_solution.ModelProjectConfiguration.GeneratedCodeFolder)? Path.Combine(_solution.ModelProjectConfiguration.ProjectFolder, _solution.ModelProjectConfiguration.GeneratedCodeFolder): _solution.ModelProjectConfiguration.ProjectFolder).GetFiles();
+            var repositories = new DirectoryInfo(!string.IsNullOrEmpty(_solution.DataProjectConfiguration.GeneratedCodeFolder) ? Path.Combine(_solution.DataProjectConfiguration.ProjectFolder, _solution.DataProjectConfiguration.GeneratedCodeFolder): _solution.DataProjectConfiguration.ProjectFolder).GetFiles();
+            var linqRepositories = new DirectoryInfo(!string.IsNullOrEmpty(_solution.LinqProjectConfiguration.GeneratedCodeFolder) ? Path.Combine(_solution.LinqProjectConfiguration.ProjectFolder, _solution.LinqProjectConfiguration.GeneratedCodeFolder) : _solution.DataProjectConfiguration.ProjectFolder).GetFiles();
+            var restRepositories = new DirectoryInfo(!string.IsNullOrEmpty(_solution.RestProjectConfiguration.GeneratedCodeFolder) ? Path.Combine(_solution.RestProjectConfiguration.ProjectFolder, _solution.RestProjectConfiguration.GeneratedCodeFolder) : _solution.RestProjectConfiguration.ProjectFolder).GetFiles();
 
 
             foreach (var table in sqlTables)
@@ -190,7 +252,7 @@ namespace Coddee.CodeTools.Components.Data
 
         private void GetDbTitle()
         {
-            if (_solution.DatabaseConfigurations.IsDbValid)
+            if (_solution.DatabaseConfigurations?.IsDbValid ?? false)
             {
                 var connection = _solution.DatabaseConfigurations.DbConnection;
                 var sqlConnBuilder = new SqlConnectionStringBuilder(connection);

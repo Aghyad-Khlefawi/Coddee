@@ -49,6 +49,12 @@ namespace Coddee.CodeTools
             get { return _propertyName; }
             set { SetProperty(ref _propertyName, value); }
         }
+        private string _prefix;
+        public string Prefix
+        {
+            get { return _prefix; }
+            set { SetProperty(ref _prefix, value); }
+        }
 
         void Remove(ModelAdditionalProperty item)
         {
@@ -74,6 +80,7 @@ namespace Coddee.CodeTools
             return new ModelProjectConfigurationSerializable
             {
                 ProjectPath = config.ProjectPath,
+                Prefix = config.Prefix,
                 DefaultNamespace = config.DefaultNamespace,
                 GeneratedCodeFolder = config.GeneratedCodeFolder,
                 AdditionalInterfaces = config.AdditionalInterfaces,
@@ -85,6 +92,7 @@ namespace Coddee.CodeTools
             return new ModelProjectConfiguration
             {
                 ProjectPath = config.ProjectPath,
+                Prefix = config.Prefix,
                 DefaultNamespace = config.DefaultNamespace,
                 GeneratedCodeFolder = config.GeneratedCodeFolder,
                 AdditionalInterfaces = config.AdditionalInterfaces,
@@ -102,6 +110,7 @@ namespace Coddee.CodeTools
     public class ModelProjectConfigurationSerializable: ProjectConfigurationSerializable
     {
         public string AdditionalInterfaces { get; set; }
+        public string Prefix { get; set; }
         public List<ModelAdditionalProperty> AdditionalProperties { get; set; }
     }
 }

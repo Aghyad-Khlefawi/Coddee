@@ -40,9 +40,9 @@ namespace Coddee.VsExtensibility
             return null;
         }
 
-        public void AddExistedFileToProject(string projectProjectPath, string file)
+        public void AddExistedFileToProject(string projectName, string file)
         {
-            _vsHelper.AddExistedFileToProject(projectProjectPath,file);
+            _vsHelper.AddExistedFileToProject(projectName, file);
         }
 
         public static void SetServiceProvider(IServiceProvider serviceProvider)
@@ -53,7 +53,7 @@ namespace Coddee.VsExtensibility
         
         public static string GetActiveConfiguration()
         {
-            return _dte.Solution.Projects.Item(1).ConfigurationManager.ActiveConfiguration.ConfigurationName;
+            return _dte.Solution.Projects.Item(1)?.ConfigurationManager?.ActiveConfiguration.ConfigurationName;
         }
     }
 }

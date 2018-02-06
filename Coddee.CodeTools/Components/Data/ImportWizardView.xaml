@@ -101,7 +101,7 @@
                                     </GroupBox>
                                     <GroupBox>
                                         <GroupBox.Header>
-                                            <CheckBox IsChecked="{Binding ImportRestRepository}">Linq Repository</CheckBox>
+                                            <CheckBox IsChecked="{Binding ImportRestRepository}">Rest Repository</CheckBox>
                                         </GroupBox.Header>
                                         <StackPanel Margin="5">
                                         </StackPanel>

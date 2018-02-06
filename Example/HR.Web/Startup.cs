@@ -6,6 +6,7 @@ using System.IO;
 using System.Text;
 using Coddee.AspNet;
 using Coddee.Loggers;
+using Coddee.Windows.AppBuilder;
 using HR.Data.LinqToSQL;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -37,7 +38,7 @@ namespace HR.Web
             var dbLocation = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..\\", "..\\", "..\\", "..\\", "..\\", "HR.Clients.WPF", "DB"));
             AppDomain.CurrentDomain.SetData("DataDirectory", dbLocation);
 
-            services.AddLogger(LoggerTypes.DebugOutput, LogRecordTypes.Debug);
+            services.AddLogger(new LoggerOptions(LoggerTypes.DebugOutput, LogRecordTypes.Debug));
             services.AddILObjectMapper();
             services.AddLinqRepositoryManager<HRDBManager>(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\HRDatabase.mdf;Integrated Security=True;Connect Timeout=30", "HR.Data.LinqToSQL");
 

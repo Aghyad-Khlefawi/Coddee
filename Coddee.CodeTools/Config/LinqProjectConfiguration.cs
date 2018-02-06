@@ -98,7 +98,7 @@ namespace Coddee.CodeTools.Config
             var linqBaseRepositoryTypes = new List<string>();
             if (!string.IsNullOrWhiteSpace(ProjectPath))
             {
-                var activeConfig = SolutionInfo.GetActiveConfiguration();
+                var activeConfig = SolutionInfo.GetActiveConfiguration() ?? "debug";
                 var assemblyName = this.GetAssemblyName();
                 if (!string.IsNullOrWhiteSpace(assemblyName))
                 {

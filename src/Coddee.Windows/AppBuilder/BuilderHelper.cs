@@ -15,6 +15,7 @@ namespace Coddee.Windows.AppBuilder
         public LoggerTypes LoggerType { get; set; }
         public LogRecordTypes Level { get; set; }
         public string LogFilePath { get; set; }
+        public bool UseFileCompression { get; set; }
     }
 
 }
@@ -38,7 +39,7 @@ public class BuilderHelper
         if (loggerType.HasFlag(LoggerTypes.File))
         {
             var fileLogger = container.Resolve<FileLogger>();
-            fileLogger.Initialize(level, filePath);
+            fileLogger.Initialize(level, filePath, options.UseFileCompression);
             logger.AddLogger(fileLogger, LoggerTypes.File);
         }
         if (loggerType.HasFlag(LoggerTypes.ApplicationConsole))

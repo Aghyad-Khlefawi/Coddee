@@ -55,6 +55,10 @@
                         <TextBox Text="{Binding GeneratedCodeFolder,UpdateSourceTrigger=PropertyChanged}"/>
                     </DockPanel>
                     <DockPanel Margin="15 0 0 3">
+                        <Label Width="130" Content="Files prefix"/>
+                        <TextBox Text="{Binding Prefix,UpdateSourceTrigger=PropertyChanged}"/>
+                    </DockPanel>
+                    <DockPanel Margin="15 0 0 3">
                         <Label Width="130" Content="Additional interfaces"/>
                         <TextBox Text="{Binding AdditionalInterfaces,UpdateSourceTrigger=PropertyChanged}"/>
                     </DockPanel>

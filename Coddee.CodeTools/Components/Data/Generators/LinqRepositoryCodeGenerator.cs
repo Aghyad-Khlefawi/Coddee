@@ -37,20 +37,20 @@ namespace Coddee.CodeTools.Components.Data.Generators
             if (args.SelectedBaseRepositoryType == typeof(ICRUDRepository<,>))
             {
                 if (_solution.LinqProjectConfiguration.UseCutomCrudBase)
-                    type.BaseTypes.Add(new CodeTypeReference(_solution.LinqProjectConfiguration.SelectedLinqCrudBase, new CodeTypeReference(dbClass), new CodeTypeReference(args.SingularName), new CodeTypeReference(primaryKeyType)));
+                    type.BaseTypes.Add(new CodeTypeReference(_solution.LinqProjectConfiguration.SelectedLinqCrudBase, new CodeTypeReference(dbClass), new CodeTypeReference(args.ModelName), new CodeTypeReference(primaryKeyType)));
                 else
-                    type.BaseTypes.Add(new CodeTypeReference(typeof(CRUDLinqRepositoryBase<,,,>).Name, new CodeTypeReference($"DB.{dbmlClass}"), new CodeTypeReference(dbClass), new CodeTypeReference(args.SingularName), new CodeTypeReference(primaryKeyType)));
+                    type.BaseTypes.Add(new CodeTypeReference(typeof(CRUDLinqRepositoryBase<,,,>).Name, new CodeTypeReference($"DB.{dbmlClass}"), new CodeTypeReference(dbClass), new CodeTypeReference(args.ModelName), new CodeTypeReference(primaryKeyType)));
             }
             else if (args.SelectedBaseRepositoryType == typeof(IReadOnlyRepository<,>))
             {
                 if (_solution.LinqProjectConfiguration.UseCutomCrudBase)
-                    type.BaseTypes.Add(new CodeTypeReference(_solution.LinqProjectConfiguration.SelectedLinqReadBase, new CodeTypeReference(dbClass), new CodeTypeReference(args.SingularName), new CodeTypeReference(primaryKeyType)));
+                    type.BaseTypes.Add(new CodeTypeReference(_solution.LinqProjectConfiguration.SelectedLinqReadBase, new CodeTypeReference(dbClass), new CodeTypeReference(args.ModelName), new CodeTypeReference(primaryKeyType)));
                 else
-                    type.BaseTypes.Add(new CodeTypeReference(typeof(ReadOnlyLinqRepositoryBase<,,,>).Name, new CodeTypeReference($"DB.{dbmlClass}"), new CodeTypeReference(dbClass), new CodeTypeReference(args.SingularName), new CodeTypeReference(primaryKeyType)));
+                    type.BaseTypes.Add(new CodeTypeReference(typeof(ReadOnlyLinqRepositoryBase<,,,>).Name, new CodeTypeReference($"DB.{dbmlClass}"), new CodeTypeReference(dbClass), new CodeTypeReference(args.ModelName), new CodeTypeReference(primaryKeyType)));
             }
             else
             {
-                type.BaseTypes.Add(new CodeTypeReference(typeof(LinqRepositoryBase<,,,>).Name, new CodeTypeReference($"DB.{dbmlClass}"), new CodeTypeReference(dbClass), new CodeTypeReference(args.SingularName), new CodeTypeReference(primaryKeyType)));
+                type.BaseTypes.Add(new CodeTypeReference(typeof(LinqRepositoryBase<,,,>).Name, new CodeTypeReference($"DB.{dbmlClass}"), new CodeTypeReference(dbClass), new CodeTypeReference(args.ModelName), new CodeTypeReference(primaryKeyType)));
             }
 
             var interfaceName = $"I{args.SingularName}Repository";

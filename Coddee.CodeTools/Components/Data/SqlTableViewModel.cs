@@ -8,20 +8,20 @@ using Coddee.WPF.Commands;
 
 namespace Coddee.CodeTools.Components.Data
 {
-    public class SqlTableViewModel : ViewModelBase
+    public class SqlTableViewModel : VsViewModelBase
     {
         private readonly ImportWizardViewModel _importWizardViewModel;
 
         public SqlTableViewModel()
         {
-            
+
         }
 
         public SqlTableViewModel(ImportWizardViewModel importWizardViewModel)
         {
             _importWizardViewModel = importWizardViewModel;
         }
-        
+
         public string TableName { get; set; }
         public string SchemaName { get; set; }
         public List<SqlColumn> Columns { get; set; }
@@ -62,15 +62,15 @@ namespace Coddee.CodeTools.Components.Data
             set { SetProperty(ref _configureTableCommand, value); }
         }
 
-        public async void ConfigureTable()
+        public void ConfigureTable()
         {
-            await _importWizardViewModel.SetTables(this);
+            _importWizardViewModel.SetTables(TableImportArguments.All, this);
             _importWizardViewModel.Show();
         }
 
         public string GetModelFileName()
         {
-            return $"{SingularName}.cs";
+            return $"{SingularName}{_solution.ModelProjectConfiguration.Prefix}.cs";
         }
         public string GetRepsotioryInterfaceFileName()
         {

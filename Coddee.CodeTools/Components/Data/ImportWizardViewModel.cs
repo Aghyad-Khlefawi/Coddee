@@ -72,27 +72,31 @@ namespace Coddee.CodeTools.Components.Data
             };
         }
 
-        public async Task SetTables(params SqlTableViewModel[] tables)
+        public void SetTables(TableImportArguments importOptions, params SqlTableViewModel[] tables)
         {
-            ImportArgumentes.ClearAndFill(await tables.Select(async e => await CreateImportArgs(e)));
+            ImportArgumentes.ClearAndFill(tables.Select(e => CreateImportArgs(e)));
             foreach (var importArgument in ImportArgumentes)
             {
+                importArgument.ImportModel = importOptions.ImprotModel;
+                importArgument.ImportRepository = importOptions.ImprotRepository;
+                importArgument.ImportLinqRepository = importOptions.ImprotLinqRepository;
+                importArgument.ImportRestRepository = importOptions.ImprotRestRepository;
+
                 if (importArgument.Columns.Count(e => e.IsPrimaryKey) != 1)
                     importArgument.ImportTable = false;
             }
         }
 
-        private async Task<TableImportArgumentsViewModel> CreateImportArgs(SqlTableViewModel sqlTableViewModel)
+        private TableImportArgumentsViewModel CreateImportArgs(SqlTableViewModel sqlTableViewModel)
         {
             var importArgs = new TableImportArgumentsViewModel(sqlTableViewModel);
-            await importArgs.Initialize();
             return importArgs;
         }
 
         private IDialog _dialog;
         public void Show()
         {
-            _dialog = _dialogService.ShowDialog("Generate files",this, DialogOptions.StretchedContent, new CloseActionCommand("Close"), new ActionCommand("Generate", Generate));
+            _dialog = _dialogService.ShowDialog("Generate files", this, DialogOptions.StretchedContent, new CloseActionCommand("Close"), new ActionCommand("Generate", Generate));
         }
 
         private async void Generate()
@@ -103,27 +107,19 @@ namespace Coddee.CodeTools.Components.Data
                 {
                     if (table.ImportModel)
                     {
-                        var project = _solution.ModelProjectConfiguration;
-                        var file = Path.Combine(project.ProjectFolder, project.GeneratedCodeFolder, $"{table.SingularName}.cs");
-                        GenerateFile(file, project, table, _modelGenerator);
+                        GenerateFile(_solution.ModelProjectConfiguration, table, _modelGenerator, table.ModelName);
                     }
                     if (table.ImportRepository)
                     {
-                        var project = _solution.DataProjectConfiguration;
-                        var file = Path.Combine(project.ProjectFolder, project.GeneratedCodeFolder, $"I{table.SingularName}Repository.cs");
-                        GenerateFile(file, project, table, _repositoryInterfaceGenerator);
+                        GenerateFile(_solution.DataProjectConfiguration, table, _repositoryInterfaceGenerator, $"I{table.SingularName}Repository");
                     }
                     if (table.ImportLinqRepository)
                     {
-                        var project = _solution.LinqProjectConfiguration;
-                        var file = Path.Combine(project.ProjectFolder, project.GeneratedCodeFolder, $"{table.SingularName}Repository.cs");
-                        GenerateFile(file, project, table, _linqRepositoryGenerator);
+                        GenerateFile(_solution.LinqProjectConfiguration, table, _linqRepositoryGenerator, $"{table.SingularName}Repository");
                     }
                     if (table.ImportRestRepository)
                     {
-                        var project = _solution.RestProjectConfiguration;
-                        var file = Path.Combine(project.ProjectFolder, project.GeneratedCodeFolder, $"{table.SingularName}Repository.cs");
-                        GenerateFile(file, project, table, _restRepositoryGenerator);
+                        GenerateFile(_solution.RestProjectConfiguration, table, _restRepositoryGenerator, $"{table.SingularName}Repository");
                     }
                 }
             }));
@@ -133,8 +129,10 @@ namespace Coddee.CodeTools.Components.Data
             _dialog.Close();
         }
 
-        void GenerateFile(string file, ProjectConfiguration project, TableImportArgumentsViewModel table, TypeCodeGenerator generator)
+        void GenerateFile(ProjectConfiguration project, TableImportArgumentsViewModel table, TypeCodeGenerator generator, string filename)
         {
+            var file = !string.IsNullOrEmpty(project.GeneratedCodeFolder) ? Path.Combine(project.ProjectFolder, project.GeneratedCodeFolder, $"{filename}.cs") : Path.Combine(project.ProjectFolder, $"{table.ModelName}.cs");
+
             if (!File.Exists(file))
             {
                 using (var stream = File.Create(file))

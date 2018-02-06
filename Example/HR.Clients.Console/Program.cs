@@ -17,7 +17,7 @@ namespace HR.Clients.Console
 
             new ConsoleApplication("HR Application", new CoddeeUnityContainer()).Run(app =>
             {
-                app.UseLogger(LoggerTypes.DebugOutput | LoggerTypes.ApplicationConsole, LogRecordTypes.Information)
+                app.UseLogger(new LoggerOptions(LoggerTypes.DebugOutput | LoggerTypes.ApplicationConsole, LogRecordTypes.Information))
                    .UseILMapper()
                    .UseMain<HRApplication>();
                 //.UseLinqRepositoryManager<HRDBManager>(connection, "HR.Data.LinqToSQL");

@@ -149,18 +149,23 @@ namespace Coddee.CodeTools
 
                         if (functionNode.Name == DbmlXmlTags.ElementType)
                         {
-                            var result = new SqlResultType
+                            var attr = functionNode.Attributes[DbmlXmlAttributes.Name];
+                            if (attr != null)
                             {
-                                Name = functionNode.Attributes[DbmlXmlAttributes.Name].Value,
-                                Columns = new List<SqlColumn>()
-                            };
+                                var result = new SqlResultType
+                                {
+                                    Name = attr.Value,
+                                    Columns = new List<SqlColumn>()
+                                };
 
-                            foreach (XmlNode columnNode in functionNode.ChildNodes)
-                            {
-                                var column = GetColumnFromNode(columnNode);
-                                result.Columns.Add(column);
+                                foreach (XmlNode columnNode in functionNode.ChildNodes)
+                                {
+                                    var column = GetColumnFromNode(columnNode);
+                                    result.Columns.Add(column);
+                                }
+
+                                function.ResultType = result;
                             }
-                            function.ResultType = result;
                         }
                     }
                     functions.Add(function);

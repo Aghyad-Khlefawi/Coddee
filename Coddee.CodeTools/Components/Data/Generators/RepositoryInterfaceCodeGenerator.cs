@@ -29,7 +29,7 @@ namespace Coddee.CodeTools.Components.Data.Generators
             base.AddBaseTypes(type, args);
             var primaryKeyType = args.GetPrimaryKeyType();
             if (primaryKeyType != null)
-                type.BaseTypes.Add(new CodeTypeReference(args.SelectedBaseRepositoryType.Name, new CodeTypeReference(args.SingularName), new CodeTypeReference(primaryKeyType)));
+                type.BaseTypes.Add(new CodeTypeReference(args.SelectedBaseRepositoryType.Name, new CodeTypeReference(args.ModelName), new CodeTypeReference(primaryKeyType)));
         }
     }
 }

@@ -12,6 +12,14 @@ using Coddee.WPF.Commands;
 
 namespace Coddee.CodeTools.Components.Data
 {
+    public class TableImportArguments
+    {
+        public bool ImprotModel { get; set; }
+        public bool ImprotRepository { get; set; }
+        public bool ImprotLinqRepository { get; set; }
+        public bool ImprotRestRepository { get; set; }
+        public static TableImportArguments All = new TableImportArguments {ImprotRestRepository = true, ImprotLinqRepository = true, ImprotModel = true, ImprotRepository = true};
+    }
     public class TableImportArgumentsViewModel : VsViewModelBase
     {
         private readonly SqlTableViewModel _table;
@@ -29,9 +37,12 @@ namespace Coddee.CodeTools.Components.Data
                 typeof(IRepository),
             };
             SelectedBaseRepositoryType = BaseRepositoryTypes[0];
+            Columns = AsyncObservableCollection<ColumnImportArgumentsViewModel>.Create(_table.Columns.Select(CreateColumn));
+
         }
 
         public string SingularName { get; set; }
+        public string ModelName => $"{SingularName}{_solution.ModelProjectConfiguration.Prefix}";
 
         private bool _isCustomLinqBase;
         public bool IsCustomLinqBase
@@ -125,16 +136,9 @@ namespace Coddee.CodeTools.Components.Data
         {
             IsExpanded = !IsExpanded;
         }
-        protected override async Task OnInitialization()
-        {
-            await base.OnInitialization();
-            Columns = await _table.Columns.Select(CreateColumn).ToAsyncObservableCollection();
-        }
-
-        private async Task<ColumnImportArgumentsViewModel> CreateColumn(SqlColumn arg)
+        private ColumnImportArgumentsViewModel CreateColumn(SqlColumn arg)
         {
             var argumentsViewModel = new ColumnImportArgumentsViewModel(arg);
-            await argumentsViewModel.Initialize();
             return argumentsViewModel;
         }
 

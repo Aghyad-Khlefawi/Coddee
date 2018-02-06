@@ -7,6 +7,7 @@ using Coddee.Data;
 using Coddee.Data.LinqToSQL;
 using Coddee.Data.MongoDB;
 using Coddee.Loggers;
+using Coddee.Windows.AppBuilder;
 using Coddee.Windows.Mapper;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
@@ -24,22 +25,21 @@ namespace Coddee.AspNet
         }
 
         public static IServiceCollection AddLogger(this IServiceCollection services,
-                                                   LoggerTypes loggerType,
-                                                   LogRecordTypes level)
+                                                   LoggerOptions options)
         {
             var logger = new LogAggregator();
-            logger.Initialize(level);
+            logger.Initialize(options.Level);
 
-            if (loggerType.HasFlag(LoggerTypes.DebugOutput))
+            if (options.LoggerType.HasFlag(LoggerTypes.DebugOutput))
             {
                 var debugLogger = new DebugOuputLogger();
-                debugLogger.Initialize(level);
+                debugLogger.Initialize(options.Level);
                 logger.AddLogger(debugLogger, LoggerTypes.DebugOutput);
             }
-            if (loggerType.HasFlag(LoggerTypes.File))
+            if (options.LoggerType.HasFlag(LoggerTypes.File))
             {
                 var fileLogger = new FileLogger();
-                fileLogger.Initialize(level, "log.txt");
+                fileLogger.Initialize(options.Level, options.LogFilePath, options.UseFileCompression);
                 logger.AddLogger(fileLogger, LoggerTypes.File);
             }
             services.AddSingleton<ILogger>(logger);
@@ -61,7 +61,7 @@ namespace Coddee.AspNet
             var mapper = serviceProvider.GetService<IObjectMapper>();
             var dbManager = new TDBManager();
             dbManager.Initialize(connectionString);
-            
+
             services.AddSingleton<ILinqDBManager>(dbManager);
             services.AddSingleton<IRepositoryManager>(repositoryManager);
 

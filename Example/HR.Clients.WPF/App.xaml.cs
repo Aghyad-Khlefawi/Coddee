@@ -28,7 +28,11 @@ namespace HR.Clients.WPF
 
             new WPFApplication("HR application", new CoddeeUnityContainer()).Run(app =>
             {
-                app.UseLogger(new LoggerOptions(LoggerTypes.ApplicationConsole | LoggerTypes.DebugOutput, LogRecordTypes.Debug))
+                app.UseLogger(new LoggerOptions(LoggerTypes.ApplicationConsole | LoggerTypes.DebugOutput| LoggerTypes.File, LogRecordTypes.Debug)
+                   {
+                       LogFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "log.txt"),
+                       UseFileCompression = true
+                   })
                    .UseApplicationConsole(e => e.Key == Key.F12)
                    .UseCoddeeDebugTool(e => e.Key == Key.F11)
                    .UseILMapper()

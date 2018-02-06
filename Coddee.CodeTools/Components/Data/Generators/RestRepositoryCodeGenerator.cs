@@ -28,15 +28,15 @@ namespace Coddee.CodeTools.Components.Data.Generators
             var primaryKeyType = args.GetPrimaryKeyType();
             if (args.SelectedBaseRepositoryType == typeof(ICRUDRepository<,>))
             {
-                type.BaseTypes.Add(new CodeTypeReference(typeof(CRUDRESTRepositoryBase<,>).Name, new CodeTypeReference(args.SingularName), new CodeTypeReference(primaryKeyType)));
+                type.BaseTypes.Add(new CodeTypeReference(typeof(CRUDRESTRepositoryBase<,>).Name, new CodeTypeReference(args.ModelName), new CodeTypeReference(primaryKeyType)));
             }
             else if (args.SelectedBaseRepositoryType == typeof(IReadOnlyRepository<,>))
             {
-                type.BaseTypes.Add(new CodeTypeReference(typeof(ReadOnlyRESTRepositoryBase<,>).Name, new CodeTypeReference(args.SingularName), new CodeTypeReference(primaryKeyType)));
+                type.BaseTypes.Add(new CodeTypeReference(typeof(ReadOnlyRESTRepositoryBase<,>).Name, new CodeTypeReference(args.ModelName), new CodeTypeReference(primaryKeyType)));
             }
             else
             {
-                type.BaseTypes.Add(new CodeTypeReference(typeof(RESTRepositoryBase<,>).Name, new CodeTypeReference(args.SingularName), new CodeTypeReference(primaryKeyType)));
+                type.BaseTypes.Add(new CodeTypeReference(typeof(RESTRepositoryBase<,>).Name, new CodeTypeReference(args.ModelName), new CodeTypeReference(primaryKeyType)));
             }
 
             var interfaceName = $"I{args.SingularName}Repository";

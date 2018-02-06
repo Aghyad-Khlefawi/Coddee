@@ -1,3 +1,6 @@
+// Copyright (c) Aghyad khlefawi. All rights reserved.  
+// Licensed under the MIT License. See LICENSE file in the project root for full license information.  
+
 using System;
 using System.Collections.Generic;
 
@@ -19,6 +22,11 @@ namespace Coddee.WPF
         Clear
     }
 
+    /// <summary>
+    /// Used to mark properties in an EditorViewModel class.
+    /// Properties marked with this attribute will benefit from some functionalities like 
+    /// automatically clearing fields and adding validation rules for the property.
+    /// </summary>
     [AttributeUsage(AttributeTargets.Property, Inherited = true, AllowMultiple = false)]
     public sealed class EditorFieldAttribute : Attribute
     {
@@ -34,6 +42,9 @@ namespace Coddee.WPF
             ClearAction = clearAction;
         }
 
+        /// <summary>
+        /// The action to be taken on <see cref="EditorViewModelBase{TEditor,TView,TModel}.Clear"/>
+        /// </summary>
         public ClearAction ClearAction { get; set; }
 
     }

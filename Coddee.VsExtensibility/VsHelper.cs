@@ -20,7 +20,7 @@ namespace Coddee.CodeTools
         bool IsSolutionLoaded();
         string GetCurrentSolutionPath();
         string GetActiveConfiguration();
-        void AddExistedFileToProject(string projectPath, string fileName);
+        void AddExistedFileToProject(string projectName, string fileName);
     }
 
     public class VsHelper : ISolutionEventsHelper, ISolutionHelper
@@ -64,7 +64,7 @@ namespace Coddee.CodeTools
         {
             foreach (Project project in Dte.Solution.Projects)
             {
-                if (project.FullName == projectPath)
+                if (project.Name == projectPath)
                 {
                     project.ProjectItems.AddFromFile(fileName);
                     break;
