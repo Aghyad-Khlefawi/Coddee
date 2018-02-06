@@ -76,6 +76,7 @@
     <Compile Include="Commands\ReactiveCommand.cs" />
     <Compile Include="Commands\RelayCommand.cs" />
     <Compile Include="Common\EditorFieldAttribute.cs" />
+    <Compile Include="Common\EditorFieldInfo.cs" />
     <Compile Include="Controls\BusyIndicator.cs" />
     <Compile Include="Controls\CoddeeControl.cs" />
     <Compile Include="Controls\FileBrowser.cs" />

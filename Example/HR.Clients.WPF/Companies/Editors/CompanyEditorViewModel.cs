@@ -25,7 +25,7 @@ namespace HR.Clients.WPF.Companies.Editors
         }
 
         private string _name;
-        [EditorField]
+        [EditorField(IsRequired = true)]
         public string Name
         {
             get { return _name; }
@@ -42,8 +42,8 @@ namespace HR.Clients.WPF.Companies.Editors
         protected override void SetValidationRules(List<IValidationRule> validationRules)
         {
             base.SetValidationRules(validationRules);
-            validationRules.Add(ValidationRule.CreateErrorRule(() => Name,
-                                           () => "Name field is required"));
+          //  validationRules.Add(ValidationRule.CreateErrorRule(() => Name,
+          //                                 () => "Name field is required"));
         }
 
         protected override async Task<Company> SaveItem()

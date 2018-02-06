@@ -30,8 +30,6 @@ namespace Coddee.WPF
     [AttributeUsage(AttributeTargets.Property, Inherited = true, AllowMultiple = false)]
     public sealed class EditorFieldAttribute : Attribute
     {
-        
-
         public EditorFieldAttribute()
         {
             
@@ -46,6 +44,6 @@ namespace Coddee.WPF
         /// The action to be taken on <see cref="EditorViewModelBase{TEditor,TView,TModel}.Clear"/>
         /// </summary>
         public ClearAction ClearAction { get; set; }
-
+        public bool IsRequired { get; set; }
     }
 }

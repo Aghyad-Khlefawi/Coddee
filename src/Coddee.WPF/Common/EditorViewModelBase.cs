@@ -26,7 +26,7 @@ namespace Coddee.WPF
 
     {
         private const string _eventsSource = "EditorBase";
-
+        protected IEnumerable<EditorFieldInfo> _editorFields;
         protected EditorViewModelBase()
         {
             Saved += OnSave;
@@ -103,36 +103,55 @@ namespace Coddee.WPF
 
         protected override async Task OnInitialization()
         {
+            GetEditorFields();
             await base.OnInitialization();
             _mapper.RegisterMap<TModel, TModel>();
             _mapper.RegisterTwoWayMap<TEditor, TModel>();
             GenerateClearFunction();
+        }
 
+        protected override void SetValidationRules(List<IValidationRule> validationRules)
+        {
+            base.SetValidationRules(validationRules);
+            foreach (var editorFieldInfo in _editorFields.Where(e=>e.Attribute.IsRequired))
+            {
+                var property = Expression.Property(Expression.Constant(this), editorFieldInfo.Property.Name);
+                var lambda = Expression.Lambda<Func<object>>(property).Compile();
+                var rule = new ValidationRule(ValidationType.Error,Validators.GetValidator(editorFieldInfo.Property.PropertyType),editorFieldInfo.Property.Name,lambda);
+                validationRules.Add(rule);
+            }
+        }
+
+        private void GetEditorFields()
+        {
+            _editorFields = typeof(TEditor).GetProperties().Where(e => e.IsDefined(typeof(EditorFieldAttribute), true)).Select(e => new EditorFieldInfo
+            {
+                Attribute = e.GetCustomAttribute<EditorFieldAttribute>(),
+                Property = e
+            });
         }
 
         private void GenerateClearFunction()
         {
-            //Get properties with EditorFieldAttribute
-            var properties = typeof(TEditor).GetProperties().Where(e => e.IsDefined(typeof(EditorFieldAttribute), true));
-            if (properties.Any())
+            if (_editorFields.Any())
             {
                 var param = Expression.Parameter(typeof(TEditor), "e");
-                var expressions = new List<Expression<Action<TEditor>>>(properties.Count());
-                foreach (var propertyInfo in properties)
+                var expressions = new List<Expression<Action<TEditor>>>(_editorFields.Count());
+                foreach (var fielInfo in _editorFields)
                 {
                     Expression<Action<TEditor>> clearExpression = null;
-                    switch (propertyInfo.GetCustomAttribute<EditorFieldAttribute>().ClearAction)
+                    switch (fielInfo.Property.GetCustomAttribute<EditorFieldAttribute>().ClearAction)
                     {
                         case ClearAction.Default:
                             // Generate default assign expression ( e=> e.Property = default(T) )
-                            clearExpression = Expression.Lambda<Action<TEditor>>(Expression.Assign(Expression.Property(param, propertyInfo.Name), Expression.Default(propertyInfo.PropertyType)), param);
+                            clearExpression = Expression.Lambda<Action<TEditor>>(Expression.Assign(Expression.Property(param, fielInfo.Property.Name), Expression.Default(fielInfo.Property.PropertyType)), param);
                             break;
                         case ClearAction.Clear:
                             // Generate call expressions ( e=>e.Clear() )
-                            var method = propertyInfo.DeclaringType.GetMethod(nameof(ICollection<object>.Clear));
+                            var method = fielInfo.Property.DeclaringType.GetMethod(nameof(ICollection<object>.Clear));
                             if (method != null)
                             {
-                                clearExpression = Expression.Lambda<Action<TEditor>>(Expression.Call(Expression.Property(param, propertyInfo.Name), method), param);
+                                clearExpression = Expression.Lambda<Action<TEditor>>(Expression.Call(Expression.Property(param, fielInfo.Property.Name), method), param);
                             }
                             break;
                     }

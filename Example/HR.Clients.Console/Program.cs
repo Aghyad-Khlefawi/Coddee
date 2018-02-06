@@ -20,7 +20,6 @@ namespace HR.Clients.Console
                 app.UseLogger(new LoggerOptions(LoggerTypes.DebugOutput | LoggerTypes.ApplicationConsole, LogRecordTypes.Information))
                    .UseILMapper()
                    .UseMain<HRApplication>();
-                //.UseLinqRepositoryManager<HRDBManager>(connection, "HR.Data.LinqToSQL");
             });
         }
     }
