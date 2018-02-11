@@ -83,6 +83,7 @@
     <Compile Include="Controls\Form.cs" />
     <Compile Include="Controls\FormField.cs" />
     <Compile Include="Controls\GlowBorder.cs" />
+    <Compile Include="Controls\MultiSelect.cs" />
     <Compile Include="Controls\RegionControl.cs" />
     <Compile Include="Controls\TabsPanel.cs" />
     <Compile Include="Controls\ValidationBorder.cs" />

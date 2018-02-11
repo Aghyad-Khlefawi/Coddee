@@ -13,8 +13,6 @@ using Coddee.WPF;
 using Coddee.WPF.Commands;
 using System.Diagnostics;
 using System.Reflection;
-using System.Windows.Forms;
-using KeyEventArgs = System.Windows.Input.KeyEventArgs;
 
 namespace Coddee.Services.ApplicationConsole
 {
@@ -280,7 +278,7 @@ namespace Coddee.Services.ApplicationConsole
                 e.Handled = false;
                 return;
             }
-            var temp = Screen.AllScreens.ElementAtOrDefault(index);
+            var temp = System.Windows.Forms.Screen.AllScreens.ElementAtOrDefault(index);
             if (temp == null)
             {
                 e.Result.Add($"The value '{indexStr}' is invalid for the /i argument.");

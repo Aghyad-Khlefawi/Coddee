@@ -2,6 +2,7 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -12,12 +13,18 @@ using System.Threading.Tasks;
 
 namespace Coddee.Collections
 {
+    public interface IAsyncObservableCollection : ICollection
+    {
+        void AddObject(object item);
+        void AddRangeObject(IEnumerable<object> item);
+        void Clear();
+    }
     /// <summary>
     /// A simple implementation for an ObservableCollection that is thread safe.
     /// Useful for WPF controls that requires the UI thread to execute the INotifyCollectionChanged
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class AsyncObservableCollection<T> : Collection<T>, INotifyPropertyChanged, INotifyCollectionChanged
+    public class AsyncObservableCollection<T> : Collection<T>, IAsyncObservableCollection, INotifyPropertyChanged, INotifyCollectionChanged
     {
 
         public static AsyncObservableCollection<T> Create()
@@ -44,7 +51,10 @@ namespace Coddee.Collections
         public AsyncObservableCollection()
         {
         }
-
+        public AsyncObservableCollection(int size)
+            : base(new List<T>(size))
+        {
+        }
         public AsyncObservableCollection(IList<T> list)
             : base(list)
         {
@@ -170,6 +180,15 @@ namespace Coddee.Collections
                 IsBusy = false;
             });
         }
+        
+        /// <summary>
+        /// Fill the collection from another collection
+        /// </summary>
+        /// <param name="collection">The other collection</param>
+        public void AddRange(IEnumerable<T> collection)
+        {
+            Fill(collection);
+        }
 
         /// <summary>
         /// Clears the collection then fills the collection from another collection
@@ -244,7 +263,7 @@ namespace Coddee.Collections
                 if (index < 0)
                     res = false;
                 RemoveItem(index);
-              
+
                 res = true;
             });
             return res;
@@ -367,6 +386,16 @@ namespace Coddee.Collections
         protected virtual void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
         {
             ExecuteOnSyncContext(() => { CollectionChanged?.Invoke(this, e); });
+        }
+
+        public void AddObject(object item)
+        {
+            Add((T)item);
+        }
+
+        public void AddRangeObject(IEnumerable<object> item)
+        {
+            Fill(item.Cast<T>());
         }
     }
 }
