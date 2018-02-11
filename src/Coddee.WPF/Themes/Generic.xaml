@@ -1234,8 +1234,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:MultiSelect}">
                     <Grid>
-                        <Border Name="PART_RootBorder"  
-                                    Background="{TemplateBinding Background}"
+                        <Border    Background="{TemplateBinding Background}"
                                     BorderBrush="{TemplateBinding BorderBrush}"
                                     BorderThickness="{TemplateBinding BorderThickness}">
                             <DockPanel>
@@ -1266,10 +1265,10 @@
                                    x:Name="PART_Popup"
                                    StaysOpen="False"
                                    PlacementTarget="{Binding ElementName=PART_RootBorder}"
-                                   Width="{Binding ElementName=PART_RootBorder,Path=ActualWidth}">
+                                   Width="{TemplateBinding ActualWidth}">
                             <Border Background="{TemplateBinding Background}"
                                         BorderBrush="{TemplateBinding BorderBrush}"
-                                        BorderThickness="2">
+                                        BorderThickness="1">
                                 <DockPanel>
                                     <Grid DockPanel.Dock="Top">
                                         <Grid.ColumnDefinitions>
