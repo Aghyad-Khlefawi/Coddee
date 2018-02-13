@@ -10,8 +10,10 @@ using System.Threading.Tasks;
 
 namespace Coddee.Services.ApplicationSearch
 {
-    public class ApplicationSearchService:IApplicationSearchService
+        /// <inheritdoc/>
+    public class ApplicationSearchService : IApplicationSearchService
     {
+        /// <inheritdoc/>
         public ApplicationSearchService()
         {
             _searchCategories = new ConcurrentBag<CategorySearchItems>();
@@ -21,13 +23,16 @@ namespace Coddee.Services.ApplicationSearch
         private readonly List<SearchItem> _indexedItems;
         private readonly ConcurrentBag<CategorySearchItems> _searchCategories;
 
+        /// <inheritdoc/>
         public event EventHandler<IEnumerable<SearchItem>> ItemsIndexed;
 
+        /// <inheritdoc/>
         public IEnumerable<SearchItem> GetIndexedItems()
         {
             return _indexedItems.AsReadOnly();
         }
 
+        /// <inheritdoc/>
         public IEnumerable<SearchItem> IndexItems(string categoryTitle, IEnumerable<SearchItem> items)
         {
             var category = _searchCategories.FirstOrDefault(e => e.Category == categoryTitle);
@@ -47,6 +52,7 @@ namespace Coddee.Services.ApplicationSearch
         }
 
 
+        /// <inheritdoc/>
         public SearchOperation Search(string term, Action<SearchItem> resultFoundCallback, Action<IList<SearchItem>> SearchCompleted)
         {
             var token = new CancellationTokenSource();

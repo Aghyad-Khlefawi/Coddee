@@ -16,6 +16,7 @@
     </UserControl.Resources>
     <controls:BusyIndicator IsBusy="{Binding IsBusy}">
         <Grid>
+            <ComboBox Margin="0 -50 0 0"></ComboBox>
             <controls:ValidationBorder VerticalAlignment="Center" HorizontalAlignment="Center"
                                        Width="120">
                 <controls:MultiSelect Height="30"

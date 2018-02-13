@@ -1200,8 +1200,8 @@
                             BorderThickness="{TemplateBinding BorderThickness}">
                         <Grid>
                             <ContentPresenter Content="{TemplateBinding Child}"/>
-                                <Path Margin="0 -1 -1 0"  Visibility="{TemplateBinding HasWarning,Converter={StaticResource BoolToVisibilityConverter}}"  Data="M233,173l169.5,169.5V173H233z M356.2,185.1l-1.5,57.9H346l-1.7-57.9H356.2z M357,261	c-0.4,0.9-0.9,1.7-1.6,2.3c-0.7,0.7-1.4,1.2-2.3,1.6c-0.9,0.4-1.9,0.6-2.9,0.6c-1,0-2-0.2-2.9-0.6s-1.7-0.9-2.4-1.6	c-0.7-0.7-1.2-1.4-1.6-2.3c-0.4-0.9-0.6-1.9-0.6-2.9s0.2-2,0.6-2.9c0.4-0.9,0.9-1.7,1.6-2.4c0.7-0.7,1.5-1.2,2.4-1.6	c0.9-0.4,1.9-0.6,2.9-0.6c1,0,2,0.2,2.9,0.6c0.9,0.4,1.7,0.9,2.3,1.6c0.7,0.7,1.2,1.5,1.6,2.4c0.4,0.9,0.6,1.9,0.6,2.9	S357.4,260.1,357,261z" Fill="{StaticResource WarningColor}" Stretch="Uniform" HorizontalAlignment="Right" Height="20" VerticalAlignment="Top" ToolTip="{TemplateBinding Message}"/>
-                                <Path Margin="0 -1 -1 0"  Visibility="{TemplateBinding HasError,Converter={StaticResource BoolToVisibilityConverter}}"  Data="M233,173l169.5,169.5V173H233z M370.6,251.9l-13.9-23.1l-14,23.1H333l19-29.2l-17.5-28h9.2l13.1,21.5	l13.2-21.5h9l-17.5,27.6l19,29.6H370.6z" Fill="{StaticResource ErrorColor}" Stretch="Uniform" HorizontalAlignment="Right" Height="20" VerticalAlignment="Top" ToolTip="{TemplateBinding Message}"/>
+                            <Path Margin="0 -1 -1 0"  Visibility="{TemplateBinding HasWarning,Converter={StaticResource BoolToVisibilityConverter}}"  Data="M233,173l169.5,169.5V173H233z M356.2,185.1l-1.5,57.9H346l-1.7-57.9H356.2z M357,261	c-0.4,0.9-0.9,1.7-1.6,2.3c-0.7,0.7-1.4,1.2-2.3,1.6c-0.9,0.4-1.9,0.6-2.9,0.6c-1,0-2-0.2-2.9-0.6s-1.7-0.9-2.4-1.6	c-0.7-0.7-1.2-1.4-1.6-2.3c-0.4-0.9-0.6-1.9-0.6-2.9s0.2-2,0.6-2.9c0.4-0.9,0.9-1.7,1.6-2.4c0.7-0.7,1.5-1.2,2.4-1.6	c0.9-0.4,1.9-0.6,2.9-0.6c1,0,2,0.2,2.9,0.6c0.9,0.4,1.7,0.9,2.3,1.6c0.7,0.7,1.2,1.5,1.6,2.4c0.4,0.9,0.6,1.9,0.6,2.9	S357.4,260.1,357,261z" Fill="{StaticResource WarningColor}" Stretch="Uniform" HorizontalAlignment="Right" Height="20" VerticalAlignment="Top" ToolTip="{TemplateBinding Message}"/>
+                            <Path Margin="0 -1 -1 0"  Visibility="{TemplateBinding HasError,Converter={StaticResource BoolToVisibilityConverter}}"  Data="M233,173l169.5,169.5V173H233z M370.6,251.9l-13.9-23.1l-14,23.1H333l19-29.2l-17.5-28h9.2l13.1,21.5	l13.2-21.5h9l-17.5,27.6l19,29.6H370.6z" Fill="{StaticResource ErrorColor}" Stretch="Uniform" HorizontalAlignment="Right" Height="20" VerticalAlignment="Top" ToolTip="{TemplateBinding Message}"/>
                         </Grid>
                     </Border>
                 </ControlTemplate>
@@ -1240,16 +1240,16 @@
                             <DockPanel>
                                 <Button Name="PART_OpenButton" Style="{x:Null}"
                                             Cursor="Hand"
+                                        Width="20"
                                             DockPanel.Dock="Right">
                                     <Button.Template>
                                         <ControlTemplate>
                                             <Border Background="White">
                                                 <Path
-                                                        Data="M0,20.362976L23.276,20.362976 11.638,32z M11.638,0L23.276,11.636993 0,11.636993z"
-                                                        Fill="DarkGray"
-                                                        Margin="3"
-                                                        Width="18"
-                                                        Stretch="Uniform" />
+                                                    Style="{StaticResource Shape_Arrow_Down}"    
+                                                    Fill="DarkGray"
+                                                        Margin="5"
+                                                        Width="8"/>
                                             </Border>
                                         </ControlTemplate>
                                     </Button.Template>
@@ -1263,7 +1263,7 @@
                         </Border>
                         <Popup Placement="Bottom"
                                    x:Name="PART_Popup"
-                                   StaysOpen="False"
+                                   StaysOpen="False" 
                                    PlacementTarget="{Binding ElementName=PART_RootBorder}"
                                    Width="{TemplateBinding ActualWidth}">
                             <Border Background="{TemplateBinding Background}"

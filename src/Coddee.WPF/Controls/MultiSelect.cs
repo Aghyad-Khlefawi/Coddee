@@ -53,7 +53,7 @@ namespace Coddee.WPF.Controls
 
         public static readonly DependencyProperty ContentProperty = ContentPropertyKey.DependencyProperty;
 
-       
+
 
         private static void OnItemsSourcePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -64,10 +64,10 @@ namespace Coddee.WPF.Controls
         }
 
         private PropertyInfo displatProperty;
+        private Popup _partPopup;
         private ButtonBase _partOpenButton;
         private ButtonBase _partAllButton;
         private ButtonBase _partNoneButton;
-        private Popup _partPopup;
         private bool _supressEvents;
 
         public string Content
@@ -82,7 +82,7 @@ namespace Coddee.WPF.Controls
             set { SetValue(DisplayMemberPathProperty, value); }
         }
 
-        
+
 
         public object SelectedItems
         {
@@ -145,7 +145,7 @@ namespace Coddee.WPF.Controls
         }
 
 
-        
+
 
         public override void OnApplyTemplate()
         {
@@ -156,8 +156,10 @@ namespace Coddee.WPF.Controls
             _partNoneButton = (ButtonBase)GetTemplateChild(PART_AllNone);
             _partPopup = (Popup)GetTemplateChild(PART_Popup);
 
+
             if (_partOpenButton != null)
                 _partOpenButton.Click += OpenButtonClicked;
+
 
             if (_partAllButton != null)
                 _partAllButton.Click += SelectAllButtonClicked;
@@ -165,12 +167,15 @@ namespace Coddee.WPF.Controls
             if (_partNoneButton != null)
                 _partNoneButton.Click += SelectNoneButtonClicked;
         }
+
+
+
         private void SelectNoneButtonClicked(object sender, RoutedEventArgs arg)
         {
             _supressEvents = true;
             Selectables.ForEach(e => e.IsSelected = false);
             _supressEvents = false;
-            SelectableSelectChanged(null,null);
+            SelectableSelectChanged(null, null);
         }
 
 

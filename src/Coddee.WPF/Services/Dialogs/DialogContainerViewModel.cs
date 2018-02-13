@@ -5,9 +5,7 @@ using System;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 using Coddee.Collections;
-using Coddee.Exceptions;
 using Coddee.Services.Dialogs;
 using Coddee.WPF.Commands;
 
@@ -174,80 +172,6 @@ namespace Coddee.WPF.Services.Dialogs
             VerticalAlignment = options.VerticalAlignment;
             HorizontalAlignment = options.HorizontalAlignment;
             CanMinimize = options.CanMinimize;
-        }
-    }
-
-    public class ActionCommandWrapper : BindableBase
-    {
-        internal ActionCommandWrapper()
-        {
-            CanExecute = true;
-        }
-
-        public ActionCommandWrapper(ActionCommandBase action, IDialog dialog)
-        {
-            if (action is ActionCommand ac)
-            {
-                if (ac.Action != null)
-                    Command = new RelayCommand(ac.Action);
-            }
-            else if (action is AsyncActionCommand asc)
-            {
-                if (asc.Action != null)
-                    Command = new RelayCommand(async () =>
-                    {
-                        try
-                        {
-                            var res = await asc.Action();
-                            if (res)
-                                dialog.Close();
-                        }
-                        catch (ValidationException)
-                        {
-                        }
-                    });
-            }
-            Title = action.Title;
-            HorizontalPosition = action.HorizontalPosition == Coddee.HorizontalPosition.Left ? Dock.Left : Dock.Right;
-            action.CanExecuteChanged += ActionCanExecuteChanged;
-            CanExecute = action.CanExecute;
-        }
-
-        public ActionCommandWrapper(CloseActionCommand action, IDialog dialog)
-        {
-            Command = new RelayCommand(() =>
-            {
-                try
-                {
-                    action.Action?.Invoke();
-                    dialog.Close();
-                }
-                catch (ValidationException)
-                {
-                }
-            });
-            Title = action.Title;
-            HorizontalPosition = action.HorizontalPosition == Coddee.HorizontalPosition.Left ? Dock.Left : Dock.Right;
-            action.CanExecuteChanged += ActionCanExecuteChanged;
-            CanExecute = action.CanExecute;
-        }
-
-
-
-        public string Title { get; set; }
-        public ICommand Command { get; }
-        public Dock HorizontalPosition { get; set; }
-
-        private bool _canExecute;
-        public bool CanExecute
-        {
-            get { return _canExecute; }
-            set { SetProperty(ref _canExecute, value); }
-        }
-
-        private void ActionCanExecuteChanged(object sender, bool e)
-        {
-            CanExecute = e;
         }
     }
 }

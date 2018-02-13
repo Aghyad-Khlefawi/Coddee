@@ -13,12 +13,28 @@ using System.Threading.Tasks;
 
 namespace Coddee.Collections
 {
+    /// <summary>
+    /// A thread-safe collection with change notifications.
+    /// </summary>
     public interface IAsyncObservableCollection : ICollection
     {
+        /// <summary>
+        /// Add an object to the collection.
+        /// </summary>
         void AddObject(object item);
+
+        /// <summary>
+        /// Add multiple objects to the collection.
+        /// </summary>
         void AddRangeObject(IEnumerable<object> item);
+
+
+        /// <summary>
+        /// Clear the collection.
+        /// </summary>
         void Clear();
     }
+
     /// <summary>
     /// A simple implementation for an ObservableCollection that is thread safe.
     /// Useful for WPF controls that requires the UI thread to execute the INotifyCollectionChanged
@@ -26,7 +42,9 @@ namespace Coddee.Collections
     /// <typeparam name="T"></typeparam>
     public class AsyncObservableCollection<T> : Collection<T>, IAsyncObservableCollection, INotifyPropertyChanged, INotifyCollectionChanged
     {
-
+        /// <summary>
+        /// Create a new instance of <see cref="AsyncObservableCollection{T}"/>
+        /// </summary>
         public static AsyncObservableCollection<T> Create()
         {
             AsyncObservableCollection<T> collection = null;
@@ -34,6 +52,10 @@ namespace Coddee.Collections
             return collection;
         }
 
+        /// <summary>
+        /// Create a new instance of <see cref="AsyncObservableCollection{T}"/>
+        /// </summary>
+        /// <param name="list">an existed collection to copy</param>
         public static AsyncObservableCollection<T> Create(IList<T> list)
         {
             AsyncObservableCollection<T> collection = null;
@@ -41,6 +63,10 @@ namespace Coddee.Collections
             return collection;
         }
 
+        /// <summary>
+        /// Create a new instance of <see cref="AsyncObservableCollection{T}"/>
+        /// </summary>
+        /// <param name="list">an existed collection to copy</param>
         public static AsyncObservableCollection<T> Create(IEnumerable<T> list)
         {
             AsyncObservableCollection<T> collection = null;
@@ -48,18 +74,22 @@ namespace Coddee.Collections
             return collection;
         }
 
+        /// <inheritdoc/>
         public AsyncObservableCollection()
         {
         }
+
+        /// <inheritdoc/>
         public AsyncObservableCollection(int size)
             : base(new List<T>(size))
         {
         }
+        /// <inheritdoc/>
         public AsyncObservableCollection(IList<T> list)
             : base(list)
         {
         }
-
+        /// <inheritdoc/>
         public AsyncObservableCollection(IEnumerable<T> list)
             : this()
         {
@@ -72,11 +102,11 @@ namespace Coddee.Collections
         /// </summary>
         public event EventHandler<T> SelectedItemChanged;
 
+        private bool _isBusy;
         /// <summary>
         /// Indicates that the collection is filling its items.
         /// Can be bound to a busy indicator.
         /// </summary>
-        private bool _isBusy;
         public bool IsBusy
         {
             get { return _isBusy; }
@@ -87,12 +117,13 @@ namespace Coddee.Collections
             }
         }
 
+        private T _selectedItem;
+
         /// <summary>
         /// Represent the selected item of the collection.
         /// Should be bound to the selected item property of the ListBox of DataGrid.
-        /// Might be null
+        /// Can be null is no item is selected
         /// </summary>
-        private T _selectedItem;
         public T SelectedItem
         {
             get { return _selectedItem; }
@@ -200,6 +231,7 @@ namespace Coddee.Collections
             Fill(collection);
         }
 
+        /// <inheritdoc/>
         public new void Clear()
         {
             SelectedItem = default(T);
@@ -235,7 +267,7 @@ namespace Coddee.Collections
         {
             base.InsertItem(index, item);
         }
-
+        /// <inheritdoc/>
         protected override void InsertItem(int index, T item)
         {
             ExecuteOnSyncContext(() =>
@@ -349,14 +381,16 @@ namespace Coddee.Collections
 
 
         //Property changed and collection changed implementations 
-
+        /// <inheritdoc cref="INotifyPropertyChanged"/>
         public event PropertyChangedEventHandler PropertyChanged;
 
+        /// <inheritdoc cref="INotifyCollectionChanged"/>
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
+        /// <inheritdoc/>
         public event NotifyCollectionChangedEventHandler CollectionChanged;
 
         private void OnCollectionChanged(NotifyCollectionChangedAction action, object item, int index)
@@ -383,16 +417,19 @@ namespace Coddee.Collections
             OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
         }
 
+        /// <inheritdoc cref="INotifyCollectionChanged"/>
         protected virtual void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
         {
             ExecuteOnSyncContext(() => { CollectionChanged?.Invoke(this, e); });
         }
 
+        /// <inheritdoc/>
         public void AddObject(object item)
         {
             Add((T)item);
         }
 
+        /// <inheritdoc/>
         public void AddRangeObject(IEnumerable<object> item)
         {
             Fill(item.Cast<T>());

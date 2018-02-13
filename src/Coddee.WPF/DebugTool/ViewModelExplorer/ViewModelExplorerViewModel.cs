@@ -22,7 +22,6 @@ namespace Coddee.WPF.DebugTool
         }
 
 
-        private readonly IViewModelsManager _vmManager;
         private PropertyMainpulatorViewModel _mainpulator;
 
         private UIElement _viewModelManipulatorContent;

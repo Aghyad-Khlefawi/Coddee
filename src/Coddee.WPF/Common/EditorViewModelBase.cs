@@ -7,17 +7,20 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading.Tasks;
-using System.Windows;
 using Coddee.Data;
 using Coddee.Exceptions;
 using Coddee.Services;
 using Coddee.Services.Dialogs;
 using Coddee.Validation;
-using Expression = System.Linq.Expressions.Expression;
 
 namespace Coddee.WPF
 {
-
+    /// <summary>
+    /// A base class for editors ViewModels that provide the ability to add and edit a model
+    /// </summary>
+    /// <typeparam name="TEditor">The same type of the ViewModel inheriting this class</typeparam>
+    /// <typeparam name="TView">The view type of the ViewModel</typeparam>
+    /// <typeparam name="TModel">The type of the model to be added or edited.</typeparam>
     public abstract class EditorViewModelBase<TEditor, TView, TModel> : ViewModelBase<TView>,
         IEditorViewModel<TView, TModel>
         where TView : System.Windows.UIElement, new()
@@ -27,20 +30,33 @@ namespace Coddee.WPF
     {
         private const string _eventsSource = "EditorBase";
         protected IEnumerable<EditorFieldInfo> _editorFields;
+
+        /// <inheritdoc />
         protected EditorViewModelBase()
         {
+
             Saved += OnSave;
             Canceled += OnCanceled;
         }
 
+        /// <summary>
+        /// A dynamically generated action to clear the editor fields base on <see cref="EditorFieldAttribute"/>
+        /// </summary>
         protected Action<TEditor> _clearAction;
 
+        /// <inheritdoc />
         public event EventHandler<EditorSaveArgs<TModel>> Saved;
+        /// <inheritdoc />
         public event EventHandler<EditorSaveArgs<TModel>> Canceled;
 
+        /// <inheritdoc />
         public override ViewModelOptions DefaultViewModelOptions => ViewModelOptions.Editor;
 
         private OperationType _operationType;
+        
+        /// <summary>
+        /// The type of the operation that is currently happening in the editor.
+        /// </summary>
         public OperationType OperationType
         {
             get { return _operationType; }
@@ -48,14 +64,37 @@ namespace Coddee.WPF
         }
 
         private TModel _editedItem;
+        /// <inheritdoc />
         public TModel EditedItem
         {
             get { return _editedItem; }
             set { SetProperty(ref this._editedItem, value); }
         }
 
+        private bool _isSaving;
+        /// <summary>
+        /// Indicates whether the editor is currently performing the save operation.
+        /// </summary>
+        public bool IsSaving
+        {
+            get { return _isSaving; }
+            set
+            {
+                SetProperty(ref _isSaving, value);
+                if (_dialog != null)
+                {
+                    var saveCommand = _dialog.Commands.FirstOrDefault(e => e.Tag == ActionCommandTags.SaveCommand);
+                    if (saveCommand != null)
+                        saveCommand.CanExecute = value;
+                }
+            }
+        }
 
         private bool _fillingValues;
+        
+        /// <summary>
+        /// Indicates whether the editor is currently filling the fields from the edited object.
+        /// </summary>
         public bool FillingValues
         {
             get { return _fillingValues; }
@@ -63,6 +102,7 @@ namespace Coddee.WPF
         }
 
         private string _title;
+        /// <inheritdoc />
         public string Title
         {
             get { return _title; }
@@ -70,12 +110,14 @@ namespace Coddee.WPF
         }
 
         private string _fullTitle;
+        /// <inheritdoc />
         public string FullTitle
         {
             get { return _fullTitle; }
             set { SetProperty(ref this._fullTitle, value); }
         }
 
+        /// <inheritdoc />
         public virtual void Add()
         {
             OperationType = OperationType.Add;
@@ -84,12 +126,14 @@ namespace Coddee.WPF
             FullTitle = _localization["AddTemplate"].Replace("$Name$", _localization[Title]);
         }
 
+        /// <inheritdoc />
         public virtual void Clear()
         {
             EditedItem = new TModel();
             _clearAction?.Invoke((TEditor)this);
         }
 
+        /// <inheritdoc />
         public virtual void Edit(TModel item)
         {
             FillingValues = true;
@@ -101,6 +145,7 @@ namespace Coddee.WPF
             FillingValues = false;
         }
 
+        /// <inheritdoc />
         protected override async Task OnInitialization()
         {
             GetEditorFields();
@@ -110,6 +155,7 @@ namespace Coddee.WPF
             GenerateClearFunction();
         }
 
+        /// <inheritdoc />
         protected override void SetValidationRules(List<IValidationRule> validationRules)
         {
             base.SetValidationRules(validationRules);
@@ -170,41 +216,58 @@ namespace Coddee.WPF
             }
         }
 
+        /// <summary>
+        /// Executed when the <see cref="Add"/> method is called
+        /// </summary>
         protected virtual void OnAdd()
         {
         }
-
+        /// <summary>
+        /// Executed when the <see cref="Edit"/> method is called
+        /// </summary>
+        /// <param name="item">The edited item.</param>
         protected virtual void OnEdit(TModel item)
         {
             MapEditedItemToEditor(item);
         }
 
-        public virtual void MapEditedItemToEditor(TModel item)
+        /// <summary>
+        /// Map the values from the edited item to the editor fields.
+        /// </summary>
+        protected virtual void MapEditedItemToEditor(TModel item)
         {
             _mapper.MapInstance(item, (TEditor)this);
         }
-
-        public virtual void MapEditorToEditedItem(TModel item)
+        /// <summary>
+        /// Map the values from the  editor fields to the edited item .
+        /// </summary>
+        /// <param name="item"></param>
+        protected virtual void MapEditorToEditedItem(TModel item)
         {
             _mapper.MapInstance((TEditor)this, item);
         }
-
+        
+        /// <inheritdoc />
         public void Cancel()
         {
             Canceled?.Invoke(this, new EditorSaveArgs<TModel>(OperationType, EditedItem));
         }
 
+        /// <summary>
+        /// Called perform the edited item is sent to the repository.
+        /// </summary>
         public virtual void PreSave()
         {
             MapEditorToEditedItem(EditedItem);
         }
 
+        /// <inheritdoc />
         public virtual async Task Save()
         {
             try
             {
                 IsBusy = true;
-
+                IsSaving = true;
                 //Validation
                 var validationResult = Validate();
                 if (validationResult != null && !validationResult.IsValid)
@@ -221,39 +284,58 @@ namespace Coddee.WPF
                 var result = await SaveItem();
                 Saved?.Invoke(this, new EditorSaveArgs<TModel>(OperationType, result));
                 IsBusy = false;
+                IsSaving = false;
             }
             catch (ValidationException)
             {
+                IsBusy = false;
+                IsSaving = false;
                 throw;
             }
             catch (Exception ex)
             {
                 _logger?.Log(_eventsSource, ex);
                 IsBusy = false;
+                IsSaving = false;
                 throw;
             }
         }
 
+        /// <summary>
+        /// Performs the save to the data store.
+        /// </summary>
+        /// <returns></returns>
         protected virtual Task<TModel> SaveItem()
         {
             return Task.FromResult(EditedItem);
         }
 
+        /// <summary>
+        /// Display the errors to the user.
+        /// </summary>
+        /// <param name="res">The last validation result</param>
         protected virtual void ShowErrors(ValidationResult res)
         {
             res.Errors.ForEach(e => _toast.ShowToast(e, ToastType.Error));
             res.Warnings.ForEach(e => _toast.ShowToast(e, ToastType.Warning));
         }
 
+        /// <summary>
+        /// Called after the <see cref="Save"/> method is called.
+        /// </summary>
         public virtual void OnSave(object sender, EditorSaveArgs<TModel> e)
         {
         }
 
+        /// <summary>
+        /// Called after the <see cref="Cancel"/> method is called.
+        /// </summary>
         public virtual void OnCanceled(object sender, EditorSaveArgs<TModel> e)
         {
         }
 
         private IDialog _dialog;
+        /// <inheritdoc />
         public virtual void Show()
         {
             if (_dialog == null)
@@ -262,20 +344,33 @@ namespace Coddee.WPF
         }
     }
 
+    /// <summary>
+    /// A base class for editors ViewModels that provide the ability to add and edit a model
+    /// </summary>
+    /// <typeparam name="TEditor">The same type of the ViewModel inheriting this class</typeparam>
+    /// <typeparam name="TView">The view type of the ViewModel</typeparam>
+    /// <typeparam name="TModel">The type of the model to be added or edited.</typeparam>
+    /// <typeparam name="TRepository">The <see cref="IRepository"/> that the editor will send the item to.</typeparam>
+    /// <typeparam name="TKey">The key type of the model.</typeparam>
     public abstract class EditorViewModelBase<TEditor, TView, TRepository, TModel, TKey> : EditorViewModelBase<TEditor, TView, TModel>
-        where TView : UIElement, new()
+        where TView : System.Windows.UIElement, new()
         where TModel : class, IUniqueObject<TKey>, new()
         where TRepository : class, ICRUDRepository<TModel, TKey>
         where TEditor : EditorViewModelBase<TEditor, TView, TModel>
     {
+        /// <summary>
+        /// The model repository.
+        /// </summary>
         protected TRepository _repository;
 
+        /// <inheritdoc />
         protected override async Task OnInitialization()
         {
             await base.OnInitialization();
             _repository = GetRepository<TRepository>();
         }
 
+        /// <inheritdoc />
         protected override async Task<TModel> SaveItem()
         {
             return await _repository.Update(OperationType, EditedItem);

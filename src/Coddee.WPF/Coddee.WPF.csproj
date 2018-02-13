@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\Coddee.WPF.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -29,6 +30,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\Coddee.WPF.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'REST|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
@@ -126,6 +128,7 @@
     <Compile Include="Events\ApplicationStartedEvent.cs" />
     <Compile Include="Common\Extensions.cs" />
     <Compile Include="Common\IEditorViewModel.cs" />
+    <Compile Include="Services\Dialogs\ActionCommandWrapper.cs" />
     <Compile Include="XamlHelpers\InputMask.cs" />
     <Compile Include="Common\IViewModel.cs" />
     <Compile Include="Notification\NotificationModule.cs" />

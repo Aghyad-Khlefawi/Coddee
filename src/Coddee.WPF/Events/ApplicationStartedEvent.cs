@@ -3,6 +3,9 @@
 
 namespace Coddee.WPF.Events
 {
+    /// <summary>
+    /// Raised when the WPF application is ready to be used by the user.
+    /// </summary>
     public class ApplicationStartedEvent : GlobalEvent<WPFApplication>
     {
     }
