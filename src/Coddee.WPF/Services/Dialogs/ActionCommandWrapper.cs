@@ -62,7 +62,7 @@ namespace Coddee.WPF.Services.Dialogs
                 catch (ValidationException)
                 {
                 }
-            });
+            }, (e) => CanExecute);
             Tag = action.Tag;
             Title = action.Title;
             HorizontalPosition = action.HorizontalPosition == Coddee.HorizontalPosition.Left ? Dock.Left : Dock.Right;
@@ -81,14 +81,23 @@ namespace Coddee.WPF.Services.Dialogs
         public Dock HorizontalPosition { get; set; }
 
         private bool _canExecute;
-        
+
         ///<inheritdoc cref="ActionCommand"/>
         public bool CanExecute
         {
             get { return _canExecute; }
-            set { SetProperty(ref _canExecute, value); }
+            private set { SetProperty(ref _canExecute, value); }
         }
 
+        /// <summary>
+        /// set the <see cref="CanExecute"/> property
+        /// </summary>
+        /// <param name="value"></param>
+        public void SetCanExecute(bool value)
+        {
+            CanExecute = value;
+            Command.CanExecute(null);
+        }
         private void ActionCanExecuteChanged(object sender, bool e)
         {
             CanExecute = e;

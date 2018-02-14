@@ -53,7 +53,7 @@ namespace Coddee.WPF
         public override ViewModelOptions DefaultViewModelOptions => ViewModelOptions.Editor;
 
         private OperationType _operationType;
-        
+
         /// <summary>
         /// The type of the operation that is currently happening in the editor.
         /// </summary>
@@ -85,13 +85,13 @@ namespace Coddee.WPF
                 {
                     var saveCommand = _dialog.Commands.FirstOrDefault(e => e.Tag == ActionCommandTags.SaveCommand);
                     if (saveCommand != null)
-                        saveCommand.CanExecute = value;
+                        saveCommand.SetCanExecute(!value);
                 }
             }
         }
 
         private bool _fillingValues;
-        
+
         /// <summary>
         /// Indicates whether the editor is currently filling the fields from the edited object.
         /// </summary>
@@ -159,11 +159,11 @@ namespace Coddee.WPF
         protected override void SetValidationRules(List<IValidationRule> validationRules)
         {
             base.SetValidationRules(validationRules);
-            foreach (var editorFieldInfo in _editorFields.Where(e=>e.Attribute.IsRequired))
+            foreach (var editorFieldInfo in _editorFields.Where(e => e.Attribute.IsRequired))
             {
                 var property = Expression.Property(Expression.Constant(this), editorFieldInfo.Property.Name);
                 var lambda = Expression.Lambda<Func<object>>(property).Compile();
-                var rule = new ValidationRule(ValidationType.Error,Validators.GetValidator(editorFieldInfo.Property.PropertyType),editorFieldInfo.Property.Name,lambda);
+                var rule = new ValidationRule(ValidationType.Error, Validators.GetValidator(editorFieldInfo.Property.PropertyType), editorFieldInfo.Property.Name, lambda);
                 validationRules.Add(rule);
             }
         }
@@ -246,7 +246,7 @@ namespace Coddee.WPF
         {
             _mapper.MapInstance((TEditor)this, item);
         }
-        
+
         /// <inheritdoc />
         public void Cancel()
         {

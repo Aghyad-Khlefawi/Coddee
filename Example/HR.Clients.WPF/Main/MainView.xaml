@@ -16,15 +16,7 @@
     </UserControl.Resources>
     <controls:BusyIndicator IsBusy="{Binding IsBusy}">
         <Grid>
-            <ComboBox Margin="0 -50 0 0"></ComboBox>
-            <controls:ValidationBorder VerticalAlignment="Center" HorizontalAlignment="Center"
-                                       Width="120">
-                <controls:MultiSelect Height="30"
-                                      ItemsSource="{Binding States}"
-                                      SelectedItems="{Binding SelectedStates}" DisplayMemberPath="Name"/>
-
-            </controls:ValidationBorder>
-            <DockPanel Visibility="Collapsed" d:DataContext="{StaticResource designData}"
+           <DockPanel d:DataContext="{StaticResource designData}"
                        Background="WhiteSmoke">
                 <controls:TabsPanel Padding="5"
                                     HeaderForeground="{StaticResource ApplicationAccentColor}"

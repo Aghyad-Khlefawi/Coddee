@@ -392,12 +392,7 @@ namespace Coddee.Collections
 
         /// <inheritdoc/>
         public event NotifyCollectionChangedEventHandler CollectionChanged;
-
-        private void OnCollectionChanged(NotifyCollectionChangedAction action, object item, int index)
-        {
-            OnCollectionChanged(new NotifyCollectionChangedEventArgs(action, item, index));
-        }
-
+        
         private void OnCollectionChanged(NotifyCollectionChangedAction action, object item, int index, int oldIndex)
         {
             OnCollectionChanged(new NotifyCollectionChangedEventArgs(action, item, index, oldIndex));
