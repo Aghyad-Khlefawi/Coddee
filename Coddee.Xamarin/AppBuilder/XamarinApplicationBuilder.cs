@@ -22,7 +22,6 @@ namespace Coddee.Xamarin.AppBuilder
         private readonly IContainer _container;
         private readonly LogAggregator _logger;
         public BuildActionsCoordinator BuildActionsCoordinator { get; }
-        private Application _systemApplication => ((XamarinApplication) _app).GetSystemApplication();
 
         protected XamarinApplicationBuilder(IApplication app, IContainer container)
         {
@@ -32,6 +31,7 @@ namespace Coddee.Xamarin.AppBuilder
             _container.RegisterInstance<ILogger>(_logger);
             BuildActionsCoordinator = _container.Resolve<BuildActionsCoordinator>();
         }
+        
 
         public virtual void Start()
         {

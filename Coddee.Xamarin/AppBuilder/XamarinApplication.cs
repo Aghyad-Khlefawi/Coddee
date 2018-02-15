@@ -67,6 +67,7 @@ namespace Coddee.Xamarin.AppBuilder
             _logger = _container.Resolve<ILogger>();
             LogStart();
             BuildApplication(builder);
+            builder.Start();
         }
 
         protected virtual void LogStart()

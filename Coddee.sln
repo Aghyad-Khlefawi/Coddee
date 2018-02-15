@@ -68,7 +68,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HR.Clients.Xamarin.Android"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HR.Clients.Xamarin", "HR.Clients.Xamarin\HR.Clients.Xamarin\HR.Clients.Xamarin.csproj", "{08C51F2B-8B91-4EA7-8A68-DE9F14EEBFFF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Coddee.Xamarin", "Coddee.Xamarin\Coddee.Xamarin.csproj", "{EF69337F-2B0B-4268-96D3-9DBE65BF38E1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Coddee.Xamarin", "Coddee.Xamarin\Coddee.Xamarin.csproj", "{EF69337F-2B0B-4268-96D3-9DBE65BF38E1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoddeeTinyiocContainer", "src\CoddeeTinyiocContainer\CoddeeTinyiocContainer.csproj", "{4429D619-8568-46BF-A3FD-7FB3C21D1AFF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -236,6 +238,12 @@ Global
 		{EF69337F-2B0B-4268-96D3-9DBE65BF38E1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{EF69337F-2B0B-4268-96D3-9DBE65BF38E1}.REST|Any CPU.ActiveCfg = Release|Any CPU
 		{EF69337F-2B0B-4268-96D3-9DBE65BF38E1}.REST|Any CPU.Build.0 = Release|Any CPU
+		{4429D619-8568-46BF-A3FD-7FB3C21D1AFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4429D619-8568-46BF-A3FD-7FB3C21D1AFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4429D619-8568-46BF-A3FD-7FB3C21D1AFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4429D619-8568-46BF-A3FD-7FB3C21D1AFF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4429D619-8568-46BF-A3FD-7FB3C21D1AFF}.REST|Any CPU.ActiveCfg = Release|Any CPU
+		{4429D619-8568-46BF-A3FD-7FB3C21D1AFF}.REST|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -270,6 +278,7 @@ Global
 		{94069B97-99B5-41DA-AE13-E0DF232B8627} = {796678F0-69D7-4FEC-894A-4342F7460EB8}
 		{08C51F2B-8B91-4EA7-8A68-DE9F14EEBFFF} = {796678F0-69D7-4FEC-894A-4342F7460EB8}
 		{EF69337F-2B0B-4268-96D3-9DBE65BF38E1} = {06E26F1F-7F64-4A9B-865F-3D5FD8F3C41F}
+		{4429D619-8568-46BF-A3FD-7FB3C21D1AFF} = {06E26F1F-7F64-4A9B-865F-3D5FD8F3C41F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {18A1216E-BFA6-42AD-AA04-5E04ED656E14}

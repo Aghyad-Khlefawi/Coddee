@@ -25,7 +25,7 @@ namespace Coddee.Xamarin.Common
 
     public interface IPresentableViewModel : IViewModel, IPresentable
     {
-        int CurrentViewIndex { get; }
-        event ViewModelEventHandler<int> ViewIndexChanged;
+        int CurrentPageIndex { get; }
+        event ViewModelEventHandler<int> PageIndexChanged;
     }
 }
