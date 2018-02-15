@@ -3,8 +3,15 @@
 
 namespace Coddee
 {
+    /// <summary>
+    /// An object that has an identifier that differentiate it from other object.
+    /// </summary>
+    /// <typeparam name="TKey"></typeparam>
     public interface IUniqueObject<TKey>
     {
+        /// <summary>
+        /// Get the object identifier.
+        /// </summary>
         TKey GetKey { get; }
     }
 }

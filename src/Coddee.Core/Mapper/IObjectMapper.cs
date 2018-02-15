@@ -68,12 +68,5 @@ namespace Coddee
 
     }
 
-    public interface IMappingInfo
-    {
-        void SetAdditionalMapping(Action<object, object> map);
-    }
-    public interface IMappingInfo<TSource, TTarget> : IMappingInfo
-    {
-        void SetAdditionalMapping(Action<TSource, TTarget> map);
-    }
+  
 }

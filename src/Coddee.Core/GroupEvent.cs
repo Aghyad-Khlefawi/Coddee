@@ -13,15 +13,27 @@ namespace Coddee
     /// <typeparam name="TPayload"></typeparam>
     public class GroupEvent<TPayload> : IEvent
     {
+        /// <inheritdoc />
         public GroupEvent()
         {
             _handlers = new Dictionary<string, List<Action<TPayload>>>();
             _asyncHandlers = new Dictionary<string, List<Func<TPayload, Task>>>();
         }
 
+        /// <summary>
+        /// The handlers of the event.
+        /// </summary>
         protected readonly Dictionary<string, List<Action<TPayload>>> _handlers;
+
+
+        /// <summary>
+        /// The Async handlers of the event.
+        /// </summary>
         protected readonly Dictionary<string, List<Func<TPayload, Task>>> _asyncHandlers;
 
+        /// <summary>
+        /// Invoke the event handlers.
+        /// </summary>
         public virtual void Raise(string group, TPayload payload)
         {
             if (_handlers.ContainsKey(group))
@@ -31,6 +43,9 @@ namespace Coddee
                 }
         }
 
+        /// <summary>
+        /// Invoke the event Async handlers.
+        /// </summary>
         public virtual async Task RaiseAsync(string group, TPayload payload)
         {
             Raise(group, payload);
@@ -41,27 +56,43 @@ namespace Coddee
                 }
         }
 
+        /// <summary>
+        /// Add a handler to the event.
+        /// </summary>
         public virtual void Subscribe(string group, Action<TPayload> handler)
         {
             var list = _handlers.ContainsKey(group) ? _handlers[group] : (_handlers[group] = new List<Action<TPayload>>());
             list.Add(handler);
         }
+
+        /// <summary>
+        /// Add an Async handler to the event.
+        /// </summary>
         public virtual void SubscribeAsync(string group, Func<TPayload, Task> handler)
         {
             var list = _asyncHandlers.ContainsKey(group) ? _asyncHandlers[group] : (_asyncHandlers[group] = new List<Func<TPayload, Task>>());
             list.Add(handler);
         }
 
+        /// <summary>
+        /// Unsubscribe a handler to the event.
+        /// </summary>
         public virtual void Unsubscribe(string group, Action<TPayload> handler)
         {
             if (_handlers.ContainsKey(group))
                 _handlers[group].Remove(handler);
         }
+
+        /// <summary>
+        /// Unsubscribe an Async handler to the event.
+        /// </summary>
         public virtual void UnsubscribeAsync(string group, Func<TPayload, Task> handler)
         {
             if (_asyncHandlers.ContainsKey(group))
                 _asyncHandlers[group].Remove(handler);
         }
+
+        /// <inheritdoc />
         public EventRoutingStrategy EventRoutingStrategy => EventRoutingStrategy.Direct;
     }
 }

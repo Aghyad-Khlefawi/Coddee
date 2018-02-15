@@ -202,7 +202,7 @@ namespace Coddee
     /// <summary>
     /// Hold the information required to map between two types
     /// </summary>
-    class MappingInfo : IMappingInfo
+    class MappingInfo 
     {
         public Type SourceType { get; set; }
         public Type TargetType { get; set; }
@@ -223,11 +223,29 @@ namespace Coddee
         }
     }
 
-    class PropertyMapper
+    /// <summary>
+    /// Provides the information needed to map between to properties.
+    /// </summary>
+    public class PropertyMapper
     {
+        /// <summary>
+        /// The source property information
+        /// </summary>
         public PropertyInfo SourceProperty { get; set; }
+
+        /// <summary>
+        /// The target property information
+        /// </summary>
         public PropertyInfo TargetProperty { get; set; }
+
+        /// <summary>
+        /// Is the source property nullable
+        /// </summary>
         public bool SourceNullable { get; set; }
+
+        /// <summary>
+        /// Is the target property nullable
+        /// </summary>
         public bool TargetNullable { get; set; }
     }
 

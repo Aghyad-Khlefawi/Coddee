@@ -8,6 +8,9 @@ namespace Coddee
     /// </summary>
     public interface IEvent
     {
+        /// <summary>
+        /// Specifies the way the event will propagate.
+        /// </summary>
         EventRoutingStrategy EventRoutingStrategy { get; }
     } 
 }

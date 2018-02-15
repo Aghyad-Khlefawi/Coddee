@@ -13,13 +13,20 @@ namespace Coddee.Loggers
     {
         private readonly IList<ILogger> _loggers;
         private readonly IList<LogRecord> _records;
+
+        /// <summary>
+        /// The allowed logger types.
+        /// </summary>
         public LoggerTypes AllowedTypes { get; set; }
+
+        /// <inheritdoc />
         public LogAggregator()
         {
             _loggers = new List<ILogger>();
             _records = new List<LogRecord>();
         }
 
+        /// <inheritdoc />
         protected override void CommitLog(LogRecord record)
         {
             _records.Add(record);

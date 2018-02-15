@@ -8,6 +8,9 @@ namespace Coddee.Notification
     /// </summary>
     public interface INotificationService
     {
+        /// <summary>
+        /// Send a notification to the application.
+        /// </summary>
         void Notify(INotification notification);
     }
 }

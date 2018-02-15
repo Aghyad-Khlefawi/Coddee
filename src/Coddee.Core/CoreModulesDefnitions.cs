@@ -6,13 +6,19 @@ using Coddee.Modules;
 
 namespace Coddee.ModuleDefinitions
 {
-   public class CoreModuleDefinitions
+    /// <summary>
+    /// The core library module types
+    /// </summary>
+    public static class CoreModuleDefinitions
     {
-       public static Type[] Modules = new[]
-       {
+        /// <summary>
+        /// The modules types.
+        /// </summary>
+        public static Type[] Modules = new[]
+        {
            typeof(EventDispatcherServiceModule),
            typeof(GlobalVariablesServiceModule),
            typeof(LocalizationManagerModule),
        };
-   }
+    }
 }

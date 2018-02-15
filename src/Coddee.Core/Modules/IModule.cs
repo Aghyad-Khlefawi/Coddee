@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace Coddee
 {
-    
+    /// <summary>
+    /// Identifies an application module
+    /// </summary>
     public interface IModule
     {
         /// <summary>

@@ -21,7 +21,6 @@ namespace Coddee.CodeTools.Components.Localization
 {
     public class LocalizationViewModel : VsViewModelBase<LocalizationView>
     {
-        private readonly ISolutionHelper _solutionHelper;
         private readonly object _updating = new object();
         private  HashSet<string> _keys;
 

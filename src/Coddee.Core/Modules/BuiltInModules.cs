@@ -3,8 +3,12 @@
 
 namespace Coddee
 {
-    public class BuiltInModules
+    /// <summary>
+    /// Contains the built in modules names.
+    /// </summary>
+    public static class BuiltInModules
     {
+#pragma warning disable 1591
         public const string GlobalVariablesService = nameof(GlobalVariablesService);
         public const string ApplicationConsole = nameof(ApplicationConsole);
         public const string ConfigurationManager = nameof(ConfigurationManager);
@@ -15,5 +19,6 @@ namespace Coddee
         public const string DebugTool = nameof(DebugTool);
         public const string LocalizationManager = nameof(LocalizationManager);
         public const string EventDispatcher = nameof(EventDispatcher);
+#pragma warning restore 1591
     }
 }

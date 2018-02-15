@@ -7,9 +7,13 @@ using Coddee.Services;
 
 namespace Coddee.Modules
 {
+    /// <summary>
+    /// Registers the global variables service
+    /// </summary>
     [Module(BuiltInModules.GlobalVariablesService)]
     public class GlobalVariablesServiceModule:IModule
     {
+        /// <inheritdoc />
         public Task Initialize(IContainer container)
         {
             container.RegisterInstance<IGlobalVariablesService,GlobalVariablesService>();

@@ -5,15 +5,27 @@ using System;
 
 namespace Coddee
 {
+    /// <summary>
+    /// Event arguments of a save operation
+    /// </summary>
+    /// <typeparam name="TModel"></typeparam>
     public class EditorSaveArgs<TModel> : EventArgs
     {
+        /// <inheritdoc />
         public EditorSaveArgs(OperationType operationType, TModel item)
         {
             OperationType = operationType;
             Item = item;
         }
 
+        /// <summary>
+        /// The executed opperation type
+        /// </summary>
         public OperationType OperationType { get; set; }
+
+        /// <summary>
+        /// The effected item
+        /// </summary>
         public TModel Item { get; set; }
     }
 }

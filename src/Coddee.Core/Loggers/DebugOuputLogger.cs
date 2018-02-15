@@ -10,6 +10,7 @@ namespace Coddee.Loggers
     /// </summary>
     public class DebugOuputLogger : LoggerBase
     {
+        /// <inheritdoc />
         protected override void CommitLog(LogRecord record)
         {
             Debug.WriteLine(BuildEvent(record));

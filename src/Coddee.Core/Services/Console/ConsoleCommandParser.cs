@@ -27,6 +27,7 @@ namespace Coddee.Services.ApplicationConsole
     /// </summary>
     public class ConsoleCommandParser : IConsoleCommandParser
     {
+        /// <inheritdoc />
         public ConsoleCommandParser()
         {
             _commands = new Dictionary<string, ConsoleCommand>();
@@ -118,16 +119,22 @@ namespace Coddee.Services.ApplicationConsole
         }
     }
 
+    /// <summary>
+    /// An exception that occurs while parsing console commands.
+    /// </summary>
     public class CommandParseException : Exception
     {
+        /// <inheritdoc />
         public CommandParseException()
         {
         }
 
+        /// <inheritdoc />
         public CommandParseException(string message) : base(message)
         {
         }
 
+        /// <inheritdoc />
         public CommandParseException(string message, Exception inner) : base(message, inner)
         {
         }
