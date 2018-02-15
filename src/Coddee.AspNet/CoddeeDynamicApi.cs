@@ -7,6 +7,8 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Reflection;
+using System.Security.Claims;
+using System.Security.Principal;
 using System.Threading.Tasks;
 using Coddee.Attributes;
 using Coddee.Data;
@@ -16,47 +18,41 @@ using Newtonsoft.Json.Linq;
 
 namespace Coddee.AspNet
 {
+    /// <summary>
+    /// An AspNetCode middle-ware that provides an interface for the application repositories.
+    /// </summary>
     public class CoddeeDynamicApi
     {
         private readonly RequestDelegate _next;
         private readonly IRepositoryManager _repositoryManager;
+        private readonly Func<IIdentity, object> _setContext;
 
+        /// <inheritdoc />
         public CoddeeDynamicApi(RequestDelegate next,
             IRepositoryManager repositoryManager,
-            CoddeeControllersManager controllersManager)
+            CoddeeControllersManager controllersManager,
+                                Func<IIdentity, object> setContext)
         {
             _next = next;
             _repositoryManager = repositoryManager;
+            _setContext = setContext;
             _apiActions = controllersManager.GetRegisteredActions();
         }
 
         private readonly Dictionary<string, IApiAction> _apiActions;
 
+        /// <summary>
+        /// Returns the requested repository either by the class name
+        /// or by using <see cref="NameAttribute"/>
+        /// </summary>
         IRepository GetRepositoryByName(string name)
         {
-            var repositories = _repositoryManager.GetRepositories();
-            foreach (var repository in repositories)
-            {
-                var reportAttr = repository.GetType().GetCustomAttribute<RepositoryAttribute>();
-                var interType = reportAttr.ImplementedRepository;
-                var nameAttrs = interType.GetCustomAttributes<NameAttribute>();
-                foreach (var nameAttr in nameAttrs)
-                {
-                    if (nameAttr != null && nameAttr.Value.Equals(name, StringComparison.InvariantCultureIgnoreCase))
-                        return repository;
-                }
-
-                var repoName = interType.Name;
-                repoName = repoName.Remove(0, 1);
-                if (repoName.EndsWith("Repository"))
-                    repoName = repoName.Substring(0, repoName.Length - 10);
-
-                if (repoName.Equals(name, StringComparison.InvariantCultureIgnoreCase))
-                    return repository;
-            }
-            return null;
+            return _repositoryManager.GetRepository(name);
         }
 
+        /// <summary>
+        /// This method is called when a valid request is received by AspNetCore
+        /// </summary>
         public async Task Invoke(HttpContext context)
         {
             var req = context.Request;
@@ -65,30 +61,40 @@ namespace Coddee.AspNet
                 await _next(context);
         }
 
+        /// <summary>
+        /// Process the request parameters and return the value from the required repository.
+        /// <returns>True if the request was handled</returns>
+        /// </summary>
         private async Task<bool> HandleRequest(HttpContext context, HttpRequest req)
         {
             if (req.Path.HasValue)
             {
+                //  Split the path
+                //  It should be like the following formula
+                //  host/dapi/Repository/Action
                 var pathParts = req.Path.Value.ToLower().Split('/').Skip(2);
                 var repositoryName = pathParts.ElementAt(0);
                 var actionName = pathParts.ElementAt(1);
                 var path = $"{repositoryName}/{actionName}";
 
+                //  Check if this path was not called before
+                //  then create an action for it
                 if (!_apiActions.TryGetValue(path, out var action))
                     action = CreateAction(repositoryName, actionName, path);
+
                 if (action == null)
                 {
-                    await context.Response.WriteAsync("Unsupported parameter count.");
+                    // Action not found
+                    await context.Response.WriteAsync("Action not found.");
                     context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
                     return true;
                 }
 
+                // Check for authentication and authorization
                 if (action.RequiredAuthentication)
                 {
-                    bool authoized = context.User.Identity.IsAuthenticated;
-                    //TODO: Check for claims
-                    if (!string.IsNullOrWhiteSpace(action.Claim))
-                        authoized = false;
+
+                    var authoized = string.IsNullOrEmpty(action.Claim) || context.User.Identity.IsAuthenticated && context.User.Identity is ClaimsIdentity identity && identity.Claims.Any(e => e.Value == action.Claim);
 
                     if (!authoized)
                     {
@@ -115,7 +121,17 @@ namespace Coddee.AspNet
 
                 try
                 {
-                    var res = await action.Invoke(args);
+                    object res = null;
+                    if (action.Owner == null)
+                    {
+                        var repository = GetRepositoryByName(action.RepositoryName);
+                        if (_setContext != null)
+                            repository.SetContext(_setContext(context.User.Identity));
+                        res = await action.Invoke(repository, args);
+                    }
+                    else
+                        res = await action.Invoke(args);
+
                     context.Response.StatusCode = (int)HttpStatusCode.OK;
                     if (action.RetrunsValue)
                     {
@@ -154,15 +170,26 @@ namespace Coddee.AspNet
             return false;
         }
 
+        /// <summary>
+        /// Returns an action that wraps a repository call 
+        /// to be used easily in future requests.
+        /// </summary>
+        /// <param name="repositoryName">The name of the requested repository.</param>
+        /// <param name="actionName">The requested action in the repository.</param>
+        /// <param name="path">The path of the request.</param>
+        /// <returns></returns>
         private IApiAction CreateAction(string repositoryName, string actionName, string path)
         {
             IApiAction action = null;
+
+            // Get the target repository
             var repository = GetRepositoryByName(repositoryName);
             if (repository != null)
             {
                 if (actionName.ToLower() == "getitem")
                     actionName = "get_item";
 
+                // find the requested method info
                 var method = repository
                     .GetType()
                     .GetMethods()
@@ -172,9 +199,11 @@ namespace Coddee.AspNet
                                                 .GetMethods()
                                                 .FirstOrDefault(e => e.Name.Equals(actionName, StringComparison.InvariantCultureIgnoreCase));
 
-                action = DelegateAction.CreateDelegateAction(repository, method, path);
+                // Create a delegate object for the action to improve dynamic calls performance
+                action = DelegateAction.CreateDelegateAction(repositoryName, method, path);
                 if (action == null)
                     return null;
+
                 if (interfaceMethod != null)
                 {
                     var authAttr = interfaceMethod.GetCustomAttribute<AuthorizeAttribute>();
@@ -190,7 +219,10 @@ namespace Coddee.AspNet
             return action;
         }
 
-        public async Task<IEnumerable<object>> ParseParameters(HttpRequest req, IEnumerable<ActionParameter> param)
+        /// <summary>
+        /// Parse the parameters from the HttpRequest
+        /// </summary>
+        private async Task<IEnumerable<object>> ParseParameters(HttpRequest req, IEnumerable<ActionParameter> param)
         {
             var args = new List<object>();
             if (param.Any())

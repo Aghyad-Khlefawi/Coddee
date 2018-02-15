@@ -31,7 +31,7 @@ namespace HR.Web
         {
             var res = await _userRepository.AuthenticationUser(username, password);
             if (res.Status == AuthenticationStatus.Successfull)
-                res.AuthenticationToken = CreateToken(new List<Claim>(), DateTime.Now.AddDays(1));
+                res.AuthenticationToken = CreateToken(new List<Claim> { new Claim("username", res.Username) }, DateTime.Now.AddDays(1));
             return res;
         }
 

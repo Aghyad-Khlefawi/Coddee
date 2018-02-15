@@ -12,7 +12,7 @@ namespace Coddee.AppBuilder
     {
         private const string EventsSource = "ApplicationBuilder";
 
-        public static IApplicationBuilder UseMongoDBRepository(
+        public static IApplicationBuilder UseMongoDBRepositories(
             this IApplicationBuilder builder,
             string connection,
             string databaseName,
@@ -23,7 +23,7 @@ namespace Coddee.AppBuilder
             {
 
                 if (!container.IsRegistered<IRepositoryManager>())
-                    container.RegisterInstance<IRepositoryManager, RepositoryManager>();
+                    throw new ApplicationBuildException("RepositoryManager is not registered. call UseSingletonRepositoryManager or UseTransientRepositoryManager to configuration the repository manager.");
 
                 var repositoryManager = container.Resolve<IRepositoryManager>();
 

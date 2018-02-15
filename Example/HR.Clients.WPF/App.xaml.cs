@@ -28,11 +28,11 @@ namespace HR.Clients.WPF
 
             new WPFApplication("HR application", new CoddeeUnityContainer()).Run(app =>
             {
-                app.UseLogger(new LoggerOptions(LoggerTypes.ApplicationConsole | LoggerTypes.DebugOutput| LoggerTypes.File, LogRecordTypes.Debug)
-                   {
-                       LogFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "log.txt"),
-                       UseFileCompression = true
-                   })
+                app.UseLogger(new LoggerOptions(LoggerTypes.ApplicationConsole | LoggerTypes.DebugOutput | LoggerTypes.File, LogRecordTypes.Debug)
+                {
+                    LogFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "log.txt"),
+                    UseFileCompression = true
+                })
                    .UseApplicationConsole(e => e.Key == Key.F12)
                    .UseCoddeeDebugTool(e => e.Key == Key.F11)
                    .UseILMapper()
@@ -41,8 +41,9 @@ namespace HR.Clients.WPF
                    .UseToast()
                    .UseDialogs()
                    .UseLocalization("HR.Clients.WPF.Properties.Resources", "HR.Clients.WPF.exe", new[] { "ar-SY", "en-US" }, "ar-SY")
-                  // .UseRESTRepositoryManager(config => new RESTRepositoryManagerConfig("http://localhost:15297/dapi/", null, "HR.Data.REST"));
-                .UseLinqRepositoryManager<HRDBManager>(connection, "HR.Data.LinqToSQL");
+                    .UseTransientRepositoryManager()
+                    .UseRESTRepositories(config => new RESTInitializerConfig("http://localhost:15297/dapi/", null, "HR.Data.REST"));
+                   // .UseLinqRepositories<HRDBManager>(new LinqInitializerConfig(c => connection, "HR.Data.LinqToSQL"));
             }, args);
             base.OnStartup(args);
         }

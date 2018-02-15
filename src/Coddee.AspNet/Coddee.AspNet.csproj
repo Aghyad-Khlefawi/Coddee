@@ -371,6 +371,7 @@
   <ItemGroup>
     <Compile Include="ApiActionAttribute.cs" />
     <Compile Include="ApiControllerBase.cs" />
+    <Compile Include="AspCoreContainer.cs" />
     <Compile Include="CoddeeControllersManager.cs" />
     <Compile Include="CoddeeDynamicApi.cs" />
     <Compile Include="DelegateAction.cs" />

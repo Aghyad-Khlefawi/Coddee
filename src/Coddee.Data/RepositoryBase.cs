@@ -10,13 +10,46 @@ namespace Coddee.Data
     /// </summary>
     public abstract class RepositoryBase:IRepository
     {
+
+        /// <summary>
+        /// The context object that provides more information to the repository about the action that is being executed.
+        /// </summary>
+        protected object _context;
+
+        /// <summary>
+        /// Property mapper 
+        /// </summary>
         protected IObjectMapper _mapper;
+
+        /// <summary>
+        /// The repository configuration object
+        /// <remarks>This field will can be null</remarks>
+        /// </summary>
         protected RepositoryConfigurations _config;
+
+        /// <summary>
+        /// The repository manager that has created this repository
+        /// </summary>
         protected IRepositoryManager _repositoryManager;
+
+
+        /// <summary>
+        /// Synchronization service.
+        /// </summary>
         protected IRepositorySyncService _syncService;
+
+        /// <summary>
+        /// If this field is true then the repository should send sync request when the data is changed.
+        /// </summary>
         protected bool _sendSyncRequests;
+
+        /// <inheritdoc />
         public abstract int RepositoryType { get; }
+
+        /// <inheritdoc />
         public bool Initialized { get; protected set; }
+
+        /// <inheritdoc />
         public Type ImplementedInterface { get; protected set; }
 
         /// <summary>
@@ -33,13 +66,20 @@ namespace Coddee.Data
             Initialized = true;
         }
 
+        /// <inheritdoc />
         public virtual void SetSyncService(IRepositorySyncService syncService,bool sendSyncRequests = true)
         {
             _syncService = syncService;
             _sendSyncRequests = sendSyncRequests;
             syncService.SyncReceived += SyncServiceSyncReceived;
         }
-        
+
+        /// <inheritdoc />
+        public void SetContext(object context)
+        {
+            _context = context;
+        }
+
         /// <summary>
         /// Called whenever a sync call is received from the <see cref="IRepositorySyncService"/> 
         /// </summary>
@@ -60,6 +100,7 @@ namespace Coddee.Data
        
     }
 
+    /// <inheritdoc />
     public abstract class RepositoryBase<TModel> : RepositoryBase
     { 
 

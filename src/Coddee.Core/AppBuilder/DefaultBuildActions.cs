@@ -40,6 +40,10 @@ namespace Coddee.AppBuilder
         {
             return new BuildAction(BuildActionsKeys.ConfigFile, action, 6);
         }
+        public static BuildAction RepositoryManagerBuildAction(Action<IContainer> action)
+        {
+            return new BuildAction(BuildActionsKeys.RepositoryManager, action, 6);
+        }
         public static BuildAction LinqRepositoryBuildAction(Action<IContainer> action)
         {
             return new BuildAction(BuildActionsKeys.LinqRepository, action, 7);

@@ -286,7 +286,7 @@ namespace Coddee.WPF
                 IsBusy = false;
                 IsSaving = false;
             }
-            catch (ValidationException)
+            catch (ValidationException ex)
             {
                 IsBusy = false;
                 IsSaving = false;

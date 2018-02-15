@@ -13,6 +13,30 @@ namespace Coddee.AppBuilder
     {
         private const string EventsSource = "ApplicationBuilder";
 
+        /// <summary>
+        /// Configure the application to use a <see cref="SingletonRepositoryManager"/> that returns the same repository instance on each call.
+        /// </summary>
+        public static T UseSingletonRepositoryManager<T>(this T builder) where T : IApplicationBuilder
+        {
+            builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.InMemoryRepositoryBuildAction((container) =>
+            {
+                container.RegisterInstance<IRepositoryManager, SingletonRepositoryManager>();
+            }));
+            return builder;
+        }
+
+        /// <summary>
+        /// Configure the application to use a <see cref="TransientRepositoryManager"/> that returns the a new repository instance on each call.
+        /// </summary>
+        public static T UseTransientRepositoryManager<T>(this T builder) where T : IApplicationBuilder
+        {
+            builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.InMemoryRepositoryBuildAction((container) =>
+            {
+                container.RegisterInstance<IRepositoryManager, TransientRepositoryManager>();
+            }));
+            return builder;
+        }
+
 
         /// <summary>
         /// Configure the repository manager to use InMemory repositories
@@ -23,17 +47,16 @@ namespace Coddee.AppBuilder
         /// <param name="config">The configuration object to be passed to the repositories</param>
         /// <returns>Application builder</returns>
         public static T UseInMemoryRepositories<T>(this T builder, string repositoriesAssembly,
-                                                                  RepositoryConfigurations config = null) where T :IApplicationBuilder
+                                                              RepositoryConfigurations config = null) where T : IApplicationBuilder
         {
             builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.InMemoryRepositoryBuildAction((container) =>
             {
                 if (!container.IsRegistered<IRepositoryManager>())
-                    container.RegisterInstance<IRepositoryManager, RepositoryManager>();
+                    throw new ApplicationBuildException("RepositoryManager is not registered. call UseSingletonRepositoryManager or UseTransientRepositoryManager to configuration the repository manager.");
 
                 var repositoryManager = container.Resolve<IRepositoryManager>();
 
-                repositoryManager
-                    .AddRepositoryInitializer(new InMemoryRepositoryInitializer(container.Resolve<IObjectMapper>(),config));
+                repositoryManager.AddRepositoryInitializer(new InMemoryRepositoryInitializer(container.Resolve<IObjectMapper>(), config));
                 repositoryManager.RegisterRepositories(repositoriesAssembly);
 
                 var logger = container.Resolve<ILogger>();
