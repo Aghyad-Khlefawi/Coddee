@@ -14,7 +14,9 @@ namespace Coddee.Collections
     public class AsyncObservableDictionary<TKey, TValue> : AsyncObservableCollection<TValue>
         where TValue : IUniqueObject<TKey>
     {
-
+        /// <summary>
+        /// Creates a new instance of <see cref="AsyncObservableCollection{T}"/>
+        /// </summary>
         public new static AsyncObservableDictionary<TKey,TValue> Create()
         {
             AsyncObservableDictionary<TKey, TValue> collection = null;
@@ -22,6 +24,9 @@ namespace Coddee.Collections
             return collection;
         }
 
+        /// <summary>
+        /// Creates a new instance of <see cref="AsyncObservableCollection{T}"/>
+        /// </summary>
         public new static AsyncObservableDictionary<TKey, TValue> Create(IList<TValue> list)
         {
             AsyncObservableDictionary<TKey, TValue> collection = null;
@@ -29,6 +34,9 @@ namespace Coddee.Collections
             return collection;
         }
 
+        /// <summary>
+        /// Creates a new instance of <see cref="AsyncObservableCollection{T}"/>
+        /// </summary>
         public new static AsyncObservableDictionary<TKey, TValue> Create(IEnumerable<TValue> list)
         {
             AsyncObservableDictionary<TKey, TValue> collection = null;
@@ -36,18 +44,20 @@ namespace Coddee.Collections
             return collection;
         }
 
+        /// <inheritdoc />
         public AsyncObservableDictionary()
         {
             _dictionary = new Dictionary<TKey, TValue>();
         }
 
+        /// <inheritdoc />
         public AsyncObservableDictionary(IList<TValue> list)
         {
             _dictionary = new Dictionary<TKey, TValue>(list.Count);
             CopyFrom(list);
         }
 
-
+        /// <inheritdoc />
         public AsyncObservableDictionary(IEnumerable<TValue> list)
         {
             _dictionary = new Dictionary<TKey, TValue>(list.Count());
@@ -98,6 +108,7 @@ namespace Coddee.Collections
             _dictionary.Remove(item.GetKey);
         }
 
+        /// <inheritdoc />
         protected override void RemoveItem(int index)
         {
             var item = this.ElementAt(index);

@@ -3,10 +3,24 @@
 
 namespace Coddee.AppBuilder
 {
+    /// <summary>
+    /// Supported application types
+    /// </summary>
     public enum ApplicationTypes
     {
+        /// <summary>
+        /// .Net Windows presentation foundation application
+        /// </summary>
         WPF,
+
+        /// <summary>
+        /// .Net console application
+        /// </summary>
         Console,
+
+        /// <summary>
+        /// AspNetCore web api
+        /// </summary>
         WebAPI
     }
 }

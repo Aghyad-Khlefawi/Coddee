@@ -118,25 +118,49 @@ namespace Coddee.Validation
             Message = message;
         }
 
+        /// <inheritdoc />
         public ValidationRule(ValidationType validationType, Validator validator, Func<string> message, string fieldName) : this(validationType, validator, message)
         {
             FieldName = fieldName;
         }
 
+        /// <inheritdoc />
         public ValidationRule(ValidationType validationType, Validator validator, Func<string> message, string fieldName, Func<object> validatedField) : this(validationType, validator, message, fieldName)
         {
             ValidatedField = validatedField;
         }
+        /// <inheritdoc />
         public ValidationRule(ValidationType validationType, Validator validator, string fieldName, Func<object> validatedField) : this(validationType, validator, () => DefaultMessages.ValidationMessage.Replace("$Field$", fieldName), fieldName)
         {
             ValidatedField = validatedField;
         }
 
+        /// <summary>
+        /// The validation result type.
+        /// </summary>
         public ValidationType ValidationType { get; }
+
+        /// <summary>
+        /// The validation function
+        /// </summary>
         public Validator Validator { get; }
+
+        /// <summary>
+        /// A function that returns the message that will be displayed 
+        /// if the validation fails
+        /// </summary>
         public Func<string> Message { get; set; }
+
+        /// <summary>
+        /// The valdiated field name.
+        /// </summary>
         public string FieldName { get; set; }
 
+
+        /// <summary>
+        /// Test if the field is valid.
+        /// </summary>
+        /// <returns></returns>
         public bool Validate()
         {
             if (ValidatedField != null)
@@ -147,11 +171,18 @@ namespace Coddee.Validation
             return Validator(null);
         }
 
+        /// <summary>
+        /// Returns the fail message.
+        /// </summary>
+        /// <returns></returns>
         public string GetMessage()
         {
             return Message();
         }
 
+        /// <summary>
+        /// A function that returns the current value of the validated field.
+        /// </summary>
         public Func<object> ValidatedField { get; set; }
     }
 }

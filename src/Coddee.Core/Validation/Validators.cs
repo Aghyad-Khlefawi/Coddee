@@ -6,6 +6,9 @@ using System.Linq;
 
 namespace Coddee.Validation
 {
+    /// <summary>
+    /// Static class containing the common validators.
+    /// </summary>
     public static class Validators
     {
         /// <summary>

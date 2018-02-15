@@ -5,8 +5,17 @@ using Coddee.Services;
 
 namespace Coddee.AppBuilder
 {
+    /// <summary>
+    /// <see cref="IApplicationBuilder"/> extensions.
+    /// </summary>
     public static class BuilderExtensions
     {
+        /// <summary>
+        /// Configure the <see cref="ILocalizationManager"/> service.
+        /// </summary>
+        /// <param name="builder"></param>
+        /// <param name="defaultCluture"></param>
+        /// <returns></returns>
         public static IApplicationBuilder UseLocalization(
             this IApplicationBuilder builder,
             string defaultCluture = "en-US")
@@ -35,6 +44,7 @@ namespace Coddee.AppBuilder
         /// <summary>
         /// Initialize the configuration manager
         /// </summary>
+        /// <param name="builder">the application builder.</param>
         /// <param name="defaultFile">The default configurations file.</param>
         public static IApplicationBuilder UseConfigurationFile(
             this IApplicationBuilder builder,

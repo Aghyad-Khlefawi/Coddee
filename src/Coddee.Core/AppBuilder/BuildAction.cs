@@ -12,16 +12,19 @@ namespace Coddee.AppBuilder
     public class BuildAction
     {
 
+        /// <inheritdoc />
         public BuildAction(string name)
         {
             Name = name;
         }
+        /// <inheritdoc />
         public BuildAction(string name, Action<IContainer> action)
             :this(name)
         {
             Action = action;
         }
 
+        /// <inheritdoc />
         public BuildAction(string name, Action<IContainer> action, int defaultInvokeOrder)
             :this(name,action)
         {

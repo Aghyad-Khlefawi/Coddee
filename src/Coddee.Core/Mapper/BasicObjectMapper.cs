@@ -14,6 +14,7 @@ namespace Coddee
     /// </summary>
     public class BasicObjectMapper : IObjectMapper
     {
+        /// <inheritdoc />
         public BasicObjectMapper()
         {
             _mappings = new Dictionary<Type, Dictionary<Type, MappingInfo>>();
@@ -50,6 +51,7 @@ namespace Coddee
             };
         }
 
+        /// <inheritdoc />
         public void RegisterMap<TSource, TTarget>()
         {
             RegisterAutoMap<TSource, TTarget>();
@@ -212,6 +214,7 @@ namespace Coddee
             AdditionalMap = map;
         }
     }
+
     class MappingInfo<TSource, TTarget> : MappingInfo
     {
         public void SetAdditionalMapping(Action<TSource, TTarget> map)
@@ -219,7 +222,8 @@ namespace Coddee
             AdditionalMap = (source, target) => map((TSource)source, (TTarget)target);
         }
     }
-    public class PropertyMapper
+
+    class PropertyMapper
     {
         public PropertyInfo SourceProperty { get; set; }
         public PropertyInfo TargetProperty { get; set; }

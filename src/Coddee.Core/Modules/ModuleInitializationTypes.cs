@@ -8,10 +8,14 @@ namespace Coddee
     /// </summary>
     public enum ModuleInitializationTypes
     {
-        // Initialize on start up
+        /// <summary>
+        /// Initialize on start up
+        /// </summary>
         Auto,
 
-        // Call initialize manually
+        /// <summary>
+        /// Call initialize manually
+        /// </summary>
         Manual
     }
 }
