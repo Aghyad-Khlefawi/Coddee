@@ -5,6 +5,9 @@ using System;
 
 namespace Coddee
 {
+    /// <summary>
+    /// Identifies a global variable object.
+    /// </summary>
     public interface IGlobaleVariable
     {
 
@@ -21,6 +24,9 @@ namespace Coddee
         /// </summary>
         public bool IsValueSet { get; private set; }
 
+        /// <summary>
+        /// The inner value of the variable.
+        /// </summary>
         protected T _value;
 
         /// <summary>
@@ -28,6 +34,10 @@ namespace Coddee
         /// </summary>
         public event EventHandler<T> ValueChanged;
 
+        
+        /// <summary>
+        /// The the value of the variable
+        /// </summary>
         public void SetValue(T value)
         {
             _value = value;

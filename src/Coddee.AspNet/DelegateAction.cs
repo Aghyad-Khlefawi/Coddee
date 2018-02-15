@@ -11,14 +11,13 @@ namespace Coddee.AspNet
 {
     public class DelegateAction : IApiAction
     {
-        public DelegateAction(string path, object owner, MethodInfo method)
+        public DelegateAction(string path, string repositoryName, MethodInfo method)
         {
             Path = path;
-            Owner = owner;
             Method = method;
             ReturnType = method.ReturnType;
             RetrunsValue = ReturnType != typeof(Task);
-
+            RepositoryName = repositoryName;
 
             if (RetrunsValue)
             {
@@ -26,28 +25,29 @@ namespace Coddee.AspNet
             }
         }
 
-        public DelegateAction(string path, object owner, MethodInfo method, ParameterInfo[] parametersInfo)
-            : this(path, owner, method)
+        public DelegateAction(string path, string repositoryName, MethodInfo method, ParameterInfo[] parametersInfo)
+            : this(path, repositoryName, method)
         {
             ParametersInfo = parametersInfo.Select(ActionParameter.Create).ToList();
         }
 
         private Func<Task> _delegate;
 
-        public object Owner { get; set; }
         public MethodInfo Method { get; set; }
         public List<ActionParameter> ParametersInfo { get; set; }
         public Type ReturnType { get; set; }
         public bool RetrunsValue { get; set; }
+        public string RepositoryName { get; }
         public string Path { get; set; }
         public bool RequiredAuthentication { get; set; }
         public string Claim { get; set; }
 
+
         protected PropertyInfo TaskResult { get; set; }
 
-        public virtual async Task<object> Invoke(IEnumerable<object> param)
+        public virtual async Task<object> Invoke(object target, IEnumerable<object> param)
         {
-            var res = InvokeDelegate(param);
+            var res = InvokeDelegate(target, param);
             if (!RetrunsValue)
                 await res;
             else
@@ -55,24 +55,18 @@ namespace Coddee.AspNet
 
             return null;
         }
-
-        protected virtual Task InvokeDelegate(IEnumerable<object> param)
+        public virtual Task<object> Invoke(IEnumerable<object> param)
         {
-            try
-            {
-                if (_delegate == null)
-                    _delegate = (Func<Task>)Method.CreateDelegate(typeof(Func<Task>),Owner);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
-
-            return _delegate.Invoke();
+            return Invoke(Owner, param);
         }
 
-        public static DelegateAction CreateDelegateAction(object controller, MethodInfo memberInfo, string pathLower)
+        protected virtual Task InvokeDelegate(object target, IEnumerable<object> param)
+        {
+            _delegate = (Func<Task>)Method.CreateDelegate(typeof(Func<Task>), target);
+            return _delegate.Invoke();
+        }
+      
+        public static DelegateAction CreateDelegateAction(string repositoryName, MethodInfo memberInfo, string pathLower)
         {
             var parameters = memberInfo.GetParameters();
             var type = GetFuncType(parameters);
@@ -80,11 +74,11 @@ namespace Coddee.AspNet
             {
                 if (parameters.Length == 0)
                 {
-                    return (DelegateAction)Activator.CreateInstance(typeof(DelegateAction), pathLower, controller, memberInfo, parameters);
+                    return (DelegateAction)Activator.CreateInstance(typeof(DelegateAction), pathLower, repositoryName, memberInfo, parameters);
                 }
 
                 var delegateActionType = type.MakeGenericType(parameters.Select(e => e.ParameterType).ToArray());
-                return (DelegateAction)Activator.CreateInstance(delegateActionType, pathLower, controller, memberInfo, parameters);
+                return (DelegateAction)Activator.CreateInstance(delegateActionType, pathLower, repositoryName, memberInfo, parameters);
             }
             return null;
         }
@@ -129,77 +123,87 @@ namespace Coddee.AspNet
             }
             return null;
         }
+
+        public void SetOwner(object controller)
+        {
+            Owner = controller;
+        }
+
+        public object Owner { get; set; }
     }
 
     public class DelegateAction<T1> : DelegateAction
     {
-        public DelegateAction(string path, object owner, MethodInfo method) : base(path, owner, method)
+        public DelegateAction(string path, string repositoryName, MethodInfo method) : base(path, repositoryName, method)
         {
         }
 
-        public DelegateAction(string path, object owner, MethodInfo method, ParameterInfo[] parametersInfo) : base(path, owner, method, parametersInfo)
+        public DelegateAction(string path, string repositoryName, MethodInfo method, ParameterInfo[] parametersInfo) : base(path, repositoryName, method, parametersInfo)
         {
-            _delegate = (Func<T1, Task>)method.CreateDelegate(typeof(Func<T1, Task>), owner);
         }
 
-        private readonly Func<T1, Task> _delegate;
+        private Func<T1, Task> _delegate;
 
-        protected override Task InvokeDelegate(IEnumerable<object> param)
+        protected override Task InvokeDelegate(object target, IEnumerable<object> param)
         {
+
+            _delegate = (Func<T1, Task>)Method.CreateDelegate(typeof(Func<T1, Task>), target);
+
             return _delegate.Invoke((T1)param.ElementAt(0));
         }
     }
     public class DelegateAction<T1, T2> : DelegateAction
     {
-        public DelegateAction(string path, object owner, MethodInfo method) : base(path, owner, method)
+        public DelegateAction(string path, string repositoryName, MethodInfo method) : base(path, repositoryName, method)
         {
         }
 
-        public DelegateAction(string path, object owner, MethodInfo method, ParameterInfo[] parametersInfo) : base(path, owner, method, parametersInfo)
+        public DelegateAction(string path, string repositoryName, MethodInfo method, ParameterInfo[] parametersInfo) : base(path, repositoryName, method, parametersInfo)
         {
-            _delegate = (Func<T1, T2, Task>)method.CreateDelegate(typeof(Func<T1, T2, Task>), owner);
         }
 
-        private readonly Func<T1, T2, Task> _delegate;
+        private Func<T1, T2, Task> _delegate;
 
-        protected override Task InvokeDelegate(IEnumerable<object> param)
+        protected override Task InvokeDelegate(object target, IEnumerable<object> param)
         {
+            _delegate = (Func<T1, T2, Task>)Method.CreateDelegate(typeof(Func<T1, T2, Task>), target);
             return _delegate.Invoke((T1)param.ElementAt(0), (T2)param.ElementAt(1));
         }
     }
     public class DelegateAction<T1, T2, T3> : DelegateAction
     {
-        public DelegateAction(string path, object owner, MethodInfo method) : base(path, owner, method)
+        public DelegateAction(string path, string repositoryName, MethodInfo method) : base(path, repositoryName, method)
         {
         }
 
-        public DelegateAction(string path, object owner, MethodInfo method, ParameterInfo[] parametersInfo) : base(path, owner, method, parametersInfo)
+        public DelegateAction(string path, string repositoryName, MethodInfo method, ParameterInfo[] parametersInfo) : base(path, repositoryName, method, parametersInfo)
         {
-            _delegate = (Func<T1, T2, T3, Task>)method.CreateDelegate(typeof(Func<T1, T2, T3, Task>), owner);
         }
 
-        private readonly Func<T1, T2, T3, Task> _delegate;
+        private Func<T1, T2, T3, Task> _delegate;
 
-        protected override Task InvokeDelegate(IEnumerable<object> param)
+        protected override Task InvokeDelegate(object target, IEnumerable<object> param)
         {
+            _delegate = (Func<T1, T2, T3, Task>)Method.CreateDelegate(typeof(Func<T1, T2, T3, Task>), target);
             return _delegate.Invoke((T1)param.ElementAt(0), (T2)param.ElementAt(1), (T3)param.ElementAt(2));
         }
     }
     public class DelegateAction<T1, T2, T3, T4> : DelegateAction
     {
-        public DelegateAction(string path, object owner, MethodInfo method) : base(path, owner, method)
+        public DelegateAction(string path, string repositoryName, MethodInfo method) : base(path, repositoryName, method)
         {
         }
 
-        public DelegateAction(string path, object owner, MethodInfo method, ParameterInfo[] parametersInfo) : base(path, owner, method, parametersInfo)
+        public DelegateAction(string path, string repositoryName, MethodInfo method, ParameterInfo[] parametersInfo) : base(path, repositoryName, method, parametersInfo)
         {
-            _delegate = (Func<T1, T2, T3, T4, Task>)method.CreateDelegate(typeof(Func<T1, T2, T3, T4, Task>), owner);
         }
 
-        private readonly Func<T1, T2, T3, T4, Task> _delegate;
+        private Func<T1, T2, T3, T4, Task> _delegate;
 
-        protected override Task InvokeDelegate(IEnumerable<object> param)
+        protected override Task InvokeDelegate(object target, IEnumerable<object> param)
         {
+
+            _delegate = (Func<T1, T2, T3, T4, Task>)Method.CreateDelegate(typeof(Func<T1, T2, T3, T4, Task>), target);
             return _delegate.Invoke((T1)param.ElementAt(0), (T2)param.ElementAt(1), (T3)param.ElementAt(2), (T4)param.ElementAt(3));
         }
     }

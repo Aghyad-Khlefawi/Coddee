@@ -19,7 +19,7 @@ namespace Coddee.WPF
         {
             _handlers = new Dictionary<IViewModel, ViewModelEventHandler<TPayload>>();
             EventRoutingStrategy = routingStrategy;
-            _viewModelsManager = WPFApplication.Current.GetContainer().Resolve<IViewModelsManager>();
+            _viewModelsManager = ViewModelBase.GetContainer().Resolve<IViewModelsManager>();
         }
 
         protected readonly IViewModelsManager _viewModelsManager;

@@ -10,6 +10,9 @@ using System.Threading.Tasks;
 
 namespace Coddee
 {
+    /// <summary>
+    /// Static extension methods class.
+    /// </summary>
     public static class Extensions
     {
         /// <summary>
@@ -194,11 +197,17 @@ namespace Coddee
             }
         }
 
+        /// <summary>
+        /// Returns the first object that matches the key base on the <see cref="IUniqueObject{TKey}"/> interface.
+        /// </summary>
         public static T First<T, TKey>(this IEnumerable<T> collection, TKey key) where T : IUniqueObject<TKey>
         {
             return collection.First(e => e.GetKey.Equals(key));
         }
 
+        /// <summary>
+        /// Casts the elements of a collection to another type.
+        /// </summary>
         public static IEnumerable<TResult> CastAs<TResult>(this IEnumerable collection)
         {
             foreach (var item in collection)
@@ -206,20 +215,34 @@ namespace Coddee
                 yield return (TResult)item;
             }
         }
+
+        /// <summary>
+        /// Casts the elements of a collection to another type.
+        /// </summary>
         public static async Task<IEnumerable<TResult>> CastAs<TSource, TResult>(this Task<IEnumerable<TSource>> collection)
         {
             return (await collection).CastAs<TResult>();
         }
+
+        /// <summary>
+        /// Returns the first object that matches the key base on the <see cref="IUniqueObject{TKey}"/> interface.
+        /// </summary>
         public static T FirstOrDefault<T, TKey>(this IEnumerable<T> collection, TKey key) where T : IUniqueObject<TKey>
         {
             return collection.FirstOrDefault(e => e.GetKey.Equals(key));
         }
 
+        /// <summary>
+        /// Removes the first item of the collection that matches the predicate.
+        /// </summary>
         public static void Remove<T>(this IList<T> collection, Func<T, bool> predicate)
         {
             collection.Remove(collection.First<T>(predicate));
         }
 
+        /// <summary>
+        /// Removes the first item of the collection that matches the predicate.
+        /// </summary>
         public static void RemoveIfExists<T>(this IList<T> collection, Func<T, bool> predicate)
         {
             var item = collection.FirstOrDefault<T>(predicate);
@@ -227,27 +250,45 @@ namespace Coddee
                 collection.Remove(item);
         }
 
+        /// <summary>
+        /// Removes the first item of the collection that matches the argument.
+        /// </summary>
         public static void RemoveIfExists<T>(this IList<T> collection, T item)
         {
             if (collection.Contains(item))
                 collection.Remove(item);
         }
 
+        /// <summary>
+        /// Waits for a collection of tasks to complete.
+        /// </summary>
         public static Task WhenAll(this IEnumerable<Task> tasks)
         {
             return Task.WhenAll(tasks);
         }
 
+        /// <summary>
+        /// Creates a continuation that executes asynchronously when the task completes.
+        /// </summary>
         public static Task ContinueWithResult<T>(this Task<T> task, Action<T> action)
         {
             return task.ContinueWith(t => action(t.Result));
         }
 
+        /// <summary>
+        /// Creates a continuation that executes asynchronously when the task completes.
+        /// </summary>
         public static Task ContinueWithResultAs<T, TResult>(this Task<IEnumerable<T>> task, Action<IEnumerable<TResult>> action)
         {
             return task.ContinueWith(t => action(t.Result.CastAs<TResult>()));
         }
 
+        /// <summary>
+        /// Combines a collection of strings to one string.
+        /// </summary>
+        /// <param name="collection"></param>
+        /// <param name="seperator"></param>
+        /// <returns></returns>
         public static string Combine(this IEnumerable<string> collection, string seperator)
         {
             if (!collection.Any())

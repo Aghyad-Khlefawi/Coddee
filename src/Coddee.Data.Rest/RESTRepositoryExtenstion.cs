@@ -11,7 +11,7 @@ using Coddee.Services;
 namespace Coddee.AppBuilder
 {
     /// <summary>
-    /// Repository
+    /// Provides the required configurations to use REST repositories.
     /// </summary>
     public class RESTInitializerConfig
     {
@@ -58,14 +58,14 @@ namespace Coddee.AppBuilder
         /// <summary>
         /// Register REST repositories and adds a <see cref="RESTRepositoryInitializer"/> to the <see cref="IRepositoryManager"/>
         /// </summary>
-        public static IApplicationBuilder UseRESTRepositoryManager(
+        public static IApplicationBuilder UseRESTRepositories(
             this IApplicationBuilder builder,
             Func<IConfigurationManager, RESTInitializerConfig> config)
         {
             builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.RESTRepositoryBuildAction((container) =>
             {
                 if (!container.IsRegistered<IRepositoryManager>())
-                    container.RegisterInstance<IRepositoryManager, RepositoryManager>();
+                    throw new ApplicationBuildException("RepositoryManager is not registered. call UseSingletonRepositoryManager or UseTransientRepositoryManager to configuration the repository manager.");
 
                 var repositoryManager = container.Resolve<IRepositoryManager>();
 

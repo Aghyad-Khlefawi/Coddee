@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using Coddee.Attributes;
 
 namespace Coddee.Data
 {
@@ -12,6 +13,12 @@ namespace Coddee.Data
     /// </summary>
     public interface IRepositoryManager
     {
+
+        /// <summary>
+        /// Gets a repository by its class name of <see cref="NameAttribute"/>
+        /// </summary>
+        /// <returns></returns>
+        IRepository GetRepository(string name);
 
         /// <summary>
         /// Gets a repository by its interface

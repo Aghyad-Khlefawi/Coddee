@@ -15,6 +15,10 @@ namespace HR.Data.LinqToSQL.Repositories
     [Repository(typeof(ICompanyRepository))]
     public class CompanyRepository : CRUDHRRepositoryBase<DB.Company, Company, Guid>, ICompanyRepository
     {
+        public CompanyRepository()
+        {
+            
+        }
         public override void RegisterMappings(IObjectMapper mapper)
         {
             base.RegisterMappings(mapper);

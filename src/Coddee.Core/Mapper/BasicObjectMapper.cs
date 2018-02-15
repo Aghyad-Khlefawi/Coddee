@@ -14,6 +14,7 @@ namespace Coddee
     /// </summary>
     public class BasicObjectMapper : IObjectMapper
     {
+        /// <inheritdoc />
         public BasicObjectMapper()
         {
             _mappings = new Dictionary<Type, Dictionary<Type, MappingInfo>>();
@@ -50,6 +51,7 @@ namespace Coddee
             };
         }
 
+        /// <inheritdoc />
         public void RegisterMap<TSource, TTarget>()
         {
             RegisterAutoMap<TSource, TTarget>();
@@ -200,7 +202,7 @@ namespace Coddee
     /// <summary>
     /// Hold the information required to map between two types
     /// </summary>
-    class MappingInfo : IMappingInfo
+    class MappingInfo 
     {
         public Type SourceType { get; set; }
         public Type TargetType { get; set; }
@@ -212,6 +214,7 @@ namespace Coddee
             AdditionalMap = map;
         }
     }
+
     class MappingInfo<TSource, TTarget> : MappingInfo
     {
         public void SetAdditionalMapping(Action<TSource, TTarget> map)
@@ -219,11 +222,30 @@ namespace Coddee
             AdditionalMap = (source, target) => map((TSource)source, (TTarget)target);
         }
     }
+
+    /// <summary>
+    /// Provides the information needed to map between to properties.
+    /// </summary>
     public class PropertyMapper
     {
+        /// <summary>
+        /// The source property information
+        /// </summary>
         public PropertyInfo SourceProperty { get; set; }
+
+        /// <summary>
+        /// The target property information
+        /// </summary>
         public PropertyInfo TargetProperty { get; set; }
+
+        /// <summary>
+        /// Is the source property nullable
+        /// </summary>
         public bool SourceNullable { get; set; }
+
+        /// <summary>
+        /// Is the target property nullable
+        /// </summary>
         public bool TargetNullable { get; set; }
     }
 

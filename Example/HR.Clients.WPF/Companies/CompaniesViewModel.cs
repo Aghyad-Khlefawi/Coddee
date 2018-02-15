@@ -96,18 +96,15 @@ namespace HR.Clients.WPF.Companies
             Resolve<IDialogService>().CreateDialog("Edit company", _companyEditor).Show();
         }
 
-        private IDialog _companyDialog;
         private void AddCompany()
         {
             _companyEditor.Add();
-            if (_companyDialog == null)
-                _companyDialog = Resolve<IDialogService>().CreateDialog("Add company", _companyEditor, DialogOptions.DefaultMinimizable);
-            _companyDialog.Show();
+            _companyEditor.Show();
         }
 
         protected override async Task OnInitialization()
         {
-            var companyRepo = Resolve<ICompanyRepository>();
+             var companyRepo = Resolve<ICompanyRepository>();
 
             Companies = AsyncObservableDictionaryView<Guid, Company>.Create(CompanySearch, await companyRepo.GetDetailedItems());
             Employees = AsyncObservableCollectionView<Employee>.Create(EmployeeSearch);

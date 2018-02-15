@@ -12,13 +12,20 @@ namespace Coddee
     /// <typeparam name="TPayload"></typeparam>
     public class GlobalEvent<TPayload> : IEvent
     {
+        /// <inheritdoc />
         public GlobalEvent()
         {
             _handlers = new List<Action<TPayload>>();
         }
 
+        /// <summary>
+        /// The handlers of the event.
+        /// </summary>
         protected readonly List<Action<TPayload>> _handlers;
 
+        /// <summary>
+        /// Invoke the event handlers.
+        /// </summary>
         public virtual void Raise(TPayload payload)
         {
             foreach (var handler in _handlers)
@@ -27,16 +34,23 @@ namespace Coddee
             }
         }
 
+        /// <summary>
+        /// Add a handler to the event.
+        /// </summary>
         public virtual void Subscribe(Action<TPayload> handler)
         {
             _handlers.Add(handler);
         }
 
+        /// <summary>
+        /// Unsubscribe a handler to the event.
+        /// </summary>
         public virtual void Unsubscribe(Action<TPayload> handler)
         {
             _handlers.Remove(handler);
         }
 
+        /// <inheritdoc />
         public EventRoutingStrategy EventRoutingStrategy => EventRoutingStrategy.Direct;
     }
 }

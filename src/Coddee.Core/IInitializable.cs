@@ -10,7 +10,15 @@ namespace Coddee
     /// </summary>
     public interface IInitializable
     {
+        /// <summary>
+        /// Indicates that the object is initialized and ready.
+        /// </summary>
         bool IsInitialized { get; }
+
+        /// <summary>
+        /// Initialized the object.
+        /// </summary>
+        /// <param name="forceInitialize">if set to true the object will re-initialize if it's already initialized.</param>
         Task Initialize(bool forceInitialize = false);
     }
 }

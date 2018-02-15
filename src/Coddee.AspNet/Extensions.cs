@@ -3,6 +3,8 @@
 
 using System;
 using System.Linq;
+using System.Security.Principal;
+using Coddee.AppBuilder;
 using Coddee.Data;
 using Coddee.Data.LinqToSQL;
 using Coddee.Data.MongoDB;
@@ -36,38 +38,62 @@ namespace Coddee.AspNet
                 debugLogger.Initialize(options.Level);
                 logger.AddLogger(debugLogger, LoggerTypes.DebugOutput);
             }
+
             if (options.LoggerType.HasFlag(LoggerTypes.File))
             {
                 var fileLogger = new FileLogger();
                 fileLogger.Initialize(options.Level, options.LogFilePath, options.UseFileCompression);
                 logger.AddLogger(fileLogger, LoggerTypes.File);
             }
+
             services.AddSingleton<ILogger>(logger);
             return services;
         }
 
-        public static IRepositoryManager AddLinqRepositoryManager<TDBManager>(
-            this IServiceCollection services,
-            string connectionString,
-            string repositoriesAssembly,
-            RepositoryConfigurations config = null)
-            where TDBManager : ILinqDBManager, new()
+        /// <summary>
+        /// Register an <see cref="IContainer"/> object
+        /// </summary>
+        public static void AddContainer(
+            this IServiceCollection services)
         {
-            var repositoryManager = new RepositoryManager();
+            var container = new AspCoreContainer(services);
+        }
+        /// <summary>
+        /// Configure the application to use a <see cref="SingletonRepositoryManager"/> that returns the same repository instance on each call.
+        /// </summary>
+        public static void AddSingletonRepositoryManager(this IServiceCollection services) 
+        {
+            services.AddSingleton<IRepositoryManager, SingletonRepositoryManager>();
+        }
+
+        /// <summary>
+        /// Configure the application to use a <see cref="TransientRepositoryManager"/> that returns the a new repository instance on each call.
+        /// </summary>
+        public static void AddTransientRepositoryManager(this IServiceCollection services) 
+        {
+            services.AddSingleton<IRepositoryManager>(new TransientRepositoryManager());
+        }
+
+        public static IRepositoryManager AddLinqRepositories<TDBManager>(
+                this IServiceCollection services,
+                LinqInitializerConfig config)
+                where TDBManager : ILinqDBManager, new()
+        {
             if (services.All(e => e.ServiceType != typeof(IRepositoryManager)))
-                services.AddSingleton<IRepositoryManager>(repositoryManager);
+                throw new ApplicationBuildException("RepositoryManager is not registered. call AddSingletonRepositoryManager or AddTransientRepositoryManager to configuration the repository manager.");
+
 
             var serviceProvider = services.BuildServiceProvider();
             var mapper = serviceProvider.GetService<IObjectMapper>();
             var dbManager = new TDBManager();
-            dbManager.Initialize(connectionString);
+            dbManager.Initialize(config.DatabaseConnection(serviceProvider.GetService<IContainer>()));
 
             services.AddSingleton<ILinqDBManager>(dbManager);
-            services.AddSingleton<IRepositoryManager>(repositoryManager);
+            var repositoryManager = serviceProvider.GetService<IRepositoryManager>();
 
-            repositoryManager.AddRepositoryInitializer(new LinqRepositoryInitializer(dbManager, mapper, config));
+            repositoryManager.AddRepositoryInitializer(new LinqRepositoryInitializer(dbManager, mapper, config.RepositoryConfigurations));
 
-            repositoryManager.RegisterRepositories(repositoriesAssembly);
+            repositoryManager.RegisterRepositories(config.RepositoriesAssembly);
             foreach (var repository in repositoryManager.GetRepositories())
             {
                 services.AddSingleton(repository.ImplementedInterface, repository);
@@ -82,7 +108,7 @@ namespace Coddee.AspNet
             string repositoriesAssembly)
         {
             if (services.All(e => e.ServiceType != typeof(IRepositoryManager)))
-                services.AddSingleton<IRepositoryManager>(new RepositoryManager());
+                services.AddSingleton<IRepositoryManager>(new SingletonRepositoryManager());
 
             var serviceProvider = services.BuildServiceProvider();
             var repositoryManager = serviceProvider.GetService<IRepositoryManager>();
@@ -107,9 +133,14 @@ namespace Coddee.AspNet
         {
             return app.UseMVCWithCoddeeRoutes("api");
         }
+        public static IApplicationBuilder UseCoddeeDynamicApi(this IApplicationBuilder appBuilder,Func<IIdentity,object> setContext)
+        {
+            appBuilder.UseMiddleware<CoddeeDynamicApi>(setContext);
+            return appBuilder;
+        }
         public static IApplicationBuilder UseCoddeeDynamicApi(this IApplicationBuilder appBuilder)
         {
-            appBuilder.UseMiddleware<CoddeeDynamicApi>();
+            appBuilder.UseMiddleware<CoddeeDynamicApi>(null);
             return appBuilder;
         }
         public static IServiceCollection AddDynamicApi(this IServiceCollection services)

@@ -11,16 +11,19 @@ namespace Coddee
     [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
     public sealed class ModuleAttribute : Attribute
     {
+        /// <inheritdoc />
         public ModuleAttribute(string moduleName)
             : this(moduleName, ModuleInitializationTypes.Auto)
         {
         }
 
+        /// <inheritdoc />
         public ModuleAttribute(string moduleName, ModuleInitializationTypes initializationTypes)
             : this(moduleName, initializationTypes, null)
         {
         }
 
+        /// <inheritdoc />
         public ModuleAttribute(
             string moduleName,
             ModuleInitializationTypes initializationTypes,
@@ -31,8 +34,21 @@ namespace Coddee
             Dependencies = dependencies;
         }
 
+       
+        /// <summary>
+        /// The name of the module
+        /// </summary>
         public string ModuleName { get; set; }
+        
+
+        /// <summary>
+        /// The initialization type of the module
+        /// </summary>
         public ModuleInitializationTypes InitializationTypes { get; set; }
+
+        /// <summary>
+        /// The modules dependencies that needs to be registered before this module.
+        /// </summary>
         public string[] Dependencies { get; set; }
     }
 
@@ -41,11 +57,34 @@ namespace Coddee
     /// </summary>
     public class Module
     {
+        /// <summary>
+        /// A new to identify the module
+        /// </summary>
         public string Name { get; set; }
+        
+        /// <summary>
+        /// The modules dependencies that needs to be registered before this module.
+        /// </summary>
         public string[] Dependencies { get; set; }
+
+        /// <summary>
+        /// The initialization type of the module
+        /// </summary>
         public ModuleInitializationTypes InitializationType { get; set; }
+
+        /// <summary>
+        /// The class type of the module.
+        /// </summary>
         public virtual Type Type { get; set; }
+        
+        /// <summary>
+        /// The registered instance of the module.
+        /// </summary>
         public IModule Instance { get; set; }
+
+        /// <summary>
+        /// Indicates if the module is registered.
+        /// </summary>
         public bool Initialized { get; set; }
     }
     

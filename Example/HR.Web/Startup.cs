@@ -3,7 +3,11 @@
 
 using System;
 using System.IO;
+using System.Linq;
+using System.Security.Claims;
 using System.Text;
+using Coddee;
+using Coddee.AppBuilder;
 using Coddee.AspNet;
 using Coddee.Loggers;
 using Coddee.Windows.AppBuilder;
@@ -15,6 +19,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using IApplicationBuilder = Microsoft.AspNetCore.Builder.IApplicationBuilder;
 
 namespace HR.Web
 {
@@ -40,7 +45,8 @@ namespace HR.Web
 
             services.AddLogger(new LoggerOptions(LoggerTypes.DebugOutput, LogRecordTypes.Debug));
             services.AddILObjectMapper();
-            services.AddLinqRepositoryManager<HRDBManager>(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\HRDatabase.mdf;Integrated Security=True;Connect Timeout=30", "HR.Data.LinqToSQL");
+            services.AddTransientRepositoryManager();
+            services.AddLinqRepositories<HRDBManager>(new LinqInitializerConfig(c => @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\HRDatabase.mdf;Integrated Security=True;Connect Timeout=30", "HR.Data.LinqToSQL"));
 
             services.AddAuthentication(options =>
             {
@@ -54,7 +60,7 @@ namespace HR.Web
                     ValidAudience = Configuration["Tokens:Audience"],
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Tokens:Key"])),
-                    ValidateLifetime = true
+                    ValidateLifetime = true,
                 };
             });
             services.AddDynamicApi(config =>
@@ -69,9 +75,9 @@ namespace HR.Web
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
-            app.UseAuthentication(); 
+            app.UseAuthentication();
 
-            app.UseCoddeeDynamicApi();
+            app.UseCoddeeDynamicApi(i => new { Username = ((ClaimsIdentity)i).Claims.First(e => e.Type == "username") });
         }
     }
 }

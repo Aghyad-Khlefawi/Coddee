@@ -25,11 +25,14 @@ namespace Coddee.AspNet
     }
     public interface IApiAction
     {
+        string RepositoryName { get; }
         string Path { get; set; }
+        Task<object> Invoke(object target, IEnumerable<object> param);
         Task<object> Invoke(IEnumerable<object> param);
         bool RetrunsValue { get; }
         List<ActionParameter> ParametersInfo { get; set; }
         bool RequiredAuthentication { get; set; }
         string Claim { get; set; }
+        object Owner { get; set; }
     }
 }

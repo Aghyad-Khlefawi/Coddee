@@ -831,6 +831,11 @@ namespace Coddee.WPF
                 IsBusy = false;
             }
         }
+
+        public static IContainer GetContainer()
+        {
+            return _container;
+        }
     }
 
     /// <summary>

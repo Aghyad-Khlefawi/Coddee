@@ -7,9 +7,13 @@ using Coddee.Services;
 
 namespace Coddee.Modules
 {
+    /// <summary>
+    /// <see cref="ILocalizationManager"/> service module.
+    /// </summary>
     [Module(BuiltInModules.LocalizationManager)]
     public class LocalizationManagerModule:IModule
     {
+        /// <inheritdoc />
         public Task Initialize(IContainer container)
         {
             var manager = new LocalizationManager();

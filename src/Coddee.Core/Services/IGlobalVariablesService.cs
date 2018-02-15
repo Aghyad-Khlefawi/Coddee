@@ -8,7 +8,9 @@ namespace Coddee.Services
     /// </summary>
     public interface IGlobalVariablesService
     {
-
+        /// <summary>
+        /// Returns the instance of the global variable.
+        /// </summary>
         T GetVariable<T>() where T : IGlobaleVariable, new();
     }
 }

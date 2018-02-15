@@ -36,7 +36,8 @@ namespace Coddee.AspNet
                     foreach (var path in paths)
                     {
                         var pathLower = path.ToLower();
-                        var delegateAction = DelegateAction.CreateDelegateAction(controller, memberInfo, pathLower);
+                        var delegateAction = DelegateAction.CreateDelegateAction(null, memberInfo, pathLower);
+                        delegateAction.SetOwner(controller);
                         if (delegateAction == null)
                             break;
                         var authAttr = memberInfo.GetCustomAttribute<AuthorizeAttribute>();
@@ -51,7 +52,7 @@ namespace Coddee.AspNet
             }
             return _apiActions;
         }
-        
+
         public void RegisterController<T>() where T : class
         {
             var type = typeof(T);

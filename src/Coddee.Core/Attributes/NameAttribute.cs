@@ -5,11 +5,18 @@ using System;
 
 namespace Coddee.Attributes
 {
+    /// <summary>
+    /// Provides an alternative or simple name for a member
+    /// </summary>
     [AttributeUsage(AttributeTargets.All, AllowMultiple = true, Inherited = true)]
     public class NameAttribute : Attribute
     {
+        /// <summary>
+        /// The name
+        /// </summary>
         public string Value { get; }
 
+        /// <inheritdoc />
         public NameAttribute(string value)
         {
             Value = value;

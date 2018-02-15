@@ -6,10 +6,15 @@ using System.Text;
 
 namespace Coddee.Loggers
 {
+    /// <summary>
+    /// Base class for logging services.
+    /// </summary>
     public abstract class LoggerBase : ILogger
     {
+        /// <inheritdoc />
         public LogRecordTypes MinimumLevel { get; protected set; }
 
+        /// <inheritdoc />
         public virtual void Initialize(LogRecordTypes type)
         {
             MinimumLevel = type;
@@ -21,6 +26,7 @@ namespace Coddee.Loggers
         /// <param name="record"></param>
         protected abstract void CommitLog(LogRecord record);
 
+        /// <inheritdoc />
         public virtual void Log(LogRecord record)
         {
             if (record.Type >= MinimumLevel)
@@ -30,21 +36,25 @@ namespace Coddee.Loggers
             }
         }
 
+        /// <inheritdoc />
         public void Log(string source, string content)
         {
             Log(source, content, LogRecordTypes.Information);
         }
 
+        /// <inheritdoc />
         public void Log(string source, string content, DateTime date)
         {
             Log(source, content, LogRecordTypes.Information, date);
         }
 
+        /// <inheritdoc />
         public void Log(string source, string content, LogRecordTypes type)
         {
             Log(source, content, type, DateTime.Now);
         }
 
+        /// <inheritdoc />
         public void Log(string source, string content, LogRecordTypes type, DateTime date)
         {
             Log(new LogRecord
@@ -56,11 +66,13 @@ namespace Coddee.Loggers
             });
         }
 
+        /// <inheritdoc />
         public void Log(string source, Exception exception)
         {
             Log(source, exception, DateTime.Now);
         }
 
+        /// <inheritdoc />
         public void Log(string source, Exception exception, DateTime date)
         {
             Log(new LogRecord
@@ -73,7 +85,10 @@ namespace Coddee.Loggers
             });
         }
 
+        /// <inheritdoc />
         public event EventHandler<LogRecord> LogRecieved;
+
+        /// <inheritdoc />
         public void SetLogLevel(LogRecordTypes logLevel)
         {
 

@@ -6,11 +6,15 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
+using Coddee;
+using Coddee.Collections;
 using Coddee.Services;
 using Coddee.Services.ApplicationSearch;
 using Coddee.WPF;
 using HR.Clients.WPF.Companies;
 using HR.Clients.WPF.States;
+using HR.Data.Models;
+using HR.Data.Repositories;
 
 namespace HR.Clients.WPF.Main
 {
@@ -52,6 +56,20 @@ namespace HR.Clients.WPF.Main
             set { SetProperty(ref this._companiesViewModel, value); }
         }
 
+        private AsyncObservableCollection<State> _states;
+        public AsyncObservableCollection<State> States
+        {
+            get { return _states; }
+            set { SetProperty(ref _states, value); }
+        }
+
+        private AsyncObservableCollection<State> _selectedStates;
+        public AsyncObservableCollection<State> SelectedStates
+        {
+            get { return _selectedStates; }
+            set { SetProperty(ref _selectedStates, value); }
+        }
+
         private string _username;
         public string Username
         {
@@ -65,7 +83,9 @@ namespace HR.Clients.WPF.Main
             {
                 StatesViewModel = await InitializeViewModel<StatesViewModel>();
                 CompaniesViewModel = await InitializeViewModel<CompaniesViewModel>();
-
+                States = await GetRepository<IStateRepository>().GetItems().ToAsyncObservableCollection();
+                SelectedStates = new AsyncObservableCollection<State>();
+                SelectedStates.CollectionChanged += SelectedStates_CollectionChanged                ;
                 var shellVM = Resolve<IDefaultShellViewModel>();
                 var applicationSearch = Resolve<IApplicationSearchService>();
 
@@ -87,14 +107,19 @@ namespace HR.Clients.WPF.Main
                     shellVM.SetToolbarContent(searchView);
                 });
                 Text = null;
-                _toast.ShowToast("Start",ToastType.Information);
+                _toast.ShowToast("Start", ToastType.Information);
                 IsVisible = 2;
-              
+
             }
             catch (Exception e)
             {
                 LogError(e);
             }
+        }
+
+        private void SelectedStates_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+
         }
 
         private void NavigateTo(object sender, SearchItem e)

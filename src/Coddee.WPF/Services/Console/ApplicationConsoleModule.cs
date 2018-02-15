@@ -6,9 +6,13 @@ using System.Threading.Tasks;
 
 namespace Coddee.Services.ApplicationConsole
 {
+    /// <summary>
+    /// A module that provide the <see cref="IApplicationConsole"/> services.
+    /// </summary>
     [Module(BuiltInModules.ApplicationConsole)]
     public class ApplicationConsoleModule : IModule
     {
+        /// <inheritdoc/>
         public Task Initialize(IContainer container)
         {
             container.RegisterInstance<IConsoleCommandParser, ConsoleCommandParser>();

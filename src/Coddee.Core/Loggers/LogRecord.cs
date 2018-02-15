@@ -5,18 +5,46 @@ using System;
 
 namespace Coddee.Loggers
 {
+    /// <summary>
+    /// Log record cause
+    /// </summary>
     public enum LogRecordTypes
     {
+        /// <summary>
+        /// A detailed Debug information
+        /// </summary>
         Debug,
+
+        /// <summary>
+        /// General information about the application.
+        /// </summary>
         Information,
+
+        /// <summary>
+        /// A warning that may prevent an error.
+        /// </summary>
         Warning,
+
+        /// <summary>
+        /// Error in some operation.
+        /// </summary>
         Error
     }
 
+    /// <summary>
+    /// A log record.
+    /// </summary>
     public class LogRecord
     {
 
+        /// <summary>
+        /// The record date.
+        /// </summary>
         public DateTime Date { get; set; }
+        
+        /// <summary>
+        /// The type of information.
+        /// </summary>
         public LogRecordTypes Type { get; set; }
 
         /// <summary>

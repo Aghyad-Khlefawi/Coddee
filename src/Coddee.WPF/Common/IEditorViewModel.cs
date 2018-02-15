@@ -15,6 +15,7 @@ namespace Coddee.WPF
         string FullTitle { get; }
 
         void Add();
+        void Clear();
         void Cancel();
         Task Save();
         void Show();

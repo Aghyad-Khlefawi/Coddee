@@ -10,6 +10,9 @@ namespace HR.Data.LinqToSQL.Repositories
     [Repository(typeof(IStateRepository))]
     public class StateRepository : ReadOnlyHRRepositoryBase<DB.State, State, int>, IStateRepository
     {
-        
+        public StateRepository()
+        {
+            
+        }
     }
 }

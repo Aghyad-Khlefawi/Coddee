@@ -7,15 +7,38 @@ using System.Reflection;
 
 namespace Coddee
 {
+    /// <summary>
+    /// The result of Diff operation
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <typeparam name="TKey"></typeparam>
     public class Diff<T, TKey> where T : IUniqueObject<TKey>
     {
+        /// <summary>
+        /// The items added to the collection
+        /// </summary>
         public IEnumerable<T> Added { get; set; }
+
+
+        /// <summary>
+        /// The items deleted from the collection
+        /// </summary>
         public IEnumerable<T> Deleted { get; set; }
+
+        /// <summary>
+        /// The items edited in the collection
+        /// </summary>
         public IEnumerable<T> Edited { get; set; }
     }
 
-    public class Diff
+    /// <summary>
+    /// A static class that provides the functionality of comparing objects changes.
+    /// </summary>
+    public static class Diff
     {
+        /// <summary>
+        /// Compare to collections changes.
+        /// </summary>
         public static Diff<T, TKey> DiffCollections<T, TKey>(IEnumerable<T> original, IEnumerable<T> edited) where T : IUniqueObject<TKey>
         {
             var editedItems = new List<T>();
@@ -35,6 +58,7 @@ namespace Coddee
                 Edited = editedItems
             };
         }
+
         private static bool IsItemEdited<T, TKey>(T original, T editedItem) where T : IUniqueObject<TKey>
         {
             if (original == null && editedItem == null)

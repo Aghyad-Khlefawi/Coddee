@@ -17,6 +17,7 @@ namespace Coddee.AppBuilder
         private const string _eventsSource = "BuildActionsCoordinator";
         private readonly ILogger _logger;
 
+        /// <inheritdoc />
         public BuildActionsCoordinator(ILogger logger)
         {
             _logger = logger;

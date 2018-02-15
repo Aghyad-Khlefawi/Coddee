@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Coddee.Attributes;
 using Coddee.Data;
 using HR.Data.Models;
 

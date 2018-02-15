@@ -1,4 +1,7 @@
-﻿using System;
+﻿// Copyright (c) Aghyad khlefawi. All rights reserved.  
+// Licensed under the MIT License. See LICENSE file in the project root for full license information.  
+
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,20 +24,30 @@ namespace Coddee.Services
         }
     }
 
-
+    /// <summary>
+    /// A service that handles localizing strings.
+    /// </summary>
     public class LocalizationManager : ILocalizationManager
     {
         private static LocalizationManager _defaultLocalizationManager;
 
+        /// <summary>
+        /// Set the default localization manager for the application.
+        /// </summary>
+        /// <param name="manager"></param>
         public static void SetDefaultLocalizationManager(LocalizationManager manager)
         {
             _defaultLocalizationManager = manager;
         }
 
+        /// <summary>
+        /// Get the default localization manager of the application.
+        /// </summary>
         public static LocalizationManager DefaultLocalizationManager => _defaultLocalizationManager ??
                                                                         (_defaultLocalizationManager =
                                                                             new LocalizationManager());
 
+        /// <inheritdoc />
         public LocalizationManager()
         {
             _localziationValues = new Dictionary<string, Dictionary<string, string>>();
@@ -43,11 +56,18 @@ namespace Coddee.Services
         }
 
         private ILogger _logger;
+
+        /// <inheritdoc />
         public event EventHandler<string> CultureChanged;
+
+        /// <inheritdoc />
         public string this[string key]
+
         {
             get { return GetValue(key); }
         }
+
+        /// <inheritdoc />
         public string DefaultCulture { get; set; }
 
         private readonly Dictionary<string, Dictionary<string, string>> _localziationValues;
@@ -55,6 +75,7 @@ namespace Coddee.Services
         private readonly ConcurrentBag<BoundLocalizationObject> _customBoundObjects;
 
 
+        /// <inheritdoc />
         public void SetCulture(string newCulture)
         {
             DefaultCulture = newCulture;
@@ -96,6 +117,7 @@ namespace Coddee.Services
             return null;
         }
 
+        /// <inheritdoc />
         public string BindValue<T>(T item, Expression<Func<T, object>> property, string key, string culture = null)
         {
             var currentValue = GetValue(key, culture);
@@ -108,13 +130,15 @@ namespace Coddee.Services
 
             if (!_boundObjects.ContainsKey(key))
                 _boundObjects.TryAdd(key, new List<BoundLocalizationObject>());
-            List<BoundLocalizationObject> objects;
-            if (_boundObjects.TryGetValue(key, out objects))
+            if (_boundObjects.TryGetValue(key, out var objects))
                 objects.Add(boundValue);
             boundValue.SetValue(currentValue);
             return currentValue;
         }
 
+       /// <summary>
+       /// Bind a property to localized values.
+       /// </summary>
         public string BindCustomValue<T>(T item,
                                          string property,
                                          Dictionary<string, string> values,
@@ -133,12 +157,14 @@ namespace Coddee.Services
             return currentValue;
         }
 
+        /// <inheritdoc />
         public void Initialize(IContainer container)
         {
             if (container.IsRegistered<ILogger>())
                 _logger = container.Resolve<ILogger>();
         }
 
+        /// <inheritdoc />
         public void AddValues(Dictionary<string, Dictionary<string, string>> values)
         {
             foreach (var value in values)
@@ -155,6 +181,7 @@ namespace Coddee.Services
             }
         }
 
+        /// <inheritdoc />
         public string GetValue(string key, string culture = null)
         {
             if (string.IsNullOrEmpty(culture))

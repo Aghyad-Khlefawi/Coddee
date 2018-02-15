@@ -5,32 +5,44 @@ using System;
 
 namespace Coddee
 {
-   public class CoddeeException:Exception
+    /// <summary>
+    /// A general purpose exception that provides a code to identify the error
+    /// </summary>
+    public class CoddeeException : Exception
     {
+        /// <inheritdoc />
         public CoddeeException()
         {
-            
+
         }
+
+        /// <inheritdoc />
         public CoddeeException(Exception ex)
             : base(ex.Message, ex)
         {
         }
 
+        /// <inheritdoc />
         public CoddeeException(int code)
         {
             Code = code;
         }
 
+        /// <inheritdoc />
         public CoddeeException(int code, string message) : base(message)
         {
             Code = code;
         }
 
+        /// <inheritdoc />
         public CoddeeException(int code, string message, Exception inner) : base(message, inner)
         {
             Code = code;
         }
 
+        /// <summary>
+        /// An error code
+        /// </summary>
         public int Code { get; set; }
     }
 }

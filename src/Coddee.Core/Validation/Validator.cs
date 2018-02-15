@@ -3,6 +3,18 @@
 
 namespace Coddee.Validation
 {
+    /// <summary>
+    /// A validation delegate
+    /// </summary>
+    /// <param name="obj">The object that needs validation.</param>
+    /// <returns>The validation result.</returns>
     public delegate bool Validator(object obj);
+
+
+    /// <summary>
+    /// A validation delegate
+    /// </summary>
+    /// <param name="obj">The object that needs validation.</param>
+    /// <returns>The validation result.</returns>
     public delegate bool Validator<TTarget>(TTarget obj);
 }

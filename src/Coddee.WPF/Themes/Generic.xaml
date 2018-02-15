@@ -1200,8 +1200,8 @@
                             BorderThickness="{TemplateBinding BorderThickness}">
                         <Grid>
                             <ContentPresenter Content="{TemplateBinding Child}"/>
-                                <Path Margin="0 -1 -1 0"  Visibility="{TemplateBinding HasWarning,Converter={StaticResource BoolToVisibilityConverter}}"  Data="M233,173l169.5,169.5V173H233z M356.2,185.1l-1.5,57.9H346l-1.7-57.9H356.2z M357,261	c-0.4,0.9-0.9,1.7-1.6,2.3c-0.7,0.7-1.4,1.2-2.3,1.6c-0.9,0.4-1.9,0.6-2.9,0.6c-1,0-2-0.2-2.9-0.6s-1.7-0.9-2.4-1.6	c-0.7-0.7-1.2-1.4-1.6-2.3c-0.4-0.9-0.6-1.9-0.6-2.9s0.2-2,0.6-2.9c0.4-0.9,0.9-1.7,1.6-2.4c0.7-0.7,1.5-1.2,2.4-1.6	c0.9-0.4,1.9-0.6,2.9-0.6c1,0,2,0.2,2.9,0.6c0.9,0.4,1.7,0.9,2.3,1.6c0.7,0.7,1.2,1.5,1.6,2.4c0.4,0.9,0.6,1.9,0.6,2.9	S357.4,260.1,357,261z" Fill="{StaticResource WarningColor}" Stretch="Uniform" HorizontalAlignment="Right" Height="20" VerticalAlignment="Top" ToolTip="{TemplateBinding Message}"/>
-                                <Path Margin="0 -1 -1 0"  Visibility="{TemplateBinding HasError,Converter={StaticResource BoolToVisibilityConverter}}"  Data="M233,173l169.5,169.5V173H233z M370.6,251.9l-13.9-23.1l-14,23.1H333l19-29.2l-17.5-28h9.2l13.1,21.5	l13.2-21.5h9l-17.5,27.6l19,29.6H370.6z" Fill="{StaticResource ErrorColor}" Stretch="Uniform" HorizontalAlignment="Right" Height="20" VerticalAlignment="Top" ToolTip="{TemplateBinding Message}"/>
+                            <Path Margin="0 -1 -1 0"  Visibility="{TemplateBinding HasWarning,Converter={StaticResource BoolToVisibilityConverter}}"  Data="M233,173l169.5,169.5V173H233z M356.2,185.1l-1.5,57.9H346l-1.7-57.9H356.2z M357,261	c-0.4,0.9-0.9,1.7-1.6,2.3c-0.7,0.7-1.4,1.2-2.3,1.6c-0.9,0.4-1.9,0.6-2.9,0.6c-1,0-2-0.2-2.9-0.6s-1.7-0.9-2.4-1.6	c-0.7-0.7-1.2-1.4-1.6-2.3c-0.4-0.9-0.6-1.9-0.6-2.9s0.2-2,0.6-2.9c0.4-0.9,0.9-1.7,1.6-2.4c0.7-0.7,1.5-1.2,2.4-1.6	c0.9-0.4,1.9-0.6,2.9-0.6c1,0,2,0.2,2.9,0.6c0.9,0.4,1.7,0.9,2.3,1.6c0.7,0.7,1.2,1.5,1.6,2.4c0.4,0.9,0.6,1.9,0.6,2.9	S357.4,260.1,357,261z" Fill="{StaticResource WarningColor}" Stretch="Uniform" HorizontalAlignment="Right" Height="20" VerticalAlignment="Top" ToolTip="{TemplateBinding Message}"/>
+                            <Path Margin="0 -1 -1 0"  Visibility="{TemplateBinding HasError,Converter={StaticResource BoolToVisibilityConverter}}"  Data="M233,173l169.5,169.5V173H233z M370.6,251.9l-13.9-23.1l-14,23.1H333l19-29.2l-17.5-28h9.2l13.1,21.5	l13.2-21.5h9l-17.5,27.6l19,29.6H370.6z" Fill="{StaticResource ErrorColor}" Stretch="Uniform" HorizontalAlignment="Right" Height="20" VerticalAlignment="Top" ToolTip="{TemplateBinding Message}"/>
                         </Grid>
                     </Border>
                 </ControlTemplate>
@@ -1221,6 +1221,78 @@
                         <Button Width="40" DockPanel.Dock="Right"  Content="..." Command="{Binding RelativeSource={RelativeSource TemplatedParent},Path=BrowseCommand}"/>
                         <Label VerticalContentAlignment="Center"  Margin="5 0" Content="{TemplateBinding FileName}"/>
                     </DockPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type local:MultiSelect}">
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Background" Value="White"/>
+        <Setter Property="BorderBrush" Value="{x:Static SystemColors.ActiveBorderBrush}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:MultiSelect}">
+                    <Grid>
+                        <Border    Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}">
+                            <DockPanel>
+                                <Button Name="PART_OpenButton" Style="{x:Null}"
+                                            Cursor="Hand"
+                                        Width="20"
+                                            DockPanel.Dock="Right">
+                                    <Button.Template>
+                                        <ControlTemplate>
+                                            <Border Background="White">
+                                                <Path
+                                                    Style="{StaticResource Shape_Arrow_Down}"    
+                                                    Fill="DarkGray"
+                                                        Margin="5"
+                                                        Width="8"/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Button.Template>
+                                </Button>
+                                <TextBox
+                                        Text="{TemplateBinding Content}"
+                                        Width="Auto"
+                                        BorderThickness="0"
+                                        IsReadOnly="True" />
+                            </DockPanel>
+                        </Border>
+                        <Popup Placement="Bottom"
+                                   x:Name="PART_Popup"
+                                   StaysOpen="False" 
+                                   PlacementTarget="{Binding ElementName=PART_RootBorder}"
+                                   Width="{TemplateBinding ActualWidth}">
+                            <Border Background="{TemplateBinding Background}"
+                                        BorderBrush="{TemplateBinding BorderBrush}"
+                                        BorderThickness="1">
+                                <DockPanel>
+                                    <Grid DockPanel.Dock="Top">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="1*"/>
+                                            <ColumnDefinition Width="1"/>
+                                            <ColumnDefinition Width="1*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Button Name="PART_AllButton">All</Button>
+                                        <Border Background="{TemplateBinding BorderBrush}" Width="1" Grid.Column="1"/>
+                                        <Button Name="PART_AllNone" Grid.Column="2">None</Button>
+                                    </Grid>
+                                    <Border Height="1" Background="{TemplateBinding BorderBrush}"/>
+                                    <ItemsControl Style="{StaticResource VirtualizingItemsControl}" Height="150"
+                                                      ItemsSource="{Binding RelativeSource={RelativeSource TemplatedParent},Path=Selectables}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <CheckBox Content="{Binding Title}" IsChecked="{Binding IsSelected}"/>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </DockPanel>
+                            </Border>
+                        </Popup>
+                    </Grid>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

@@ -14,17 +14,6 @@ namespace Coddee.Services.Navigation
 {
     public class NavigationService : ViewModelBase<NavigationServiceView>, INavigationService
     {
-        public NavigationService()
-        {
-            
-        }
-
-        public NavigationService(IEventDispatcher eventDispatcher,IViewModelsManager viewModelsManager)
-        {
-            _eventDispatcher = eventDispatcher;
-            _viewModelsManager = viewModelsManager;
-        }
-
 
         private bool _showTitles;
         public bool ShowTitles
@@ -66,14 +55,12 @@ namespace Coddee.Services.Navigation
         {
             NavigationItems.Add(navigationItem);
             if (!navigationItem.DestinationResolved)
-                navigationItem.SetDestination((IPresentable)_viewModelsManager.CreateViewModel(navigationItem.DestinationType,null));
+                navigationItem.SetDestination((IPresentable)_vmManager.CreateViewModel(navigationItem.DestinationType,null));
             navigationItem.NavigationRequested += NavigationItem_NavigationRequested;
             navigationItem.Initialize();
         }
 
         private AsyncObservableCollection<INavigationItem> _navigationItems;
-        private readonly IEventDispatcher _eventDispatcher;
-        private readonly IViewModelsManager _viewModelsManager;
         public AsyncObservableCollection<INavigationItem> NavigationItems
         {
             get { return _navigationItems; }

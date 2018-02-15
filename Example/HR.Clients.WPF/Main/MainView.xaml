@@ -12,23 +12,26 @@
              d:DesignHeight="300">
     <UserControl.Resources>
         <local:MainViewModel x:Key="designData" />
-
+        
     </UserControl.Resources>
-    <controls:BusyIndicator IsBusy="{Binding IsBusy}" >
-        <DockPanel d:DataContext="{StaticResource designData}"
-                   Background="WhiteSmoke">
-            <controls:TabsPanel Padding="5"
-                                HeaderForeground="{StaticResource ApplicationAccentColor}"
-                                Margin="5">
-                <controls:TabsPanelItem Header="Companies and Employees"
-                                        Presentable="{Binding CompaniesViewModel}">
-                    <controls:ViewModelPresenter ViewModel="{Binding CompaniesViewModel}" />
-                </controls:TabsPanelItem>
+    <controls:BusyIndicator IsBusy="{Binding IsBusy}">
+        <Grid>
+           <DockPanel d:DataContext="{StaticResource designData}"
+                       Background="WhiteSmoke">
+                <controls:TabsPanel Padding="5"
+                                    HeaderForeground="{StaticResource ApplicationAccentColor}"
+                                    Margin="5">
+                    <controls:TabsPanelItem Header="Companies and Employees"
+                                            Presentable="{Binding CompaniesViewModel}">
+                        <controls:ViewModelPresenter ViewModel="{Binding CompaniesViewModel}" />
+                    </controls:TabsPanelItem>
 
-                <controls:TabsPanelItem Header="{controls:Localize States}"
-                                        Presentable="{Binding StatesViewModel}" />
-            </controls:TabsPanel>
-            
-        </DockPanel>
+                    <controls:TabsPanelItem Header="{controls:Localize States}"
+                                            Presentable="{Binding StatesViewModel}" />
+                </controls:TabsPanel>
+
+            </DockPanel>
+
+        </Grid>
     </controls:BusyIndicator>
 </UserControl>

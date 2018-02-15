@@ -7,9 +7,13 @@ using Coddee.Services;
 
 namespace Coddee.Modules
 {
+    /// <summary>
+    /// Register the <see cref="IEventDispatcher"/> service
+    /// </summary>
     [Module(BuiltInModules.EventDispatcher)]
     public class EventDispatcherServiceModule : IModule
     {
+        /// <inheritdoc />
         public Task Initialize(IContainer container)
         {
             container.RegisterInstance<IEventDispatcher, EventDispatcher>();

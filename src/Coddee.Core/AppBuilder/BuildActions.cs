@@ -3,11 +3,16 @@
 
 namespace Coddee.AppBuilder
 {
-   public class BuildActionsKeys
+    /// <summary>
+    /// Static class that contains the application build steps keys
+    /// </summary>
+    public static class BuildActionsKeys
     {
+#pragma warning disable 1591
         public const string Logger = nameof(Logger);
         public const string ConfigFile = nameof(ConfigFile);
         public const string Mapper = nameof(Mapper);
+        public const string RepositoryManager = nameof(RepositoryManager);
         public const string LinqRepository = nameof(LinqRepository);
         public const string RESTRepository = nameof(RESTRepository);
         public const string MongoRepository = nameof(MongoRepository);
@@ -28,5 +33,6 @@ namespace Coddee.AppBuilder
         public const string RegisterDefaultModules = nameof(RegisterDefaultModules);
         public const string ConfigureGlobalVariabls = nameof(ConfigureGlobalVariabls);
         public const string ConsoleMain = nameof(ConsoleMain);
+#pragma warning restore 1591
     }
 }

@@ -13,8 +13,6 @@ using Coddee.WPF;
 using Coddee.WPF.Commands;
 using System.Diagnostics;
 using System.Reflection;
-using System.Windows.Forms;
-using KeyEventArgs = System.Windows.Input.KeyEventArgs;
 
 namespace Coddee.Services.ApplicationConsole
 {
@@ -23,6 +21,7 @@ namespace Coddee.Services.ApplicationConsole
     /// </summary>
     public class ApplicationConsoleService : ViewModelBase<ApplicationConsoleView>, IApplicationConsole
     {
+        /// <param name="parser"><see cref="IConsoleCommandParser"/> service</param>
         public ApplicationConsoleService(IConsoleCommandParser parser)
         {
             _logger = new StringLogger();
@@ -68,10 +67,11 @@ namespace Coddee.Services.ApplicationConsole
             WriteToConsole(obj);
         }
 
+        
+        private bool _showConsole;
         /// <summary>
         /// Specify the console visibility 
         /// </summary>
-        private bool _showConsole;
         public bool ShowConsole
         {
             get { return _showConsole; }
@@ -79,6 +79,9 @@ namespace Coddee.Services.ApplicationConsole
         }
 
         private string _consoleContent;
+        /// <summary>
+        /// The content displayed in the console.
+        /// </summary>
         public string ConsoleContent
         {
             get { return _consoleContent; }
@@ -87,12 +90,18 @@ namespace Coddee.Services.ApplicationConsole
 
 
         private string _currentCommand;
+        /// <summary>
+        /// The current command that the user is writing.
+        /// </summary>
         public string CurrentCommand
         {
             get { return _currentCommand; }
             set { SetProperty(ref _currentCommand, value); }
         }
 
+        /// <summary>
+        /// Execute the current command
+        /// </summary>
         public ICommand ExecuteCommand => new RelayCommand(Execute);
 
         /// <summary>
@@ -147,7 +156,6 @@ namespace Coddee.Services.ApplicationConsole
         /// <summary>
         /// Initialize the console
         /// </summary>
-        /// <param name="shell"></param>
         public void Initialize(ContentControl shell, LogRecordTypes logLevel)
         {
             _logger.Initialize(logLevel);
@@ -167,7 +175,6 @@ namespace Coddee.Services.ApplicationConsole
             grid.Children.Add(GetView());
 
             //Sets the Shell KeyDown event handler to toggle the console visibility
-            //when Ctrl+F12 are pressed
             shell.KeyDown += (sender, args) =>
             {
                 if (_toggleCondition(args))
@@ -280,7 +287,7 @@ namespace Coddee.Services.ApplicationConsole
                 e.Handled = false;
                 return;
             }
-            var temp = Screen.AllScreens.ElementAtOrDefault(index);
+            var temp = System.Windows.Forms.Screen.AllScreens.ElementAtOrDefault(index);
             if (temp == null)
             {
                 e.Result.Add($"The value '{indexStr}' is invalid for the /i argument.");
@@ -411,6 +418,7 @@ namespace Coddee.Services.ApplicationConsole
                 }
         }
 
+        /// <inheritdoc/>
         public void Execute(ConsoleCommand command)
         {
             Execute(command.Name);

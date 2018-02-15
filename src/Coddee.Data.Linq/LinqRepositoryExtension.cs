@@ -9,6 +9,44 @@ using Coddee.Loggers;
 
 namespace Coddee.AppBuilder
 {
+    /// <summary>
+    /// Provides the required configurations to use Linq repositories.
+    /// </summary>
+    public class LinqInitializerConfig
+    {
+        /// <inheritdoc />
+        public LinqInitializerConfig(Func<IContainer, string> databaseConnection, string repositoriesAssembly)
+        {
+            DatabaseConnection = databaseConnection;
+            RepositoriesAssembly = repositoriesAssembly;
+        }
+
+        /// <summary>
+        /// Configuration object to be passed to the repositories
+        /// </summary>
+        public RepositoryConfigurations RepositoryConfigurations { get; set; }
+
+        /// <summary>
+        /// An action that will be executed if no connection was provided.
+        /// </summary>
+        public Action ConnectionStringNotFound { get; set; }
+
+        /// <summary>
+        /// A function that returns a valid SQL connection to the database.
+        /// </summary>
+        public Func<IContainer, string> DatabaseConnection { get; set; }
+
+        /// <summary>
+        /// The assembly name containing the repository
+        /// <remarks>Without extension</remarks>
+        /// </summary>
+        public string RepositoriesAssembly { get; set; }
+    }
+
+    
+    /// <summary>
+    /// Application builder extensions
+    /// </summary>
     public static class LinqRepositoryExtension
     {
         private const string EventsSource = "ApplicationBuilder";
@@ -17,41 +55,21 @@ namespace Coddee.AppBuilder
         /// <summary>
         /// Register LinQ repositories and adds a <see cref="LinqRepositoryInitializer"/> to the <see cref="IRepositoryManager"/>
         /// </summary>
-        public static IApplicationBuilder UseLinqRepositoryManager<TDBManager>(
+        public static IApplicationBuilder UseLinqRepositories<TDBManager>(
             this IApplicationBuilder builder,
-            Func<IContainer,string> GetSQLDBConnection,
-            string repositoriesAssembly,
-            Action ConnectionStringNotFound = null,
-            RepositoryConfigurations config = null)
+            LinqInitializerConfig config)
             where TDBManager : ILinqDBManager, new()
         {
 
             builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.LinqRepositoryBuildAction((container) =>
             {
-                var connectionString = GetSQLDBConnection(container);
+                var connectionString = config.DatabaseConnection(container);
                 if (string.IsNullOrEmpty(connectionString))
                 {
-                    ConnectionStringNotFound();
+                    config.ConnectionStringNotFound?.Invoke(); 
                     return;
                 }
-                CreateRepositoryManager<TDBManager>( container, connectionString, repositoriesAssembly, config);
-            }));
-            return builder;
-        }
-
-        /// <summary>
-        /// Register LinQ repositories and adds a <see cref="LinqRepositoryInitializer"/> to the <see cref="IRepositoryManager"/>
-        /// </summary>
-        public static IApplicationBuilder UseLinqRepositoryManager<TDBManager>(
-            this IApplicationBuilder builder,
-            string connectionString,
-            string repositoriesAssembly,
-            RepositoryConfigurations config = null)
-            where TDBManager : ILinqDBManager, new()
-        {
-            builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.LinqRepositoryBuildAction((container) =>
-            {
-                CreateRepositoryManager<TDBManager>(container, connectionString, repositoriesAssembly, config);
+                CreateRepositoryManager<TDBManager>(container, connectionString, config.RepositoriesAssembly, config.RepositoryConfigurations);
             }));
             return builder;
         }
@@ -61,7 +79,7 @@ namespace Coddee.AppBuilder
         {
 
             if (!container.IsRegistered<IRepositoryManager>())
-                 container.RegisterInstance<IRepositoryManager,RepositoryManager>();
+                throw new ApplicationBuildException("RepositoryManager is not registered. call UseSingletonRepositoryManager or UseTransientRepositoryManager to configuration the repository manager.");
 
             var repositoryManager = container.Resolve<IRepositoryManager>();
 
@@ -74,15 +92,15 @@ namespace Coddee.AppBuilder
 
             var logger = container.Resolve<ILogger>();
             container.RegisterInstance<IRepositoryManager>(repositoryManager);
-            
-                foreach (var repository in repositoryManager.GetRepositories())
-                {
-                    logger.Log(EventsSource,
-                                $"Registering repository of type {repository.GetType().Name}",
-                                LogRecordTypes.Debug);
-                    container.RegisterInstance(repository.ImplementedInterface, repository);
-                }
+
+            foreach (var repository in repositoryManager.GetRepositories())
+            {
+                logger.Log(EventsSource,
+                            $"Registering repository of type {repository.GetType().Name}",
+                            LogRecordTypes.Debug);
+                container.RegisterInstance(repository.ImplementedInterface, repository);
+            }
         }
-        
+
     }
 }

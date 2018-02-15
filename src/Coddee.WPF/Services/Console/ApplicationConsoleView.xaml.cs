@@ -10,6 +10,7 @@ namespace Coddee.Services.ApplicationConsole
     /// </summary>
     public partial class ApplicationConsoleView : UserControl
     {
+        /// <inheritdoc/>
         public ApplicationConsoleView()
         {
             InitializeComponent();

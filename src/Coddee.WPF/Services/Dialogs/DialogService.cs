@@ -81,7 +81,8 @@ namespace Coddee.Services.Dialogs
                                                       {
                                                           return false;
                                                       }
-                                                  }));
+                                                  })
+                                { Tag = ActionCommandTags.SaveCommand });
             return dialog;
         }
         public IDialog CreateDialog(IEditorViewModel editor, DialogOptions options)

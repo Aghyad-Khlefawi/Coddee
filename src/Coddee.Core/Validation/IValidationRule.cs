@@ -3,9 +3,19 @@
 
 namespace Coddee.Validation
 {
+    /// <summary>
+    /// The validation result type.
+    /// </summary>
     public enum ValidationType
     {
+        /// <summary>
+        /// falling the validation should cause an error
+        /// </summary>
         Error,
+
+        /// <summary>
+        /// falling the validation should cause a warning
+        /// </summary>
         Warning
     }
 

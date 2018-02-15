@@ -6,10 +6,17 @@ using System.Threading;
 
 namespace Coddee
 {
+    /// <summary>
+    /// Manages the UI thread for UI interactions.
+    /// </summary>
     public static class UISynchronizationContext
     {
         private static SynchronizationContext _context;
 
+        /// <summary>
+        /// Set the UI synchronization context.
+        /// </summary>
+        /// <param name="context"></param>
         public static void SetContext(SynchronizationContext context)
         {
             _context = context;

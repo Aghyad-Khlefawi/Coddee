@@ -3,8 +3,14 @@
 
 namespace Coddee
 {
+    /// <summary>
+    /// Static class that contains the common messages used in the library.
+    /// </summary>
     public static class DefaultMessages
     {
+        /// <summary>
+        /// The default validation message.
+        /// </summary>
         public static string ValidationMessage { get; set; } = "$Field$ is required.";
     }
 }

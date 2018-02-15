@@ -7,9 +7,15 @@ using System.Threading.Tasks;
 
 namespace Coddee.Data
 {
+    /// <summary>
+    /// A configuration object that will be passed to the repository on initialization.
+    /// </summary>
     public class RepositoryConfigurations
     {
-        public string EncrpyionKey { get; set; }
+        /// <summary>
+        /// An encryption key that can be used to decrypt the data.
+        /// </summary>
+        public string EncryptionKey { get; set; }
     }
 
     /// <summary>
@@ -22,6 +28,9 @@ namespace Coddee.Data
         /// </summary>
         int RepositoryType { get; }
 
+        /// <summary>
+        /// Indicates that the repository is initialized and ready to use.
+        /// </summary>
         bool Initialized { get; }
 
         /// <summary>
@@ -40,8 +49,13 @@ namespace Coddee.Data
         /// <summary>
         /// Set the sync service to be used in the repository
         /// </summary>
-        /// <param name="syncService"></param>
         void SetSyncService(IRepositorySyncService syncService,bool sendSyncRequests = true);
+
+        /// <summary>
+        /// Sets the context object that may change the repository behavior according to the context
+        /// <remarks>The context may change on each call to the repository.</remarks>
+        /// </summary>
+        void SetContext(object context);
     }
 
     /// <summary>

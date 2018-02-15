@@ -10,6 +10,7 @@ namespace Coddee.Validation
     /// </summary>
     public class ValidationResult
     {
+        /// <inheritdoc />
         public ValidationResult()
         {
             Errors = new List<string>();
@@ -31,9 +32,19 @@ namespace Coddee.Validation
         /// </summary>
         public List<string> Warnings { get; set; }
 
-
+        /// <summary>
+        /// Checks if that result has no errors or warnings
+        /// </summary>
         public bool IsValidWithoutWarrnings => !HasErrors && !HasWarnings;
+
+        /// <summary>
+        /// Checks if the result has no errors
+        /// </summary>
         public bool HasErrors => Errors == null || Errors.Count > 0;
+
+        /// <summary>
+        /// Checks if the result has no warnings
+        /// </summary>
         public bool HasWarnings => Warnings == null || Warnings.Count > 0;
 
         /// <summary>

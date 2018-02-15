@@ -34,7 +34,7 @@ namespace Coddee.WPF
         {
             
         }
-
+        
         public EditorFieldAttribute(ClearAction clearAction)
         {
             ClearAction = clearAction;
@@ -44,6 +44,9 @@ namespace Coddee.WPF
         /// The action to be taken on <see cref="EditorViewModelBase{TEditor,TView,TModel}.Clear"/>
         /// </summary>
         public ClearAction ClearAction { get; set; }
+        /// <summary>
+        /// When set to true an error validation rule will be created for the field.
+        /// </summary>
         public bool IsRequired { get; set; }
     }
 }

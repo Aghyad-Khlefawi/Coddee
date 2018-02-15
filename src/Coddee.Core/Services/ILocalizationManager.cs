@@ -45,7 +45,12 @@ namespace Coddee.Services
         /// <param name="item">The object that contains the property.</param>
         /// <param name="property">The property to bind.</param>
         /// <param name="key">The value key.</param>
+        /// <param name="culture">The targeted culture</param>
         string BindValue<T>(T item, Expression<Func<T, object>> property, string key, string culture = null);
+
+        /// <summary>
+        /// Initialize the service to use.
+        /// </summary>
         void Initialize(IContainer container);
         
         /// <summary>
