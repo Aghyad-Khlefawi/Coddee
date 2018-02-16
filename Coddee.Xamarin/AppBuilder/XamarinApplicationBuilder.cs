@@ -23,7 +23,7 @@ namespace Coddee.Xamarin.AppBuilder
         private readonly LogAggregator _logger;
         public BuildActionsCoordinator BuildActionsCoordinator { get; }
 
-        protected XamarinApplicationBuilder(IApplication app, IContainer container)
+        public XamarinApplicationBuilder(IApplication app, IContainer container)
         {
             _app = app;
             _container = container;
@@ -66,7 +66,7 @@ namespace Coddee.Xamarin.AppBuilder
             BuildActionsCoordinator.AddAction(DefaultBuildActions.RegisterDefaultModulesBuildAction(container =>
             {
                 var applicationModulesManager = container.RegisterInstance<IApplicationModulesManager, ApplicationModulesManager>();
-                applicationModulesManager.RegisterModule(CoreModuleDefinitions.Modules.ToArray());
+                applicationModulesManager.RegisterModule(CoreModuleDefinitions.Modules.Concat(XamarinModuleDefinitions.Modules).ToArray());
                 applicationModulesManager.InitializeAutoModules().GetAwaiter().GetResult();
             }));
 
@@ -74,8 +74,6 @@ namespace Coddee.Xamarin.AppBuilder
             if (!BuildActionsCoordinator.BuildActionExists(BuildActionsKeys.ConfigureGlobalVariabls))
                 ConfigureGlobalVariables();
 
-            if (!BuildActionsCoordinator.BuildActionExists(BuildActionsKeys.ConfigFile))
-                this.UseConfigurationFile();
 
             SetupViewModelBase();
 

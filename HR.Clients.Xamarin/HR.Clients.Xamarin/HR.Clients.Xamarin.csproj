@@ -5,14 +5,17 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CommonServiceLocator" Version="2.0.2" />
-    <PackageReference Include="Unity" Version="5.6.0" />
+    <PackageReference Include="Unity" Version="4.0.1" />
     <PackageReference Include="Xamarin.Forms" Version="2.5.0.122203" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Coddee.Xamarin\Coddee.Xamarin.csproj" />
-    <ProjectReference Include="..\..\src\Coddee.Unity\Coddee.Unity.csproj" />
+    <Reference Include="Unity.Abstractions">
+      <HintPath>..\..\packages\Unity.5.6.0\lib\netstandard1.0\Unity.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Xamarin.Forms.Core">
+      <HintPath>C:\Users\feras\.nuget\packages\xamarin.forms\2.5.0.122203\lib\netstandard1.0\Xamarin.Forms.Core.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <ItemGroup>
