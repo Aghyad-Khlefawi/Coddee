@@ -2,17 +2,12 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Windows.Input;
 using Coddee;
 using Coddee.Collections;
-using Coddee.Services;
-using Coddee.Services.Dialogs;
 using Coddee.WPF;
 using Coddee.WPF.Collections;
 using Coddee.WPF.Commands;
-using Coddee.WPF.Services.Dialogs;
 using HR.Clients.WPF.Companies.Editors;
 using HR.Data.Models;
 using HR.Data.Repositories;
@@ -21,11 +16,6 @@ namespace HR.Clients.WPF.Companies
 {
     public class CompaniesViewModel : ViewModelBase<CompaniesView>
     {
-        public CompaniesViewModel()
-        {
-            EditCompanyCommand = CreateReactiveCommand(this, EditCompany)
-                .ObserveProperty(e => e.SelectedEmployee);
-        }
         private CompanyEditorViewModel _companyEditor;
         private EmployeeEditorViewModelBase _employeeEditor;
 
@@ -34,6 +24,17 @@ namespace HR.Clients.WPF.Companies
         {
             get { return _companies; }
             set { SetProperty(ref this._companies, value); }
+        }
+
+        private Company _selectedCompany;
+        public Company SelectedCompany
+        {
+            get { return _selectedCompany; }
+            set
+            {
+                SetProperty(ref _selectedCompany, value);
+                CompanySelected(value);
+            }
         }
 
         private AsyncObservableCollectionView<Employee> _employees;
@@ -48,53 +49,96 @@ namespace HR.Clients.WPF.Companies
             get { return _selectedEmployee; }
             set { SetProperty(ref this._selectedEmployee, value); }
         }
-        public ICommand AddCompanyCommand => new RelayCommand(AddCompany);
-        public ICommand EditCompanyCommand;
-        public ICommand DeleteCompanyCommand => new RelayCommand(DeleteCompany);
 
-        public ICommand AddEmployeeCommand => new RelayCommand(AddEmployee);
-        public ICommand EditEmployeeCommand => new RelayCommand(EditEmployee);
-        public ICommand DeleteEmployeeCommand => new RelayCommand(DeleteEmployee);
+        private IReactiveCommand _addCompanyCommand;
+        public IReactiveCommand AddCompanyCommand
+        {
+            get { return _addCompanyCommand ?? (_addCompanyCommand = CreateReactiveCommand(AddCompany)); }
+            set { SetProperty(ref _addCompanyCommand, value); }
+        }
+
+        private IReactiveCommand _editCompanyCommand;
+        public IReactiveCommand EditCompanyCommand
+        {
+            get
+            {
+                return _editCompanyCommand ?? (_editCompanyCommand = CreateReactiveCommand(this, EditCompany)
+                                                   .ObserveProperty(e => e.SelectedCompany));
+            }
+            set { SetProperty(ref _editCompanyCommand, value); }
+        }
+
+        private IReactiveCommand _deleteCompanyCommand;
+        public IReactiveCommand DeleteCompanyCommand
+        {
+            get
+            {
+                return _deleteCompanyCommand ?? (_deleteCompanyCommand = CreateReactiveCommand(this, DeleteCompany)
+                                                     .ObserveProperty(e => e.SelectedCompany));
+            }
+            set { SetProperty(ref _deleteCompanyCommand, value); }
+        }
+
+
+        private IReactiveCommand _addEmployeeCommand;
+        public IReactiveCommand AddEmployeeCommand
+        {
+            get { return _addEmployeeCommand ?? (_addEmployeeCommand = CreateReactiveCommand(AddEmployee)); }
+            set { SetProperty(ref _addEmployeeCommand, value); }
+        }
+
+        private IReactiveCommand _editEmployeeCommand;
+        public IReactiveCommand EditEmployeeCommand
+        {
+            get { return _editEmployeeCommand ?? (_editEmployeeCommand = CreateReactiveCommand(EditEmployee)); }
+            set { SetProperty(ref _editEmployeeCommand, value); }
+        }
+
+        private IReactiveCommand _deleteEmployeeCommand;
+        public IReactiveCommand DeleteEmployeeCommand
+        {
+            get { return _deleteEmployeeCommand ?? (_deleteEmployeeCommand = CreateReactiveCommand(DeleteEmployee)); }
+            set { SetProperty(ref _deleteEmployeeCommand, value); }
+        }
+
 
         private void DeleteEmployee()
         {
             //TODO update
-            //Resolve<IDialogService>()
-            //    .ShowConfirmation($"Are you sure you want to delete '{Employees.SelectedItem.FullName}'?",
-            //                      async () =>
-            //                      {
-            //                          await Resolve<IEmployeeRepository>().DeleteItem(Employees.SelectedItem);
-            //                          Employees.Remove(Employees.SelectedItem);
-            //                      });
+            _dialogService
+                .ShowConfirmation($"Are you sure you want to delete '{Employees.SelectedItem.FullName}'?",
+                                  async () =>
+                                  {
+                                      await Resolve<IEmployeeRepository>().DeleteItem(Employees.SelectedItem);
+                                      Employees.Remove(Employees.SelectedItem);
+                                  });
         }
 
         private void EditEmployee()
         {
-            _employeeEditor.Edit(Employees.SelectedItem, Companies.SelectedItem);
+            _employeeEditor.Edit(Employees.SelectedItem, SelectedCompany);
+            _employeeEditor.Show();
         }
 
         private void AddEmployee()
         {
-            _employeeEditor.Add(Companies.SelectedItem);
-            var dialog = Resolve<IDialogService>().CreateDialog("Add employee", _employeeEditor, DialogOptions.DefaultMinimizable);
-            dialog.Show();
+            _employeeEditor.Add(SelectedCompany);
+            _employeeEditor.Show();
         }
         private void DeleteCompany()
         {
-            Resolve<IDialogService>()
-               .CreateConfirmation($"Are you sure you want to delete '{Companies.SelectedItem.Name}'?",
-                                 async () =>
-                                 {
-                                     await Resolve<ICompanyRepository>().DeleteItem(Companies.SelectedItem);
-                                     Companies.Remove(Companies.SelectedItem);
-                                 }).Show();
+            _dialogService.CreateConfirmation($"Are you sure you want to delete '{SelectedCompany.Name}'?",
+                                  async () =>
+                                  {
+                                      await Resolve<ICompanyRepository>().DeleteItem(SelectedCompany);
+                                      Companies.Remove(SelectedCompany);
+                                  }).Show();
         }
 
         private void EditCompany()
         {
-            _companyEditor.Edit(Companies.SelectedItem);
-            //TODO update
-            Resolve<IDialogService>().CreateDialog("Edit company", _companyEditor).Show();
+            _companyEditor.Edit(SelectedCompany);
+            _companyEditor.Show();
         }
 
         private void AddCompany()
@@ -109,14 +153,14 @@ namespace HR.Clients.WPF.Companies
 
             Companies = AsyncObservableDictionaryView<Guid, Company>.Create(CompanySearch, await companyRepo.GetDetailedItems());
             Employees = AsyncObservableCollectionView<Employee>.Create(EmployeeSearch);
-
-            Companies.SelectedItemChanged += CompanySelected;
-
-            _companyEditor = await InitializeViewModel<CompanyEditorViewModel>();
+            
+            _companyEditor = CreateViewModel<CompanyEditorViewModel>();
             _companyEditor.Saved += CompanySaved;
 
-            _employeeEditor = await InitializeViewModel<EmployeeEditorViewModelBase>();
+            _employeeEditor = CreateViewModel<EmployeeEditorViewModelBase>();
             _employeeEditor.Saved += EmployeeSaved;
+
+            await InitializeChildViewModels();
 
         }
 
@@ -138,7 +182,7 @@ namespace HR.Clients.WPF.Companies
             ToastSuccess();
         }
 
-        private async void CompanySelected(object sender, Company e)
+        private async void CompanySelected(Company e)
         {
             if (e != null)
             {
@@ -149,7 +193,7 @@ namespace HR.Clients.WPF.Companies
 
         private void EmployeeSaved(object sernder, EditorSaveArgs<Employee> args)
         {
-            if (args.Item.CompanyID == Companies.SelectedItem.ID)
+            if (args.Item.CompanyID == SelectedCompany.ID)
             {
                 Employees.Update(args.OperationType, args.Item);
             }
