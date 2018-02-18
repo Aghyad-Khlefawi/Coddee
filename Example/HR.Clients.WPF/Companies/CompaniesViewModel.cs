@@ -2,6 +2,7 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Coddee;
@@ -106,7 +107,11 @@ namespace HR.Clients.WPF.Companies
         {
              var companyRepo = Resolve<ICompanyRepository>();
 
-            Companies = AsyncObservableDictionaryView<Guid, Company>.Create(CompanySearch, await companyRepo.GetDetailedItems());
+            Companies = AsyncObservableDictionaryView<Guid, Company>.Create(CompanySearch, await companyRepo.GetDetailedItems(new List<Guid>
+            {
+                Guid.Empty,
+                Guid.Empty,
+            }));
             Employees = AsyncObservableCollectionView<Employee>.Create(EmployeeSearch);
 
             Companies.SelectedItemChanged += CompanySelected;

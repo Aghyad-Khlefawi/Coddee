@@ -227,7 +227,7 @@ namespace Coddee.AspNet
             var args = new List<object>();
             if (param.Any())
             {
-                if (req.Method == "GET" || req.Method == "DELETE")
+                if (req.Method == HttpMethods.Get || req.Method == HttpMethods.Delete)
                 {
                     foreach (var parameterInfo in param)
                     {
@@ -236,9 +236,16 @@ namespace Coddee.AspNet
                         {
                             if (queryParam.Key.ToLower() == parameterInfo.Name)
                             {
-                                var val = $"\"{queryParam.Value}\"";
-                                var json = JToken.Parse(val);
-                                args.Add(json.ToObject(parameterInfo.Type));
+                                if (parameterInfo.Type == typeof(DateTime))
+                                {
+                                    args.Add(DateTime.Parse(queryParam.Value));
+                                }
+                                else
+                                {
+                                    var val = $"{queryParam.Value}";
+                                    var json = JToken.Parse(val);
+                                    args.Add(json.ToObject(parameterInfo.Type));
+                                }
                                 found = true;
                                 break;
                             }

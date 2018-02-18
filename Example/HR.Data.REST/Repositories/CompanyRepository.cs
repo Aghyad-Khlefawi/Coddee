@@ -8,6 +8,7 @@ using Coddee.Data;
 using Coddee.Data.REST;
 using HR.Data.Models;
 using HR.Data.Repositories;
+using Newtonsoft.Json;
 
 namespace HR.Data.REST.Repositories
 {
@@ -19,9 +20,9 @@ namespace HR.Data.REST.Repositories
         {
             
         }
-        public Task<IEnumerable<Company>> GetDetailedItems()
+        public Task<IEnumerable<Company>> GetDetailedItems(List<Guid> temp)
         {
-            return GetFromController<IEnumerable<Company>>(nameof(GetDetailedItems));
+            return GetFromController<IEnumerable<Company>>(nameof(GetDetailedItems),new KeyValuePair<string, string>(nameof(temp),JsonConvert.SerializeObject(temp)));
         }
     }
 }
