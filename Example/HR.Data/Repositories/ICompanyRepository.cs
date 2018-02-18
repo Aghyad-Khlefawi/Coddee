@@ -15,6 +15,6 @@ namespace HR.Data.Repositories
         [Authorize]
         new Task<IEnumerable<Company>> GetItems();
 
-        Task<IEnumerable<Company>> GetDetailedItems(List<Guid> temp);
+        Task<IEnumerable<Company>> GetDetailedItems();
     }
 }

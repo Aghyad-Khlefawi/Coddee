@@ -236,15 +236,36 @@ namespace Coddee.AspNet
                         {
                             if (queryParam.Key.ToLower() == parameterInfo.Name)
                             {
-                                if (parameterInfo.Type == typeof(DateTime))
+                                try
                                 {
-                                    args.Add(DateTime.Parse(queryParam.Value));
+                                    if (parameterInfo.Type == typeof(DateTime))
+                                    {
+                                        args.Add(DateTime.Parse(queryParam.Value));
+                                    }
+                                    else if (parameterInfo.Type == typeof(Guid))
+                                    {
+                                        args.Add(Guid.Parse(queryParam.Value));
+                                    }
+                                    else if (parameterInfo.Type == typeof(bool))
+                                    {
+                                        args.Add(bool.Parse(queryParam.Value));
+                                    }
+                                    else if (parameterInfo.Type == typeof(int))
+                                    {
+                                        args.Add(int.Parse(queryParam.Value));
+                                    }
+                                    else if (parameterInfo.Type == typeof(string))
+                                    {
+                                        args.Add(queryParam.Value.ToString());
+                                    }
+                                    else
+                                    {
+                                        args.Add(JsonConvert.DeserializeObject(queryParam.Value, parameterInfo.Type));
+                                    }
                                 }
-                                else
+                                catch (Exception)
                                 {
-                                    var val = $"{queryParam.Value}";
-                                    var json = JToken.Parse(val);
-                                    args.Add(json.ToObject(parameterInfo.Type));
+                                    args.Add(JsonConvert.DeserializeObject($"\"{queryParam.Value}\"", parameterInfo.Type));
                                 }
                                 found = true;
                                 break;

@@ -31,7 +31,7 @@ namespace HR.Data.LinqToSQL.Repositories
             return await Execute(db => { return _mapper.Map<Company>(db.CompaniesViews.First(e => e.ID == res.ID)); });
         }
 
-        public Task<IEnumerable<Company>> GetDetailedItems(List<Guid> temp)
+        public Task<IEnumerable<Company>> GetDetailedItems()
         {
             return Execute(db => _mapper.MapCollection<Company>(db.CompaniesViews.ToList()));
         }

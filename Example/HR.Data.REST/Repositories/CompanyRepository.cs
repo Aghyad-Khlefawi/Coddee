@@ -16,13 +16,13 @@ namespace HR.Data.REST.Repositories
     public class CompanyRepository : CRUDRESTRepositoryBase<Models.Company, Guid>, ICompanyRepository
     {
         public CompanyRepository()
-            :base("Company")
+            : base("Company")
         {
-            
+
         }
-        public Task<IEnumerable<Company>> GetDetailedItems(List<Guid> temp)
+        public Task<IEnumerable<Company>> GetDetailedItems()
         {
-            return GetFromController<IEnumerable<Company>>(nameof(GetDetailedItems),new KeyValuePair<string, string>(nameof(temp),JsonConvert.SerializeObject(temp)));
+            return GetFromController<IEnumerable<Company>>(nameof(GetDetailedItems));
         }
     }
 }

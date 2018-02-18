@@ -105,13 +105,9 @@ namespace HR.Clients.WPF.Companies
 
         protected override async Task OnInitialization()
         {
-             var companyRepo = Resolve<ICompanyRepository>();
+            var companyRepo = Resolve<ICompanyRepository>();
 
-            Companies = AsyncObservableDictionaryView<Guid, Company>.Create(CompanySearch, await companyRepo.GetDetailedItems(new List<Guid>
-            {
-                Guid.Empty,
-                Guid.Empty,
-            }));
+            Companies = AsyncObservableDictionaryView<Guid, Company>.Create(CompanySearch, await companyRepo.GetDetailedItems());
             Employees = AsyncObservableCollectionView<Employee>.Create(EmployeeSearch);
 
             Companies.SelectedItemChanged += CompanySelected;

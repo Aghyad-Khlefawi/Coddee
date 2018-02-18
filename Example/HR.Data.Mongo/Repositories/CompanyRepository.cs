@@ -41,7 +41,7 @@ namespace HR.Data.Mongo.Repositories
             return item;
         }
 
-        public async Task<IEnumerable<Company>> GetDetailedItems(List<Guid> temp)
+        public async Task<IEnumerable<Company>> GetDetailedItems()
         {
             return (await _collection.Find(e => true).ToListAsync()).Select(e =>
             {
