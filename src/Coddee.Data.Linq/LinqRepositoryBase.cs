@@ -20,9 +20,15 @@ namespace Coddee.Data.LinqToSQL
     public class LinqRepositoryBase<TDataContext> : RepositoryBase, ILinqRepository
         where TDataContext : DataContext
     {
+        /// <inheritdoc />
         public override int RepositoryType { get; } = (int)RepositoryTypes.Linq;
 
+        /// <summary>
+        /// <see cref="LinqDBManager{TDataContext}"/> object responsible for creating data contexts.
+        /// </summary>
         protected LinqDBManager<TDataContext> _dbManager;
+
+
         /// <summary>
         /// Initialize the repository
         /// </summary>
@@ -67,12 +73,16 @@ namespace Coddee.Data.LinqToSQL
             });
         }
 
+        /// <summary>
+        /// Create an sql transaction object.
+        /// </summary>
         protected DbTransaction CreateTransaction(TDataContext context)
         {
             if (context.Connection.State != ConnectionState.Open)
                 context.Connection.Open();
             return context.Transaction = context.Connection.BeginTransaction();
         }
+
         /// <summary>
         /// Execute a function on the database context and then return a value
         /// </summary>
@@ -156,6 +166,11 @@ namespace Coddee.Data.LinqToSQL
             }
         }
 
+        /// <summary>
+        /// Execute a function on the database context and then return a value
+        /// The action will be wrapped with a transaction 
+        /// The caller is reasonable for calling transaction.Commit
+        /// </summary>
         protected Task<TResult> TransactionalExecute<TResult>(TDataContext context, Func<TDataContext, DbTransaction, TResult> action)
         {
             return Task.Run(() =>
@@ -336,14 +351,20 @@ namespace Coddee.Data.LinqToSQL
         }
     }
 
+    /// <summary>
+    /// Base implementation for a LinqToSQL repository that interact with a specific SQL table
+    /// </summary>
     public class LinqRepositoryBase<TDataContext, TTable, TModel, TKey> :
-        LinqRepositoryBase<TDataContext, TTable> where TDataContext : DataContext
+        LinqRepositoryBase<TDataContext, TTable>, IRepository<TModel, TKey> where TDataContext : DataContext
         where TTable : class, new()
         where TModel : IUniqueObject<TKey>, new()
     {
         private readonly string _identifier;
+
+        /// <inheritdoc />
         public event EventHandler<RepositoryChangeEventArgs<TModel>> ItemsChanged;
 
+        /// <inheritdoc />
         public LinqRepositoryBase()
         {
             _identifier = typeof(TModel).Name;
@@ -568,6 +589,8 @@ namespace Coddee.Data.LinqToSQL
                   return item;
               });
         }
+
+        /// <inheritdoc />
         public virtual async Task<TModel> UpdateItem(TModel item)
         {
             using (var context = _dbManager.CreateContext())
@@ -578,11 +601,18 @@ namespace Coddee.Data.LinqToSQL
                 return res;
             }
         }
+
+        /// <summary>
+        /// perform additional insert operations.
+        /// </summary>
         protected virtual void AditionalUpdate(TModel item, TTable tableItem, TDataContext db, DbTransaction transaction)
         {
 
         }
 
+        /// <summary>
+        /// Do the update operation to the database.
+        /// </summary>
         protected virtual TTable UpdateToDB(TModel item, TDataContext db)
         {
             var temp = GetItemByPrimaryKey(db, item.GetKey);
@@ -620,11 +650,17 @@ namespace Coddee.Data.LinqToSQL
              });
         }
 
+        /// <summary>
+        /// perform additional insert operations.
+        /// </summary>
         protected virtual void AdditionalInsert(TModel item, TTable tableItem, TDataContext db, DbTransaction transaction)
         {
 
         }
 
+        /// <summary>
+        /// Insert the item to the database.
+        /// </summary>
         protected virtual TTable InsertToDB(TModel item, TDataContext db)
         {
             var tableitem = new TTable();
@@ -661,6 +697,9 @@ namespace Coddee.Data.LinqToSQL
             });
         }
 
+        /// <summary>
+        /// Delete the object from the database.
+        /// </summary>
         protected virtual TModel DeleteFromDB(TKey ID, TDataContext db)
         {
             var oldItem = GetItemByPrimaryKey(db, ID);
