@@ -65,7 +65,7 @@ namespace HR.Clients.WPF
                             //Use a singleton repository manager that will keep
                             //using the same instance of the repositories for the 
                             //entire life of the application 
-                            .UseTransientRepositoryManager()
+                            .UseSingletonRepositoryManager()
 
                             //Add Rest repositories to the repository manager
                             .UseRESTRepositories(config => new RESTInitializerConfig("http://localhost:15297/dapi/", null, "HR.Data.REST"));
