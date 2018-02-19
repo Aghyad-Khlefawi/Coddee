@@ -76,6 +76,7 @@ namespace HR.Data.Mongo.Repositories
                     .Set(e => e.Employees[-1].LastName, item.LastName);
 
             await _companyCollection.UpdateOneAsync(e => e.ID == item.CompanyID && e.Employees.Any(em=>em.ID == item.ID), update);
+            ItemsChanged?.Invoke(this,new RepositoryChangeEventArgs<Employee>(OperationType.Edit,item));
             return item;
         }
 
@@ -84,6 +85,7 @@ namespace HR.Data.Mongo.Repositories
             item.ID = Guid.NewGuid();
             await _companyCollection.UpdateOneAsync(e => e.ID == item.CompanyID,
                                                     Builders<Company>.Update.Push(e => e.Employees, item));
+            ItemsChanged?.Invoke(this,new RepositoryChangeEventArgs<Employee>(OperationType.Add,item));
             return item;
         }
 
@@ -92,6 +94,7 @@ namespace HR.Data.Mongo.Repositories
             var item = await this[ID];
             await _companyCollection.FindOneAndUpdateAsync(e => e.ID == item.CompanyID,
                                                     Builders<Company>.Update.Pull(e => e.Employees, item));
+            ItemsChanged?.Invoke(this,new RepositoryChangeEventArgs<Employee>(OperationType.Delete,item));
         }
 
         public Task DeleteItem(Employee item)

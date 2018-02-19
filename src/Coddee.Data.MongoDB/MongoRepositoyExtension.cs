@@ -8,10 +8,22 @@ using Coddee.Loggers;
 
 namespace Coddee.AppBuilder
 {
+    /// <summary>
+    /// Extensions for the application builder.
+    /// </summary>
     public static class MongoRepositoyExtension
     {
         private const string EventsSource = "ApplicationBuilder";
 
+        /// <summary>
+        /// Adds MogonRepositories to the repository manager
+        /// </summary>
+        /// <param name="builder"></param>
+        /// <param name="connection">The database connection string</param>
+        /// <param name="databaseName">The database name</param>
+        /// <param name="repositoriesAssembly">The assembly that contains the repositories</param>
+        /// <param name="registerTheRepositoresInContainer">If set to true the repositories will be registered in the dependency container.</param>
+        /// <returns></returns>
         public static IApplicationBuilder UseMongoDBRepositories(
             this IApplicationBuilder builder,
             string connection,
