@@ -8,13 +8,23 @@ using System.Threading;
 
 namespace Coddee.Windows
 {
-    public class Performance
+    /// <summary>
+    /// Helper class for getting informations related to the machine performance.
+    /// </summary>
+    public static class Performance
     {
+        /// <summary>
+        /// returns an object that contains information about the current state of the machine memory and processes.
+        /// </summary>
+        /// <param name="PerformanceInformation"></param>
+        /// <param name="Size"></param>
+        /// <returns></returns>
         [DllImport("psapi.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool GetPerformanceInfo([Out] out PerformanceInformation PerformanceInformation, [In] int Size);
 
         [StructLayout(LayoutKind.Sequential)]
+#pragma warning disable 1591
         public struct PerformanceInformation
         {
             public int Size;
@@ -32,6 +42,7 @@ namespace Coddee.Windows
             public int ProcessCount;
             public int ThreadCount;
         }
+#pragma warning restore 1591
 
         /// <summary>
         /// Returns the amount of free RAM on the machine in MB

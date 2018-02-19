@@ -11,9 +11,24 @@ namespace Coddee.Windows
     /// </summary>
     public class Drive
     {
+        /// <summary>
+        /// The title of the volume.
+        /// </summary>
         public string VolumeName { get; set; }
+        
+        /// <summary>
+        /// The type of the file system used in the drive.
+        /// </summary>
         public string FileSystemName { get; set; }
+
+        /// <summary>
+        /// The drive serial number.
+        /// </summary>
         public uint SerialNumber { get; set; }
+
+        /// <summary>
+        /// The assigned drive letter.
+        /// </summary>
         public string DriveLetter { get; set; }
 
         [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
@@ -28,7 +43,7 @@ namespace Coddee.Windows
             int nFileSystemNameSize);
 
         /// <summary>
-        /// Returns a storage drive information by i'ts letter
+        /// Returns a storage drive information by it's letter
         /// </summary>
         /// <param name="driveLetter"></param>
         /// <returns></returns>

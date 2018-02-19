@@ -14,7 +14,7 @@ namespace Coddee.ModuleDefinitions
         /// <summary>
         /// The modules types.
         /// </summary>
-        public static Type[] Modules = new[]
+        public static Type[] Modules =
         {
            typeof(EventDispatcherServiceModule),
            typeof(GlobalVariablesServiceModule),

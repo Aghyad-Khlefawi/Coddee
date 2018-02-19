@@ -8,7 +8,10 @@ using System.DirectoryServices.AccountManagement;
 
 namespace Coddee.Windows
 {
-    public class Users
+    /// <summary>
+    /// Helper class for working with windows users.
+    /// </summary>
+    public static class Users
     {
         /// <summary>
         /// Returns the local user accounts on this machines
@@ -30,8 +33,8 @@ namespace Coddee.Windows
         /// <summary>
         /// Change a local user password
         /// </summary>
-        /// <param name="username">The taget user</param>
-        /// <param name="newPassword">The new pasword</param>
+        /// <param name="username">The target user</param>
+        /// <param name="newPassword">The new password</param>
         public static void ChangeUserPassword(string username, string newPassword)
         {
             var path = $"WinNT://{Environment.MachineName},computer";
@@ -47,7 +50,7 @@ namespace Coddee.Windows
         /// </summary>
         /// <param name="username">Username</param>
         /// <param name="password">Password</param>
-        /// <param name="group">A gounp name to assigne the user to</param>
+        /// <param name="group">A group name to assign the user to</param>
         /// <param name="displayName">The display name</param>
         /// <param name="description">Description</param>
         /// <param name="passwordExpires">Password expires</param>

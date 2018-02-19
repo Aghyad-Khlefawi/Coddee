@@ -3,6 +3,8 @@
 
 namespace Coddee.AppBuilder
 {
+
+    /// <inheritdoc />
     public interface IConsoleApplicationBuilder:IApplicationBuilder
     {
 

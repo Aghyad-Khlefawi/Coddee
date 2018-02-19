@@ -6,9 +6,13 @@ using System.Threading.Tasks;
 
 namespace Coddee.Services.Configuration
 {
+    /// <summary>
+    /// Register the <see cref="IConfigurationManager"/> service.
+    /// </summary>
     [Module(BuiltInModules.ConfigurationManager)]
     public class ConfigurationManagerModule:IModule
     {
+        /// <inheritdoc />
         public Task Initialize(IContainer container)
         {
             container.RegisterInstance<IConfigurationManager, ConfigurationManager>();

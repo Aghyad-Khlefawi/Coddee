@@ -13,8 +13,10 @@ namespace Coddee.Data.LinqToSQL
         private readonly ILinqDBManager _dbManager;
         private readonly IObjectMapper _mapper;
         private readonly RepositoryConfigurations _config;
+        /// <inheritdoc />
         public int RepositoryType { get; } = (int)RepositoryTypes.Linq;
 
+        /// <inheritdoc />
         public LinqRepositoryInitializer(ILinqDBManager dbManager,
                                          IObjectMapper mapper,
                                          RepositoryConfigurations config = null)
@@ -24,6 +26,7 @@ namespace Coddee.Data.LinqToSQL
             _config = config;
         }
 
+        /// <inheritdoc />
         public void InitializeRepository(IRepositoryManager repositoryManager, IRepository repository, Type implementedInterface)
         {
             ((ILinqRepository)repository).Initialize(_dbManager, repositoryManager, _mapper, implementedInterface, _config);

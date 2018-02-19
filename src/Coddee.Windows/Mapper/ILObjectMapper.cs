@@ -16,6 +16,7 @@ namespace Coddee.Windows.Mapper
     /// </summary>
     public class ILObjectsMapper : IObjectMapper
     {
+        /// <inheritdoc />
         public ILObjectsMapper()
         {
             _mappings = new Dictionary<Type, Dictionary<Type, ILMappingInfo>>();
@@ -189,6 +190,7 @@ namespace Coddee.Windows.Mapper
                 InvalidOperationException($"The mapping from {sourceType.Name} to {targetType.Name} was not defined or the target type doesn't have a parameterless constructor");
         }
 
+        /// <inheritdoc />
         public void RegisterMap<TSource, TTarget>()
         {
             RegisterAutoMap<TSource, TTarget>();
@@ -506,7 +508,9 @@ namespace Coddee.Windows.Mapper
         }
     }
 
-
+    /// <summary>
+    /// Provides the information to map between two objects using IL methods
+    /// </summary>
     public class ILMappingInfo
     {
         internal Func<object, object> SingleMapper { get; set; }
@@ -514,12 +518,23 @@ namespace Coddee.Windows.Mapper
         internal Action<object, object> ManualMapper { get; set; }
         internal Action<object, object> InstanceMapper { get; set; }
 
-        public Action<object, object> AdditionalMap { get; set; }
+        /// <summary>
+        /// Additional mapping action.
+        /// </summary>
+        public Action<object, object> AdditionalMap { get; private set; }
 
+        /// <summary>
+        /// Calls the <see cref="AdditionalMap"/> action.
+        /// </summary>
         public void ExecuteAdditionalMap(object source, object target)
         {
             AdditionalMap(source, target);
         }
+
+        /// <summary>
+        /// Sets the <see cref="AdditionalMap"/> action.
+        /// </summary>
+        /// <param name="map"></param>
         public void SetAdditionalMapping(Action<object, object> map)
         {
             AdditionalMap = map;
@@ -531,7 +546,7 @@ namespace Coddee.Windows.Mapper
         public void SetAdditionalMapping(Action<TSource, TTarget> map)
         {
             if (map != null)
-                AdditionalMap = (source, target) => map((TSource)source, (TTarget)target);
+                SetAdditionalMapping((source, target) => map((TSource)source, (TTarget)target));
         }
     }
 }

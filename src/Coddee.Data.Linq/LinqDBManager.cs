@@ -5,9 +5,20 @@ using System.Data.Linq;
 
 namespace Coddee.Data.LinqToSQL
 {
+    /// <summary>
+    /// An object responsible for creating an setting the connection of DataContext objects.
+    /// </summary>
     public interface ILinqDBManager
     {
+        /// <summary>
+        /// The database connection string.
+        /// </summary>
         string Connection { get; set; }
+
+        /// <summary>
+        /// Initialize the DbManager
+        /// </summary>
+        /// <param name="connection">The database connection string.</param>
         void Initialize(string connection);
     }
 
@@ -16,8 +27,10 @@ namespace Coddee.Data.LinqToSQL
     /// </summary>
     public abstract class LinqDBManager<TDataContext>: ILinqDBManager where TDataContext : DataContext
     {
+        /// <inheritdoc />
         public string Connection { get; set; }
 
+        /// <inheritdoc />
         public void Initialize(string connection)
         {
             Connection = connection;

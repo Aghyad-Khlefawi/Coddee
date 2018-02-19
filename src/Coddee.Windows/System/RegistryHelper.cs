@@ -9,10 +9,13 @@ using Microsoft.Win32;
 
 namespace Coddee.Windows
 {
+    /// <summary>
+    /// Helper class for working with the windows registry
+    /// </summary>
     public static class RegistryHelper
     {
         /// <summary>
-        /// Reads a reigtery object and try to converted to a POCO object
+        /// Reads a registry object and try to converted to a POCO object
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="keyPath"></param>
@@ -42,11 +45,8 @@ namespace Coddee.Windows
         }
 
         /// <summary>
-        /// Reads a reigtery object and returns it's values as a dictionary
+        /// Reads a registry object and returns it's values as a dictionary
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="keyPath"></param>
-        /// <returns></returns>
         public static Dictionary<string, string> ReadKeyValues(string keyPath)
         {
             var key = Registry.LocalMachine.OpenSubKey(keyPath);
@@ -71,20 +71,28 @@ namespace Coddee.Windows
             }
         }
     }
+
+    /// <summary>
+    /// An exception the occurs while dealing with windows registry keys.
+    /// </summary>
     public class RegistryKeyNotFoundException : Exception
     {
+        /// <inheritdoc />
         public RegistryKeyNotFoundException()
         {
         }
 
+        /// <inheritdoc />
         public RegistryKeyNotFoundException(string message) : base(message)
         {
         }
 
+        /// <inheritdoc />
         public RegistryKeyNotFoundException(string message, Exception innerException) : base(message, innerException)
         {
         }
 
+        /// <inheritdoc />
         protected RegistryKeyNotFoundException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }

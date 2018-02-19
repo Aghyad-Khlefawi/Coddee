@@ -19,11 +19,20 @@ namespace Coddee.Data.REST
     /// </summary>
     public abstract class RESTRepositoryBase : RepositoryBase, IRESTRepository
     {
+        /// <inheritdoc />
         public override int RepositoryType { get; } = (int)RepositoryTypes.REST;
 
+        /// <summary>
+        /// The http client that will make the requests to the server.
+        /// </summary>
         protected HttpClient _httpClient;
+
+        /// <summary>
+        /// An <see cref="Action"/> that will be executed in case an Unauthorized response was received.
+        /// </summary>
         protected Action _unauthorizedRequestHandler;
 
+        /// <inheritdoc />
         public void Initialize(HttpClient httpClient,
                                Action unauthorizedRequestHandler,
                                IRepositoryManager repositoryManager,
@@ -36,6 +45,7 @@ namespace Coddee.Data.REST
             Initialize(repositoryManager, mapper, implementedInterface, config);
         }
 
+        /// <inheritdoc />
         public void SetHttpClient(HttpClient httpClient)
         {
             _httpClient = httpClient;
@@ -79,6 +89,11 @@ namespace Coddee.Data.REST
             }
         }
 
+        /// <summary>
+        /// Handle responses with BadRequest response code.
+        /// </summary>
+        /// <param name="ex"></param>
+        /// <returns></returns>
         protected virtual Exception HandleBadRequest(string ex)
         {
             var exception = JsonConvert.DeserializeObject<APIException>(ex);
@@ -284,7 +299,6 @@ namespace Coddee.Data.REST
         /// <summary>
         /// Sends a Delete request
         /// </summary>
-        /// <typeparam name="T">The result type</typeparam>
         /// <param name="url">The request URL</param>
         /// <param name="id">The resource id</param>
         /// <returns></returns>
@@ -311,7 +325,6 @@ namespace Coddee.Data.REST
         /// <summary>
         /// Sends a Delete request
         /// </summary>
-        /// <typeparam name="T">The result type</typeparam>
         /// <param name="controller">The requested controller</param>
         /// <param name="action">The requested action</param>
         /// <param name="id">The resource id</param>
@@ -322,19 +335,33 @@ namespace Coddee.Data.REST
             return Delete($"{controller}/{action}", id);
         }
 
-
-        protected KeyValuePair<string, string> KeyValue(string name, object value)
+        /// <summary>
+        /// Helper function to convert an object to string
+        /// </summary>
+        /// <param name="name">The parameter name</param>
+        /// <param name="value">The parameter value</param>
+        /// <returns></returns>
+        protected virtual KeyValuePair<string, string> KeyValue(string name, object value)
         {
             return new KeyValuePair<string, string>(name, value.ToString());
         }
     }
 
-    public abstract class RESTRepositoryBase<TModel, TKey> : RESTRepositoryBase
+    /// <summary>
+    /// Base implementation for a REST repository that targets a specific Model type.
+    /// </summary>
+    /// <typeparam name="TModel"></typeparam>
+    /// <typeparam name="TKey"></typeparam>
+    public abstract class RESTRepositoryBase<TModel, TKey> : RESTRepositoryBase, IRepository<TModel, TKey>
         where TModel : IUniqueObject<TKey>
     {
+        /// <summary>
+        /// The sync service identifier for the model type.
+        /// </summary>
         protected readonly string _identifier;
 
 
+        /// <inheritdoc />
         protected RESTRepositoryBase()
         {
             _identifier = typeof(TModel).Name;
@@ -382,6 +409,7 @@ namespace Coddee.Data.REST
                 _syncService?.SyncItem(_identifier, new RepositorySyncEventArgs { Item = e.Item, OperationType = e.OperationType });
         }
 
+        /// <inheritdoc />
         public event EventHandler<RepositoryChangeEventArgs<TModel>> ItemsChanged;
     }
 
@@ -393,11 +421,15 @@ namespace Coddee.Data.REST
     public abstract class ReadOnlyRESTRepositoryBase<TModel, TKey> : RESTRepositoryBase<TModel, TKey>,
         IReadOnlyRepository<TModel, TKey> where TModel : IUniqueObject<TKey>
     {
+        /// <inheritdoc />
         protected ReadOnlyRESTRepositoryBase(string controllerName)
         {
             ControllerName = controllerName;
         }
 
+        /// <summary>
+        /// The name of the AspNet controller.
+        /// </summary>
         public string ControllerName { get; }
 
         /// <summary>
@@ -428,10 +460,12 @@ namespace Coddee.Data.REST
             return Get<T>(ControllerName, action, param);
         }
 
+        /// <inheritdoc />
         public Task<TModel> this[TKey index] =>
             GetFromController<TModel>(ApiCommonActions.GetItem,
                                       new KeyValuePair<string, string>("index", index.ToString()));
 
+        /// <inheritdoc />
         public Task<IEnumerable<TModel>> GetItems()
         {
             return GetFromController<IEnumerable<TModel>>(ApiCommonActions.GetItems);
@@ -448,6 +482,7 @@ namespace Coddee.Data.REST
         ICRUDRepository<TModel, TKey>
         where TModel : IUniqueObject<TKey>
     {
+        /// <inheritdoc />
         protected CRUDRESTRepositoryBase(string controllerName) : base(controllerName)
         {
         }
@@ -497,6 +532,7 @@ namespace Coddee.Data.REST
         }
 
 
+        /// <inheritdoc />
         public virtual async Task<TModel> UpdateItem(TModel item)
         {
             var res = await PutToController<TModel>(ApiCommonActions.UpdateItem, item);
@@ -504,6 +540,7 @@ namespace Coddee.Data.REST
             return res;
         }
 
+        /// <inheritdoc />
         public virtual async Task<TModel> InsertItem(TModel item)
         {
             var res = await PostToController<TModel>(ApiCommonActions.InsertItem, item);
@@ -511,6 +548,7 @@ namespace Coddee.Data.REST
             return res;
         }
 
+        /// <inheritdoc />
         public virtual async Task DeleteItemByKey(TKey ID)
         {
             var res = await this[ID];
@@ -518,6 +556,7 @@ namespace Coddee.Data.REST
             RaiseItemsChanged(this, new RepositoryChangeEventArgs<TModel>(OperationType.Delete, res, false));
         }
 
+        /// <inheritdoc />
         public virtual async Task DeleteItem(TModel item)
         {
             await DeleteItemByKey(item.GetKey);

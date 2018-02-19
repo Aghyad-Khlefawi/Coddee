@@ -9,10 +9,13 @@ using System.Net.Sockets;
 
 namespace Coddee.Windows
 {
+    /// <summary>
+    /// Helper class for getting information related to the Network.
+    /// </summary>
     public class Network
     {
         /// <summary>
-        /// Sends a wake on lan magic packet to an machine
+        /// Sends a wake on LAN magic packet to an machine
         /// </summary>
         /// <param name="mac">The machine mac address as a bytes array</param>
         public static void WakeOnLan(byte[] mac)
@@ -32,7 +35,7 @@ namespace Coddee.Windows
         }
 
         /// <summary>
-        /// Sends a wake on lan magic packet to an machine
+        /// Sends a wake on LAN magic packet to an machine
         /// </summary>
         /// <param name="mac">The machine mac address as a string</param>
         public static void WakeOnLan(string mac)
@@ -67,7 +70,7 @@ namespace Coddee.Windows
         }
 
         /// <summary>
-        /// Check if the current machine is connected to the internet
+        /// Check if the current machine is connected to the Internet
         /// </summary>
         /// <param name="testSite">A website to test the connection</param>
         public static bool CheckForInternetConnection(string testSite)
@@ -87,8 +90,8 @@ namespace Coddee.Windows
         }
 
         /// <summary>
-        /// Check if the current machine is connected to the internet,
-        /// The function uses www.google.com to check for internet 
+        /// Check if the current machine is connected to the Internet,
+        /// The function uses www.google.com to check for Internet 
         /// </summary>
         public static bool CheckForInternetConnection()
         {
@@ -110,7 +113,7 @@ namespace Coddee.Windows
         }
 
         /// <summary>
-        /// Returns a network adpater MAC address
+        /// Returns a network adapter MAC address
         /// </summary>
         /// <returns></returns>
         public static string GetMACAddress(string adapterName)

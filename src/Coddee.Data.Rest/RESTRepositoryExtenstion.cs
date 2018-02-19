@@ -51,6 +51,10 @@ namespace Coddee.AppBuilder
         /// </summary>
         public bool RegisterTheRepositoresInContainer { get; set; }
     }
+
+    /// <summary>
+    /// Builder extension for Rest repositories.
+    /// </summary>
     public static class RESTRepositoryExtenstion
     {
         private const string EventsSource = "ApplicationBuilder";
