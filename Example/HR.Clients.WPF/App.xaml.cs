@@ -49,31 +49,41 @@ namespace HR.Clients.WPF
                             //Use the IL mapper as the IObjectMapper
                             .UseILMapper()
 
-                             //Use the shell created  by the library with a login window
+                            //Use the shell created  by the library with a login window
                             .UseDefaultShellWithLogin<MainViewModel, LoginViewModel>()
 
-                             //Configure a navigation bar for the application
+                            //Configure a navigation bar for the application
                             .UseNavigation(HRNavigation.Navigations)
 
-                             //Use the toast service to display messages to the user.
+                            //Use the toast service to display messages to the user.
                             .UseToast()
                             .UseDialogs()
 
-                             //Use localization file for Arabic and English
+                            //Use localization file for Arabic and English
                             .UseLocalization("HR.Clients.WPF.Properties.Resources", "HR.Clients.WPF.exe", new[] { "ar-SY", "en-US" }, "ar-SY")
 
-                             //Use a singleton repository manager that will keep
-                             //using the same instance of the repositories for the 
-                             //entire life of the application 
-                            .UseSingletonRepositoryManager()
+                            //Use a singleton repository manager that will keep
+                            //using the same instance of the repositories for the 
+                            //entire life of the application 
+                            .UseTransientRepositoryManager()
 
-                             //Add Rest repositories to the repository manager
+                            //Add Rest repositories to the repository manager
                             .UseRESTRepositories(config => new RESTInitializerConfig("http://localhost:15297/dapi/", null, "HR.Data.REST"));
+
+                         //To use linq repositories you can change the last line to:
+                         //.UseLinqRepositories<HRDBManager>(new LinqInitializerConfig(GetDbConnection, "HR.Data.LinqToSQL"))
+
                      },
                      args);
 
             //Start the application
             base.OnStartup(args);
+        }
+
+        string GetDbConnection(IContainer container)
+        {
+            var dbLocation = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "DB"));
+            return $@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename={dbLocation}\HRDatabase.mdf;Integrated Security=True;Connect Timeout=30";
         }
     }
 }
