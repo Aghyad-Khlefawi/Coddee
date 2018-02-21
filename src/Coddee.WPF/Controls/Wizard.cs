@@ -574,8 +574,7 @@ namespace Coddee.WPF.Controls
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
-            var button = GetTemplateChild("PART_BUTTON") as Button;
-            if (button != null)
+            if (GetTemplateChild("PART_BUTTON") is Button button)
             {
                 button.Click += (sender, args) => Select();
             }

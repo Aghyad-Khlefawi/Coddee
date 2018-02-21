@@ -279,8 +279,7 @@ namespace Coddee.Services.ApplicationConsole
                 return;
             }
             var indexStr = e.Arguments["/i"];
-            int index;
-            if (!int.TryParse(indexStr, out index))
+            if (!int.TryParse(indexStr, out var index))
             {
                 e.Result
                     .Add($"The value '{indexStr}' is invalid for the /i argument, you need to specify an integer value.");

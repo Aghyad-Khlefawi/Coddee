@@ -42,8 +42,7 @@ namespace Coddee.WPF
         /// <inheritdoc />
         protected override void OnViewCreated(object view)
         {
-            var frameworkElement = view as FrameworkElement;
-            if (frameworkElement != null)
+            if (view is FrameworkElement frameworkElement)
                 frameworkElement.DataContext = this;
 
             base.OnViewCreated(view);
@@ -58,7 +57,7 @@ namespace Coddee.WPF
             return Application.Current.Dispatcher;
         }
 
-       
+
         /// <summary>
         /// Gets a repository by its interface
         /// </summary>
@@ -74,7 +73,7 @@ namespace Coddee.WPF
         /// </summary>
         public new static void SetContainer(IContainer container)
         {
-            
+
             if (_container.IsRegistered<IToastService>())
                 _toast = _container.Resolve<IToastService>();
 
@@ -125,7 +124,7 @@ namespace Coddee.WPF
             return DesignerProperties.GetIsInDesignMode(new DependencyObject());
         }
 
-       
+
         /// <summary>
         /// Finds an XAML resource by name
         /// </summary>
@@ -142,7 +141,7 @@ namespace Coddee.WPF
             return (T)Application.Current.TryFindResource(ResourceName);
         }
 
-       
+
         /// <summary>
         /// Create a <see cref="ReactiveCommand{TObserved}"/> observing this ViewModel
         /// </summary>
@@ -167,7 +166,7 @@ namespace Coddee.WPF
             return ReactiveCommand<T, TParam>.Create(obj, handler);
         }
 
-       
+
     }
 
     /// <summary>

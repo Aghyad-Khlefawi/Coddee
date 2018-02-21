@@ -63,9 +63,8 @@ namespace Coddee.WPF.Controls
 
         private static void OnPresentableSet(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var tablePanelItem = d as TabsPanelItem;
-            if (tablePanelItem != null && e.NewValue is IPresentable)
-                tablePanelItem.SetContentFromPresentable((IPresentable) e.NewValue);
+            if (d is TabsPanelItem tablePanelItem && e.NewValue is IPresentable)
+                tablePanelItem.SetContentFromPresentable((IPresentable)e.NewValue);
         }
 
         private void SetContentFromPresentable(IPresentable presentable)
@@ -75,20 +74,20 @@ namespace Coddee.WPF.Controls
 
         public IPresentable Presentable
         {
-            get { return (IPresentable) GetValue(PresentableProperty); }
+            get { return (IPresentable)GetValue(PresentableProperty); }
             set { SetValue(PresentableProperty, value); }
         }
 
         public string Header
         {
-            get { return (string) GetValue(HeaderProperty); }
+            get { return (string)GetValue(HeaderProperty); }
             set { SetValue(HeaderProperty, value); }
         }
 
 
         public object Content
         {
-            get { return (object) GetValue(ContentProperty); }
+            get { return (object)GetValue(ContentProperty); }
             set { SetValue(ContentProperty, value); }
         }
 
@@ -184,34 +183,34 @@ namespace Coddee.WPF.Controls
 
         public double MaxContentHeight
         {
-            get { return (double) GetValue(MaxContentHeightProperty); }
+            get { return (double)GetValue(MaxContentHeightProperty); }
             set { SetValue(MaxContentHeightProperty, value); }
         }
 
         public SolidColorBrush HeaderForeground
         {
-            get { return (SolidColorBrush) GetValue(HeaderForegroundProperty); }
+            get { return (SolidColorBrush)GetValue(HeaderForegroundProperty); }
             set { SetValue(HeaderForegroundProperty, value); }
         }
 
         public double TabsBarHeight
         {
-            get { return (double) GetValue(TabsBarHeightProperty); }
+            get { return (double)GetValue(TabsBarHeightProperty); }
             set { SetValue(TabsBarHeightProperty, value); }
         }
         public Thickness ItemsMargin
         {
-            get { return (Thickness) GetValue(ItemsMarginProperty); }
+            get { return (Thickness)GetValue(ItemsMarginProperty); }
             set { SetValue(ItemsMarginProperty, value); }
         }
         public SolidColorBrush ItemBackground
         {
-            get { return (SolidColorBrush) GetValue(ItemBackgroundProperty); }
+            get { return (SolidColorBrush)GetValue(ItemBackgroundProperty); }
             set { SetValue(ItemBackgroundProperty, value); }
         }
         public TabsPanelItemsCollection Items
         {
-            get { return (TabsPanelItemsCollection) GetValue(ItemsProperty); }
+            get { return (TabsPanelItemsCollection)GetValue(ItemsProperty); }
             set { SetValue(ItemsProperty, value); }
         }
 
@@ -242,7 +241,7 @@ namespace Coddee.WPF.Controls
             {
                 foreach (var item in e.NewItems)
                 {
-                    ((TabsPanelItem) item).ItemSelected += OnItemSelected;
+                    ((TabsPanelItem)item).ItemSelected += OnItemSelected;
                 }
                 if (CurrentTab == null && Items.Any())
                     Items[0].OnItemSelect();

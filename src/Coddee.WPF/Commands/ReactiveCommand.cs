@@ -18,18 +18,32 @@ namespace Coddee.WPF.Commands
     /// <typeparam name="TObserved">The observed object(ViewModel) Type</typeparam>
     public abstract class ReactiveCommandBase<TObserved> : IReactiveCommand<TObserved>
     {
+        /// <inheritdoc />
         protected ReactiveCommandBase(TObserved observedObject)
         {
             ObservedObject = observedObject;
             _observedProperties = new List<ObservedProperty<TObserved>>();
         }
 
+        /// <summary>
+        /// The object being bserved by the command.
+        /// </summary>
         public TObserved ObservedObject { get; }
 
+        /// <summary>
+        /// The properties that are observed.
+        /// </summary>
         protected readonly List<ObservedProperty<TObserved>> _observedProperties;
 
+        /// <summary>
+        /// Indicates whether the command can be executed.
+        /// </summary>
         protected bool _canExecute = true;
 
+        /// <summary>
+        /// Attach an event handler to the <see cref="INotifyPropertyChanged"/>
+        /// </summary>
+        /// <param name="observedObject"></param>
         protected virtual void AttachNotifyHandler(INotifyPropertyChanged observedObject)
         {
             observedObject.PropertyChanged += (sender, args) =>
@@ -45,12 +59,15 @@ namespace Coddee.WPF.Commands
 
 
 
+        /// <inheritdoc />
         public IReactiveCommand ObserveProperty(string propertyName, Validator validator)
         {
             _observedProperties.Add(new ObservedProperty<TObserved>(ObservedObject, propertyName, validator));
             UpdateCanExecute();
             return this;
         }
+        
+        /// <inheritdoc />
         public IReactiveCommand<TObserved> ObserveProperty<TProperty>(string propertyName, Validator<TProperty> validator)
         {
             _observedProperties.Add(new ObservedProperty<TObserved, TProperty>(ObservedObject, propertyName, validator));
@@ -58,6 +75,7 @@ namespace Coddee.WPF.Commands
             return this;
         }
 
+        /// <inheritdoc />
         public virtual void UpdateCanExecute()
 
         {
@@ -80,20 +98,24 @@ namespace Coddee.WPF.Commands
             });
         }
 
+        /// <inheritdoc />
         public bool CanExecute()
         {
             return _canExecute;
         }
 
+        /// <inheritdoc />
         public virtual bool CanExecute(object parameter)
         {
             return _canExecute;
         }
 
 
+        /// <inheritdoc />
         public abstract void Execute(object parameter);
 
 
+        /// <inheritdoc />
         public event EventHandler CanExecuteChanged;
     }
 
@@ -105,12 +127,16 @@ namespace Coddee.WPF.Commands
     {
         private readonly Action _handler;
 
+        /// <inheritdoc />
         public ReactiveCommand(TObserved observedObject, Action handler)
             : base(observedObject)
         {
             _handler = handler;
         }
 
+        /// <summary>
+        /// Create an instance of ReactiveCommand
+        /// </summary>
         public static ReactiveCommand<TObserved> Create(TObserved observedObject, Action handler)
         {
             var reactiveCommand = new ReactiveCommand<TObserved>(observedObject, handler);
@@ -119,7 +145,7 @@ namespace Coddee.WPF.Commands
             return reactiveCommand;
         }
 
-        
+        /// <inheritdoc />
         public override void Execute(object parameter)
         {
             _handler?.Invoke();
@@ -136,12 +162,16 @@ namespace Coddee.WPF.Commands
     {
         private readonly Action<TParam> _handler;
 
+        /// <inheritdoc />
         public ReactiveCommand(TObserved observedObject, Action<TParam> handler)
             : base(observedObject)
         {
             _handler = handler;
         }
 
+        /// <summary>
+        /// Create an instance of ReactiveCommand
+        /// </summary>
         public static ReactiveCommand<TObserved, TParam> Create(TObserved observedObject, Action<TParam> handler)
         {
             var reactiveCommand = new ReactiveCommand<TObserved, TParam>(observedObject, handler);
@@ -150,6 +180,7 @@ namespace Coddee.WPF.Commands
             return reactiveCommand;
         }
 
+        /// <inheritdoc />
         public override void Execute(object parameter)
         {
             _handler?.Invoke((TParam)parameter);
