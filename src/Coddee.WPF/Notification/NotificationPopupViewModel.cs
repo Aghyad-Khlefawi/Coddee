@@ -7,8 +7,12 @@ using Coddee.WPF;
 
 namespace Coddee.Notification
 {
+    /// <summary>
+    /// A ViewModel for notification popup.
+    /// </summary>
     public class NotificationPopupViewModel : ViewModelBase, IInteractiveNotification
     {
+        /// <inheritdoc />
         public NotificationPopupViewModel(INotification notification)
         {
             Title = notification.Title;
@@ -25,21 +29,41 @@ namespace Coddee.Notification
                 Opened += e => interactiveNotification.Open();
         }
 
+        /// <inheritdoc />
         public string Title { get; set; }
+        /// <inheritdoc />
         public string Description { get; set; }
+        /// <inheritdoc />
         public int Type { get; }
+        /// <inheritdoc />
         public DateTime Date { get; set; }
+        /// <inheritdoc />
         public string Category { get; set; }
+        /// <inheritdoc />
         public string Parameter { get; set; }
 
+        /// <inheritdoc />
         public event Action<INotification> Opened;
+
+        /// <summary>
+        /// Triggered when the popup is closed.
+        /// </summary>
         public event Action<NotificationPopupViewModel> Closed;
 
+        /// <inheritdoc cref="Open"/>
         public ICommand OpenCommand { get; }
+        
+        /// <inheritdoc cref="Close"/>
         public ICommand CloseCommand { get; }
 
+        /// <summary>
+        /// Indicates whether the popup is closed
+        /// </summary>
         public bool IsClosed { get; set; }
 
+        /// <summary>
+        /// Close the popup.
+        /// </summary>
         public void Close()
         {
             if (!IsClosed)
@@ -49,6 +73,7 @@ namespace Coddee.Notification
             }
         }
 
+        /// <inheritdoc />
         public void Open()
         {
             Opened?.Invoke(this);
