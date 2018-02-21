@@ -3,6 +3,7 @@
 
 using System;
 using System.Windows;
+using Coddee.Mvvm;
 
 namespace Coddee.WPF
 {
@@ -19,9 +20,23 @@ namespace Coddee.WPF
     /// </summary>
     public interface IDefaultShellViewModel : IShellViewModel
     {
+        /// <summary>
+        /// Set the main content of the application.
+        /// </summary>
+        /// <returns></returns>
         IPresentableViewModel SetMainContent(Type defaultPresentable, bool useNavigation);
+
+        /// <summary>
+        /// returns the main content of the application.
+        /// </summary>
+        /// <returns></returns>
         IPresentableViewModel GetMainContent();
 
+
+        /// <summary>
+        /// Sets the tool-bar content.
+        /// </summary>
+        /// <param name="content"></param>
         void SetToolbarContent(UIElement content);
     }
 }

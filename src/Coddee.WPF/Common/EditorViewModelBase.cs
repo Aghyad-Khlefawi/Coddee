@@ -9,6 +9,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Coddee.Data;
 using Coddee.Exceptions;
+using Coddee.Mvvm;
 using Coddee.Services;
 using Coddee.Services.Dialogs;
 using Coddee.Validation;
@@ -339,7 +340,7 @@ namespace Coddee.WPF
         public virtual void Show()
         {
             if (_dialog == null)
-                _dialog = _dialogService.CreateDialog(Title, this);
+                _dialog = _dialogService.CreateDialog(Title, (IEditorViewModel)this);
             _dialog.Show();
         }
     }

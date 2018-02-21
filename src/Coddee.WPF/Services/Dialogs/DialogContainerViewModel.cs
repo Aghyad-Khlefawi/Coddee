@@ -79,8 +79,8 @@ namespace Coddee.WPF.Services.Dialogs
             set { SetProperty(ref _horizontalAlignment, value); }
         }
 
-        private UIElement _content;
-        public UIElement Content
+        private object _content;
+        public object Content
         {
             get { return _content; }
             set { SetProperty(ref _content, value); }
@@ -135,7 +135,7 @@ namespace Coddee.WPF.Services.Dialogs
             StateChanged?.Invoke(this, newState);
         }
 
-        public void SetContent(UIElement content)
+        public void SetContent(object content)
         {
             Content = content;
         }

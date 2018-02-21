@@ -7,12 +7,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Coddee.Loggers;
-using Coddee.WPF;
 
 
-namespace Coddee.Services.ViewModelManager
+namespace Coddee.Mvvm
 {
-
+    /// <inheritdoc />
     public class ViewModelsManager : IViewModelsManager
     {
         private const string _eventsSource = "ViewModelsManager";
@@ -21,6 +20,7 @@ namespace Coddee.Services.ViewModelManager
         private readonly ILogger _logger;
         private int _lastID;
 
+        /// <inheritdoc />
         public ViewModelsManager(IContainer container, ILogger logger)
         {
             _container = container;
@@ -30,13 +30,23 @@ namespace Coddee.Services.ViewModelManager
         }
 
 
+        /// <inheritdoc />
         public event EventHandler<ViewModelInfo> ViewModelCreated;
 
+        /// <summary>
+        /// Collection containing all the created ViewModels
+        /// </summary>
         protected ConcurrentDictionary<IViewModel, ViewModelInfo> _viewModels;
+
+        /// <summary>
+        /// All the ViewModels that are in groups.
+        /// </summary>
         protected ConcurrentDictionary<string, List<IViewModel>> _viewModelGroups;
 
+        /// <inheritdoc />
         public ViewModelInfo RootViewModel { get; protected set; }
 
+        /// <inheritdoc />
         public void AddViewModelToGroup(string group, IViewModel viewModel)
         {
             if (!string.IsNullOrEmpty(viewModel.ViewModelGroup) && _viewModelGroups.ContainsKey(viewModel.ViewModelGroup))
@@ -46,11 +56,13 @@ namespace Coddee.Services.ViewModelManager
             list.Add(viewModel);
         }
 
+        /// <inheritdoc />
         public IEnumerable<IViewModel> GetGroupViewModels(string group)
         {
             return _viewModelGroups[group];
         }
 
+        /// <inheritdoc />
         public void RemoveViewModel(IViewModel viewModel)
         {
             lock (_viewModels)
@@ -63,11 +75,13 @@ namespace Coddee.Services.ViewModelManager
             }
         }
 
+        /// <inheritdoc />
         public IViewModel CreateViewModel(Type viewModelType, IViewModel parentVM)
         {
             return CreateViewModel(viewModelType, parentVM, null);
         }
 
+        /// <inheritdoc />
         public IViewModel CreateViewModel(Type viewModelType, IViewModel parentVM, ViewModelOptions viewModelOptions)
         {
             lock (_viewModels)
@@ -104,16 +118,19 @@ namespace Coddee.Services.ViewModelManager
             }
         }
 
+        /// <inheritdoc />
         public TResult CreateViewModel<TResult>(IViewModel parentVM) where TResult : IViewModel
         {
             return (TResult)CreateViewModel(typeof(TResult), parentVM);
         }
 
+        /// <inheritdoc />
         public TResult CreateViewModel<TResult>(IViewModel parentVM, ViewModelOptions viewModelOptions) where TResult : IViewModel
         {
             return (TResult)CreateViewModel(typeof(TResult), parentVM, viewModelOptions);
         }
 
+        /// <inheritdoc />
         public async Task<IViewModel> InitializeViewModel(Type viewModelType, IViewModel parentVM)
         {
             var vm = CreateViewModel(viewModelType, parentVM);
@@ -121,12 +138,14 @@ namespace Coddee.Services.ViewModelManager
             return vm;
         }
 
+        /// <inheritdoc />
         public IEnumerable<ViewModelInfo> GetChildViewModels(IViewModel parent)
         {
             if (_viewModels.ContainsKey(parent))
                 return _viewModels[parent].ChildViewModels;
             return new List<ViewModelInfo>();
         }
+        /// <inheritdoc />
         public ViewModelInfo GetParentViewModel(IViewModel viewModel)
         {
             if (_viewModels.ContainsKey(viewModel))
@@ -134,6 +153,7 @@ namespace Coddee.Services.ViewModelManager
             return null;
         }
 
+        /// <inheritdoc />
         public async Task<TResult> InitializeViewModel<TResult>(IViewModel parentVM) where TResult : IViewModel
         {
             return (TResult)await InitializeViewModel(typeof(TResult), parentVM);

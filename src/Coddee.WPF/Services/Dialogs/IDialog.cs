@@ -3,6 +3,7 @@
 
 using System;
 using Coddee.Collections;
+using Coddee.Mvvm;
 using Coddee.WPF;
 using Coddee.WPF.Services.Dialogs;
 

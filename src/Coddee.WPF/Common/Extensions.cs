@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using Coddee.Collections;
+using Coddee.Mvvm;
 using Coddee.Services;
 using Coddee.Services.Dialogs;
 using Coddee.Validation;
@@ -34,11 +35,7 @@ namespace Coddee.WPF
         }
 
 
-        public static Task InitializeAll(this IEnumerable<IViewModel> items, bool forceInitialization = false)
-        {
-            return Task.WhenAll(items.Where(e => forceInitialization || !e.IsInitialized).Select(e => e.Initialize()));
-        }
-
+       
 
         public static IEnumerable<SelectableItem<T>> AsSelectable<T>(this IEnumerable<T> collection)
         {

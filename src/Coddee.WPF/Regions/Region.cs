@@ -2,10 +2,14 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
 using System.Windows;
+using Coddee.Mvvm;
 using Coddee.WPF.Regions;
 
 namespace Coddee.WPF
 {
+    /// <summary>
+    /// A region of the application UI.
+    /// </summary>
     public class Region : BindableBase
     {
         /// <summary>
@@ -31,13 +35,21 @@ namespace Coddee.WPF
 
         private readonly string _name;
 
-        private UIElement _content;
-        public UIElement Content
+        private object _content;
+        
+        /// <summary>
+        /// The content displayed in the Region.
+        /// </summary>
+        public object Content
         {
             get { return _content; }
             set { SetProperty(ref this._content, value); }
         }
 
+        /// <summary>
+        /// Returns the name of the region.
+        /// </summary>
+        /// <returns></returns>
         public string GetName()
         {
             return _name;
@@ -47,7 +59,7 @@ namespace Coddee.WPF
         /// Change the region content
         /// </summary>
         /// <param name="content">The new content</param>
-        public void View(UIElement content)
+        public void View(object content)
         {
             Content = content;
         }

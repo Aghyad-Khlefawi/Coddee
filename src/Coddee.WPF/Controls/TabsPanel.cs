@@ -12,6 +12,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Markup;
 using System.Windows.Media;
+using Coddee.Mvvm;
 using Coddee.WPF.Commands;
 
 namespace Coddee.WPF.Controls

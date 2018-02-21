@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Markup;
 using System.Windows.Media;
+using Coddee.Mvvm;
 using Coddee.Validation;
 
 namespace Coddee.WPF.Controls

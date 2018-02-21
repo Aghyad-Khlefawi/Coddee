@@ -50,7 +50,7 @@ namespace HR.Clients.WPF.Main
                     var searchView = applicationQuickSearch.GetView();
                     if (searchView is FrameworkElement searchViewElem)
                         searchViewElem.HorizontalAlignment = HorizontalAlignment.Right;
-                    shellVM.SetToolbarContent(searchView);
+                    shellVM.SetToolbarContent((UIElement)searchView);
                 });
 
             }

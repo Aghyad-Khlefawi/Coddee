@@ -19,6 +19,7 @@ namespace Coddee.ModuleDefinitions
            typeof(EventDispatcherServiceModule),
            typeof(GlobalVariablesServiceModule),
            typeof(LocalizationManagerModule),
+           typeof(ViewModelManagerModule),
        };
     }
 }

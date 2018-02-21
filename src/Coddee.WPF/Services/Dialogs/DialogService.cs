@@ -9,6 +9,7 @@ using System.Windows;
 using System.Windows.Controls;
 using Coddee.Collections;
 using Coddee.Exceptions;
+using Coddee.Mvvm;
 using Coddee.WPF;
 using Coddee.WPF.Services.Dialogs;
 
@@ -36,7 +37,7 @@ namespace Coddee.Services.Dialogs
         public event EventHandler<IDialog> DialogStateChanged;
         public event EventHandler<IDialog> DialogClosed;
 
-        public IDialog CreateDialog(string title, UIElement content, DialogOptions options, params ActionCommandBase[] commands)
+        public IDialog CreateDialog(string title, object content, DialogOptions options, params ActionCommandBase[] commands)
         {
             var container = CreateViewModel<DialogContainerViewModel>();
             container.ZIndex = _maxZindex;
@@ -49,16 +50,16 @@ namespace Coddee.Services.Dialogs
             Interlocked.Increment(ref _maxZindex);
             return container;
         }
-        public IDialog CreateDialog(UIElement content, DialogOptions options, params ActionCommandBase[] commands)
+        public IDialog CreateDialog(object content, DialogOptions options, params ActionCommandBase[] commands)
         {
             return CreateDialog(null, content, options, commands);
         }
 
-        public IDialog CreateDialog(string title, UIElement content, params ActionCommandBase[] actions)
+        public IDialog CreateDialog(string title, object content, params ActionCommandBase[] actions)
         {
             return CreateDialog(title, content, DialogOptions.Default, actions);
         }
-        public IDialog CreateDialog(UIElement content, params ActionCommandBase[] actions)
+        public IDialog CreateDialog(object content, params ActionCommandBase[] actions)
         {
             return CreateDialog(null, content, actions);
         }
@@ -66,7 +67,7 @@ namespace Coddee.Services.Dialogs
         public IDialog CreateDialog(string title, IEditorViewModel editor, DialogOptions options)
         {
             var dialog = CreateDialog(title,
-                                editor.GetView(),
+                                (UIElement)editor.GetView(),
                                 options,
                                 new CloseActionCommand(_localization.GetValue("Cancel")),
                                 new AsyncActionCommand(_localization.GetValue("Save"),

@@ -5,6 +5,7 @@ using System;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using Coddee.Mvvm;
 using Coddee.WPF.Commands;
 using Coddee.WPF.Services.Dialogs;
 
@@ -81,7 +82,7 @@ namespace Coddee.WPF.DefaultShell
         /// </summary>
         protected virtual void Exit()
         {
-            _app.GetSystemApplication().Shutdown();
+            ((WPFApplication)_app).GetSystemApplication().Shutdown();
         }
 
         /// <summary>
