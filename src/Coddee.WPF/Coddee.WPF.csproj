@@ -72,7 +72,9 @@
     <Compile Include="AppBuilder\WPFApplicationBuilder.cs" />
     <Compile Include="Collections\AsyncObservableDictionaryView.cs" />
     <Compile Include="Collections\AsyncObservableCollectionView.cs" />
+    <Compile Include="Commands\IReactiveCommand.cs" />
     <Compile Include="Commands\KeyDownCommand.cs" />
+    <Compile Include="Commands\ObservedProperty.cs" />
     <Compile Include="Commands\OnEnterCommand.cs" />
     <Compile Include="Commands\ReactiveCommand.cs" />
     <Compile Include="Commands\RelayCommand.cs" />

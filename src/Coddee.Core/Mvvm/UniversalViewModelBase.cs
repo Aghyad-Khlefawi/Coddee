@@ -14,41 +14,101 @@ using Coddee.Validation;
 
 namespace Coddee.Mvvm
 {
+    /// <summary>
+    /// Universal ViewModel base class.
+    /// </summary>
     public class UniversalViewModelBase : BindableBase, IPresentableViewModel
     {
         private const string _eventsSource = "VMBase";
 
+        /// <summary>
+        /// Defines a completed task object.
+        /// </summary>
         protected static readonly Task completedTask = Task.FromResult(false);
+
+        /// <summary>
+        /// The running application.
+        /// </summary>
         protected static IApplication _app;
+
+        /// <summary>
+        /// The dependency container used in the application.
+        /// </summary>
         protected static IContainer _container;
+
+        /// <summary>
+        /// <see cref="IGlobalVariablesService"/>
+        /// </summary>
         protected static IGlobalVariablesService _globalVariables;
+
+        /// <summary>
+        /// <see cref="ILocalizationManager"/>
+        /// </summary>
         protected static ILocalizationManager _localization;
+
+        /// <summary>
+        /// <see cref="ILogger"/>
+        /// </summary>
         protected static ILogger _logger;
+
+        /// <summary>
+        /// <see cref="IObjectMapper"/>
+        /// </summary>
         protected static IObjectMapper _mapper;
+
+        /// <summary>
+        /// <see cref="IViewModelsManager"/>
+        /// </summary>
         protected static IViewModelsManager _vmManager;
+
+        /// <summary>
+        /// <see cref="IEventDispatcher"/>
+        /// </summary>
         protected static IEventDispatcher _eventDispatcher;
 
-        protected bool _validateOnPropertyChanged;
-        public string __Name { get; protected set; }
-
+        /// <inheritdoc />
         protected UniversalViewModelBase()
         {
             ValidationRules = new List<IValidationRule>();
             _viewsTypes = new Dictionary<int, Type>();
             _views = new Dictionary<int, object>();
             _viewsTypes = new Dictionary<int, Type>();
-
             __Name = GetType().Name;
-            
-
         }
+
+        /// <summary>
+        /// The view object currently displayed.
+        /// </summary>
         protected object _currentView;
+
+        /// <summary>
+        /// The availabe view instances supported by this ViewModel;
+        /// </summary>
         protected readonly Dictionary<int, object> _views;
+
+        /// <summary>
+        /// The View types supported by this ViewModel.
+        /// </summary>
         protected readonly Dictionary<int, Type> _viewsTypes;
 
+        /// <summary>
+        /// Triggered when a view object is created.
+        /// </summary>
         public event EventHandler<object> ViewCreated;
 
+        /// <summary>
+        /// Indecates if the <see cref="RegisterViews"/> method is called.
+        /// </summary>
         protected bool _viewsRegistered;
+
+        /// <summary>
+        /// If set to true the validation method will be called on property changed.
+        /// </summary>
+        protected bool _validateOnPropertyChanged;
+
+        /// <inheritdoc />
+        public string __Name { get; protected set; }
+
 
 
         /// <summary>
@@ -74,10 +134,10 @@ namespace Coddee.Mvvm
         public event ViewModelEventHandler<IEnumerable<IValidationRule>> ValidationRulesSet;
 
 
+        private bool _isValid;
         /// <summary>
         /// The IsValid value of last validation operation
         /// </summary>
-        private bool _isValid;
         public bool IsValid
         {
             get { return _isValid; }
@@ -100,6 +160,7 @@ namespace Coddee.Mvvm
             protected set { SetProperty(ref this._isInitialized, value); }
         }
 
+        /// <inheritdoc />
         public virtual ViewModelOptions DefaultViewModelOptions => ViewModelOptions.Default;
 
         /// <summary>
@@ -511,6 +572,9 @@ namespace Coddee.Mvvm
         {
         }
 
+        /// <summary>
+        /// Indicates that the ViewModel is currently undergoing the validation process.
+        /// </summary>
         protected bool _validating;
 
         /// <summary>
@@ -719,6 +783,10 @@ namespace Coddee.Mvvm
             }
         }
 
+        /// <summary>
+        /// Returns the dependency container object.
+        /// </summary>
+        /// <returns></returns>
         public static IContainer GetContainer()
         {
             return _container;

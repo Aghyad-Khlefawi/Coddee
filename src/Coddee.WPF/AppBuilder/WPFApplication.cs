@@ -21,6 +21,7 @@ namespace Coddee.WPF
     {
         private const string _eventsSource = "Application";
 
+        /// <inheritdoc />
         public WPFApplication(Guid applicationID, string applicationName, IContainer container)
         {
             ApplicationID = applicationID;
@@ -29,12 +30,16 @@ namespace Coddee.WPF
             _container = container;
         }
 
+        /// <inheritdoc />
         public WPFApplication(string applicationName, IContainer container)
             : this(Guid.NewGuid(), applicationName, container)
         {
         }
 
 
+        /// <summary>
+        /// Log the initial application information.
+        /// </summary>
         protected virtual void LogStart()
         {
             _logger.Log(_eventsSource, $"Initializing application {ApplicationName} {Assembly.GetEntryAssembly().GetName().Version}");
@@ -43,11 +48,16 @@ namespace Coddee.WPF
             _logger.Log(_eventsSource, $"using Coddee.WPF: {Assembly.Load("Coddee.WPF").GetName().Version}");
         }
 
-
+        /// <summary>
+        /// The running WPF application.
+        /// </summary>
         public static WPFApplication Current { get; protected set; }
 
         ILogger _logger;
 
+        /// <summary>
+        /// Start the application build process.
+        /// </summary>
         public void Run(Action<IWPFApplicationBuilder> BuildApplication, StartupEventArgs startupEventArgs)
         {
 
@@ -63,9 +73,17 @@ namespace Coddee.WPF
             ResolveStartupArgs(startupEventArgs);
             BuildApplication(builder);
         }
-
+        
+        /// <summary>
+        /// The startup command passed to the executable.
+        /// </summary>
         public IEnumerable<string> StartupCommandStrings { get; private set; }
+
+        /// <summary>
+        /// The parsed result of the startup command passed to the executable.
+        /// </summary>
         public IEnumerable<CommandParseResult> StartupCommands { get; private set; }
+
         private void ResolveStartupArgs(StartupEventArgs startupEventArgs)
         {
             var command = string.Concat(startupEventArgs.Args.Select(e => e + " ")).TrimEnd();
@@ -90,12 +108,18 @@ namespace Coddee.WPF
         /// </summary>
         protected Application _systemApplication;
 
-
+        /// <inheritdoc />
         public Guid ApplicationID { get; }
+        /// <inheritdoc />
         public string ApplicationName { get; }
+        /// <inheritdoc />
         public ApplicationTypes ApplicationType { get; }
 
 
+        /// <summary>
+        /// Returns the dependency container used in the application.
+        /// </summary>
+        /// <returns></returns>
         public IContainer GetContainer()
         {
             return _container;
@@ -111,7 +135,7 @@ namespace Coddee.WPF
         }
 
         /// <summary>
-        /// Shows the application mainwindow
+        /// Shows the application MainWindow
         /// </summary>
         public void ShowWindow()
         {

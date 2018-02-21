@@ -1,4 +1,7 @@
-﻿namespace Coddee.Mvvm
+﻿// Copyright (c) Aghyad khlefawi. All rights reserved.  
+// Licensed under the MIT License. See LICENSE file in the project root for full license information.  
+
+namespace Coddee.Mvvm
 {
     /// <summary>
     /// Base class for ViewModel event that invokes the handlers in all the parent ViewModels.

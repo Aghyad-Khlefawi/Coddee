@@ -11,10 +11,10 @@
              d:DesignWidth="600"
              d:DesignHeight="300">
     <UserControl.Resources>
-        <local:MainViewModel x:Key="designData" />
+        <local:MainViewModel x:Key="designData" IsBusy="True" />
         
     </UserControl.Resources>
-    <controls:BusyIndicator IsBusy="{Binding IsBusy}">
+    <controls:BusyIndicator d:DataContext="{StaticResource designData}" IsBusy="{Binding IsBusy}">
         <Grid>
            <DockPanel d:DataContext="{StaticResource designData}"
                        Background="WhiteSmoke">

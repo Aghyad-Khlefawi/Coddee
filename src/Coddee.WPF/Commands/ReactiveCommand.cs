@@ -6,79 +6,11 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
-using System.Windows.Input;
 using Coddee.Validation;
 
 namespace Coddee.WPF.Commands
 {
 
-    /// <summary>
-    /// A property information that will cause the ReactiveCommand to update the CanExecute.
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public class ObservedProperty<T>
-    {
-        private readonly PropertyInfo _property;
-
-        public ObservedProperty(T obj, Expression<Func<T, object>> observedField, Validator validator)
-            : this(obj, ExpressionHelper.GetMemberName(observedField), validator)
-        {
-        }
-
-        public ObservedProperty(T obj, string observedPropertyName, Validator validator)
-        {
-            Object = obj;
-            ObservedPropertyName = observedPropertyName;
-            Validator = validator;
-            _property = obj.GetType().GetProperty(observedPropertyName);
-        }
-
-        /// <summary>
-        /// Validates the property value
-        /// </summary>
-        /// <returns></returns>
-        public bool Validate()
-        {
-            return Validator?.Invoke(_property.GetValue(Object)) ?? true;
-        }
-
-        /// <summary>
-        /// The observed object
-        /// </summary>
-        public T Object { get; }
-
-
-        public string ObservedPropertyName { get; }
-
-        /// <summary>
-        /// The property value validator.
-        /// </summary>
-        public Validator Validator { get; }
-    }
-
-    public class ObservedProperty<T,TProperty>: ObservedProperty<T>
-    {
-        public ObservedProperty(T obj, Expression<Func<T, object>> observedField, Validator<TProperty> validator) : base(obj, observedField, e=> validator((TProperty)e))
-        {
-        }
-
-        public ObservedProperty(T obj, string observedPropertyName, Validator<TProperty> validator) : base(obj, observedPropertyName, e => validator((TProperty)e))
-        {
-        }
-    }
-
-    public interface IReactiveCommand : ICommand
-    {
-        IReactiveCommand ObserveProperty(string propertyName, Validator validator);
-        void UpdateCanExecute();
-        bool CanExecute();
-    }
-
-    public interface IReactiveCommand<TObserved> : IReactiveCommand
-    {
-        IReactiveCommand<TObserved> ObserveProperty<TProperty>(string propertyName, Validator<TProperty> validator);
-    }
 
     /// <summary>
     /// A command that updates the CanExecute property based on properties changes.
