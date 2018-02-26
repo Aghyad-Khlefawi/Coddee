@@ -100,6 +100,10 @@ namespace Coddee.WPF.DebugTool
                 View.Close();
         }
 
+        /// <summary>
+        /// Set the condition on which the debug tools toggle.
+        /// </summary>
+        /// <param name="toggleCondition"></param>
         public void SetToggleCondition(Func<KeyEventArgs, bool> toggleCondition)
         {
             _toggleCondition = toggleCondition;

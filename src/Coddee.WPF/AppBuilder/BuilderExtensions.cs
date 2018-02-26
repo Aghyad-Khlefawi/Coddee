@@ -19,11 +19,15 @@ using Coddee.WPF.Services.Dialogs;
 
 namespace Coddee.AppBuilder
 {
+    /// <summary>
+    /// Builder extensions for WPF applications.
+    /// </summary>
     public static class BuilderExtensions
     {
         /// <summary>
         /// Add a console to the application
         /// </summary>
+        /// <param name="builder"></param>
         /// <param name="toggleCondition">A function that is executed on the shell KeyDown event show return true to toggle the console</param>
         /// <returns></returns>
         public static IApplicationBuilder UseApplicationConsole(this IApplicationBuilder builder,
@@ -51,6 +55,7 @@ namespace Coddee.AppBuilder
         /// <summary>
         /// Add a console to the application
         /// </summary>
+        /// <param name="builder"></param>
         /// <param name="toggleCondition">A function that is executed on the shell KeyDown event show return true to toggle the console</param>
         /// <returns></returns>
         public static IApplicationBuilder UseCoddeeDebugTool(this IApplicationBuilder builder,
@@ -148,7 +153,6 @@ namespace Coddee.AppBuilder
         /// <summary>
         /// Sets a custom shell for the WPF application
         /// </summary>
-        /// <typeparam name="TShellViewModel"></typeparam>
         /// <returns></returns>
         public static IApplicationBuilder UseCustomShellWithLogin<TShellViewModel, TLogin>(this IApplicationBuilder builder,
                                                                                               Action<Window> config = null)
@@ -347,6 +351,9 @@ namespace Coddee.AppBuilder
             return builder;
         }
 
+        /// <summary>
+        /// Initializes the <see cref="INotificationService"/>
+        /// </summary>
         public static IApplicationBuilder UseNotification(this IApplicationBuilder builder,Region notificationRegion,double duration)
         {
             builder.BuildActionsCoordinator.AddActionAfter(new BuildAction(BuildActionsKeys.Notification,
@@ -357,6 +364,10 @@ namespace Coddee.AppBuilder
                                                                            }), BuildActionsKeys.Toast);
             return builder;
         }
+
+        /// <summary>
+        /// Initializes the <see cref="INotificationService"/>
+        /// </summary>
         public static IApplicationBuilder UseNotification(this IApplicationBuilder builder)
         {
             return builder.UseNotification(DefaultRegions.NotificationRegion, 5000);
