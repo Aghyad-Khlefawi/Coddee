@@ -6,6 +6,9 @@ using System.Collections.Generic;
 
 namespace Coddee.WPF
 {
+    /// <summary>
+    /// Type of operation used to clear a field.
+    /// </summary>
     public enum ClearAction
     {
         /// <summary>
@@ -30,11 +33,13 @@ namespace Coddee.WPF
     [AttributeUsage(AttributeTargets.Property, Inherited = true, AllowMultiple = false)]
     public sealed class EditorFieldAttribute : Attribute
     {
+        /// <inheritdoc />
         public EditorFieldAttribute()
         {
             
         }
-        
+
+        /// <inheritdoc />
         public EditorFieldAttribute(ClearAction clearAction)
         {
             ClearAction = clearAction;

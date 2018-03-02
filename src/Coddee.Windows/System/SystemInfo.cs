@@ -5,6 +5,9 @@ using System.Management;
 
 namespace Coddee.Windows
 {
+    /// <summary>
+    /// Helper class for getting information related to the hard ware.
+    /// </summary>
     public static class SystemInfo
     {
         /// <summary>
@@ -18,7 +21,7 @@ namespace Coddee.Windows
         }
 
         /// <summary>
-        /// Reunts the cpu unique idenetifire
+        /// returns the CPU unique identifier
         /// Requires a reference to System.Management.dll
         /// </summary>
         /// <returns></returns>

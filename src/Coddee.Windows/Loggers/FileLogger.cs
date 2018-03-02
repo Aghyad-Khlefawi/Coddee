@@ -7,9 +7,16 @@ using System.IO.Compression;
 
 namespace Coddee.Loggers
 {
+    /// <summary>
+    /// <see cref="ILogger"/> implementation that writes the log to a text file.
+    /// </summary>
     public class FileLogger : LoggerBase
     {
         private FileInfo _file;
+
+        /// <summary>
+        /// Initialize the logger to use.
+        /// </summary>
         public void Initialize(LogRecordTypes type, string fileName, bool useFileCompression)
         {
             base.Initialize(type);
@@ -82,6 +89,7 @@ namespace Coddee.Loggers
             }
         }
 
+        /// <inheritdoc />
         protected override void CommitLog(LogRecord record)
         {
             lock (_file)

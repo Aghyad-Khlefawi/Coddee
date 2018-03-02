@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Windows;
+using Coddee.Mvvm;
 
 namespace Coddee.WPF.Regions
 {
@@ -22,7 +23,7 @@ namespace Coddee.WPF.Regions
         /// </summary>
         /// <param name="regionName">Target region</param>
         /// <param name="view">The new content</param>
-        public static void View(string regionName, UIElement view)
+        public static void View(string regionName, object view)
         {
             if (!_regions.ContainsKey(regionName))
                 throw new ArgumentException($"Region [{regionName}] was not found ");

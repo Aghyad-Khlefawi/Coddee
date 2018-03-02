@@ -4,8 +4,11 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace Coddee.WPF
+namespace Coddee
 {
+    /// <summary>
+    /// Base class for type that needs <see cref="INotifyPropertyChanged"/>
+    /// </summary>
     public class BindableBase : INotifyPropertyChanged
     {
         /// <summary>
@@ -25,8 +28,12 @@ namespace Coddee.WPF
             return true;
         }
 
+        /// <inheritdoc />
         public event PropertyChangedEventHandler PropertyChanged;
 
+        /// <summary>
+        /// Raises the <see cref="PropertyChanged"/> event.
+        /// </summary>
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

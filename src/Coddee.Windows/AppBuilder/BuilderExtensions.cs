@@ -17,9 +17,21 @@ using Coddee.Windows.Mapper;
 
 namespace Coddee.AppBuilder
 {
+    /// <summary>
+    /// Builder extension for a windows application.
+    /// </summary>
     public static class BuilderExtensions
     {
 
+        /// <summary>
+        /// Initialize <see cref="ILocalizationManager"/> service.
+        /// </summary>
+        /// <param name="builder"></param>
+        /// <param name="resourceManagerFullPath">Resource files location <remarks>example "HR.Clients.WPF.Properties.Resources"</remarks></param>
+        /// <param name="resourceManagerAssembly">The name of the assembly containing the resources <remarks>Example "HR.Clients.WPF.exe"</remarks></param>
+        /// <param name="supportedCultures">The available cultures in the resource files <remarks>Example new[] {"ar-SY", "en-US"}</remarks></param>
+        /// <param name="defaultCluture">The default culture used in the application <remarks>Example "en-US"</remarks></param>
+        /// <returns></returns>
         public static IApplicationBuilder UseLocalization(
             this IApplicationBuilder builder,
             string resourceManagerFullPath,
@@ -82,7 +94,12 @@ namespace Coddee.AppBuilder
             return builder;
         }
 
-
+        /// <summary>
+        /// Set the application entry point
+        /// </summary>
+        /// <param name="builder"></param>
+        /// <param name="entryPoint">Application main method</param>
+        /// <returns></returns>
         public static IApplicationBuilder UseMain(this IApplicationBuilder builder,
                                                     Action<IContainer> entryPoint)
         {
@@ -90,12 +107,25 @@ namespace Coddee.AppBuilder
             return builder;
         }
 
+        /// <summary>
+        /// Set the application entry point
+        /// </summary>
+        /// <param name="builder"></param>
+        /// <param name="entryPoint">The class containing the entry point.</param>
+        /// <returns></returns>
         public static IApplicationBuilder UseMain(this IApplicationBuilder builder,
                                                          IEntryPointClass entryPoint)
         {
             builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.ConsoleMainBuildAction(entryPoint.Start));
             return builder;
         }
+
+        /// <summary>
+        /// Set the application entry point
+        /// </summary>
+        /// <param name="builder"></param>
+        /// <typeparam name="T">The class containing the entry point</typeparam>
+        /// <returns></returns>
         public static IApplicationBuilder UseMain<T>(this IApplicationBuilder builder) where T : IEntryPointClass
         {
             builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.ConsoleMainBuildAction((container) =>
@@ -119,7 +149,12 @@ namespace Coddee.AppBuilder
             return builder;
         }
 
-
+        /// <summary>
+        /// Add additional modules to the application.
+        /// </summary>
+        /// <param name="buillder"></param>
+        /// <param name="modulesAssemblies">The names of the assemblies containing the modules.</param>
+        /// <returns></returns>
         public static IApplicationBuilder UseModules(this IApplicationBuilder buillder, params string[] modulesAssemblies)
         {
             buillder.BuildActionsCoordinator.AddAction(DefaultBuildActions.DiscoverModulesBuildAction(

@@ -7,6 +7,9 @@ using System.Windows.Controls;
 
 namespace Coddee.WPF.Controls
 {
+    /// <summary>
+    /// Base class for Coddee controls.
+    /// </summary>
     public class CoddeeControl : Control,INotifyPropertyChanged
     {
         static CoddeeControl()
@@ -15,10 +18,18 @@ namespace Coddee.WPF.Controls
                 _container = WPFApplication.Current.GetContainer();
         }
 
+        /// <summary>
+        /// Application dependency container.
+        /// </summary>
         protected static readonly IContainer _container;
 
+        /// <inheritdoc />
         public event PropertyChangedEventHandler PropertyChanged;
 
+        /// <summary>
+        /// Raises the <see cref="PropertyChanged"/> event.
+        /// </summary>
+        /// <param name="propertyName"></param>
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

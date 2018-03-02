@@ -5,21 +5,25 @@ using System;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using Coddee.Mvvm;
 using Coddee.Services;
-using Coddee.Services.ViewModelManager;
 using Coddee.WPF.Commands;
 using Coddee.WPF.DebugTool.Shell;
 
 namespace Coddee.WPF.DebugTool
 {
+    /// <summary>
+    /// <see cref="IDebugTool"/> implementation.
+    /// </summary>
     public class DebugToolViewModel : ViewModelBase<DebugToolView>, IDebugTool
     {
-
+        /// <inheritdoc />
         public DebugToolViewModel()
         {
 
         }
 
+        /// <inheritdoc />
         public DebugToolViewModel(ViewModelExplorerViewModel viewModelExplorer, ShellToolsViewModel shellTools)
         {
             _viewModelExplorer = viewModelExplorer;
@@ -27,6 +31,10 @@ namespace Coddee.WPF.DebugTool
         }
 
         private ShellToolsViewModel _shellTools;
+
+        /// <summary>
+        /// <see cref="ShellToolsViewModel"/>
+        /// </summary>
         public ShellToolsViewModel ShellTools
         {
             get { return _shellTools; }
@@ -34,12 +42,17 @@ namespace Coddee.WPF.DebugTool
         }
 
         private ViewModelExplorerViewModel _viewModelExplorer;
+        
+        /// <summary>
+        /// <see cref="ViewModelExplorerViewModel"/>
+        /// </summary>
         public ViewModelExplorerViewModel ViewModelExplorer
         {
             get { return _viewModelExplorer; }
             set { SetProperty(ref this._viewModelExplorer, value); }
         }
 
+        /// <inheritdoc />
         protected override async Task OnInitialization()
         {
             await base.OnInitialization();
@@ -87,6 +100,10 @@ namespace Coddee.WPF.DebugTool
                 View.Close();
         }
 
+        /// <summary>
+        /// Set the condition on which the debug tools toggle.
+        /// </summary>
+        /// <param name="toggleCondition"></param>
         public void SetToggleCondition(Func<KeyEventArgs, bool> toggleCondition)
         {
             _toggleCondition = toggleCondition;
@@ -95,26 +112,43 @@ namespace Coddee.WPF.DebugTool
 
     }
 
-   
-
+    /// <summary>
+    /// A ViewModel class for navigating ViewModel hierarchy.
+    /// </summary>
     public class ViewModelNavigationItem : BindableBase
     {
+        /// <inheritdoc />
         public ViewModelNavigationItem(ViewModelInfo viewModelInfo)
         {
             ViewModelInfo = viewModelInfo;
             Name = viewModelInfo.ViewModel.__Name;
+            
         }
 
+        /// <summary>
+        /// The information object of the ViewModel.
+        /// </summary>
         public ViewModelInfo ViewModelInfo { get; set; }
 
         private string _name;
+
+        /// <summary>
+        /// The displayed name .
+        /// </summary>
         public string Name
         {
             get { return _name; }
             set { SetProperty(ref this._name, value); }
         }
-
+        
+        /// <summary>
+        /// Triggered when the navigation to ViewModel is required.
+        /// </summary>
         public event EventHandler<ViewModelNavigationItem> OnNavigate;
+
+        /// <summary>
+        /// Navigate to this ViewModel.
+        /// </summary>
         public ICommand NavigateCommand => new RelayCommand(Navigate);
 
         private void Navigate()

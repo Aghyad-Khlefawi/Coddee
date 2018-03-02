@@ -18,7 +18,7 @@ namespace Coddee.AppBuilder
         /// </summary>
         public static T UseSingletonRepositoryManager<T>(this T builder) where T : IApplicationBuilder
         {
-            builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.InMemoryRepositoryBuildAction((container) =>
+            builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.RepositoryManagerBuildAction((container) =>
             {
                 container.RegisterInstance<IRepositoryManager, SingletonRepositoryManager>();
             }));
@@ -30,7 +30,7 @@ namespace Coddee.AppBuilder
         /// </summary>
         public static T UseTransientRepositoryManager<T>(this T builder) where T : IApplicationBuilder
         {
-            builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.InMemoryRepositoryBuildAction((container) =>
+            builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.RepositoryManagerBuildAction((container) =>
             {
                 container.RegisterInstance<IRepositoryManager, TransientRepositoryManager>();
             }));

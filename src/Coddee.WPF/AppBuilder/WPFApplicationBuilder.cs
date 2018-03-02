@@ -7,6 +7,7 @@ using System.Threading;
 using System.Windows;
 using Coddee.AppBuilder;
 using Coddee.ModuleDefinitions;
+using Coddee.Mvvm;
 
 namespace Coddee.WPF
 {
@@ -47,7 +48,7 @@ namespace Coddee.WPF
             }));
         }
 
-        
+
         protected override Type[] GetDefaultModules()
         {
             return CoreModuleDefinitions.Modules.Concat(WindowsModuleDefinitions.Modules.Concat(WPFModuleDefinitions.Modules)).ToArray();
@@ -56,8 +57,11 @@ namespace Coddee.WPF
         protected virtual void SetupViewModelBase()
         {
             Log($"Setting up ViewModelBase.");
-            ViewModelBase.SetApplication((WPFApplication)_app);
+            UniversalViewModelBase.SetApplication((WPFApplication)_app);
+            UniversalViewModelBase.SetContainer(_container);
+
             ViewModelBase.SetContainer(_container);
+            ViewModelEvent.SetViewModelManager(_container.Resolve<IViewModelsManager>());
         }
 
         private StartupEventArgs _startupEventArgs;

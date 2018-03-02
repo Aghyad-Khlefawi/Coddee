@@ -9,16 +9,22 @@ using System.Windows;
 using System.Windows.Controls;
 using Coddee.Collections;
 using Coddee.Exceptions;
+using Coddee.Mvvm;
 using Coddee.WPF;
 using Coddee.WPF.Services.Dialogs;
 
 namespace Coddee.Services.Dialogs
 {
+    /// <inheritdoc cref="IDialogService"/>
     public class DialogService : ViewModelBase<DialogServiceView>, IDialogService
     {
         private int _maxZindex;
 
         private AsyncObservableCollection<IDialog> _activeDialogs;
+
+        /// <summary>
+        /// A collection containing the currently active dialogs.
+        /// </summary>
         public AsyncObservableCollection<IDialog> ActiveDialogs
         {
             get { return _activeDialogs; }
@@ -27,16 +33,22 @@ namespace Coddee.Services.Dialogs
 
 
         private AsyncObservableCollection<IDialog> _minimizedDialogs;
+        /// <summary>
+        /// A collection containing the currently minimized dialogs.
+        /// </summary>
         public AsyncObservableCollection<IDialog> MinimizedDialogs
         {
             get { return _minimizedDialogs; }
             set { SetProperty(ref _minimizedDialogs, value); }
         }
 
+        /// <inheritdoc />
         public event EventHandler<IDialog> DialogStateChanged;
+        /// <inheritdoc />
         public event EventHandler<IDialog> DialogClosed;
 
-        public IDialog CreateDialog(string title, UIElement content, DialogOptions options, params ActionCommandBase[] commands)
+        /// <inheritdoc />
+        public IDialog CreateDialog(string title, object content, DialogOptions options, params ActionCommandBase[] commands)
         {
             var container = CreateViewModel<DialogContainerViewModel>();
             container.ZIndex = _maxZindex;
@@ -49,24 +61,28 @@ namespace Coddee.Services.Dialogs
             Interlocked.Increment(ref _maxZindex);
             return container;
         }
-        public IDialog CreateDialog(UIElement content, DialogOptions options, params ActionCommandBase[] commands)
+        /// <inheritdoc />
+        public IDialog CreateDialog(object content, DialogOptions options, params ActionCommandBase[] commands)
         {
             return CreateDialog(null, content, options, commands);
         }
 
-        public IDialog CreateDialog(string title, UIElement content, params ActionCommandBase[] actions)
+        /// <inheritdoc />
+        public IDialog CreateDialog(string title, object content, params ActionCommandBase[] actions)
         {
             return CreateDialog(title, content, DialogOptions.Default, actions);
         }
-        public IDialog CreateDialog(UIElement content, params ActionCommandBase[] actions)
+        /// <inheritdoc />
+        public IDialog CreateDialog(object content, params ActionCommandBase[] actions)
         {
             return CreateDialog(null, content, actions);
         }
 
+        /// <inheritdoc />
         public IDialog CreateDialog(string title, IEditorViewModel editor, DialogOptions options)
         {
             var dialog = CreateDialog(title,
-                                editor.GetView(),
+                                (UIElement)editor.GetView(),
                                 options,
                                 new CloseActionCommand(_localization.GetValue("Cancel")),
                                 new AsyncActionCommand(_localization.GetValue("Save"),
@@ -77,7 +93,7 @@ namespace Coddee.Services.Dialogs
                                                           await editor.Save();
                                                           return true;
                                                       }
-                                                      catch (ValidationException e)
+                                                      catch (ValidationException)
                                                       {
                                                           return false;
                                                       }
@@ -85,46 +101,57 @@ namespace Coddee.Services.Dialogs
                                 { Tag = ActionCommandTags.SaveCommand });
             return dialog;
         }
+        /// <inheritdoc />
         public IDialog CreateDialog(IEditorViewModel editor, DialogOptions options)
         {
             return CreateDialog(editor.FullTitle, editor, options);
         }
 
+        /// <inheritdoc />
         public IDialog CreateDialog(string title, IEditorViewModel editor)
         {
             return CreateDialog(title, editor, DialogOptions.Default);
         }
+        /// <inheritdoc />
         public IDialog CreateDialog(IEditorViewModel editor)
         {
             return CreateDialog(editor.FullTitle, editor);
         }
 
+        /// <inheritdoc />
         public IDialog CreateDialog(IPresentable presentable)
         {
             return CreateDialog(null, presentable, DialogOptions.Default);
         }
+        /// <inheritdoc />
         public IDialog CreateDialog(IPresentable presentable, DialogOptions options)
         {
             return CreateDialog(null, presentable, options);
         }
+        /// <inheritdoc />
         public IDialog CreateDialog(IPresentable presentable, DialogOptions options, params ActionCommandBase[] actions)
         {
             return CreateDialog(null, presentable, options, actions);
         }
 
+        /// <inheritdoc />
         public IDialog CreateDialog(string title, IPresentable presentable)
         {
             return CreateDialog(title, presentable.GetView(), DialogOptions.Default);
         }
+        /// <inheritdoc />
         public IDialog CreateDialog(string title, IPresentable presentable, DialogOptions options)
         {
             return CreateDialog(title, presentable.GetView(), options);
         }
+
+        /// <inheritdoc />
         public IDialog CreateDialog(string title, IPresentable presentable, DialogOptions options, params ActionCommandBase[] actions)
         {
             return CreateDialog(title, presentable.GetView(), options, actions);
         }
 
+        /// <inheritdoc />
         public IDialog CreateConfirmation(string message, Action yesAction, Action noAction = null)
         {
             return CreateDialog(_localization["Confirmation"],
@@ -156,6 +183,7 @@ namespace Coddee.Services.Dialogs
             }
         }
 
+        /// <inheritdoc />
         public void Initialize(Region dialogRegion)
         {
             dialogRegion.View(this);
@@ -163,11 +191,13 @@ namespace Coddee.Services.Dialogs
             MinimizedDialogs = AsyncObservableCollection<IDialog>.Create();
         }
 
+        /// <inheritdoc />
         public IEnumerable<IDialog> GetActiveDialogs()
         {
             return ActiveDialogs.ToList();
         }
 
+        /// <inheritdoc />
         public IEnumerable<IDialog> GetMinimizedDialogs()
         {
             return MinimizedDialogs.ToList();

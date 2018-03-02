@@ -11,11 +11,27 @@ using Coddee.Validation;
 
 namespace Coddee.WPF.Converters
 {
+    /// <summary>
+    /// Uses the ViewModel validation rules and returns a red brush if the value is invalid.
+    /// </summary>
     public class RequiredBrushConverter : IMultiValueConverter
     {
+        /// <summary>
+        /// Color used if the validation returned error result.
+        /// </summary>
         public static SolidColorBrush ErrorBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#D91D1D"));
+
+        /// <summary>
+        /// Color used if the validation returned warning result.
+        /// </summary>
         public static SolidColorBrush WarningBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFF39524"));
+
+        /// <summary>
+        /// Color used if the validation succeeded.
+        /// </summary>
         public static SolidColorBrush GrayBrush = System.Windows.SystemColors.ActiveBorderBrush;
+
+        /// <inheritdoc />
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
             if (values[0] is List<IValidationRule> required && parameter is string fieldName)
@@ -32,6 +48,7 @@ namespace Coddee.WPF.Converters
             return GrayBrush;
         }
 
+        /// <inheritdoc />
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();

@@ -5,6 +5,7 @@ using System;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using Coddee.Mvvm;
 using Coddee.WPF.Commands;
 using Coddee.WPF.Services.Dialogs;
 
@@ -29,7 +30,11 @@ namespace Coddee.WPF.DefaultShell
 
         #region ToolBar properties
 
-        protected string _username;
+        private string _username;
+
+        /// <summary>
+        /// The username of the logged in user.
+        /// </summary>
         public string Username
         {
             get { return _username; }
@@ -37,13 +42,21 @@ namespace Coddee.WPF.DefaultShell
         }
 
         private string _applicationName;
+
+        /// <summary>
+        /// The application name.
+        /// </summary>
         public string ApplicationName
         {
             get { return _applicationName; }
             set { SetProperty(ref this._applicationName, value); }
         }
 
-        protected bool _hasError;
+        private bool _hasError;
+
+        /// <summary>
+        /// Indicates whether any errors has occurred in the application/
+        /// </summary>
         public bool HasError
         {
             get { return _hasError; }
@@ -51,18 +64,28 @@ namespace Coddee.WPF.DefaultShell
         }
 
         private UIElement _toolbarContent;
+
+        /// <summary>
+        /// The content  of the tool-bar area.
+        /// </summary>
         public UIElement ToolbarContent
         {
             get { return _toolbarContent; }
             set { SetProperty(ref this._toolbarContent, value); }
         }
 
+        
+        /// <inheritdoc cref="Minimize"/>
         public ICommand MinimizeCommand => new RelayCommand(Minimize);
+
+        /// <inheritdoc cref="Exit"/>
         public ICommand ExitCommand => new RelayCommand(Exit);
 
         #endregion
 
         private IDialogExplorer _dialogExplorer;
+
+        /// <see cref="IDialogExplorer"/>
         public IDialogExplorer DialogExplorer
         {
             get { return _dialogExplorer; }
@@ -70,6 +93,9 @@ namespace Coddee.WPF.DefaultShell
         }
 
         private bool _useNavigation;
+        /// <summary>
+        /// If true the navigation bar will be visible.
+        /// </summary>
         public bool UseNavigation
         {
             get { return _useNavigation; }
@@ -81,7 +107,7 @@ namespace Coddee.WPF.DefaultShell
         /// </summary>
         protected virtual void Exit()
         {
-            _app.GetSystemApplication().Shutdown();
+            ((WPFApplication)_app).GetSystemApplication().Shutdown();
         }
 
         /// <summary>
@@ -94,6 +120,7 @@ namespace Coddee.WPF.DefaultShell
 
         private IPresentableViewModel _mainViewModel;
 
+        /// <inheritdoc />
         protected override async Task OnInitialization()
         {
             await base.OnInitialization();
@@ -102,6 +129,7 @@ namespace Coddee.WPF.DefaultShell
             DialogExplorer = Resolve<IDialogExplorer>();
         }
         
+        /// <inheritdoc />
         public IPresentableViewModel SetMainContent(Type defaultPresentable, bool useNavigation)
         {
             _username = _globalVariables.GetVariable<UsernameGlobalVariable>().GetValue();
@@ -113,11 +141,13 @@ namespace Coddee.WPF.DefaultShell
             return _mainViewModel;
         }
 
+        /// <inheritdoc />
         public IPresentableViewModel GetMainContent()
         {
             return _mainViewModel;
         }
 
+        /// <inheritdoc />
         public void SetToolbarContent(UIElement content)
         {
             ToolbarContent = content;

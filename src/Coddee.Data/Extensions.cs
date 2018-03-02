@@ -9,6 +9,9 @@ using Coddee.Collections;
 
 namespace Coddee.Data
 {
+    /// <summary>
+    /// Extension methods for data related classes.
+    /// </summary>
     public static class Extensions
     {
         /// <summary>
@@ -19,7 +22,7 @@ namespace Coddee.Data
         /// <param name="repo">The target repository</param>
         /// <param name="op">Operation type</param>
         /// <param name="item">The model object</param>
-        public static Task<TModel> Update<TModel, TKey>(this ICRUDRepository<TModel,TKey> repo, OperationType op, TModel item) where TModel : IUniqueObject<TKey>
+        public static Task<TModel> Update<TModel, TKey>(this ICRUDRepository<TModel, TKey> repo, OperationType op, TModel item) where TModel : IUniqueObject<TKey>
         {
             return op == OperationType.Add ? repo.InsertItem(item) : repo.UpdateItem(item);
         }
@@ -42,8 +45,9 @@ namespace Coddee.Data
         /// <typeparam name="TModel">The model object Type</typeparam>
         /// <typeparam name="TKey">The model object key Type</typeparam>
         /// <param name="repo">The target repository</param>
+        /// <param name="sender">the repository</param>
         /// <param name="args">The editor save arguments</param>
-        public static void Update<TModel, TKey>(this ICRUDRepository<TModel, TKey> repo,object sender, EditorSaveArgs<TModel> args) where TModel : IUniqueObject<TKey>
+        public static void Update<TModel, TKey>(this ICRUDRepository<TModel, TKey> repo, object sender, EditorSaveArgs<TModel> args) where TModel : IUniqueObject<TKey>
         {
             repo.Update(args.OperationType, args.Item);
         }
@@ -61,7 +65,7 @@ namespace Coddee.Data
         /// Updates the collection base on the operation type 
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        public static void Update<T>(this IList<T> collection,RepositoryChangeEventArgs<T> args)
+        public static void Update<T>(this IList<T> collection, RepositoryChangeEventArgs<T> args)
         {
             collection.Update(args.OperationType, args.Item);
         }
@@ -79,8 +83,7 @@ namespace Coddee.Data
         /// <summary>
         /// Updates the collection base on the operation type 
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        public static void BindToRepositoryChanges<T, TKey>(this IList<T> collection, ICRUDRepository<T,TKey> repo) 
+        public static void BindToRepositoryChanges<T, TKey>(this IList<T> collection, ICRUDRepository<T, TKey> repo)
             where T : IUniqueObject<TKey>
         {
             repo.ItemsChanged += collection.Update;
@@ -98,7 +101,10 @@ namespace Coddee.Data
             return collection;
         }
 
-        public static async Task<IEnumerable<TResult>> Select<T, TResult>(this Task<IEnumerable<T>> collection,Func<T,TResult> func)
+        /// <summary>
+        /// Projects each element of a task sequence result into a new form
+        /// </summary>
+        public static async Task<IEnumerable<TResult>> Select<T, TResult>(this Task<IEnumerable<T>> collection, Func<T, TResult> func)
         {
             return (await collection).Select(func);
         }

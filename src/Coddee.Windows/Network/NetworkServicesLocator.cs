@@ -1,4 +1,7 @@
-﻿using System;
+﻿// Copyright (c) Aghyad khlefawi. All rights reserved.  
+// Licensed under the MIT License. See LICENSE file in the project root for full license information.  
+
+using System;
 using Timer = System.Timers.Timer;
 using System.Collections.Generic;
 using System.Net;
@@ -10,11 +13,18 @@ using Newtonsoft.Json;
 
 namespace Coddee.Network
 {
+    /// <summary>
+    /// Locates <see cref="NetworkService"/> available on the local network.
+    /// </summary>
     public class NetworkServicesLocator
     {
         private static UdpClient _server;
         private static CancellationTokenSource _token;
         private static bool _isBroadcasting;
+
+        /// <summary>
+        /// Start broadcasting the access information for <see cref="NetworkService"/>.
+        /// </summary>
         public async void BroadcastServices(params NetworkService[] services)
         {
             if (_isBroadcasting)
@@ -40,6 +50,10 @@ namespace Coddee.Network
                 }
             }, _token.Token, TaskCreationOptions.LongRunning, TaskScheduler.Default);
         }
+
+        /// <summary>
+        /// Stop broadcasting the access information for <see cref="NetworkService"/>.
+        /// </summary>
         public static void StopBroadcastServer()
         {
             _isBroadcasting = false;
@@ -47,14 +61,24 @@ namespace Coddee.Network
             _token.Cancel();
         }
 
+        /// <summary>
+        /// Triggered when a <see cref="NetworkService"/> is discovered
+        /// </summary>
+        public event EventHandler<IEnumerable<NetworkService>> OnServicesDiscovered;
 
-        public event EventHandler<IEnumerable<NetworkService>> OnServicesDescovered;
-        public event EventHandler<IEnumerable<NetworkService>> OnServiceDescoveryCompleted;
+        /// <summary>
+        /// Triggered when the search for <see cref="NetworkService"/> is completed.
+        /// </summary>
+        public event EventHandler<IEnumerable<NetworkService>> OnServiceDiscoveryCompleted;
 
         private UdpClient _client;
         private DateTime _startDate;
         private bool _completed;
 
+        /// <summary>
+        /// Start looking for <see cref="NetworkService"/> on the local network
+        /// </summary>
+        /// <param name="timeoutSeconds"></param>
         public async void StartServicesDiscoveryAsync(int timeoutSeconds)
         {
             var result = new List<NetworkService>();
@@ -65,7 +89,7 @@ namespace Coddee.Network
                 if (!_completed)
                 {
                     _completed = true;
-                    OnServiceDescoveryCompleted?.Invoke(this, result);
+                    OnServiceDiscoveryCompleted?.Invoke(this, result);
                 }
                 timer.Stop();
             };
@@ -86,10 +110,10 @@ namespace Coddee.Network
 
                     item.AccessInfo.IP = res.RemoteEndPoint.Address.ToString();
                 }
-                OnServicesDescovered?.Invoke(this, result);
+                OnServicesDiscovered?.Invoke(this, result);
             }
             _completed = true;
-            OnServiceDescoveryCompleted?.Invoke(this, result);
+            OnServiceDiscoveryCompleted?.Invoke(this, result);
         }
     }
 }

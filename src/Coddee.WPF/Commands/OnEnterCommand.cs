@@ -11,6 +11,9 @@ namespace Coddee.WPF.Commands
     /// </summary>
     public class OnEnterCommand
     {
+        /// <summary>
+        /// The command that will be executed.
+        /// </summary>
         public static readonly DependencyProperty CommandProperty =
             DependencyProperty.RegisterAttached(
                 "Command",
@@ -30,11 +33,17 @@ namespace Coddee.WPF.Commands
             };
         }
 
+        /// <summary>
+        /// Set <see cref="CommandProperty"/>.
+        /// </summary>
         public static void SetCommand(UIElement UIElement, ICommand command)
         {
             UIElement.SetValue(CommandProperty, command);
         }
 
+        /// <summary>
+        /// Get <see cref="CommandProperty"/>.
+        /// </summary>
         public static ICommand GetCommand(UIElement UIElement)
         {
             return (UIElement.GetValue(CommandProperty) as ICommand);

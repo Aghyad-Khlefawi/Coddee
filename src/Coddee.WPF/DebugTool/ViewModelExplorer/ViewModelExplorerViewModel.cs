@@ -1,20 +1,28 @@
-﻿using System.Linq;
+﻿// Copyright (c) Aghyad khlefawi. All rights reserved.  
+// Licensed under the MIT License. See LICENSE file in the project root for full license information.  
+
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using Coddee.Collections;
-using Coddee.Services;
-using Coddee.Services.ViewModelManager;
+using Coddee.Mvvm;
 using Coddee.WPF.Commands;
 
 namespace Coddee.WPF.DebugTool
 {
+    /// <summary>
+    /// Views the available ViewModels and provides a way to navigate the hierarchy.
+    /// </summary>
     public class ViewModelExplorerViewModel : ViewModelBase<ViewModelExplorerView>
     {
+        /// <inheritdoc />
         public ViewModelExplorerViewModel()
         {
-            
+
         }
+
+        /// <inheritdoc />
         public ViewModelExplorerViewModel(IViewModelsManager vmManager, PropertyMainpulatorViewModel mainpulator)
         {
             _vmManager = vmManager;
@@ -25,6 +33,10 @@ namespace Coddee.WPF.DebugTool
         private PropertyMainpulatorViewModel _mainpulator;
 
         private UIElement _viewModelManipulatorContent;
+
+        /// <summary>
+        /// <see cref="PropertyMainpulatorViewModel"/>
+        /// </summary>
         public UIElement ViewModelManipulatorContent
         {
             get { return _viewModelManipulatorContent; }
@@ -32,6 +44,10 @@ namespace Coddee.WPF.DebugTool
         }
 
         private AsyncObservableCollection<ViewModelNavigationItem> _navigationStack;
+
+        /// <summary>
+        /// Contents the navigation steps.
+        /// </summary>
         public AsyncObservableCollection<ViewModelNavigationItem> NavigationStack
         {
             get { return _navigationStack; }
@@ -39,6 +55,10 @@ namespace Coddee.WPF.DebugTool
         }
 
         private AsyncObservableCollection<ViewModelNavigationItem> _viewModels;
+
+        /// <summary>
+        /// Collections contains the available ViewModels.
+        /// </summary>
         public AsyncObservableCollection<ViewModelNavigationItem> ViewModels
         {
             get { return _viewModels; }
@@ -46,12 +66,17 @@ namespace Coddee.WPF.DebugTool
         }
 
         private ViewModelInfo _currentViewModel;
+
+        /// <summary>
+        /// The selected ViewModel
+        /// </summary>
         public ViewModelInfo CurrentViewModel
         {
             get { return _currentViewModel; }
             set { SetProperty(ref this._currentViewModel, value); }
         }
 
+        /// <inheritdoc />
         protected override void OnDesignMode()
         {
             base.OnDesignMode();
@@ -68,6 +93,7 @@ namespace Coddee.WPF.DebugTool
             SetAsCurrentVM(shellVM.ViewModelInfo);
         }
 
+        /// <inheritdoc />
         protected override async Task OnInitialization()
         {
             await base.OnInitialization();
@@ -76,11 +102,15 @@ namespace Coddee.WPF.DebugTool
 
 
             await _mainpulator.Initialize();
-            ViewModelManipulatorContent = _mainpulator.GetView();
+            ViewModelManipulatorContent = (UIElement)_mainpulator.GetView();
         }
 
+        /// <summary>
+        /// Load the ViewModels
+        /// </summary>
         public ICommand LoadCommand => new RelayCommand(Load);
 
+        /// <inheritdoc cref="LoadCommand"/>
         public void Load()
         {
             IsBusy = true;

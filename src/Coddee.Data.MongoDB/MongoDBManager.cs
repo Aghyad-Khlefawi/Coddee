@@ -15,6 +15,7 @@ namespace Coddee.Data.MongoDB
         private readonly string _dbName;
         private IMongoClient _client;
 
+        /// <inheritdoc />
         public MongoDBManager(string connection,string dbName)
         {
             _connection = connection;

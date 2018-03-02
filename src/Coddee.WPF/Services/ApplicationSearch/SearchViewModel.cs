@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿// Copyright (c) Aghyad khlefawi. All rights reserved.  
+// Licensed under the MIT License. See LICENSE file in the project root for full license information.  
+
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,20 +13,29 @@ using Coddee.WPF.Commands;
 
 namespace Coddee.Services.ApplicationSearch
 {
+    /// <summary>
+    /// Default implementation of <see cref="IApplicationQuickSearch"/>
+    /// </summary>
     public class SearchViewModel : ViewModelBase<SearchView>, IApplicationQuickSearch
     {
         private readonly IApplicationSearchService _applicationSearchService;
 
+        /// <inheritdoc />
         public SearchViewModel()
         {
 
         }
+        /// <inheritdoc />
         public SearchViewModel(IApplicationSearchService applicationSearchService)
         {
             _applicationSearchService = applicationSearchService;
         }
 
         private bool _showPopup;
+
+        /// <summary>
+        /// Indicates whether the popup is displayed
+        /// </summary>
         public bool ShowPopup
         {
             get { return _showPopup; }
@@ -31,6 +43,10 @@ namespace Coddee.Services.ApplicationSearch
         }
 
         private string _searchText;
+
+        /// <summary>
+        /// The search text of the service.
+        /// </summary>
         public string SearchText
         {
             get { return _searchText; }
@@ -44,6 +60,10 @@ namespace Coddee.Services.ApplicationSearch
 
 
         private AsyncObservableCollectionView<SearchItem> _searchResults;
+
+        /// <summary>
+        /// The results of the current search operation.
+        /// </summary>
         public AsyncObservableCollectionView<SearchItem> SearchResults
         {
             get { return _searchResults; }
@@ -51,6 +71,10 @@ namespace Coddee.Services.ApplicationSearch
         }
 
         private SearchItem _selectedResult;
+
+        /// <summary>
+        /// Selected result from the popup.
+        /// </summary>
         public SearchItem SelectedResult
         {
             get { return _selectedResult; }
@@ -58,6 +82,10 @@ namespace Coddee.Services.ApplicationSearch
         }
 
         private bool _searchResultsFound = true;
+
+        /// <summary>
+        /// If false then no result were found in the search operation.
+        /// </summary>
         public bool SearchResultsFound
         {
             get { return _searchResultsFound; }
@@ -65,9 +93,25 @@ namespace Coddee.Services.ApplicationSearch
         }
 
         private SearchOperation _lastOperation;
+
+        /// <summary>
+        /// Close the search popup.
+        /// </summary>
         public ICommand CloseSearchCommand => new RelayCommand(CloseSearch);
+
+        /// <summary>
+        /// Called when a key is pressed in the search bar.
+        /// </summary>
         public ICommand KeyDownCommand => new RelayCommand<KeyEventArgs>(KeyDown);
+
+        /// <summary>
+        /// Called when a result is pressed.
+        /// </summary>
         public ICommand NavigateCommand => new RelayCommand(Navigate);
+
+        /// <summary>
+        /// Called when the first result is selected.
+        /// </summary>
         public ICommand NavigateFirstCommand => new RelayCommand(NavigateFirst);
 
         private void NavigateFirst()
@@ -88,6 +132,7 @@ namespace Coddee.Services.ApplicationSearch
         }
 
 
+        /// <inheritdoc />
         protected override void OnDesignMode()
         {
             base.OnDesignMode();
@@ -106,6 +151,7 @@ namespace Coddee.Services.ApplicationSearch
             Search(value);
         }
 
+        /// <inheritdoc />
         protected override void OnDefaultViewCreated(SearchView e)
         {
             base.OnDefaultViewCreated( e);
@@ -119,13 +165,14 @@ namespace Coddee.Services.ApplicationSearch
             };
         }
 
+        /// <inheritdoc />
         public void Focus()
         {
             View.SearchBox.Focus();
             Keyboard.Focus(View.SearchBox);
         }
-
-        public void Search(string term)
+        
+        private void Search(string term)
         {
             if (string.IsNullOrEmpty(term))
                 return;
@@ -144,7 +191,7 @@ namespace Coddee.Services.ApplicationSearch
                                                   });
         }
 
-        public void AttachNavigationHandler(IEnumerable<SearchItem> items)
+        private void AttachNavigationHandler(IEnumerable<SearchItem> items)
         {
             foreach (var searchItem in items)
             {
@@ -160,6 +207,7 @@ namespace Coddee.Services.ApplicationSearch
             });
         }
 
+        /// <inheritdoc />
         protected override async Task OnInitialization()
         {
             await base.OnInitialization();

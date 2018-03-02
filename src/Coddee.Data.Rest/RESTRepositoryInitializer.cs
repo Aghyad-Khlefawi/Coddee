@@ -7,14 +7,19 @@ using System.Net.Http;
 
 namespace Coddee.Data.REST
 {
+    /// <summary>
+    /// A repository initializer that should provide the Rest repositories with their dependencies to operate.
+    /// </summary>
     public class RESTRepositoryInitializer : IRepositoryInitializer
     {
         private readonly Action _unauthorizedRequestHandler;
         private readonly IObjectMapper _mapper;
         private HttpClient _client;
 
+        /// <inheritdoc />
         public int RepositoryType { get; } = (int)RepositoryTypes.REST;
 
+        /// <inheritdoc />
         public RESTRepositoryInitializer(string apiBaseURL, Action unauthorizedRequestHandler, IObjectMapper mapper)
         {
             _unauthorizedRequestHandler = unauthorizedRequestHandler;
@@ -22,11 +27,17 @@ namespace Coddee.Data.REST
             _client = new HttpClient { BaseAddress = new Uri(apiBaseURL, UriKind.Absolute) };
         }
 
+        /// <inheritdoc />
         public void InitializeRepository(IRepositoryManager repositoryManager, IRepository repository, Type implementedInterface)
         {
             ((IRESTRepository)repository).Initialize(_client, _unauthorizedRequestHandler, repositoryManager, _mapper, implementedInterface);
         }
 
+        /// <summary>
+        /// Change the API base URL for the repositories.
+        /// </summary>
+        /// <param name="url"></param>
+        /// <param name="repositories"></param>
         public void SetApiBaseUrl(string url, IEnumerable<IRESTRepository> repositories)
         {
             _client = new HttpClient { BaseAddress = new Uri(url, UriKind.Absolute) };
