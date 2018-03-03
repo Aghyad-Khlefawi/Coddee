@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Coddee.AppBuilder;
+using Coddee.Mvvm;
 using Coddee.Services;
-using Coddee.Xamarin.Common;
 using Coddee.Xamarin.DefaultShell;
 using Coddee.Xamarin.Events;
-using Coddee.Xamarin.Services.ViewModelManager;
 using Xamarin.Forms;
 
 namespace Coddee.Xamarin.AppBuilder
@@ -35,7 +32,7 @@ namespace Coddee.Xamarin.AppBuilder
 
                 var systemApplication = xamarinApplication.GetSystemApplication();
 
-                var shell = (DefaultShellView) shellViewModel.GetPage();
+                var shell = (DefaultShellView) shellViewModel.GetView();
                 config?.Invoke(shell);
                 container.RegisterInstance<IShell>(shell);
                 systemApplication.MainPage = shell;
