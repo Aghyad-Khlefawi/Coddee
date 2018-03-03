@@ -1,7 +1,7 @@
 ﻿using System;
+using Coddee.Commands;
 using Coddee.Data;
 using Coddee.Mvvm;
-using Coddee.Xamarin.Commands;
 using Xamarin.Forms;
 
 namespace Coddee.Xamarin.Common
