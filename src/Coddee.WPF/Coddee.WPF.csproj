@@ -230,7 +230,6 @@
     <Compile Include="Common\SelectableItem.cs" />
     <Compile Include="XamlHelpers\UpdatableMarkupExtension.cs" />
     <Compile Include="XamlHelpers\Validate.cs" />
-    <Compile Include="Common\ViewModelsGroupEvent.cs" />
     <Compile Include="WPFModulesDefnitions.cs" />
     <Compile Include="XamlHelpers\FocusOnLoad.cs" />
     <Compile Include="XamlHelpers\RelayScroll.cs" />
