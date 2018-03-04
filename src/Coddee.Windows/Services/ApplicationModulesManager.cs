@@ -21,6 +21,7 @@ namespace Coddee.Services
         private readonly IContainer _container;
         private readonly ILogger _logger;
 
+        /// <inheritdoc />
         public ApplicationModulesManager(IContainer container, ILogger logger)
         {
             _container = container;
@@ -29,11 +30,8 @@ namespace Coddee.Services
         }
 
         private readonly Dictionary<string, Module> _modules;
-
-        /// <summary>
-        /// Register a module manually
-        /// </summary>
-        /// <param name="modules">The modules information</param>
+       
+        /// <inheritdoc />
         public IEnumerable<Module> RegisterModule(params Module[] modules)
         {
             foreach (var applicationModule in modules)
@@ -44,6 +42,7 @@ namespace Coddee.Services
             return modules;
         }
 
+        /// <inheritdoc />
         public IEnumerable<Module> RegisterModule(params Type[] modules)
         {
             var res = new List<Module>();
@@ -67,11 +66,7 @@ namespace Coddee.Services
             return res;
         }
 
-        /// <summary>
-        /// Search for modules in the executable folder.
-        /// Finds the modules based on the ApplicationModuleAttribute
-        /// </summary>
-        /// <param name="assembliesPrefix">A prefix for the assemblies to look for</param>
+        /// <inheritdoc />
         public IEnumerable<Module> DescoverModulesFromAssambles(string assembliesPrefix = null)
         {
             string path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
@@ -79,12 +74,7 @@ namespace Coddee.Services
                                                     .Select(Assembly.LoadFile)
                                                     .ToArray());
         }
-
-        /// <summary>
-        /// Search for modules in the executable folder.
-        /// Finds the modules based on the ApplicationModuleAttribute
-        /// </summary>
-        /// <param name="assemblies">A specific assemblies to search for modules</param>
+        /// <inheritdoc />
         public IEnumerable<Module> DescoverModulesFromAssambles(params Assembly[] assemblies)
         {
             var res = new List<Module>();
@@ -118,10 +108,7 @@ namespace Coddee.Services
             return res;
         }
 
-        /// <summary>
-        /// Calls the initialization method on the modules
-        /// </summary>
-        /// <param name="modules"></param>
+        /// <inheritdoc />
         public async Task InitializeModules(params Module[] modules)
         {
             foreach (var module in modules)
@@ -131,9 +118,7 @@ namespace Coddee.Services
         }
 
 
-        /// <summary>
-        /// Calls the initialization method on the modules with auto initialize type
-        /// </summary>
+        /// <inheritdoc />
         public async Task InitializeAutoModules()
         {
             _logger.Log(EventsSource, $"Initializing auto modules", LogRecordTypes.Debug);
@@ -153,9 +138,7 @@ namespace Coddee.Services
         /// <summary>
         /// Aggregate through the modules to resolve and initialize there dependencies then initialize the requested module
         /// </summary>
-        /// <param name="module"></param>
-        /// <param name="dependencyStack"></param>
-        public async Task InitializeModuleWithDependincies(Module module, List<string> dependencyStack)
+       public async Task InitializeModuleWithDependincies(Module module, List<string> dependencyStack)
         {
             if (module.Initialized)
             {

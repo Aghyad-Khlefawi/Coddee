@@ -3,8 +3,12 @@
 
 namespace Coddee.AppBuilder
 {
-    public class ConsoleApplicationBuilder: WindowsApplicationBuilder,IConsoleApplicationBuilder
+    /// <summary>
+    /// Sets up the <see cref="ConsoleApplication"/> build steps.
+    /// </summary>
+    public class ConsoleApplicationBuilder : WindowsApplicationBuilder,IConsoleApplicationBuilder
     {
+        /// <inheritdoc />
         public ConsoleApplicationBuilder(IApplication app, IContainer container) : base(app, container)
         {
 

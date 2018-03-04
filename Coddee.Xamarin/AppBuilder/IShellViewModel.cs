@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Coddee.Xamarin.Common;
+﻿using Coddee.Mvvm;
 
 namespace Coddee.Xamarin.AppBuilder
 {

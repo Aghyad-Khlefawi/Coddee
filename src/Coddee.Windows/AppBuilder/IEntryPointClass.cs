@@ -3,8 +3,14 @@
 
 namespace Coddee.Windows.AppBuilder
 {
+    /// <summary>
+    /// Represents an entry point class for a console application
+    /// </summary>
     public interface IEntryPointClass
     {
+        /// <summary>
+        /// The main method of the application.
+        /// </summary>
         void Start(IContainer container);
     }
 }

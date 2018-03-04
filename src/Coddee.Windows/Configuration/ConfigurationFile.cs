@@ -9,9 +9,13 @@ using Newtonsoft.Json;
 
 namespace Coddee.Services.Configuration
 {
-
+    /// <summary>
+    /// A configuration file that contains key value configurations for the application.
+    /// </summary>
     public class ConfigurationFile : IConfigurationFile
     {
+        /// <param name="name">The configuration file name</param>
+        /// <param name="path">The configuration file full path</param>
         public ConfigurationFile(string name, string path)
         {
             Name = name;
@@ -20,19 +24,29 @@ namespace Coddee.Services.Configuration
             _configurations = new Dictionary<string, string>();
         }
 
+        /// <param name="name">The configuration file name</param>
+        /// <param name="path">The configuration file full path</param>
+        /// <param name="cryptoProvider">An encryption provide to encrypt and decrypt the file.</param>
         public ConfigurationFile(string name, string path, CryptoProvider cryptoProvider)
             : this(name, path)
         {
             _cryptoProvider = cryptoProvider;
         }
 
+        /// <param name="name">The configuration file name</param>
+        /// <param name="path">The configuration file full path</param>
+        /// <param name="cryptoProvider">An encryption provide to encrypt and decrypt the file.</param>
+        /// <param name="defaultValues">Default values in case the file did not exist.</param>
         public ConfigurationFile(string name, string path, CryptoProvider cryptoProvider, Dictionary<string, object> defaultValues)
             : this(name, path, cryptoProvider)
         {
             _defaultValues = defaultValues;
         }
 
+        /// <inheritdoc />
         public string Name { get; }
+
+        /// <inheritdoc />
         public string Path { get; }
 
         private readonly CryptoProvider _cryptoProvider;
@@ -43,6 +57,7 @@ namespace Coddee.Services.Configuration
 
         private bool _isLoaded;
 
+        /// <inheritdoc />
         public TValue GetValue<TValue>(string key)
         {
             if (!_isLoaded)
@@ -50,6 +65,7 @@ namespace Coddee.Services.Configuration
             return JsonConvert.DeserializeObject<TValue>(_configurations[key]);
         }
 
+        /// <inheritdoc />
         public bool TryGetValue<TValue>(string key, out TValue value)
         {
             if (!_isLoaded)
@@ -65,6 +81,7 @@ namespace Coddee.Services.Configuration
             return true;
         }
 
+        /// <inheritdoc />
         public void SetValue<TValue>(string key, TValue value)
         {
             _configurations[key] = JsonConvert.SerializeObject(value);
@@ -73,6 +90,7 @@ namespace Coddee.Services.Configuration
 
 
 
+        /// <inheritdoc />
         public void ReadFile()
         {
             if (!CheckIfFileExistsAndCreate())

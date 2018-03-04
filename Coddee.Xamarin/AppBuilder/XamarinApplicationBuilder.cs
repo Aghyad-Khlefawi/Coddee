@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using Coddee.AppBuilder;
 using Coddee.Loggers;
 using Coddee.ModuleDefinitions;
+using Coddee.Mvvm;
 using Coddee.Services;
 using Coddee.Xamarin.Common;
 using Coddee.Xamarin.Services.ApplicationModulesManager;
@@ -97,8 +96,11 @@ namespace Coddee.Xamarin.AppBuilder
             BuildActionsCoordinator.AddAction(DefaultBuildActions.SetupViewModelBaseBuildAction(container =>
             {
                 Log($"Setting up ViewModelBase.");
-                ViewModelBase.SetApplication((XamarinApplication) _app);
+                UniversalViewModelBase.SetApplication((XamarinApplication) _app);
+                UniversalViewModelBase.SetContainer(_container);
+
                 ViewModelBase.SetContainer(_container);
+                ViewModelEvent.SetViewModelManager(_container.Resolve<IViewModelsManager>());
             }));
         }
     }

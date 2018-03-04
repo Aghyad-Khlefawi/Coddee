@@ -5,6 +5,7 @@ using System;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Coddee.Loggers;
+using Coddee.Mvvm;
 using Coddee.Services.ApplicationConsole;
 using Coddee.WPF;
 

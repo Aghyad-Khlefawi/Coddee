@@ -6,12 +6,15 @@ using Microsoft.Win32;
 
 namespace Coddee.Windows
 {
+    /// <summary>
+    /// Helper class for getting information related to the operation system.
+    /// </summary>
     public class OS
     {
         /// <summary>
         /// Returns the windows name and it's edition
         /// E.g. Windows 10 Enterprise
-        /// The function result may change between deffrent versions of windows
+        /// The function result may change between different versions of windows
         /// </summary>
         public static string GetWindowsName()
         {
@@ -22,7 +25,7 @@ namespace Coddee.Windows
         /// <summary>
         /// Returns the windows release id
         /// E.g. 1607
-        /// The function result may change between deffirent versions of windows
+        /// The function result may change between different versions of windows
         /// </summary>
         public static string GetWindowsVersion()
         {
@@ -33,7 +36,7 @@ namespace Coddee.Windows
         /// <summary>
         /// Returns the windows edition
         /// E.g. Enterprise
-        /// The function result may change between deffrent versions of windows
+        /// The function result may change between different versions of windows
         /// </summary>
         public static string GetWindowsEdition()
         {
@@ -44,7 +47,7 @@ namespace Coddee.Windows
         /// <summary>
         /// Returns the windows Build number
         /// E.g. 10.0.14393
-        /// The function result may change between deffrent versions of windows
+        /// The function result may change between different versions of windows
         /// </summary>
         public static string GetWindowsBuildNumber()
         {

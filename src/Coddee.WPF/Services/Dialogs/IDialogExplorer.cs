@@ -1,4 +1,6 @@
-﻿namespace Coddee.WPF.Services.Dialogs
+﻿using Coddee.Mvvm;
+
+namespace Coddee.WPF.Services.Dialogs
 {
     public interface IDialogExplorer:IPresentable,IInitializable
     {

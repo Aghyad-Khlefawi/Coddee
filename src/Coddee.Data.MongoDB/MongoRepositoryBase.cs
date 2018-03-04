@@ -18,9 +18,18 @@ namespace Coddee.Data.MongoDB
     /// </summary>
     public abstract class MongoRepositoryBase<TModel> : RepositoryBase<TModel>, IMongoRepository
     {
+        /// <summary>
+        /// The db manager for creating sessions.
+        /// </summary>
         protected IMongoDBManager _dbManager;
+
+
+        /// <summary>
+        /// A reference to the database.
+        /// </summary>
         protected IMongoDatabase _database;
 
+        /// <inheritdoc />
         public override int RepositoryType { get; } = (int)RepositoryTypes.Mongo;
 
 
@@ -38,6 +47,10 @@ namespace Coddee.Data.MongoDB
             Initialize(repositoryManager, mapper, implementedInterface, config);
         }
 
+
+        /// <summary>
+        /// Configure the default mapping for the model.
+        /// </summary>
         protected virtual void ConfigureDetaultTableMappings<TType, TKey>(
             BsonClassMap<TType> c,
             Expression<Func<TType, TKey>> idMap)
@@ -48,6 +61,9 @@ namespace Coddee.Data.MongoDB
             c.SetIgnoreExtraElements(true);
         }
 
+        /// <summary>
+        /// Configure the default mapping for the model.
+        /// </summary>
         protected virtual void ConfigureDetaultTableMappings<TType>(
             BsonClassMap<TType> c,
             string idColumn)
@@ -62,21 +78,36 @@ namespace Coddee.Data.MongoDB
     /// Base implementation for a MongoDB repository
     /// Register class mapping for a collection 
     /// </summary>
-    public abstract class MongoRepositoryBase<TModel, TKey> : MongoRepositoryBase<TModel>
+    public abstract class MongoRepositoryBase<TModel, TKey> : MongoRepositoryBase<TModel>, IRepository<TModel, TKey> where TModel : IUniqueObject<TKey>
     {
+        /// <summary>
+        /// A reference to the database collection.
+        /// </summary>
         protected IMongoCollection<TModel> _collection;
+
+        /// <summary>
+        /// A function that returns the key for a model object.
+        /// </summary>
         protected readonly Expression<Func<TModel, TKey>> _idProperty;
+
+        /// <summary>
+        /// The name of the database collection.
+        /// </summary>
         protected readonly string _collectionName;
+
+        /// <inheritdoc />
         public event EventHandler<RepositoryChangeEventArgs<TModel>> ItemsChanged;
 
         private readonly string _identifier;
 
+        /// <inheritdoc />
         protected MongoRepositoryBase(string collectionName)
         {
             _collectionName = collectionName;
             _identifier = typeof(TModel).Name;
         }
 
+        /// <inheritdoc />
         protected MongoRepositoryBase(string collectionName, Expression<Func<TModel, TKey>> idProperty)
             : this(collectionName)
         {
@@ -98,7 +129,9 @@ namespace Coddee.Data.MongoDB
             _collection = _database.GetCollection<TModel>(_collectionName);
         }
 
-
+        /// <summary>
+        /// Register the mapping information for the table.
+        /// </summary>
         protected virtual void RegisterTableMappings()
         {
             BsonClassMap.RegisterClassMap<TModel>(c =>
@@ -112,15 +145,23 @@ namespace Coddee.Data.MongoDB
             });
         }
 
+        /// <summary>
+        /// Returns the default name used for the Id column.
+        /// </summary>
+        /// <returns></returns>
         protected virtual string GetDefaultIdColumnName()
         {
             return "ID";
         }
 
-
+        /// <summary>
+        /// Configure additional table mapping
+        /// </summary>
         protected virtual void ConfigureTableMappings(BsonClassMap<TModel> bsonClassMap)
         {
         }
+
+        /// <inheritdoc />
         public override void SyncServiceSyncReceived(string identifier, RepositorySyncEventArgs args)
         {
             base.SyncServiceSyncReceived(identifier, args);
@@ -129,12 +170,16 @@ namespace Coddee.Data.MongoDB
                                   new RepositoryChangeEventArgs<TModel>(args.OperationType, ((JObject)args.Item).ToObject<TModel>(), true));
         }
 
+        /// <summary>
+        /// Called when the repository content is changed
+        /// </summary>
         protected virtual void RaiseItemsChanged(object sender, RepositoryChangeEventArgs<TModel> args)
         {
             ItemsChanged?.Invoke(this, args);
         }
 
-        public override void SetSyncService(IRepositorySyncService syncService,bool sendSyncRequests=true)
+        /// <inheritdoc />
+        public override void SetSyncService(IRepositorySyncService syncService, bool sendSyncRequests = true)
         {
             base.SetSyncService(syncService, sendSyncRequests);
             ItemsChanged += OnItemsChanged;
@@ -154,27 +199,31 @@ namespace Coddee.Data.MongoDB
     public abstract class ReadOnlyMongoRepositoryBase<TModel, TKey> : MongoRepositoryBase<TModel, TKey>,
         IReadOnlyRepository<TModel, TKey> where TModel : IUniqueObject<TKey>
     {
+        /// <inheritdoc />
         protected ReadOnlyMongoRepositoryBase(string collectionName)
             : base(collectionName)
         {
         }
 
+        /// <inheritdoc />
         protected ReadOnlyMongoRepositoryBase(string collectionName, Expression<Func<TModel, TKey>> idProperty)
             : base(collectionName, idProperty)
         {
         }
 
 
+        /// <inheritdoc />
         public virtual Task<TModel> this[TKey index] => _collection
             .Find(new BsonDocument("_id", BsonValue.Create(index)))
             .FirstAsync();
 
+        /// <inheritdoc />
         public virtual async Task<IEnumerable<TModel>> GetItems()
         {
             return (await _collection.Find(e => true).ToListAsync()).AsEnumerable();
         }
 
-        
+
     }
 
 
@@ -187,16 +236,19 @@ namespace Coddee.Data.MongoDB
     public abstract class CRUDMongoRepositoryBase<TModel, TKey> : ReadOnlyMongoRepositoryBase<TModel, TKey>,
         ICRUDRepository<TModel, TKey> where TModel : IUniqueObject<TKey>
     {
+        /// <inheritdoc />
         protected CRUDMongoRepositoryBase(string collectionName) : base(collectionName)
         {
         }
 
+        /// <inheritdoc />
         protected CRUDMongoRepositoryBase(string collectionName,
                                           Expression<Func<TModel, TKey>> idProperty) : base(collectionName, idProperty)
         {
         }
 
 
+        /// <inheritdoc />
         public virtual async Task<TModel> UpdateItem(TModel item)
         {
             await _collection.ReplaceOneAsync(new BsonDocument("_id", BsonValue.Create(item.GetKey)), item);
@@ -204,6 +256,7 @@ namespace Coddee.Data.MongoDB
             return item;
         }
 
+        /// <inheritdoc />
         public virtual async Task<TModel> InsertItem(TModel item)
         {
             await _collection.InsertOneAsync(item);
@@ -211,6 +264,7 @@ namespace Coddee.Data.MongoDB
             return item;
         }
 
+        /// <inheritdoc />
         public virtual async Task DeleteItemByKey(TKey ID)
         {
             var item = await this[ID];
@@ -218,6 +272,7 @@ namespace Coddee.Data.MongoDB
             RaiseItemsChanged(this, new RepositoryChangeEventArgs<TModel>(OperationType.Edit, item, false));
         }
 
+        /// <inheritdoc />
         public virtual async Task DeleteItem(TModel item)
         {
             await DeleteItemByKey(item.GetKey);

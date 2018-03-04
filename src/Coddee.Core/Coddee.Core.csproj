@@ -67,10 +67,29 @@
     <Compile Include="AsyncLinq.cs" />
     <Compile Include="Attributes\Authorize.cs" />
     <Compile Include="Attributes\NameAttribute.cs" />
+    <Compile Include="Commands\IReactiveCommand.cs" />
+    <Compile Include="Commands\ObservedProperty.cs" />
+    <Compile Include="Commands\ReactiveCommand.cs" />
     <Compile Include="ConfigKeys.cs" />
     <Compile Include="DefaultMessages.cs" />
     <Compile Include="Diff.cs" />
     <Compile Include="Exceptions\ValidationException.cs" />
+    <Compile Include="Mvvm\BindableBase.cs" />
+    <Compile Include="Mvvm\Delegates.cs" />
+    <Compile Include="Mvvm\IEditorViewModel.cs" />
+    <Compile Include="Mvvm\IPresentable.cs" />
+    <Compile Include="Mvvm\IViewModel.cs" />
+    <Compile Include="Mvvm\IViewModelEvent.cs" />
+    <Compile Include="Mvvm\IViewModelsManager.cs" />
+    <Compile Include="Mvvm\UniversalViewModelBase.cs" />
+    <Compile Include="Mvvm\ViewModelBubbleEvent.cs" />
+    <Compile Include="Mvvm\ViewModelEvent.cs" />
+    <Compile Include="Mvvm\ViewModelInfo.cs" />
+    <Compile Include="Mvvm\ViewModelManagerModule.cs" />
+    <Compile Include="Mvvm\ViewModelOptions.cs" />
+    <Compile Include="Mvvm\ViewModelsGroupEvent.cs" />
+    <Compile Include="Mvvm\ViewModelsManager.cs" />
+    <Compile Include="Mvvm\ViewModelTunnelEvent.cs" />
     <Compile Include="Position.cs" />
     <Compile Include="Services\Console\ConsoleCommandParser.cs" />
     <Compile Include="EventRoutingStrategy.cs" />
@@ -143,5 +162,6 @@
   <ItemGroup>
     <None Include="Coddee.pfx" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
 </Project>

@@ -13,6 +13,7 @@ namespace Coddee.WPF
     /// <typeparam name="TItem"></typeparam>
     public class SelectableItem<TItem> : BindableBase
     {
+        /// <inheritdoc />
         public SelectableItem(TItem item, bool isSelected = false)
         {
             Item = item;
@@ -21,6 +22,10 @@ namespace Coddee.WPF
 
 
         private string _title;
+        
+        /// <summary>
+        /// Title for the wrapped item.
+        /// </summary>
         public string Title
         {
             get { return _title; }
@@ -28,6 +33,10 @@ namespace Coddee.WPF
         }
 
         private string _subtitle;
+
+        /// <summary>
+        /// Sub-Title for the wrapped item.
+        /// </summary>
         public string Subtitle
         {
             get { return _subtitle; }
@@ -37,7 +46,7 @@ namespace Coddee.WPF
         private bool _isSelected;
 
         /// <summary>
-        /// Wraped object
+        /// Wrapped object
         /// </summary>
         public TItem Item { get; set; }
 
@@ -103,6 +112,9 @@ namespace Coddee.WPF
             IsSelected = !IsSelected;
         }
 
+        /// <summary>
+        /// Set is <see cref="IsSelected"/> property to true.
+        /// </summary>
         public void Select()
         {
             IsSelected = true;

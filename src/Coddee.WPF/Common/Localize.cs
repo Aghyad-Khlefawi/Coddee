@@ -11,8 +11,12 @@ namespace Coddee.WPF
     /// </summary>
     public class Localize : UpdatableMarkupExtension
     {
+        /// <summary>
+        /// The localization manager.
+        /// </summary>
         public static LocalizationManager Localization => LocalizationManager.DefaultLocalizationManager;
 
+        /// <inheritdoc />
         public Localize(object key)
         {
             Key = key;
@@ -28,6 +32,7 @@ namespace Coddee.WPF
         [ConstructorArgument("key")]
         public object Key { get; set; }
 
+        /// <inheritdoc />
         public override object ProvideValue()
         {
             return Key != null ? Localization.GetValue((string)Key) : null;

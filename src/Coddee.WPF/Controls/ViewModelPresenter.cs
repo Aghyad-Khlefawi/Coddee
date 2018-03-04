@@ -4,6 +4,7 @@
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
+using Coddee.Mvvm;
 
 namespace Coddee.WPF.Controls
 {
@@ -33,9 +34,9 @@ namespace Coddee.WPF.Controls
 
         public static readonly DependencyPropertyKey ContentPropertyKey = DependencyProperty.RegisterReadOnly(
                                                                       "Content",
-                                                                      typeof(UIElement),
+                                                                      typeof(object),
                                                                       typeof(ViewModelPresenter),
-                                                                      new PropertyMetadata(default(UIElement)));
+                                                                      new PropertyMetadata(default(object)));
 
         public static readonly DependencyProperty ViewIndexModeProperty = DependencyProperty.Register(
                                                         "ViewIndexMode",
@@ -51,9 +52,9 @@ namespace Coddee.WPF.Controls
 
         public static readonly DependencyProperty ContentProperty = ContentPropertyKey.DependencyProperty;
 
-        public UIElement Content
+        public object Content
         {
-            get { return (UIElement)GetValue(ContentProperty); }
+            get { return (object)GetValue(ContentProperty); }
             protected set { SetValue(ContentPropertyKey, value); }
         }
 

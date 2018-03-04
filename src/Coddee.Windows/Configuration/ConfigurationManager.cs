@@ -13,6 +13,7 @@ namespace Coddee.Services.Configuration
     /// </summary>
     public class ConfigurationManager : IConfigurationManager
     {
+        /// <inheritdoc />
         public ConfigurationManager()
         {
             _configurationFiles = new Dictionary<string, IConfigurationFile>();
@@ -22,6 +23,7 @@ namespace Coddee.Services.Configuration
 
         private readonly Dictionary<string, IConfigurationFile> _configurationFiles;
 
+        /// <inheritdoc />
         public void Initialize(IConfigurationFile defaultConfigurationFile)
         {
             if (defaultConfigurationFile == null)
@@ -33,6 +35,7 @@ namespace Coddee.Services.Configuration
             AddConfigurationFile(defaultConfigurationFile);
         }
 
+        /// <inheritdoc />
         public void AddConfigurationFile(IConfigurationFile configFile)
         {
             if (_configurationFiles.ContainsKey(configFile.Name))
@@ -41,6 +44,7 @@ namespace Coddee.Services.Configuration
             _configurationFiles.Add(configFile.Name, configFile);
         }
 
+        /// <inheritdoc />
         public TValue GetValue<TValue>(string key, string fileName = null)
         {
             fileName = string.IsNullOrWhiteSpace(fileName) ? _defaultConfigFile : fileName;
@@ -51,6 +55,7 @@ namespace Coddee.Services.Configuration
             return _configurationFiles[fileName].GetValue<TValue>(key);
         }
 
+        /// <inheritdoc />
         public bool TryGetValue<TValue>(string key, out TValue value, string fileName = null)
         {
             fileName = string.IsNullOrWhiteSpace(fileName) ? _defaultConfigFile : fileName;
@@ -61,6 +66,7 @@ namespace Coddee.Services.Configuration
             return _configurationFiles[fileName].TryGetValue(key, out value);
         }
 
+        /// <inheritdoc />
         public void SetValue<TValue>(string key, TValue value, string fileName = null)
         {
             fileName = string.IsNullOrWhiteSpace(fileName) ? _defaultConfigFile : fileName;

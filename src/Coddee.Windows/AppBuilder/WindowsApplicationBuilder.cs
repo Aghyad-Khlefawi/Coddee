@@ -9,14 +9,32 @@ using Coddee.Services;
 
 namespace Coddee.AppBuilder
 {
+    /// <summary>
+    /// Base class for windows applications builders.
+    /// </summary>
     public abstract class WindowsApplicationBuilder : IApplicationBuilder
     {
+        /// <summary>
+        /// The source for the logging service.
+        /// </summary>
         protected const string _eventsSource = "ApplicationBuilder";
 
+        /// <summary>
+        /// The application.
+        /// </summary>
         protected readonly IApplication _app;
+
+        /// <summary>
+        /// Dependency container.
+        /// </summary>
         protected readonly IContainer _container;
+
+        /// <summary>
+        /// Logging service.
+        /// </summary>
         protected readonly LogAggregator _logger;
 
+        /// <inheritdoc />
         protected WindowsApplicationBuilder(IApplication app, IContainer container)
         {
             _app = app;
@@ -26,9 +44,12 @@ namespace Coddee.AppBuilder
             BuildActionsCoordinator = _container.Resolve<BuildActionsCoordinator>();
         }
 
-        //Build Actions
+        /// <inheritdoc />
         public BuildActionsCoordinator BuildActionsCoordinator { get; }
 
+        /// <summary>
+        /// Set the default global variables values.
+        /// </summary>
         protected void ConfigureGlobalVariables()
         {
             BuildActionsCoordinator.AddAction(DefaultBuildActions.ConfigureGlobalVariablesBuildAction(container =>
@@ -38,11 +59,17 @@ namespace Coddee.AppBuilder
         }
 
 
+        /// <summary>
+        /// send a record to the logging service.
+        /// </summary>
         protected void Log(string log, LogRecordTypes type = LogRecordTypes.Debug)
         {
             _logger.Log(_eventsSource, log, type);
         }
 
+        /// <summary>
+        /// Start the application build process.
+        /// </summary>
         public virtual void Start()
         {
             _logger.Log(_eventsSource, "Application build started.", LogRecordTypes.Information);
@@ -60,6 +87,9 @@ namespace Coddee.AppBuilder
             }
         }
 
+        /// <summary>
+        /// set the default application build steps.
+        /// </summary>
         protected virtual void SetupDefaultBuildActions()
         {
             Log($"Setting up default build actions.");
@@ -79,6 +109,9 @@ namespace Coddee.AppBuilder
                 this.UseConfigurationFile(null);
         }
 
+        /// <summary>
+        /// Get the default modules supported by a windows application.
+        /// </summary>
         protected virtual Type[] GetDefaultModules()
         {
             return CoreModuleDefinitions.Modules.Concat(WindowsModuleDefinitions.Modules).ToArray();

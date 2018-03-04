@@ -172,7 +172,7 @@ namespace Coddee.Services.ApplicationConsole
                 grid.Children.Add((UIElement)oldContent);
                 shell.Content = grid;
             }
-            grid.Children.Add(GetView());
+            grid.Children.Add((UIElement)GetView());
 
             //Sets the Shell KeyDown event handler to toggle the console visibility
             shell.KeyDown += (sender, args) =>
@@ -279,8 +279,7 @@ namespace Coddee.Services.ApplicationConsole
                 return;
             }
             var indexStr = e.Arguments["/i"];
-            int index;
-            if (!int.TryParse(indexStr, out index))
+            if (!int.TryParse(indexStr, out var index))
             {
                 e.Result
                     .Add($"The value '{indexStr}' is invalid for the /i argument, you need to specify an integer value.");
@@ -444,7 +443,7 @@ namespace Coddee.Services.ApplicationConsole
         private void OnRestartCommand(object sender, ConsoleCommandArgs e)
         {
             Process.Start(Assembly.GetEntryAssembly().GetName().CodeBase);
-            _app.GetSystemApplication().Shutdown();
+            ((WPFApplication)_app).GetSystemApplication().Shutdown();
         }
 
         private void OnHelpCommand(object sender, ConsoleCommandArgs e)
@@ -498,7 +497,7 @@ namespace Coddee.Services.ApplicationConsole
 
         private void OnExitCommand(object sender, ConsoleCommandArgs e)
         {
-            _app.GetSystemApplication().Shutdown();
+            ((WPFApplication)_app).GetSystemApplication().Shutdown();
         }
 
         private void OnCMDCommand(object sender, ConsoleCommandArgs e)

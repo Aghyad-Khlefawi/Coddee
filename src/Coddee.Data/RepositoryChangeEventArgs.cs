@@ -11,6 +11,7 @@ namespace Coddee.Data
     /// <typeparam name="T">The model object type</typeparam>
     public class RepositoryChangeEventArgs<T>:EventArgs
     {
+        /// <inheritdoc />
         public RepositoryChangeEventArgs(OperationType operationType, T item,bool fromSync=false)
         {
             OperationType = operationType;

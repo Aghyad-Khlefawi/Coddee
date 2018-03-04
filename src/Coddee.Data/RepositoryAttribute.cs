@@ -12,6 +12,7 @@ namespace Coddee.Data
     [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = true)]
     public sealed class RepositoryAttribute : Attribute
     {
+        /// <inheritdoc />
         public RepositoryAttribute(Type implementedRepository, bool discoverable = true)
         {
             ImplementedRepository = implementedRepository;

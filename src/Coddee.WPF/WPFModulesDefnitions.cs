@@ -9,7 +9,6 @@ using Coddee.WPF.DebugTool;
 using Coddee.Services.Dialogs;
 using Coddee.Services.Navigation;
 using Coddee.Services.Toast;
-using Coddee.Services.ViewModelManager;
 using Coddee.Services.ApplicationSearch;
 
 namespace Coddee.ModuleDefinitions
@@ -23,7 +22,6 @@ namespace Coddee.ModuleDefinitions
            typeof(DialogServicsModule),
            typeof(NavigationModule),
            typeof(ToastServiceModule),
-           typeof(ViewModelManagerModule),
            typeof(SQLDBBrowserModule),
            typeof(ApplicationSearchModule),
            typeof(NotificationModule)

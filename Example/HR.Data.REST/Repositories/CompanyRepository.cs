@@ -8,6 +8,7 @@ using Coddee.Data;
 using Coddee.Data.REST;
 using HR.Data.Models;
 using HR.Data.Repositories;
+using Newtonsoft.Json;
 
 namespace HR.Data.REST.Repositories
 {
@@ -15,9 +16,9 @@ namespace HR.Data.REST.Repositories
     public class CompanyRepository : CRUDRESTRepositoryBase<Models.Company, Guid>, ICompanyRepository
     {
         public CompanyRepository()
-            :base("Company")
+            : base("Company")
         {
-            
+
         }
         public Task<IEnumerable<Company>> GetDetailedItems()
         {

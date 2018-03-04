@@ -12,11 +12,13 @@ namespace Coddee.Data
     [JsonObject]
     public class APIException : CoddeeException
     {
+        /// <inheritdoc />
         public APIException()
         {
 
         }
 
+        /// <inheritdoc />
         public APIException(Exception inner)
             : base(0, inner.Message, inner)
         {
@@ -27,15 +29,18 @@ namespace Coddee.Data
             InnerExceptionType = inner.GetType();
         }
 
+        /// <inheritdoc />
         public APIException(int code)
             : base(code)
         {
         }
 
+        /// <inheritdoc />
         public APIException(int code, string message) : base(code, message)
         {
         }
 
+        /// <inheritdoc />
         public APIException(int code, string message, Exception inner) : base(code, message, inner)
         {
             InnerExceptionSeriailized = JsonConvert.SerializeObject(inner);

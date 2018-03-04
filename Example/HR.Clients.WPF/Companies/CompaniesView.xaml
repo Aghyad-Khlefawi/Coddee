@@ -42,7 +42,7 @@
                                        DockPanel.Dock="Top"
                                        Height="25" />
             <DataGrid ItemsSource="{Binding Companies.CollectionView}"
-                      SelectedItem="{Binding Companies.SelectedItem}"
+                      SelectedItem="{Binding SelectedCompany}"
                       IsReadOnly="True"
                       RowHeight="25"
                       AutoGenerateColumns="False">

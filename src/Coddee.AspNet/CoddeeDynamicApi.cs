@@ -227,7 +227,7 @@ namespace Coddee.AspNet
             var args = new List<object>();
             if (param.Any())
             {
-                if (req.Method == "GET" || req.Method == "DELETE")
+                if (req.Method == HttpMethods.Get || req.Method == HttpMethods.Delete)
                 {
                     foreach (var parameterInfo in param)
                     {
@@ -236,9 +236,37 @@ namespace Coddee.AspNet
                         {
                             if (queryParam.Key.ToLower() == parameterInfo.Name)
                             {
-                                var val = $"\"{queryParam.Value}\"";
-                                var json = JToken.Parse(val);
-                                args.Add(json.ToObject(parameterInfo.Type));
+                                try
+                                {
+                                    if (parameterInfo.Type == typeof(DateTime))
+                                    {
+                                        args.Add(DateTime.Parse(queryParam.Value));
+                                    }
+                                    else if (parameterInfo.Type == typeof(Guid))
+                                    {
+                                        args.Add(Guid.Parse(queryParam.Value));
+                                    }
+                                    else if (parameterInfo.Type == typeof(bool))
+                                    {
+                                        args.Add(bool.Parse(queryParam.Value));
+                                    }
+                                    else if (parameterInfo.Type == typeof(int))
+                                    {
+                                        args.Add(int.Parse(queryParam.Value));
+                                    }
+                                    else if (parameterInfo.Type == typeof(string))
+                                    {
+                                        args.Add(queryParam.Value.ToString());
+                                    }
+                                    else
+                                    {
+                                        args.Add(JsonConvert.DeserializeObject(queryParam.Value, parameterInfo.Type));
+                                    }
+                                }
+                                catch (Exception)
+                                {
+                                    args.Add(JsonConvert.DeserializeObject($"\"{queryParam.Value}\"", parameterInfo.Type));
+                                }
                                 found = true;
                                 break;
                             }

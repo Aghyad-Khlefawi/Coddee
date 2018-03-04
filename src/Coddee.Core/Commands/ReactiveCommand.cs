@@ -1,82 +1,16 @@
-﻿using System;
+﻿// Copyright (c) Aghyad khlefawi. All rights reserved.  
+// Licensed under the MIT License. See LICENSE file in the project root for full license information.  
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
-using System.Windows.Input;
 using Coddee.Validation;
 
-namespace Coddee.Xamarin.Commands
+namespace Coddee.Commands
 {
-    /// <summary>
-    /// A property information that will cause the ReactiveCommand to update the CanExecute.
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public class ObservedProperty<T>
-    {
-        private readonly PropertyInfo _property;
 
-        public ObservedProperty(T obj, Expression<Func<T, object>> observedField, Validator validator)
-            : this(obj, ExpressionHelper.GetMemberName(observedField), validator)
-        {
-        }
-
-        public ObservedProperty(T obj, string observedPropertyName, Validator validator)
-        {
-            Object = obj;
-            ObservedPropertyName = observedPropertyName;
-            Validator = validator;
-            _property = obj.GetType().GetProperty(observedPropertyName);
-        }
-
-        /// <summary>
-        /// Validates the property value
-        /// </summary>
-        /// <returns></returns>
-        public bool Validate()
-        {
-            return Validator?.Invoke(_property.GetValue(Object)) ?? true;
-        }
-
-        /// <summary>
-        /// The observed object
-        /// </summary>
-        public T Object { get; }
-
-
-        public string ObservedPropertyName { get; }
-
-        /// <summary>
-        /// The property value validator.
-        /// </summary>
-        public Validator Validator { get; }
-    }
-
-    public class ObservedProperty<T, TProperty> : ObservedProperty<T>
-    {
-        public ObservedProperty(T obj, Expression<Func<T, object>> observedField, Validator<TProperty> validator) :
-            base(obj, observedField, e => validator((TProperty) e))
-        {
-        }
-
-        public ObservedProperty(T obj, string observedPropertyName, Validator<TProperty> validator) : base(obj,
-            observedPropertyName, e => validator((TProperty) e))
-        {
-        }
-    }
-
-    public interface IReactiveCommand : ICommand
-    {
-        IReactiveCommand ObserveProperty(string propertyName, Validator validator);
-        void UpdateCanExecute();
-        bool CanExecute();
-    }
-
-    public interface IReactiveCommand<TObserved> : IReactiveCommand
-    {
-        IReactiveCommand<TObserved> ObserveProperty<TProperty>(string propertyName, Validator<TProperty> validator);
-    }
 
     /// <summary>
     /// A command that updates the CanExecute property based on properties changes.
@@ -84,22 +18,37 @@ namespace Coddee.Xamarin.Commands
     /// <typeparam name="TObserved">The observed object(ViewModel) Type</typeparam>
     public abstract class ReactiveCommandBase<TObserved> : IReactiveCommand<TObserved>
     {
+        /// <inheritdoc />
         protected ReactiveCommandBase(TObserved observedObject)
         {
             ObservedObject = observedObject;
             _observedProperties = new List<ObservedProperty<TObserved>>();
         }
 
+        /// <summary>
+        /// The object being bserved by the command.
+        /// </summary>
         public TObserved ObservedObject { get; }
 
+        /// <summary>
+        /// The properties that are observed.
+        /// </summary>
         protected readonly List<ObservedProperty<TObserved>> _observedProperties;
 
+        /// <summary>
+        /// Indicates whether the command can be executed.
+        /// </summary>
         protected bool _canExecute = true;
 
+        /// <summary>
+        /// Attach an event handler to the <see cref="INotifyPropertyChanged"/>
+        /// </summary>
+        /// <param name="observedObject"></param>
         protected virtual void AttachNotifyHandler(INotifyPropertyChanged observedObject)
         {
             observedObject.PropertyChanged += (sender, args) =>
             {
+
                 if (_observedProperties.Any(e => e.ObservedPropertyName == args.PropertyName))
                 {
                     UpdateCanExecute();
@@ -108,6 +57,9 @@ namespace Coddee.Xamarin.Commands
         }
 
 
+
+
+        /// <inheritdoc />
         public IReactiveCommand ObserveProperty(string propertyName, Validator validator)
         {
             _observedProperties.Add(new ObservedProperty<TObserved>(ObservedObject, propertyName, validator));
@@ -115,15 +67,15 @@ namespace Coddee.Xamarin.Commands
             return this;
         }
 
-        public IReactiveCommand<TObserved> ObserveProperty<TProperty>(string propertyName,
-            Validator<TProperty> validator)
+        /// <inheritdoc />
+        public IReactiveCommand<TObserved> ObserveProperty<TProperty>(string propertyName, Validator<TProperty> validator)
         {
-            _observedProperties.Add(
-                new ObservedProperty<TObserved, TProperty>(ObservedObject, propertyName, validator));
+            _observedProperties.Add(new ObservedProperty<TObserved, TProperty>(ObservedObject, propertyName, validator));
             UpdateCanExecute();
             return this;
         }
 
+        /// <inheritdoc />
         public virtual void UpdateCanExecute()
 
         {
@@ -138,7 +90,6 @@ namespace Coddee.Xamarin.Commands
                         break;
                     }
                 }
-
                 if (_canExecute != canExecute)
                 {
                     _canExecute = canExecute;
@@ -147,20 +98,24 @@ namespace Coddee.Xamarin.Commands
             });
         }
 
+        /// <inheritdoc />
         public bool CanExecute()
         {
             return _canExecute;
         }
 
+        /// <inheritdoc />
         public virtual bool CanExecute(object parameter)
         {
             return _canExecute;
         }
 
 
+        /// <inheritdoc />
         public abstract void Execute(object parameter);
 
 
+        /// <inheritdoc />
         public event EventHandler CanExecuteChanged;
     }
 
@@ -172,12 +127,16 @@ namespace Coddee.Xamarin.Commands
     {
         private readonly Action _handler;
 
+        /// <inheritdoc />
         public ReactiveCommand(TObserved observedObject, Action handler)
             : base(observedObject)
         {
             _handler = handler;
         }
 
+        /// <summary>
+        /// Create an instance of ReactiveCommand
+        /// </summary>
         public static ReactiveCommand<TObserved> Create(TObserved observedObject, Action handler)
         {
             var reactiveCommand = new ReactiveCommand<TObserved>(observedObject, handler);
@@ -186,11 +145,12 @@ namespace Coddee.Xamarin.Commands
             return reactiveCommand;
         }
 
-
+        /// <inheritdoc />
         public override void Execute(object parameter)
         {
             _handler?.Invoke();
         }
+
     }
 
     /// <summary>
@@ -202,12 +162,16 @@ namespace Coddee.Xamarin.Commands
     {
         private readonly Action<TParam> _handler;
 
+        /// <inheritdoc />
         public ReactiveCommand(TObserved observedObject, Action<TParam> handler)
             : base(observedObject)
         {
             _handler = handler;
         }
 
+        /// <summary>
+        /// Create an instance of ReactiveCommand
+        /// </summary>
         public static ReactiveCommand<TObserved, TParam> Create(TObserved observedObject, Action<TParam> handler)
         {
             var reactiveCommand = new ReactiveCommand<TObserved, TParam>(observedObject, handler);
@@ -216,9 +180,11 @@ namespace Coddee.Xamarin.Commands
             return reactiveCommand;
         }
 
+        /// <inheritdoc />
         public override void Execute(object parameter)
         {
-            _handler?.Invoke((TParam) parameter);
+            _handler?.Invoke((TParam)parameter);
         }
+
     }
 }

@@ -8,6 +8,9 @@ using System.Linq;
 
 namespace Coddee.Data
 {
+    /// <summary>
+    /// Extensions for LinqToSql classes.
+    /// </summary>
     public static class Extensions
     {
         /// <summary>

@@ -9,6 +9,7 @@ using System.Windows.Media;
 using Coddee.CodeTools.Components;
 using Coddee.Loggers;
 using Coddee.ModuleDefinitions;
+using Coddee.Mvvm;
 using Coddee.Services;
 using Coddee.Unity;
 using Coddee.VsExtensibility;
@@ -82,6 +83,7 @@ namespace Coddee.CodeTools
             _vsHelper.Initialize(this);
             SolutionInfo.SetServiceProvider(this);
             VsViewModelBase.CreateSolutionInfo(_vsHelper);
+            UniversalViewModelBase.SetContainer(_container);
             ViewModelBase.SetContainer(_container);
             var vm = _container.Resolve<IViewModelsManager>().CreateViewModel<CodeToolsMainViewModel>(null);
 

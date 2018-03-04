@@ -11,19 +11,24 @@ using Coddee.WPF.Commands;
 
 namespace Coddee.WPF.Services.Dialogs
 {
+    /// <inheritdoc cref="IDialog"/>
     public class DialogContainerViewModel : ViewModelBase<DialogContainerView>, IDialog
     {
+        /// <inheritdoc />
         public DialogContainerViewModel()
         {
             Commands = AsyncObservableCollection<ActionCommandWrapper>.Create();
         }
 
+        /// <inheritdoc />
         public event EventHandler Closed;
+        /// <inheritdoc />
         public event EventHandler<DialogState> StateChanged;
 
         private DialogOptions _dialogOptions;
 
         private AsyncObservableCollection<ActionCommandWrapper> _commands;
+        /// <inheritdoc />
         public AsyncObservableCollection<ActionCommandWrapper> Commands
         {
             get { return _commands; }
@@ -31,6 +36,7 @@ namespace Coddee.WPF.Services.Dialogs
         }
 
         private string _title;
+        /// <inheritdoc />
         public string Title
         {
             get { return _title; }
@@ -38,6 +44,7 @@ namespace Coddee.WPF.Services.Dialogs
         }
 
         private int _zIndex;
+        /// <inheritdoc />
         public int ZIndex
         {
             get { return _zIndex; }
@@ -45,6 +52,7 @@ namespace Coddee.WPF.Services.Dialogs
         }
 
         private DialogState _state;
+        /// <inheritdoc />
         public DialogState State
         {
             get { return _state; }
@@ -52,6 +60,10 @@ namespace Coddee.WPF.Services.Dialogs
         }
 
         private VerticalAlignment _contentVerticalAlignment;
+        
+        /// <summary>
+        /// Vertical alignment of the dialog content.
+        /// </summary>
         public VerticalAlignment ContentVerticalAlignment
         {
             get { return _contentVerticalAlignment; }
@@ -59,6 +71,10 @@ namespace Coddee.WPF.Services.Dialogs
         }
 
         private HorizontalAlignment _contentHorizontalAlignment;
+
+        /// <summary>
+        /// Horizontal alignment of the dialog content.
+        /// </summary>
         public HorizontalAlignment ContentHorizontalAlignment
         {
             get { return _contentHorizontalAlignment; }
@@ -66,6 +82,10 @@ namespace Coddee.WPF.Services.Dialogs
         }
 
         private VerticalAlignment _verticalAlignment;
+
+        /// <summary>
+        /// Vertical alignment of the dialog.
+        /// </summary>
         public VerticalAlignment VerticalAlignment
         {
             get { return _verticalAlignment; }
@@ -73,26 +93,42 @@ namespace Coddee.WPF.Services.Dialogs
         }
 
         private HorizontalAlignment _horizontalAlignment;
+        /// <summary>
+        /// Horizontal alignment of the dialog.
+        /// </summary>
         public HorizontalAlignment HorizontalAlignment
         {
             get { return _horizontalAlignment; }
             set { SetProperty(ref _horizontalAlignment, value); }
         }
 
-        private UIElement _content;
-        public UIElement Content
+        private object _content;
+        
+        /// <summary>
+        /// The dialog content.
+        /// </summary>
+        public object Content
         {
             get { return _content; }
             set { SetProperty(ref _content, value); }
         }
 
         private bool _canMinimize;
+
+        /// <summary>
+        /// Indicates whether the dialog can be minimized.
+        /// </summary>
         public bool CanMinimize
         {
             get { return _canMinimize; }
             set { SetProperty(ref _canMinimize, value); }
         }
+
         private IReactiveCommand _minimizeCommand;
+        
+        /// <summary>
+        /// Minimize the dialog.
+        /// </summary>
         public IReactiveCommand MinimizeCommand
         {
             get { return _minimizeCommand ?? (_minimizeCommand = CreateReactiveCommand(Minimize)); }
@@ -100,6 +136,10 @@ namespace Coddee.WPF.Services.Dialogs
         }
 
         private IReactiveCommand _showCommand;
+
+        /// <summary>
+        /// Changes the dialog status to <see cref="DialogState.Active"/>
+        /// </summary>
         public IReactiveCommand ShowCommand
         {
             get { return _showCommand ?? (_showCommand = CreateReactiveCommand(Show)); }
@@ -107,18 +147,25 @@ namespace Coddee.WPF.Services.Dialogs
         }
 
         private IReactiveCommand _closeCommand;
+
+        /// <summary>
+        /// Closes the dialog.
+        /// </summary>
         public IReactiveCommand CloseCommand
         {
             get { return _closeCommand ?? (_closeCommand = CreateReactiveCommand(Close)); }
             set { SetProperty(ref _closeCommand, value); }
         }
 
-        public void Minimize()
+        private void Minimize()
         {
             SetState(DialogState.Minimized);
         }
 
-
+        /// <summary>
+        /// Set the <see cref="Commands"/> property.
+        /// </summary>
+        /// <param name="commands"></param>
         public void SetCommands(params ActionCommandBase[] commands)
         {
             Commands.ClearAndFill(commands.Select(e =>
@@ -129,17 +176,24 @@ namespace Coddee.WPF.Services.Dialogs
             }));
         }
 
+        /// <inheritdoc />
         public void SetState(DialogState newState)
         {
             State = newState;
             StateChanged?.Invoke(this, newState);
         }
 
-        public void SetContent(UIElement content)
+
+        /// <summary>
+        /// Set the <see cref="Content"/> property
+        /// </summary>
+        /// <param name="content"></param>
+        public void SetContent(object content)
         {
             Content = content;
         }
 
+        /// <inheritdoc />
         protected override void OnDesignMode()
         {
             base.OnDesignMode();
@@ -153,16 +207,22 @@ namespace Coddee.WPF.Services.Dialogs
             };
         }
 
+        /// <inheritdoc />
         public void Show()
         {
             SetState(DialogState.Active);
         }
 
+        /// <inheritdoc />
         public void Close()
         {
             Closed?.Invoke(this, EventArgs.Empty);
         }
 
+        /// <summary>
+        /// Apply the <see cref="DialogOptions"/>
+        /// </summary>
+        /// <param name="options"></param>
         public void SetDialogOptions(DialogOptions options)
         {
             _dialogOptions = options;

@@ -1,5 +1,5 @@
 ﻿using System;
-using Coddee.Xamarin.Services.ViewModelManager;
+using Coddee.Modules;
 
 namespace Coddee.Xamarin
 {

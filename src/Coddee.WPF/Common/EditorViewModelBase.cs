@@ -9,6 +9,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Coddee.Data;
 using Coddee.Exceptions;
+using Coddee.Mvvm;
 using Coddee.Services;
 using Coddee.Services.Dialogs;
 using Coddee.Validation;
@@ -29,6 +30,10 @@ namespace Coddee.WPF
 
     {
         private const string _eventsSource = "EditorBase";
+
+        /// <summary>
+        /// The fields marked with <see cref="EditorFieldAttribute"/>
+        /// </summary>
         protected IEnumerable<EditorFieldInfo> _editorFields;
 
         /// <inheritdoc />
@@ -286,7 +291,7 @@ namespace Coddee.WPF
                 IsBusy = false;
                 IsSaving = false;
             }
-            catch (ValidationException ex)
+            catch (ValidationException)
             {
                 IsBusy = false;
                 IsSaving = false;
@@ -339,7 +344,7 @@ namespace Coddee.WPF
         public virtual void Show()
         {
             if (_dialog == null)
-                _dialog = _dialogService.CreateDialog(Title, this);
+                _dialog = _dialogService.CreateDialog(Title, (IEditorViewModel)this);
             _dialog.Show();
         }
     }
