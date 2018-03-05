@@ -75,7 +75,8 @@ namespace Coddee.Xamarin.Services.Navigation
             nav.IsSelected = true;
             
             var page = (Page)e.GetView();
-            View.Detail = page;
+            page.Title = ((NavigationItem) nav).Title;
+            View.Detail=new NavigationPage(page);
             View.IsPresented = false;
         }
     }

@@ -5,14 +5,13 @@
                   x:Class="Coddee.Xamarin.Services.Navigation.NavigationServiceDefaultView"
                   xmlns:pages="clr-namespace:Coddee.Xamarin.Services.Navigation">
     <MasterDetailPage.Master>
-        <ContentPage x:Name="MasterPage"
-                     Title="Master">
+        <ContentPage Title="Master"
+                     Padding="0,40,0,0">
             <StackLayout>
-                <ListView x:Name="MenuItemsListView"
-                          SeparatorVisibility="None"
+                <ListView SeparatorVisibility="Default"
                           HasUnevenRows="true"
                           ItemsSource="{Binding NavigationItems}"
-                          SelectedItem="{Binding SelectedNavigationItem}">
+                          SelectedItem="{Binding SelectedNavigationItem,Mode=TwoWay}">
                     <ListView.Header>
                         <Grid BackgroundColor="#03A9F4">
                             <Grid.ColumnDefinitions>
@@ -36,7 +35,8 @@
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <ViewCell>
-                                <StackLayout Padding="15,10" HorizontalOptions="FillAndExpand">
+                                <StackLayout Padding="15,10" HorizontalOptions="FillAndExpand"
+                                             IsVisible="{Binding IsVisible}">
                                     <Label VerticalOptions="FillAndExpand" 
                                            VerticalTextAlignment="Center" 
                                            Text="{Binding Title}" 
