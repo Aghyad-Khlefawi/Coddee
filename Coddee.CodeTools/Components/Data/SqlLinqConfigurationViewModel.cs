@@ -3,6 +3,7 @@
 
 using Coddee.CodeTools.Config;
 using Coddee.Collections;
+using Coddee.Mvvm;
 using Coddee.Services;
 using Coddee.SQL;
 using Coddee.WPF;

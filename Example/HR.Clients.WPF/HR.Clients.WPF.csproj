@@ -157,10 +157,6 @@
       <Project>{d37a3baf-2c12-4947-aa65-c737dacc5b54}</Project>
       <Name>Coddee.Data.REST</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\src\Coddee.Data\Coddee.Data.csproj">
-      <Project>{9541018b-0cc1-4237-8370-df8f20940eed}</Project>
-      <Name>Coddee.Data</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\src\Coddee.Security\Coddee.Security.csproj">
       <Project>{86cfa30d-188c-485d-8df5-544313d445c7}</Project>
       <Name>Coddee.Security</Name>

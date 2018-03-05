@@ -249,10 +249,6 @@
       <Project>{200805c2-e25c-4d1b-ac1e-0dbb5869aeb9}</Project>
       <Name>Coddee.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Coddee.Data\Coddee.Data.csproj">
-      <Project>{9541018B-0CC1-4237-8370-DF8F20940EED}</Project>
-      <Name>Coddee.Data</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Coddee.Security\Coddee.Security.csproj">
       <Project>{86CFA30D-188C-485D-8DF5-544313D445C7}</Project>
       <Name>Coddee.Security</Name>

@@ -402,10 +402,6 @@
       <Project>{D37A3BAF-2C12-4947-AA65-C737DACC5B54}</Project>
       <Name>Coddee.Data.REST</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Coddee.Data\Coddee.Data.csproj">
-      <Project>{9541018B-0CC1-4237-8370-DF8F20940EED}</Project>
-      <Name>Coddee.Data</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Coddee.Windows\Coddee.Windows.csproj">
       <Project>{91804C4A-4272-4736-8DB9-61A0BBD21642}</Project>
       <Name>Coddee.Windows</Name>

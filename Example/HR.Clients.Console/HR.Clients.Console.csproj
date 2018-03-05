@@ -72,10 +72,6 @@
       <Project>{b7f174a8-5037-4c30-9e8b-9896315ae855}</Project>
       <Name>Coddee.Data.LinqToSQL</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\src\Coddee.Data\Coddee.Data.csproj">
-      <Project>{9541018b-0cc1-4237-8370-df8f20940eed}</Project>
-      <Name>Coddee.Data</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\src\Coddee.Unity\Coddee.Unity.csproj">
       <Project>{602298C6-5140-465B-835B-7B79551C84E5}</Project>
       <Name>Coddee.Unity</Name>

@@ -83,10 +83,6 @@
       <Project>{B7F174A8-5037-4C30-9E8B-9896315AE855}</Project>
       <Name>Coddee.Data.LinqToSQL</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\src\Coddee.Data\Coddee.Data.csproj">
-      <Project>{9541018B-0CC1-4237-8370-DF8F20940EED}</Project>
-      <Name>Coddee.Data</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\src\Coddee.Security\Coddee.Security.csproj">
       <Project>{86CFA30D-188C-485D-8DF5-544313D445C7}</Project>
       <Name>Coddee.Security</Name>

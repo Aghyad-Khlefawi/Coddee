@@ -8,7 +8,7 @@ namespace Coddee.AppBuilder
     /// <summary>
     /// <see cref="IApplicationBuilder"/> extensions.
     /// </summary>
-    public static class BuilderExtensions
+    public static partial class BuilderExtensions
     {
         /// <summary>
         /// Configure the <see cref="ILocalizationManager"/> service.

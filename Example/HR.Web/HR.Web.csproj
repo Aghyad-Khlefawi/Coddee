@@ -29,7 +29,6 @@
     <ProjectReference Include="..\..\src\Coddee.Core\Coddee.Core.csproj" />
     <ProjectReference Include="..\..\src\Coddee.Crypto\Coddee.Crypto.csproj" />
     <ProjectReference Include="..\..\src\Coddee.Data.Linq\Coddee.Data.LinqToSQL.csproj" />
-    <ProjectReference Include="..\..\src\Coddee.Data\Coddee.Data.csproj" />
     <ProjectReference Include="..\..\src\Coddee.Security\Coddee.Security.csproj" />
     <ProjectReference Include="..\..\src\Coddee.Windows\Coddee.Windows.csproj" />
     <ProjectReference Include="..\HR.Data.LinqToSQL\HR.Data.LinqToSQL.csproj" />
