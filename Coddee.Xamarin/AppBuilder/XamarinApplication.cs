@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Coddee.AppBuilder;
 using Coddee.Loggers;
 using Xamarin.Forms;

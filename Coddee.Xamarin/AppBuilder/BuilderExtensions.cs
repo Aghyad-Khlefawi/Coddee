@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using Coddee.AppBuilder;
 using Coddee.Mvvm;
 using Coddee.Services;
 using Coddee.Xamarin.DefaultShell;
 using Coddee.Xamarin.Events;
+using Coddee.Xamarin.Services.Navigation;
 using Xamarin.Forms;
 
 namespace Coddee.Xamarin.AppBuilder
@@ -44,6 +46,29 @@ namespace Coddee.Xamarin.AppBuilder
                     container.Resolve<IEventDispatcher>().GetEvent<ApplicationStartedEvent>()
                         .Raise(xamarinApplication);
                 });
+            }));
+            return builder;
+        }
+
+        /// <summary>
+        /// Sets a default Navigation for the Xamarin
+        /// </summary>
+        /// <returns></returns>
+        public static IApplicationBuilder UseNavigation(
+            this IApplicationBuilder builder,
+            params INavigationItem[] navigationItems)
+        {
+            builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.NavigationBuildAction((container) =>
+            {
+                var xamarinApplication = container.Resolve<XamarinApplication>();
+                var systemApplication = xamarinApplication.GetSystemApplication();
+                var navs = new List<INavigationItem>();
+                var nav = container.Resolve<INavigationService>();
+                navs.AddRange(navigationItems);
+                nav.Initialize(navs);
+                systemApplication.MainPage = ((NavigationService) nav).GetDefaultView();
+                container.Resolve<IEventDispatcher>().GetEvent<ApplicationStartedEvent>()
+                    .Raise(xamarinApplication);
             }));
             return builder;
         }

@@ -14,6 +14,5 @@ namespace Coddee.Xamarin.AppBuilder
     /// </summary>
     public interface IDefaultShellViewModel : IShellViewModel
     {
-  
     }
 }

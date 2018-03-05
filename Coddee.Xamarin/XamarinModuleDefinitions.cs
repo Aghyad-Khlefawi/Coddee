@@ -1,5 +1,6 @@
 ﻿using System;
 using Coddee.Modules;
+using Coddee.Xamarin.Services.Navigation;
 
 namespace Coddee.Xamarin
 {
@@ -7,7 +8,8 @@ namespace Coddee.Xamarin
    {
        public static Type[] Modules =
        {
-           typeof(ViewModelManagerModule)
+           typeof(ViewModelManagerModule),
+           typeof(NavigationModule),
        };
    }
 }

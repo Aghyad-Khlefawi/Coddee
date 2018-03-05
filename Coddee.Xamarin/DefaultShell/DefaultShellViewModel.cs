@@ -1,8 +1,5 @@
-﻿using System;
-using System.Threading.Tasks;
-using Coddee.Xamarin.AppBuilder;
+﻿using Coddee.Xamarin.AppBuilder;
 using Coddee.Xamarin.Common;
-
 namespace Coddee.Xamarin.DefaultShell
 {
     /// <summary>
@@ -20,6 +17,6 @@ namespace Coddee.Xamarin.DefaultShell
             set { SetProperty(ref this._useNavigation, value); }
         }
 
-       
+      
     }
 }

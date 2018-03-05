@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Coddee.Unity;
 using Coddee.Xamarin.AppBuilder;
-using Unity;
 using Xamarin.Forms;
 
 namespace HR.Clients.Xamarin
@@ -18,7 +14,7 @@ namespace HR.Clients.Xamarin
             {
                 new XamarinApplication("HR Client", new CoddeeUnityContainer()).Run(builder =>
                 {
-                    builder.UseDefaultShell();
+                    builder.UseNavigation(HRNavigation.Navigations);
                 });
             }
             catch (Exception ex)

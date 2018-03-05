@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<MasterDetailPage xmlns="http://xamarin.com/schemas/2014/forms"
+                  xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                  x:Class="Coddee.Xamarin.Services.Navigation.NavigationServiceDefaultView"
+                  xmlns:pages="clr-namespace:Coddee.Xamarin.Services.Navigation">
+    <MasterDetailPage.Master>
+        <ContentPage x:Name="MasterPage"
+                     Title="Master">
+            <StackLayout>
+                <ListView x:Name="MenuItemsListView"
+                          SeparatorVisibility="None"
+                          HasUnevenRows="true"
+                          ItemsSource="{Binding NavigationItems}"
+                          SelectedItem="{Binding SelectedNavigationItem}">
+                    <ListView.Header>
+                        <Grid BackgroundColor="#03A9F4">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="10"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="10"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="30"/>
+                                <RowDefinition Height="80"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="10"/>
+                            </Grid.RowDefinitions>
+                            <Label
+                                Grid.Column="1"
+                                Grid.Row="2"
+                                Text="{Binding ApplicationName}"
+                                Style="{DynamicResource SubtitleStyle}"/>
+                        </Grid>
+                    </ListView.Header>
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <StackLayout Padding="15,10" HorizontalOptions="FillAndExpand">
+                                    <Label VerticalOptions="FillAndExpand" 
+                                           VerticalTextAlignment="Center" 
+                                           Text="{Binding Title}" 
+                                           FontSize="24"/>
+                                </StackLayout>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </StackLayout>
+        </ContentPage>
+    </MasterDetailPage.Master>
+    <MasterDetailPage.Detail>
+        <NavigationPage>
+
+        </NavigationPage>
+    </MasterDetailPage.Detail>
+</MasterDetailPage>
