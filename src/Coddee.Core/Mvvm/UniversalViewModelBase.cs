@@ -7,6 +7,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Coddee.AppBuilder;
+using Coddee.Data;
 using Coddee.Exceptions;
 using Coddee.Loggers;
 using Coddee.Services;
@@ -20,6 +21,11 @@ namespace Coddee.Mvvm
     public class UniversalViewModelBase : BindableBase, IPresentableViewModel
     {
         private const string _eventsSource = "VMBase";
+
+        /// <summary>
+        /// <see cref="IRepositoryManager"/> service.
+        /// </summary>
+        protected static IRepositoryManager _repositoryManager;
 
         /// <summary>
         /// Defines a completed task object.
@@ -82,7 +88,7 @@ namespace Coddee.Mvvm
         protected object _currentView;
 
         /// <summary>
-        /// The availabe view instances supported by this ViewModel;
+        /// The available view instances supported by this ViewModel;
         /// </summary>
         protected readonly Dictionary<int, object> _views;
 
@@ -97,7 +103,7 @@ namespace Coddee.Mvvm
         public event EventHandler<object> ViewCreated;
 
         /// <summary>
-        /// Indecates if the <see cref="RegisterViews"/> method is called.
+        /// Indicates if the <see cref="RegisterViews"/> method is called.
         /// </summary>
         protected bool _viewsRegistered;
 
@@ -292,7 +298,15 @@ namespace Coddee.Mvvm
             _app = app;
         }
 
-   
+        /// <summary>
+        /// Gets a repository by its interface
+        /// </summary>
+        /// <typeparam name="TInterface"></typeparam>
+        /// <returns></returns>
+        protected TInterface GetRepository<TInterface>() where TInterface : IRepository
+        {
+            return _repositoryManager.GetRepository<TInterface>();
+        }
 
         /// <summary>
         /// Executes and action on the UI SynchronizationContext
@@ -499,9 +513,13 @@ namespace Coddee.Mvvm
 
             if (_container.IsRegistered<IEventDispatcher>())
                 _eventDispatcher = _container.Resolve<IEventDispatcher>();
+
+            if (_container.IsRegistered<IRepositoryManager>())
+                _repositoryManager = _container.Resolve<IRepositoryManager>();
+
         }
 
-        
+
 
         /// <summary>
         /// Resolve a dependency

@@ -4,6 +4,7 @@
 using System.Threading.Tasks;
 using System.Windows;
 using Coddee.CodeTools.Components.Data;
+using Coddee.Mvvm;
 using Coddee.Services;
 using Coddee.WPF;
 
@@ -47,7 +48,7 @@ namespace Coddee.CodeTools.Components
             RegisterViewType<TView>(0);
         }
 
-        protected override void OnViewCreated(UIElement view)
+        protected override void OnViewCreated(object view)
         {
             base.OnViewCreated(view);
             if (view is TView defaultView)

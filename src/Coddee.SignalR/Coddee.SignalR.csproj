@@ -94,10 +94,6 @@
       <Project>{200805C2-E25C-4D1B-AC1E-0DBB5869AEB9}</Project>
       <Name>Coddee.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Coddee.Data\Coddee.Data.csproj">
-      <Project>{9541018B-0CC1-4237-8370-DF8F20940EED}</Project>
-      <Name>Coddee.Data</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

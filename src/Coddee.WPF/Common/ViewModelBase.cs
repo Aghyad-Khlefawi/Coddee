@@ -27,7 +27,6 @@ namespace Coddee.WPF
         private const string _eventsSource = "VMBase";
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-        protected static IRepositoryManager _repositoryManager;
         protected static IDialogService _dialogService;
         protected static IToastService _toast;
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
@@ -58,15 +57,7 @@ namespace Coddee.WPF
         }
 
 
-        /// <summary>
-        /// Gets a repository by its interface
-        /// </summary>
-        /// <typeparam name="TInterface"></typeparam>
-        /// <returns></returns>
-        protected TInterface GetRepository<TInterface>() where TInterface : IRepository
-        {
-            return _repositoryManager.GetRepository<TInterface>();
-        }
+       
 
         /// <summary>
         /// Set the container on the view model and resolve the basic dependencies
@@ -79,10 +70,7 @@ namespace Coddee.WPF
 
             if (_container.IsRegistered<IDialogService>())
                 _dialogService = _container.Resolve<IDialogService>();
-
-            if (_container.IsRegistered<IRepositoryManager>())
-                _repositoryManager = _container.Resolve<IRepositoryManager>();
-        }
+  }
 
         /// <summary>
         /// Shows a test message
