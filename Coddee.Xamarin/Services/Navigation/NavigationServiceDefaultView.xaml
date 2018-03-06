@@ -3,7 +3,8 @@
 <MasterDetailPage xmlns="http://xamarin.com/schemas/2014/forms"
                   xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                   x:Class="Coddee.Xamarin.Services.Navigation.NavigationServiceDefaultView"
-                  xmlns:pages="clr-namespace:Coddee.Xamarin.Services.Navigation">
+                  xmlns:pages="clr-namespace:Coddee.Xamarin.Services.Navigation"
+                  xmlns:controls="clr-namespace:Coddee.Xamarin.Controls;assembly=Coddee.Xamarin">
     <MasterDetailPage.Master>
         <ContentPage Title="Master"
                      Padding="0,40,0,0">
@@ -15,32 +16,35 @@
                     <ListView.Header>
                         <Grid BackgroundColor="#03A9F4">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="10"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="10"/>
+                                <ColumnDefinition Width="10" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="10" />
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="30"/>
-                                <RowDefinition Height="80"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="10"/>
+                                <RowDefinition Height="30" />
+                                <RowDefinition Height="80" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="10" />
                             </Grid.RowDefinitions>
                             <Label
                                 Grid.Column="1"
                                 Grid.Row="2"
                                 Text="{Binding ApplicationName}"
-                                Style="{DynamicResource SubtitleStyle}"/>
+                                Style="{DynamicResource SubtitleStyle}" />
                         </Grid>
                     </ListView.Header>
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <ViewCell>
                                 <StackLayout Padding="15,10" HorizontalOptions="FillAndExpand"
-                                             IsVisible="{Binding IsVisible}">
-                                    <Label VerticalOptions="FillAndExpand" 
-                                           VerticalTextAlignment="Center" 
-                                           Text="{Binding Title}" 
-                                           FontSize="24"/>
+                                             IsVisible="{Binding IsVisible}"
+                                             Orientation="Horizontal">
+                                    <controls:SvgViewer SvgData="{Binding Icon}" FillColor="#03A9F4" 
+                                                        Margin="5"/>
+                                    <Label VerticalOptions="FillAndExpand"
+                                           VerticalTextAlignment="Center"
+                                           Text="{Binding Title}"
+                                           FontSize="24" />
                                 </StackLayout>
                             </ViewCell>
                         </DataTemplate>
@@ -50,8 +54,6 @@
         </ContentPage>
     </MasterDetailPage.Master>
     <MasterDetailPage.Detail>
-        <NavigationPage>
-
-        </NavigationPage>
+        <NavigationPage />
     </MasterDetailPage.Detail>
 </MasterDetailPage>
