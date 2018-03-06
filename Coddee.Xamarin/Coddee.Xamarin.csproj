@@ -11,7 +11,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\src\Coddee.Core\Coddee.Core.csproj" />
-    <ProjectReference Include="..\src\Coddee.Data\Coddee.Data.csproj" />
   </ItemGroup>
 
   <ItemGroup>
