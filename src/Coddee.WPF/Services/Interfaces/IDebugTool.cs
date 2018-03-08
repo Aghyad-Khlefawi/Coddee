@@ -2,16 +2,16 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
 using System;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace Coddee.Services
 {
-    public interface IDebugTool
+
+    /// <summary>
+    /// A helper tool for debugging applications.
+    /// </summary>
+    public interface IDebugTool:IInitializable
     {
-
-        Task Initialize(bool forceInitialize = false);
-
         /// <summary>
         /// Set the condition on which the tool visibility will be toggled
         /// </summary>

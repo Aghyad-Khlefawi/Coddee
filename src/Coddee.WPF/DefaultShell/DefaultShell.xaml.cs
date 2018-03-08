@@ -12,6 +12,7 @@ namespace Coddee.WPF.DefaultShell
     /// </summary>
     public partial class DefaultShellView : Window, IShell
     {
+        /// <inheritdoc />
         public DefaultShellView()
         {
             InitializeComponent();
@@ -36,6 +37,9 @@ namespace Coddee.WPF.DefaultShell
             }
         }
 
+        /// <summary>
+        /// Set the window state.
+        /// </summary>
         public void SetState(WindowState state)
         {
             WindowState = state;

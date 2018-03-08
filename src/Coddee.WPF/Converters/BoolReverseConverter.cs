@@ -7,13 +7,18 @@ using System.Windows.Data;
 
 namespace Coddee.WPF.Converters
 {
+    /// <summary>
+    /// XAML converter that return the opposite of a boolean value.
+    /// </summary>
     public class BoolReverseConverter : IValueConverter
     {
+        /// <inheritdoc />
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return !(bool)value;
         }
 
+        /// <inheritdoc />
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return !(bool)value;

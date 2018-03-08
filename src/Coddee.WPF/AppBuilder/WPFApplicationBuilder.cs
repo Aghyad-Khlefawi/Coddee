@@ -11,23 +11,28 @@ using Coddee.Mvvm;
 
 namespace Coddee.WPF
 {
+    /// <summary>
+    /// WPF application builder.
+    /// </summary>
     public interface IWPFApplicationBuilder : IApplicationBuilder
     {
 
     }
 
+    /// <inheritdoc cref="IWPFApplicationBuilder"/>
     public class WPFApplicationBuilder : WindowsApplicationBuilder, IWPFApplicationBuilder
     {
 
         private Application _systemApplication => ((WPFApplication)_app).GetSystemApplication();
 
-
+        /// <inheritdoc />
         public WPFApplicationBuilder(WPFApplication app, IContainer container)
             : base(app, container)
         {
             _systemApplication.Startup += delegate { Start(); };
         }
 
+        /// <inheritdoc />
         public override void Start()
         {
             _systemApplication.Dispatcher.Invoke(() =>
@@ -38,6 +43,7 @@ namespace Coddee.WPF
         }
 
 
+        /// <inheritdoc />
         protected override void SetupDefaultBuildActions()
         {
             base.SetupDefaultBuildActions();
@@ -49,11 +55,15 @@ namespace Coddee.WPF
         }
 
 
+        /// <inheritdoc />
         protected override Type[] GetDefaultModules()
         {
             return CoreModuleDefinitions.Modules.Concat(WindowsModuleDefinitions.Modules.Concat(WPFModuleDefinitions.Modules)).ToArray();
         }
 
+        /// <summary>
+        /// Set the ViewModelBase dependencies.
+        /// </summary>
         protected virtual void SetupViewModelBase()
         {
             Log($"Setting up ViewModelBase.");
@@ -65,6 +75,7 @@ namespace Coddee.WPF
         }
 
         private StartupEventArgs _startupEventArgs;
+
         internal void SetStartupArgs(StartupEventArgs startupEventArgs)
         {
             _startupEventArgs = startupEventArgs;

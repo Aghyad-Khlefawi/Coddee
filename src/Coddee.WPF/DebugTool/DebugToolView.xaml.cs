@@ -7,6 +7,7 @@ namespace Coddee.WPF.DebugTool
     /// </summary>
     public partial class DebugToolView : Window
     {
+        /// <inheritdoc />
         public DebugToolView()
         {
             InitializeComponent();

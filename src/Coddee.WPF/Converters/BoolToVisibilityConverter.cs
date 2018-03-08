@@ -15,6 +15,7 @@ namespace Coddee.WPF.Converters
     [ValueConversion(typeof(bool), typeof(Visibility), ParameterType = typeof(string))]
     public class BoolToVisibilityConverter : IValueConverter
     {
+        /// <inheritdoc />
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             var val = value as bool?;
@@ -30,6 +31,7 @@ namespace Coddee.WPF.Converters
             return val.Value ? Visibility.Visible : Visibility.Collapsed;
         }
 
+        /// <inheritdoc />
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             var val = value as Visibility?;

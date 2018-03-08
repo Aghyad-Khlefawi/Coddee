@@ -7,6 +7,7 @@ namespace Coddee.WPF.Services.Dialogs
     /// </summary>
     public partial class DialogsExplorerView : UserControl
     {
+        /// <inheritdoc />
         public DialogsExplorerView()
         {
             InitializeComponent();

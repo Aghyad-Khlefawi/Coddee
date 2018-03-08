@@ -9,9 +9,13 @@ using System.Windows.Data;
 namespace Coddee.WPF.Converters
 {
 
+    /// <summary>
+    /// A XAML converter that checks an <see cref="Enum"/> value and returns <see cref="Visibility.Visible"/> or <see cref="Visibility.Collapsed"/>.
+    /// </summary>
     [ValueConversion(typeof(Enum), typeof(Visibility), ParameterType = typeof(string))]
     public class EnumToVisibilityConverter : IValueConverter
     {
+        /// <inheritdoc />
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (parameter is int intParam)
@@ -22,6 +26,7 @@ namespace Coddee.WPF.Converters
             throw new ArgumentException("Converter parameter must be an enum or an int", nameof(parameter));
         }
 
+        /// <inheritdoc />
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return value;

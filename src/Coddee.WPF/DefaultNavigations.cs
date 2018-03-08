@@ -5,8 +5,14 @@ using Coddee.Services.Navigation;
 
 namespace Coddee.WPF
 {
+    /// <summary>
+    /// Default application navigation sections.
+    /// </summary>
     public class DefaultNavigations
     {
+        /// <summary>
+        /// Application home sections.
+        /// </summary>
         public static INavigationItem Home { get; set; }
     }
 }

@@ -10,6 +10,7 @@ namespace Coddee.Services.Dialogs
     /// </summary>
     public partial class DialogServiceView : UserControl
     {
+        /// <inheritdoc />
         public DialogServiceView()
         {
             InitializeComponent();

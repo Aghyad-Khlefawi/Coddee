@@ -10,6 +10,7 @@ namespace Coddee.WPF.Services.Dialogs
     /// </summary>
     public partial class DialogContainerView : UserControl
     {
+        /// <inheritdoc />
         public DialogContainerView()
         {
             InitializeComponent();
