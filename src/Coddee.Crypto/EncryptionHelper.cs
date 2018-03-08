@@ -8,6 +8,9 @@ using System.Text;
 
 namespace Coddee.Crypto
 {
+    /// <summary>
+    /// Helper class for encryption operations.
+    /// </summary>
     public class EncryptionHelper
     {
         /// <summary>

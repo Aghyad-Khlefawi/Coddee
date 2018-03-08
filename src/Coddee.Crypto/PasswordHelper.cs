@@ -11,14 +11,27 @@ namespace Coddee.Crypto
     /// </summary>
     public class HashedPassword
     {
+        /// <inheritdoc />
         public HashedPassword(string password, string salt)
         {
             Password = password;
             Salt = salt;
         }
+
+        /// <summary>
+        /// The hashed password value.
+        /// </summary>
         public string Password { get; set; }
+
+        /// <summary>
+        /// Hash salt.
+        /// </summary>
         public string Salt { get; set; }
     }
+
+    /// <summary>
+    /// Helper class for password hashing and generating.
+    /// </summary>
     public static class PasswordHelper
     {
         /// <summary>

@@ -47,7 +47,7 @@ namespace HR.Data.Mongo.Repositories
                 if (user == null || !PasswordHelper.ValidatePassword(password, user.PasswordSalt, user.PasswordHash))
                     return new HRAuthenticationResponse
                     {
-                        Status = AuthenticationStatus.InvalidCredinitals
+                        Status = AuthenticationStatus.InvalidCredentials
                     };
                 return new HRAuthenticationResponse
                 {
