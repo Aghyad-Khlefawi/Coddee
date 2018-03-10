@@ -1,5 +1,6 @@
 ﻿using System;
 using Coddee.Modules;
+using Coddee.Xamarin.Services.Configuration;
 using Coddee.Xamarin.Services.Navigation;
 
 namespace Coddee.Xamarin
@@ -10,6 +11,7 @@ namespace Coddee.Xamarin
        {
            typeof(ViewModelManagerModule),
            typeof(NavigationModule),
+           typeof(ConfigurationManagerModule),
        };
    }
 }

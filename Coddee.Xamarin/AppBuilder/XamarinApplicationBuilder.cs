@@ -73,7 +73,8 @@ namespace Coddee.Xamarin.AppBuilder
             if (!BuildActionsCoordinator.BuildActionExists(BuildActionsKeys.ConfigureGlobalVariabls))
                 ConfigureGlobalVariables();
 
-
+            if (!BuildActionsCoordinator.BuildActionExists(BuildActionsKeys.ConfigFile))
+                this.UseConfigurationFile();
             SetupViewModelBase();
 
         }
