@@ -61,7 +61,7 @@ namespace Coddee.AspNet
         /// <summary>
         /// Configure the application to use a <see cref="SingletonRepositoryManager"/> that returns the same repository instance on each call.
         /// </summary>
-        public static void AddSingletonRepositoryManager(this IServiceCollection services) 
+        public static void AddSingletonRepositoryManager(this IServiceCollection services)
         {
             services.AddSingleton<IRepositoryManager, SingletonRepositoryManager>();
         }
@@ -69,14 +69,15 @@ namespace Coddee.AspNet
         /// <summary>
         /// Configure the application to use a <see cref="TransientRepositoryManager"/> that returns the a new repository instance on each call.
         /// </summary>
-        public static void AddTransientRepositoryManager(this IServiceCollection services) 
+        public static void AddTransientRepositoryManager(this IServiceCollection services)
         {
             services.AddSingleton<IRepositoryManager>(new TransientRepositoryManager());
         }
 
         public static IRepositoryManager AddLinqRepositories<TDBManager>(
                 this IServiceCollection services,
-                LinqInitializerConfig config)
+                LinqInitializerConfig config,
+                bool registerAsServices=false)
                 where TDBManager : ILinqDBManager, new()
         {
             if (services.All(e => e.ServiceType != typeof(IRepositoryManager)))
@@ -94,10 +95,11 @@ namespace Coddee.AspNet
             repositoryManager.AddRepositoryInitializer(new LinqRepositoryInitializer(dbManager, mapper, config.RepositoryConfigurations));
 
             repositoryManager.RegisterRepositories(config.RepositoriesAssembly);
-            foreach (var repository in repositoryManager.GetRepositories())
-            {
-                services.AddSingleton(repository.ImplementedInterface, repository);
-            }
+            if (registerAsServices)
+                foreach (var repository in repositoryManager.GetRepositories())
+                {
+                    services.AddSingleton(repository.ImplementedInterface, repository);
+                }
             return repositoryManager;
         }
 
@@ -133,7 +135,7 @@ namespace Coddee.AspNet
         {
             return app.UseMVCWithCoddeeRoutes("api");
         }
-        public static IApplicationBuilder UseCoddeeDynamicApi(this IApplicationBuilder appBuilder,Func<IIdentity,object> setContext)
+        public static IApplicationBuilder UseCoddeeDynamicApi(this IApplicationBuilder appBuilder, Func<IIdentity, object> setContext)
         {
             appBuilder.UseMiddleware<CoddeeDynamicApi>(setContext);
             return appBuilder;

@@ -10,10 +10,11 @@ using HR.Data.Models;
 
 namespace HR.Data.Repositories
 {
+        [Authorize]
     public interface ICompanyRepository : ICRUDRepository<Company, Guid>
     {
-        [Authorize]
-        new Task<IEnumerable<Company>> GetItems();
+        //[Authorize]
+        //new Task<IEnumerable<Company>> GetItems();
 
         Task<IEnumerable<Company>> GetDetailedItems();
     }

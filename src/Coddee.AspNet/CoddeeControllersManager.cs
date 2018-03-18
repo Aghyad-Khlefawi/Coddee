@@ -40,12 +40,15 @@ namespace Coddee.AspNet
                         delegateAction.SetOwner(controller);
                         if (delegateAction == null)
                             break;
-                        var authAttr = memberInfo.GetCustomAttribute<AuthorizeAttribute>();
+
+                        var authAttr = memberInfo.GetCustomAttribute<AuthorizeAttribute>() ?? type.GetCustomAttribute<AuthorizeAttribute>();
+
                         if (authAttr != null)
                         {
                             delegateAction.RequiredAuthentication = true;
                             delegateAction.Claim = authAttr.Claim;
                         }
+
                         _apiActions.Add(pathLower, delegateAction);
                     }
                 }
