@@ -112,6 +112,12 @@ namespace Coddee.Xamarin.Common
             }
             set { SetProperty(ref _view, value); }
         }
+        private string _title;
+        public string Title
+        {
+            get { return _title; }
+            set { SetProperty(ref this._title, value); }
+        }
 
         protected override void RegisterViews()
         {
@@ -123,7 +129,10 @@ namespace Coddee.Xamarin.Common
         {
             base.OnViewCreated(view);
             if (view is TView defaultView)
+            {
                 OnDefaultViewCreated(defaultView);
+                defaultView.SetBinding(Page.TitleProperty, Title);
+            }
         }
 
         /// <summary>
