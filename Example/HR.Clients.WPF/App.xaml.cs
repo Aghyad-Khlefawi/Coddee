@@ -67,7 +67,7 @@ namespace HR.Clients.WPF
                              //entire life of the application 
 
                              .UseRESTRepositories(config => new RESTInitializerConfig("http://localhost:15297/dapi/", null, "HR.Data.REST"))
-                             .UseSingletonRepositoryManager();
+                             .UseTransientRepositoryManager();
 
                          //Add Rest repositories to the repository manager;
 

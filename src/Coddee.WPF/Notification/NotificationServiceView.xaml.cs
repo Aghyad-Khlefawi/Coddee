@@ -7,6 +7,7 @@ namespace Coddee.Notification
     /// </summary>
     public partial class NotificationServiceView : UserControl
     {
+        /// <inheritdoc />
         public NotificationServiceView()
         {
             InitializeComponent();

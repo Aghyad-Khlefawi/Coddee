@@ -20,8 +20,7 @@ namespace Coddee.AppBuilder
             this IApplicationBuilder builder,
             string defaultCluture = "en-US")
         {
-            builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.LocalizationBuildAction(
-                                                                                                  (container) =>
+            builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.LocalizationBuildAction((container) =>
                     {
                         var localizationManager = container.Resolve<ILocalizationManager>();
                         localizationManager.SetCulture(defaultCluture);
@@ -57,7 +56,5 @@ namespace Coddee.AppBuilder
                   }));
             return builder;
         }
-
     }
-
 }

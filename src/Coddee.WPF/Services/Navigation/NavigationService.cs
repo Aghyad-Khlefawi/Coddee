@@ -17,6 +17,10 @@ namespace Coddee.Services.Navigation
     {
 
         private bool _showTitles;
+
+        /// <summary>
+        /// If true the navigation item title will be visible.
+        /// </summary>
         public bool ShowTitles
         {
             get { return _showTitles; }
@@ -29,8 +33,11 @@ namespace Coddee.Services.Navigation
 
         private Region _navigationRegion;
 
+        /// <inheritdoc />
         public event EventHandler<NavigationEventArgs> Navigated;
         private INavigationItem _currentNavligationItem;
+
+        /// <inheritdoc />
         public void Initialize(Region navbarRegion,
                                Region navigationRegion,
                                IEnumerable<INavigationItem> navigationItems)
@@ -52,6 +59,7 @@ namespace Coddee.Services.Navigation
             });
         }
 
+        /// <inheritdoc />
         public void AddNavigationItem(INavigationItem navigationItem)
         {
             NavigationItems.Add(navigationItem);

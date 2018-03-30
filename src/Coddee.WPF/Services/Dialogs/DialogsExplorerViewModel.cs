@@ -9,20 +9,29 @@ using Coddee.WPF.Commands;
 
 namespace Coddee.WPF.Services.Dialogs
 {
+    /// <summary>
+    /// Implementation of <see cref="IDialogExplorer"/>
+    /// </summary>
     public class DialogsExplorerViewModel : ViewModelBase<DialogsExplorerView>, IDialogExplorer
     {
+        /// <inheritdoc />
         public DialogsExplorerViewModel()
         {
 
         }
 
         private IReactiveCommand _showCommand;
+
+        /// <summary>
+        /// Show the explorer
+        /// </summary>
         public IReactiveCommand ShowCommand
         {
             get { return _showCommand ?? (_showCommand = CreateReactiveCommand<DialogsExplorerViewModel, DialogContainerViewModel>(this, Show)); }
             set { SetProperty(ref _showCommand, value); }
         }
 
+        /// <inheritdoc cref="ShowCommand"/>
         public void Show(DialogContainerViewModel dialog)
         {
             dialog.Show();
@@ -30,6 +39,10 @@ namespace Coddee.WPF.Services.Dialogs
         }
 
         private AsyncObservableCollection<DialogContainerViewModel> _dialogs;
+        
+        /// <summary>
+        /// The minimized dialogs.
+        /// </summary>
         public AsyncObservableCollection<DialogContainerViewModel> Dialogs
         {
             get { return _dialogs; }
@@ -37,6 +50,10 @@ namespace Coddee.WPF.Services.Dialogs
         }
 
         private IReactiveCommand _toggleCommand;
+
+        /// <summary>
+        /// Toggle the explorer.
+        /// </summary>
         public IReactiveCommand ToggleCommand
         {
             get { return _toggleCommand ?? (_toggleCommand = CreateReactiveCommand(Toggle)); }
@@ -44,6 +61,10 @@ namespace Coddee.WPF.Services.Dialogs
         }
 
         private double _horizontalOffset;
+
+        /// <summary>
+        /// Popup horizontal offset.
+        /// </summary>
         public double HorizontalOffset
         {
             get { return _horizontalOffset; }
@@ -51,6 +72,10 @@ namespace Coddee.WPF.Services.Dialogs
         }
 
         private double _verticalOffset;
+
+        /// <summary>
+        /// Popup vertical offset.
+        /// </summary>
         public double VerticalOffset
         {
             get { return _verticalOffset; }
@@ -58,6 +83,9 @@ namespace Coddee.WPF.Services.Dialogs
         }
 
         private double _width;
+        /// <summary>
+        /// Popup width.
+        /// </summary>
         public double Width
         {
             get { return _width; }
@@ -65,6 +93,9 @@ namespace Coddee.WPF.Services.Dialogs
         }
 
         private bool _isOpen;
+        /// <summary>
+        /// Is the popup open.
+        /// </summary>
         public bool IsOpen
         {
             get { return _isOpen; }
@@ -72,12 +103,16 @@ namespace Coddee.WPF.Services.Dialogs
         }
 
         private int _dialogsCount;
+        /// <summary>
+        /// The count of the minimized dialogs.
+        /// </summary>
         public int DialogsCount
         {
             get { return _dialogsCount; }
             set { SetProperty(ref _dialogsCount, value); }
         }
 
+        /// <inheritdoc />
         protected override void OnDesignMode()
         {
             base.OnDesignMode();
@@ -106,11 +141,13 @@ namespace Coddee.WPF.Services.Dialogs
             };
         }
 
+        /// <see cref="ToggleCommand"/>
         public void Toggle()
         {
             IsOpen = !IsOpen;
         }
 
+        /// <inheritdoc />
         protected override async Task OnInitialization()
         {
             await base.OnInitialization();

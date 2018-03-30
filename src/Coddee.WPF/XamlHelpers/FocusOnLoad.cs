@@ -10,6 +10,9 @@ namespace Coddee.WPF.XamlHelpers
     /// </summary>
     public class FocusOnLoad
     {
+        /// <summary>
+        /// The targeted element
+        /// </summary>
         public static readonly DependencyProperty ElementProperty =
             DependencyProperty.RegisterAttached("Element",
                                                 typeof(FrameworkElement),
@@ -24,11 +27,17 @@ namespace Coddee.WPF.XamlHelpers
             }
         }
         
+        /// <summary>
+        /// Set the <see cref="ElementProperty"/> value.
+        /// </summary>
         public static void SetElement(DependencyObject element, IInputElement value)
         {
             element.SetValue(ElementProperty, value);
         }
 
+        /// <summary>
+        /// Get the <see cref="ElementProperty"/> value.
+        /// </summary>
         public static IInputElement GetElement(DependencyObject element)
         {
             return (IInputElement)element.GetValue(ElementProperty);

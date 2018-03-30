@@ -16,12 +16,17 @@ namespace Coddee.Notification
         private double _notificationDuration;
 
         private AsyncObservableCollection<INotification> _notifications;
+
+        /// <summary>
+        /// The notifications collection.
+        /// </summary>
         public AsyncObservableCollection<INotification> Notifications
         {
             get { return _notifications; }
             set { SetProperty(ref this._notifications, value); }
         }
 
+        /// <inheritdoc />
         protected override void OnDesignMode()
         {
             base.OnDesignMode();
@@ -33,8 +38,12 @@ namespace Coddee.Notification
             };
         }
 
+        /// <summary>
+        /// Triggered when a new notification is added.
+        /// </summary>
         public event EventHandler<INotification> NotificationReceived;
 
+        /// <inheritdoc />
         public void Notify(INotification notification)
         {
             NotificationReceived?.Invoke(this, notification);
@@ -59,7 +68,9 @@ namespace Coddee.Notification
             Notifications.Add(popup);
         }
 
-
+        /// <summary>
+        /// Initialize the service.
+        /// </summary>
         public void Inititlize(Region notificationsRegion, double notificationDuration = 5000)
         {
             notificationsRegion.View(this);

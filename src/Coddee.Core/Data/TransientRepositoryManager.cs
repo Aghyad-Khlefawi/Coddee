@@ -21,7 +21,7 @@ namespace Coddee.Data
         }
 
         /// <summary>
-        /// Singelton repository registered with <see cref="AddRepository"/>
+        /// Singleton repository registered with <see cref="AddRepository"/>
         /// </summary>
         private readonly Dictionary<Type, IRepository> _singletonRepositories;
         

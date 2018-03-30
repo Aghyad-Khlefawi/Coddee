@@ -13,6 +13,7 @@ namespace Coddee.WPF.Converters
     [ValueConversion(typeof(object), typeof(bool), ParameterType = typeof(string))]
     public class NullToBoolConverter : IValueConverter
     {
+        /// <inheritdoc />
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             var returnValue = !(value is string ?
@@ -26,6 +27,7 @@ namespace Coddee.WPF.Converters
             return !returnValue;
         }
 
+        /// <inheritdoc />
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             return null;

@@ -14,11 +14,13 @@ namespace Coddee.WPF.Converters
     [ValueConversion(typeof(object), typeof(Visibility), ParameterType = typeof(object))]
     public class EqualityVisibilityConverter : IValueConverter
     {
+        /// <inheritdoc />
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return value.Equals(parameter) ? Visibility.Visible : Visibility.Collapsed;
         }
 
+        /// <inheritdoc />
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return value;

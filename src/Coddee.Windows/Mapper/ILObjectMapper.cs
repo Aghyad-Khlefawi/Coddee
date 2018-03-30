@@ -92,8 +92,7 @@ namespace Coddee.Windows.Mapper
 
                     if (sourceProperty == null)
                     {
-                        sourceProperty =
-                            sourcePoperties.FirstOrDefault(e => e.Name == targetPoperty.Name &&
+                        sourceProperty = sourcePoperties.FirstOrDefault(e => e.Name == targetPoperty.Name &&
                                                                 e.PropertyType == typeof(Nullable<>).MakeGenericType(targetPoperty.PropertyType));
                         sourceNullable = true;
                     }
@@ -126,7 +125,7 @@ namespace Coddee.Windows.Mapper
                                   ? (IlMappingInfo<TSource, TTarget>)_mappings[sourceType][targetType]
                                   : new IlMappingInfo<TSource, TTarget>();
 
-            ilMappingInfo.SetAdditionalMapping(additionalMapping);
+            ilMappingInfo?.SetAdditionalMapping(additionalMapping);
 
             if (targetConstrucotr != null)
             {
@@ -546,7 +545,7 @@ namespace Coddee.Windows.Mapper
         public void SetAdditionalMapping(Action<TSource, TTarget> map)
         {
             if (map != null)
-                SetAdditionalMapping((source, target) => map((TSource)source, (TTarget)target));
+                base.SetAdditionalMapping((source, target) => map((TSource)source, (TTarget)target));
         }
     }
 }

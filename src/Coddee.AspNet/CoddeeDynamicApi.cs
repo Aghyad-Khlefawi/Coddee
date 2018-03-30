@@ -94,7 +94,7 @@ namespace Coddee.AspNet
                 if (action.RequiredAuthentication)
                 {
 
-                    var authoized = string.IsNullOrEmpty(action.Claim) || context.User.Identity.IsAuthenticated && context.User.Identity is ClaimsIdentity identity && identity.Claims.Any(e => e.Value == action.Claim);
+                    var authoized = context.User.Identity.IsAuthenticated && (string.IsNullOrEmpty(action.Claim) || context.User.Identity is ClaimsIdentity identity && identity.Claims.Any(e => e.Value == action.Claim));
 
                     if (!authoized)
                     {
@@ -196,7 +196,7 @@ namespace Coddee.AspNet
                     .FirstOrDefault(e => e.Name.Equals(actionName, StringComparison.InvariantCultureIgnoreCase));
 
                 var interfaceMethod = repository.ImplementedInterface
-                                                .GetMethods()
+                                                .GetMethods(BindingFlags.FlattenHierarchy)
                                                 .FirstOrDefault(e => e.Name.Equals(actionName, StringComparison.InvariantCultureIgnoreCase));
 
                 // Create a delegate object for the action to improve dynamic calls performance
@@ -213,6 +213,17 @@ namespace Coddee.AspNet
                         action.Claim = authAttr.Claim;
                     }
                 }
+
+                if (!action.RequiredAuthentication)
+                {
+                    var authAttr = repository.ImplementedInterface.GetCustomAttribute<AuthorizeAttribute>();
+                    if (authAttr != null)
+                    {
+                        action.RequiredAuthentication = true;
+                        action.Claim = authAttr.Claim;
+                    }
+                }
+
                 _apiActions.Add(path, action);
             }
 

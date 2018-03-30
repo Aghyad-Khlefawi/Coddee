@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="92dfe8bb-efb5-4f8d-8ded-a2aa927bcb1b" Version="1.1" Language="en-US" Publisher="Aghyad Khlefawi" />
+        <Identity Id="92dfe8bb-efb5-4f8d-8ded-a2aa927bcb1b" Version="1.2" Language="en-US" Publisher="Aghyad Khlefawi" />
         <DisplayName>Coddee.VSExtension</DisplayName>
         <Description xml:space="preserve">Visual studio extensions for Coddee library.</Description>
         <MoreInfo>https://github.com/Aghyad-Khlefawi/Coddee</MoreInfo>

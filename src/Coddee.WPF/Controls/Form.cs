@@ -14,6 +14,9 @@ using System.Windows.Media;
 
 namespace Coddee.WPF.Controls
 {
+    /// <summary>
+    /// A data form.
+    /// </summary>
     [DefaultProperty("Fields")]
     [ContentProperty("Fields")]
     [TemplatePart(Name = "PART_CONTAINER", Type = typeof(Panel))]
@@ -23,6 +26,8 @@ namespace Coddee.WPF.Controls
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(Form), new FrameworkPropertyMetadata(typeof(Form)));
         }
+
+        /// <inheritdoc />
         public Form()
         {
             Fields = new FormFieldsCollection();
@@ -32,19 +37,26 @@ namespace Coddee.WPF.Controls
         }
 
 
-
+        /// <summary>
+        /// The form fields.
+        /// </summary>
         public static readonly DependencyProperty FieldsProperty = DependencyProperty.Register("Fields", typeof(FormFieldsCollection), typeof(Form), new PropertyMetadata(new FormFieldsCollection(), FieldsSet));
 
-
+        /// <summary>
+        /// The margin between the fields
+        /// </summary>
         public static readonly DependencyProperty FieldsMarginProperty = DependencyProperty.Register(
                                                                                                      "FieldsMargin", typeof(Thickness), typeof(Form), new PropertyMetadata(new Thickness(0, 0, 0, 3)));
-
+        /// <summary>
+        /// The style of the titles.
+        /// </summary>
         public static readonly DependencyProperty TitleStyleProperty = DependencyProperty.Register(
                                                         "TitleStyle",
                                                         typeof(Style),
                                                         typeof(Form),
                                                         new PropertyMetadata(default(Style)));
 
+        /// <inheritdoc cref="TitleStyleProperty"/>
         public Style TitleStyle
         {
             get { return (Style)GetValue(TitleStyleProperty); }
@@ -52,6 +64,7 @@ namespace Coddee.WPF.Controls
         }
 
         private double _titlesWidth;
+        /// <inheritdoc cref="FieldsMarginProperty"/>
         public Thickness FieldsMargin
         {
             get { return (Thickness)GetValue(FieldsMarginProperty); }
@@ -59,6 +72,7 @@ namespace Coddee.WPF.Controls
         }
 
 
+        /// <inheritdoc cref="FieldsProperty"/>
         public FormFieldsCollection Fields
         {
             get { return (FormFieldsCollection)GetValue(FieldsProperty); }
@@ -144,6 +158,9 @@ namespace Coddee.WPF.Controls
         }
     }
 
+    /// <summary>
+    /// A collection of <see cref="FormField"/> objects.
+    /// </summary>
     public class FormFieldsCollection : ObservableCollection<FormField>
     {
 

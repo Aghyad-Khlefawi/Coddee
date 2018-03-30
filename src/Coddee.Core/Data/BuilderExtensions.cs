@@ -69,7 +69,6 @@ namespace Coddee.AppBuilder
                                LogRecordTypes.Debug);
                     container.RegisterInstance(repository.ImplementedInterface, repository);
                 }
-
             }));
             return builder;
         }

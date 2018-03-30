@@ -3,11 +3,29 @@
 
 namespace Coddee.Security
 {
+    /// <summary>
+    /// Define the possible results of an authentication operation.
+    /// </summary>
     public enum AuthenticationStatus
     {
+        /// <summary>
+        /// The user is valid.
+        /// </summary>
         Successfull,
-        InvalidCredinitals,
+
+        /// <summary>
+        /// The provided credentials do not belong to a valid user.
+        /// </summary>
+        InvalidCredentials,
+
+        /// <summary>
+        /// The user is locked from authenticating.
+        /// </summary>
         Locked,
+
+        /// <summary>
+        /// An error occurred while authenticating.
+        /// </summary>
         Failed
     }
 }

@@ -7,8 +7,14 @@ using Coddee.Security;
 
 namespace Coddee.WPF.Security
 {
+    /// <summary>
+    /// Login service.
+    /// </summary>
     public interface ILoginViewModel : IPresentableViewModel
     {
+        /// <summary>
+        /// Triggered when the login operation is completed.
+        /// </summary>
         event EventHandler<AuthenticationResponse> LoggedIn;
     }
 }

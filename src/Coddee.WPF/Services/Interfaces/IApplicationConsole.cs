@@ -7,10 +7,12 @@ using System.Windows.Input;
 using Coddee.Loggers;
 using Coddee.Mvvm;
 using Coddee.Services.ApplicationConsole;
-using Coddee.WPF;
 
 namespace Coddee.Services
 {
+    /// <summary>
+    /// Application console service.
+    /// </summary>
     public interface IApplicationConsole:IPresentable
     {
         /// <summary>

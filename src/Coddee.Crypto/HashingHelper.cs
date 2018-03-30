@@ -12,6 +12,7 @@ namespace Coddee.Crypto
     /// </summary>
     public class HashedValue
     {
+        /// <inheritdoc />
         public HashedValue(string hash,
                            string salt)
         {
@@ -19,10 +20,20 @@ namespace Coddee.Crypto
             Salt = salt;
         }
 
+        /// <summary>
+        /// The hash value.
+        /// </summary>
         public string Hash { get; set; }
+
+        /// <summary>
+        /// The salt used for hashing.
+        /// </summary>
         public string Salt { get; set; }
     }
 
+    /// <summary>
+    /// Helper class for hashing operations.
+    /// </summary>
     public static class HashHelper
     {
         /// <summary>
