@@ -67,6 +67,9 @@
     <Compile Include="AsyncLinq.cs" />
     <Compile Include="Attributes\Authorize.cs" />
     <Compile Include="Attributes\NameAttribute.cs" />
+    <Compile Include="Commands\IReactiveCommand.cs" />
+    <Compile Include="Commands\ObservedProperty.cs" />
+    <Compile Include="Commands\ReactiveCommand.cs" />
     <Compile Include="ConfigKeys.cs" />
     <Compile Include="Data\BuilderExtensions.cs" />
     <Compile Include="Data\Extensions.cs" />
@@ -174,5 +177,6 @@
   <ItemGroup>
     <None Include="Coddee.pfx" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
 </Project>
