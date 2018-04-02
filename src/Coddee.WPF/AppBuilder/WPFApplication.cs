@@ -60,10 +60,14 @@ namespace Coddee.WPF
         /// </summary>
         public void Run(Action<IWPFApplicationBuilder> BuildApplication, StartupEventArgs startupEventArgs)
         {
-
-
             Current = this;
             _systemApplication = Application.Current;
+
+            _systemApplication.Resources[nameof(ApplicationColors.ApplicationAccentColor)] = ApplicationColors.ApplicationAccentColor;
+            _systemApplication.Resources[nameof(ApplicationColors.ApplicationAccentColorDarker)] = ApplicationColors.ApplicationAccentColorDarker;
+            _systemApplication.Resources[nameof(ApplicationColors.NavbarBackground)] = ApplicationColors.NavbarBackground;
+            _systemApplication.Resources[nameof(ApplicationColors.NavigationBarBorderBrush)] = ApplicationColors.NavigationBarBorderBrush;
+
             _systemApplication.ShutdownMode = ShutdownMode.OnExplicitShutdown;
             _container.RegisterInstance<IApplication>(this);
             _container.RegisterInstance(this);
@@ -141,5 +145,7 @@ namespace Coddee.WPF
         {
             _systemApplication.MainWindow.Show();
         }
+
+        
     }
 }

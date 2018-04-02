@@ -39,7 +39,7 @@
                 BorderBrush="LightGray"
                 BorderThickness="1">
             <DockPanel>
-                <DockPanel Background="{DynamicResource ApplicationAccentColor}"
+                <DockPanel Background="{x:Static local:ApplicationColors.ApplicationAccentColor}"
                            x:Name="ToolBar"
                            Margin="0 0 0 0"
                            LastChildFill="False"

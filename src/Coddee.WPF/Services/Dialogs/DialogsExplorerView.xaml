@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:Coddee.WPF.Services.Dialogs"
+             xmlns:wpf="clr-namespace:Coddee.WPF"
              d:DesignHeight="100"
              Name="Root"
              mc:Ignorable="d">
@@ -19,7 +20,7 @@
         <Button x:Name="ExplorerButton"
                 Command="{Binding ToggleCommand}">
             <StackPanel Orientation="Horizontal">
-                <TextBlock Foreground="{DynamicResource ApplicationAccentColorDarker}"
+                <TextBlock Foreground="{x:Static wpf:ApplicationColors.ApplicationAccentColorDarker}"
                            Text="{Binding DialogsCount}"
                            Visibility="{Binding DialogsCount,Converter={StaticResource InequalityVisibilityConverter},ConverterParameter={StaticResource Int32_0}}"
                            VerticalAlignment="Center"

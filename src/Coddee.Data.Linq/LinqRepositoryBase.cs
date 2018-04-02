@@ -530,14 +530,14 @@ namespace Coddee.Data.LinqToSQL
         /// <returns></returns>
         protected IEnumerable<TModel> TableToModelMapping(List<TTable> source)
         {
-            return MapItemToModel(source);
+            return MapItemToModelCollection(source);
         }
 
         /// <summary>
         /// Maps the collection from the table type to the model type
         /// The default behavior is using the Object mapper but can be overridden to alter the behavior
         /// </summary>
-        protected virtual IEnumerable<TModel> MapItemToModel(List<TTable> source)
+        protected virtual IEnumerable<TModel> MapItemToModelCollection(List<TTable> source)
         {
             return _mapper.MapCollection<TModel>(source);
         }
@@ -617,8 +617,17 @@ namespace Coddee.Data.LinqToSQL
         {
             var temp = GetItemByPrimaryKey(db, item.GetKey);
             MapItemToTable(item, temp);
+            AddionalUpdateToDbMapping(temp, item);
             db.SubmitChanges();
             return temp;
+        }
+
+        /// <summary>
+        /// Perform any additional mapping to the table item
+        /// </summary>
+        protected virtual void AddionalUpdateToDbMapping(TTable tableitem, TModel item)
+        {
+
         }
 
         /// <summary>
@@ -665,12 +674,19 @@ namespace Coddee.Data.LinqToSQL
         {
             var tableitem = new TTable();
             MapItemToTable(item, tableitem);
+            AddionalInsertToDbMapping(tableitem,item);
             db.GetTable<TTable>().InsertOnSubmit(tableitem);
             db.SubmitChanges();
             return tableitem;
         }
 
+        /// <summary>
+        /// Perform any additional mapping to the table item
+        /// </summary>
+        protected virtual void AddionalInsertToDbMapping(TTable tableitem, TModel item)
+        {
 
+        }
 
         /// <summary>
         /// Deletes an item from the repository by it's key

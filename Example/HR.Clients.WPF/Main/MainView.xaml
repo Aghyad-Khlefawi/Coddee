@@ -11,15 +11,15 @@
              d:DesignWidth="600"
              d:DesignHeight="300">
     <UserControl.Resources>
-        <local:MainViewModel x:Key="designData" IsBusy="True" />
+        <local:MainViewModel x:Key="designData" />
         
     </UserControl.Resources>
     <controls:BusyIndicator d:DataContext="{StaticResource designData}" IsBusy="{Binding IsBusy}">
         <Grid>
-           <DockPanel d:DataContext="{StaticResource designData}"
+            <DockPanel d:DataContext="{StaticResource designData}"
                        Background="WhiteSmoke">
                 <controls:TabsPanel Padding="5"
-                                    HeaderForeground="{StaticResource ApplicationAccentColor}"
+                                    HeaderForeground="{x:Static controls:ApplicationColors.ApplicationAccentColor}"
                                     Margin="5">
                     <controls:TabsPanelItem Header="Companies and Employees"
                                             Presentable="{Binding CompaniesViewModel}">
@@ -29,9 +29,7 @@
                     <controls:TabsPanelItem Header="{controls:Localize States}"
                                             Presentable="{Binding StatesViewModel}" />
                 </controls:TabsPanel>
-
             </DockPanel>
-
         </Grid>
     </controls:BusyIndicator>
 </UserControl>

@@ -13,7 +13,7 @@
                
 
                 <ResourceDictionary>
-                    <SolidColorBrush x:Key="ApplicationAccentColor"
+                    <!--<SolidColorBrush x:Key="ApplicationAccentColor"
                                      Color="#065FCF" />
                     <SolidColorBrush x:Key="ApplicationAccentColorDarker"
                                      Color="#06438F" />
@@ -21,17 +21,17 @@
                                      Color="#065FCF" />
 
                     <SolidColorBrush x:Key="NavbarBackground"
-                                     Color="#888888" />
+                                     Color="#888888" />-->
                     
                     <Style TargetType="wpf:BusyIndicator" >
-                        <Setter Property="FillColor" Value="{StaticResource ApplicationAccentColor}"/>
+                        <Setter Property="FillColor" Value="{x:Static wpf:ApplicationColors.ApplicationAccentColor}"/>
                     </Style>
                     <Style
                         x:Key="ButtonBase"
                         TargetType="Button"
                         BasedOn="{StaticResource HighlightButton}">
                         <Setter Property="Background"
-                                Value="{StaticResource ApplicationAccentColor}" />
+                                Value="{x:Static wpf:ApplicationColors.ApplicationAccentColor}" />
                         <Setter Property="Foreground" Value="White" />
                     </Style>
                     <Style TargetType="Button"

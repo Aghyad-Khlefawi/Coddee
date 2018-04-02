@@ -36,7 +36,7 @@
     </Style>
 
     <Style TargetType="{x:Type local:BusyIndicator}">
-        <Setter Property="FillColor" Value="{DynamicResource ApplicationAccentColor}"/>
+        <Setter Property="FillColor" Value="{x:Static wpf:ApplicationColors.ApplicationAccentColor}"/>
         <Setter Property="IsTabStop"
                 Value="False" />
         <Setter Property="Template">
@@ -955,7 +955,7 @@
                     <DataTrigger Binding="{Binding IsCompleted}"
                                  Value="true">
                         <Setter Property="Fill"
-                                Value="{DynamicResource ApplicationAccentColor}" />
+                                Value="{x:Static wpf:ApplicationColors.ApplicationAccentColor}" />
                     </DataTrigger>
                     <MultiDataTrigger>
                         <MultiDataTrigger.Conditions>
@@ -980,7 +980,7 @@
                     <DataTrigger Binding="{Binding IsCurrent}"
                                  Value="true">
                         <Setter Property="Fill"
-                                Value="{DynamicResource ApplicationAccentColorDarker}" />
+                                Value="{x:Static wpf:ApplicationColors.ApplicationAccentColorDarker}" />
                     </DataTrigger>
 
                 </Style.Triggers>
@@ -1016,7 +1016,7 @@
                     <DataTrigger Binding="{Binding IsCompleted}"
                                  Value="true">
                         <Setter Property="Fill"
-                                Value="{DynamicResource ApplicationAccentColor}" />
+                                Value="{x:Static wpf:ApplicationColors.ApplicationAccentColor}" />
                     </DataTrigger>
                     <MultiDataTrigger>
                         <MultiDataTrigger.Conditions>
@@ -1042,7 +1042,7 @@
                     <DataTrigger Binding="{Binding IsCurrent}"
                                  Value="true">
                         <Setter Property="Fill"
-                                Value="{DynamicResource ApplicationAccentColorDarker}" />
+                                Value="{x:Static wpf:ApplicationColors.ApplicationAccentColorDarker}" />
                     </DataTrigger>
 
                 </Style.Triggers>
