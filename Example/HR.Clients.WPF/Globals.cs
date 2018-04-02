@@ -3,4 +3,4 @@
 
 namespace HR.Clients.WPF
 {
-}
+}//

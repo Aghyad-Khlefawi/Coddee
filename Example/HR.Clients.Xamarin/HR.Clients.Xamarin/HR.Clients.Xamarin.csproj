@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommonServiceLocator" Version="2.0.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.1" />
+    <PackageReference Include="Unity" Version="5.6.0" />
+    <PackageReference Include="Xamarin.Forms" Version="2.5.0.122203" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Coddee.Xamarin\Coddee.Xamarin.csproj" />
+    <ProjectReference Include="..\..\..\src\Coddee.Core\Coddee.Core.csproj" />
+    <ProjectReference Include="..\..\..\src\Coddee.Data.Rest\Coddee.Data.REST.csproj" />
+    <ProjectReference Include="..\..\..\src\Coddee.Security\Coddee.Security.csproj" />
+    <ProjectReference Include="..\..\..\src\Coddee.Unity\Coddee.Unity.csproj" />
+    <ProjectReference Include="..\..\HR.Data.REST\HR.Data.REST.csproj" />
+    <ProjectReference Include="..\..\HR.Data\HR.Data.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Condition=" '$(EnableDefaultCompileItems)' == 'true' " Update="App.xaml.cs">
+      <DependentUpon>*.xaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Main\MainView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Settings\SettingsView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+</Project>

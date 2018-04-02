@@ -21,6 +21,11 @@ namespace Coddee.AppBuilder
         /// <summary>
         /// AspNetCore web api
         /// </summary>
-        WebAPI
+        WebAPI,
+
+        /// <summary>
+        /// Xamarin application
+        /// </summary>
+        Xamarin
     }
 }
