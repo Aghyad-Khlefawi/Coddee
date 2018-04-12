@@ -12,21 +12,24 @@ namespace Coddee.Data.MongoDB
     {
         private readonly IMongoDBManager _dbManager;
         private readonly IObjectMapper _mapper;
+        private readonly RepositoryConfigurations _config;
 
         /// <inheritdoc />
         public int RepositoryType { get; } = (int)RepositoryTypes.Mongo;
 
         /// <inheritdoc />
-        public MongoRepositoryInitializer(IMongoDBManager dbManager, IObjectMapper mapper)
+        public MongoRepositoryInitializer(IMongoDBManager dbManager, IObjectMapper mapper,
+                                          RepositoryConfigurations config = null)
         {
             _dbManager = dbManager;
             _mapper = mapper;
+            _config = config;
         }
 
         /// <inheritdoc />
         public void InitializeRepository(IRepositoryManager repositoryManager, IRepository repository, Type implementedInterface)
         {
-            ((IMongoRepository)repository).Initialize(_dbManager,repositoryManager,_mapper,implementedInterface);
+            ((IMongoRepository)repository).Initialize(_dbManager,repositoryManager,_mapper,implementedInterface, _config);
         }
     }
 }

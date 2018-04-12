@@ -21,11 +21,9 @@ namespace Coddee.Loggers
         {
             base.Initialize(type);
 
-            if (useFileCompression)
+            _file = new FileInfo(fileName);
 
-                _file = new FileInfo(fileName);
-
-            if (_file.Exists && useFileCompression)
+            if (useFileCompression && _file.Exists)
             {
                 CompressOldLogFile(fileName);
             }

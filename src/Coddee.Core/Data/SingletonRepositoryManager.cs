@@ -69,12 +69,34 @@ namespace Coddee.Data
         {
             foreach (var repository in repositories)
             {
-                if (repository.Value.GetTypeInfo().ImplementedInterfaces.Any(e => e == typeof(IRepository)))
+                var typeInfo = repository.Value.GetTypeInfo();
+                if (typeInfo.ImplementedInterfaces.Any(e => e == typeof(IRepository)))
                 {
-                    if (repository.Value.GetTypeInfo().ImplementedInterfaces.All(e => e != repository.Key))
+                    if (typeInfo.ImplementedInterfaces.All(e => e != repository.Key))
                         throw new ArgumentException(
                             $"The type {repository.Value.FullName} doesn't implements '{repository.Key.FullName}' interface");
-                    var repo = (IRepository)Activator.CreateInstance(repository.Value);
+
+                    bool hasDefaultConstructor = false;
+                    foreach (var constructor in typeInfo.DeclaredConstructors)
+                    {
+                        if (constructor.IsPublic)
+                            continue;
+                        var param = constructor.GetParameters();
+                        if (param == null || !param.Any())
+                            hasDefaultConstructor = true;
+                    }
+
+                    if (!hasDefaultConstructor)
+                        throw new Exception($"The type {repository.Value.FullName} doesn't have a public parameterless constructor.");
+                    IRepository repo;
+                    try
+                    {
+                        repo = (IRepository)Activator.CreateInstance(repository.Value);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception($"The type {repository.Value.FullName} failed to initialize.", e);
+                    }
                     InitializeRepository(repo, repository.Key);
                     AddRepository(repo, repository.Key);
                 }

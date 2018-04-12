@@ -31,6 +31,7 @@ namespace Coddee.AspNet
         {
             var logger = new LogAggregator();
             logger.Initialize(options.Level);
+            logger.AllowedTypes = options.LoggerType;
 
             if (options.LoggerType.HasFlag(LoggerTypes.DebugOutput))
             {
@@ -45,7 +46,6 @@ namespace Coddee.AspNet
                 fileLogger.Initialize(options.Level, options.LogFilePath, options.UseFileCompression);
                 logger.AddLogger(fileLogger, LoggerTypes.File);
             }
-
             services.AddSingleton<ILogger>(logger);
             return services;
         }

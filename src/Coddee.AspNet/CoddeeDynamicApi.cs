@@ -12,6 +12,7 @@ using System.Security.Principal;
 using System.Threading.Tasks;
 using Coddee.Attributes;
 using Coddee.Data;
+using Coddee.Loggers;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -23,6 +24,9 @@ namespace Coddee.AspNet
     /// </summary>
     public class CoddeeDynamicApi
     {
+        private const string _eventsSource = "CoddeeDynamicApi";
+
+        private readonly ILogger _logger;
         private readonly RequestDelegate _next;
         private readonly IRepositoryManager _repositoryManager;
         private readonly Func<IIdentity, object> _setContext;
@@ -31,12 +35,16 @@ namespace Coddee.AspNet
         public CoddeeDynamicApi(RequestDelegate next,
             IRepositoryManager repositoryManager,
             CoddeeControllersManager controllersManager,
-                                Func<IIdentity, object> setContext)
+                                IContainer container,
+            Func<IIdentity, object> setContext)
         {
             _next = next;
             _repositoryManager = repositoryManager;
             _setContext = setContext;
             _apiActions = controllersManager.GetRegisteredActions();
+
+            if (container.IsRegistered<ILogger>())
+                _logger = container.Resolve<ILogger>();
         }
 
         private readonly Dictionary<string, IApiAction> _apiActions;
@@ -69,6 +77,8 @@ namespace Coddee.AspNet
         {
             if (req.Path.HasValue)
             {
+                _logger?.Log(_eventsSource, $"Request received to path {req.Path.Value}", LogRecordTypes.Debug);
+
                 //  Split the path
                 //  It should be like the following formula
                 //  host/dapi/Repository/Action
@@ -80,10 +90,14 @@ namespace Coddee.AspNet
                 //  Check if this path was not called before
                 //  then create an action for it
                 if (!_apiActions.TryGetValue(path, out var action))
+                {
+                    _logger?.Log(_eventsSource, $"Action not found for {path}", LogRecordTypes.Debug);
                     action = CreateAction(repositoryName, actionName, path);
+                }
 
                 if (action == null)
                 {
+                    _logger?.Log(_eventsSource, $"Action for path {req.Path.Value} not found", LogRecordTypes.Debug);
                     // Action not found
                     await context.Response.WriteAsync("Action not found.");
                     context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
@@ -98,6 +112,7 @@ namespace Coddee.AspNet
 
                     if (!authoized)
                     {
+                        _logger?.Log(_eventsSource, $"Client is unauthorized for {req.Path.Value}", LogRecordTypes.Debug);
                         context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
                         await context.Response.WriteAsync("Unauthorized.");
                         return true;
@@ -109,10 +124,12 @@ namespace Coddee.AspNet
                 {
                     try
                     {
+                        _logger?.Log(_eventsSource, $"Parsing parameters for {req.Path.Value}", LogRecordTypes.Debug);
                         args = await ParseParameters(req, action.ParametersInfo);
                     }
                     catch (APIException ex)
                     {
+                        _logger?.Log(_eventsSource, $"Parsing parameters for {req.Path.Value} failed", LogRecordTypes.Debug);
                         context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
                         await context.Response.WriteAsync(ex.Message);
                         return true;
@@ -121,6 +138,7 @@ namespace Coddee.AspNet
 
                 try
                 {
+                    _logger?.Log(_eventsSource, $"Invoking action {req.Path.Value}", LogRecordTypes.Debug);
                     object res = null;
                     if (action.Owner == null)
                     {
@@ -132,6 +150,7 @@ namespace Coddee.AspNet
                     else
                         res = await action.Invoke(args);
 
+                    _logger?.Log(_eventsSource, $"Action invoked successfully {req.Path.Value}", LogRecordTypes.Debug);
                     context.Response.StatusCode = (int)HttpStatusCode.OK;
                     if (action.RetrunsValue)
                     {
@@ -141,8 +160,7 @@ namespace Coddee.AspNet
                 }
                 catch (Exception e)
                 {
-
-
+                    _logger?.Log(_eventsSource, $"Action failed to invoke {req.Path.Value}", LogRecordTypes.Debug);
                     if (e.InnerException is DBException dbexc)
                     {
                         var apiEx = new APIException(dbexc);
@@ -180,12 +198,15 @@ namespace Coddee.AspNet
         /// <returns></returns>
         private IApiAction CreateAction(string repositoryName, string actionName, string path)
         {
+            _logger?.Log(_eventsSource, $"Creating action for {repositoryName}:{actionName}", LogRecordTypes.Debug);
             IApiAction action = null;
 
             // Get the target repository
             var repository = GetRepositoryByName(repositoryName);
             if (repository != null)
             {
+                _logger?.Log(_eventsSource, $"repository '{repositoryName}' found", LogRecordTypes.Debug);
+
                 if (actionName.ToLower() == "getitem")
                     actionName = "get_item";
 
@@ -198,6 +219,12 @@ namespace Coddee.AspNet
                 var interfaceMethod = repository.ImplementedInterface
                                                 .GetMethods(BindingFlags.FlattenHierarchy)
                                                 .FirstOrDefault(e => e.Name.Equals(actionName, StringComparison.InvariantCultureIgnoreCase));
+
+                if (method == null)
+                {
+                    _logger?.Log(_eventsSource, $"Method not found for {repositoryName}:{actionName}", LogRecordTypes.Debug);
+                    return null;
+                }
 
                 // Create a delegate object for the action to improve dynamic calls performance
                 action = DelegateAction.CreateDelegateAction(repositoryName, method, path);

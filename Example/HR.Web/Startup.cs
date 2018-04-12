@@ -42,7 +42,7 @@ namespace HR.Web
         {
             var dbLocation = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..\\", "..\\", "..\\", "..\\", "..\\", "HR.Clients.WPF", "DB"));
             AppDomain.CurrentDomain.SetData("DataDirectory", dbLocation);
-
+            services.AddContainer();
             services.AddLogger(new LoggerOptions(LoggerTypes.DebugOutput, LogRecordTypes.Debug));
             services.AddILObjectMapper();
             services.AddTransientRepositoryManager();
@@ -67,6 +67,10 @@ namespace HR.Web
             {
                 config.RegisterController<AuthController>();
             });
+
+            var temp = new DebugOuputLogger();
+            temp.Initialize(LogRecordTypes.Debug);
+            temp.Log("WebApp", "DebugAppStarted");
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

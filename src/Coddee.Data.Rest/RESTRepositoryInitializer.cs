@@ -14,23 +14,26 @@ namespace Coddee.Data.REST
     {
         private readonly Action _unauthorizedRequestHandler;
         private readonly IObjectMapper _mapper;
+        private readonly RepositoryConfigurations _config;
         private HttpClient _client;
 
         /// <inheritdoc />
         public int RepositoryType { get; } = (int)RepositoryTypes.REST;
 
         /// <inheritdoc />
-        public RESTRepositoryInitializer(string apiBaseURL, Action unauthorizedRequestHandler, IObjectMapper mapper)
+        public RESTRepositoryInitializer(string apiBaseURL, Action unauthorizedRequestHandler, IObjectMapper mapper,
+                                         RepositoryConfigurations config = null)
         {
             _unauthorizedRequestHandler = unauthorizedRequestHandler;
             _mapper = mapper;
+            _config = config;
             _client = new HttpClient { BaseAddress = new Uri(apiBaseURL, UriKind.Absolute) };
         }
 
         /// <inheritdoc />
         public void InitializeRepository(IRepositoryManager repositoryManager, IRepository repository, Type implementedInterface)
         {
-            ((IRESTRepository)repository).Initialize(_client, _unauthorizedRequestHandler, repositoryManager, _mapper, implementedInterface);
+            ((IRESTRepository)repository).Initialize(_client, _unauthorizedRequestHandler, repositoryManager, _mapper, implementedInterface, _config);
         }
 
         /// <summary>

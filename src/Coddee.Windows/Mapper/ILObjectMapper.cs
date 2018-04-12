@@ -10,6 +10,21 @@ using System.Reflection.Emit;
 namespace Coddee.Windows.Mapper
 {
     /// <summary>
+    /// Argument for <see cref="ILObjectsMapper.MappingNotFound"/> event
+    /// </summary>
+    public class MappingNotFoundEventArgs : EventArgs
+    {
+        /// <summary>
+        /// The source object type
+        /// </summary>
+        public Type SourceType { get; set; }
+        /// <summary>
+        /// The target object type
+        /// </summary>
+        public Type TargetType { get; set; }
+    }
+
+    /// <summary>
     /// An object mapper for that uses generate IL to map object 
     /// using dynamic methods created at runtime,
     /// The current implementation only supports one level of mapping but it's very fast for simple POCO objects mapping
@@ -21,6 +36,11 @@ namespace Coddee.Windows.Mapper
         {
             _mappings = new Dictionary<Type, Dictionary<Type, ILMappingInfo>>();
         }
+
+        /// <summary>
+        /// Raised when a mapping is requested without registering the types.
+        /// </summary>
+        public event EventHandler<MappingNotFoundEventArgs> MappingNotFound;
 
         /// <summary>
         /// A dictionary to hold the mapping information
@@ -168,8 +188,10 @@ namespace Coddee.Windows.Mapper
             var sourceType = source.GetType();
             var targetType = typeof(TTarget);
             if (!_mappings.ContainsKey(sourceType) || !_mappings[sourceType].ContainsKey(targetType))
-                throw new
-                    InvalidOperationException($"The mapping from {sourceType.Name} to {targetType.Name} was not defined or the target type doesn't have a parameterless constructor");
+            {
+                OnMappingNotFound(sourceType, targetType);
+                return default(TTarget);
+            }
 
             var mappings = _mappings[sourceType][targetType];
             if (mappings.ManualMapper != null)
@@ -185,8 +207,14 @@ namespace Coddee.Windows.Mapper
                 mappings.AdditionalMap?.Invoke(source, res);
                 return res;
             }
-            throw new
-                InvalidOperationException($"The mapping from {sourceType.Name} to {targetType.Name} was not defined or the target type doesn't have a parameterless constructor");
+            OnMappingNotFound(sourceType, targetType);
+            return default(TTarget);
+        }
+
+        private void OnMappingNotFound(Type sourceType, Type targetType)
+        {
+            MappingNotFound?.Invoke(this, new MappingNotFoundEventArgs { SourceType = sourceType, TargetType = targetType });
+            throw new InvalidOperationException($"The mapping from {sourceType.Name} to {targetType.Name} was not defined or the target type doesn't have a parameterless constructor");
         }
 
         /// <inheritdoc />
@@ -208,8 +236,10 @@ namespace Coddee.Windows.Mapper
                 var sourceType = source[0].GetType();
                 var targetType = typeof(TTarget);
                 if (!_mappings.ContainsKey(sourceType) || !_mappings[sourceType].ContainsKey(targetType))
-                    throw new
-                        InvalidOperationException($"The mapping from {sourceType.Name} to {targetType.Name} was not defined or the target type doesn't have a parameterless constructor");
+                {
+                    OnMappingNotFound(sourceType, targetType);
+                    return default(IEnumerable<TTarget>);
+                }
 
                 var mappings = _mappings[sourceType][targetType];
                 if (mappings.ManualMapper != null)
@@ -228,8 +258,8 @@ namespace Coddee.Windows.Mapper
                 {
                     return (TTarget[])mappings.CollectionMapper(source);
                 }
-                throw new
-                    InvalidOperationException($"The mapping from {sourceType.Name} to {targetType.Name} was not defined or the target type doesn't have a parameterless constructor");
+                OnMappingNotFound(sourceType, targetType);
+                return default(IEnumerable<TTarget>);
             }
             return new List<TTarget>();
         }
@@ -246,8 +276,9 @@ namespace Coddee.Windows.Mapper
             var sourceType = source.GetType();
             var targetType = typeof(TTarget);
             if (!_mappings.ContainsKey(sourceType) || !_mappings[sourceType].ContainsKey(targetType))
-                throw new
-                    InvalidOperationException($"The mapping from {sourceType.Name} to {targetType.Name} was not defined ");
+            {
+                OnMappingNotFound(sourceType, targetType);
+            }
 
             var mappings = _mappings[sourceType][targetType];
             if (mappings.InstanceMapper != null)
@@ -257,8 +288,7 @@ namespace Coddee.Windows.Mapper
                     mappings.ExecuteAdditionalMap(source, target);
             }
             else
-                throw new
-                    InvalidOperationException($"The mapping from {source.GetType().Name} to {typeof(TTarget).Name} was not defined ");
+                OnMappingNotFound(sourceType, targetType);
         }
 
         /// <summary>

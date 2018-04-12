@@ -15,16 +15,18 @@ namespace Coddee.Windows.AppBuilder
         /// <param name="loggerType">The logging service type</param>
         /// <param name="level" >The minimum logging level</param>
         public LoggerOptions(LoggerTypes loggerType, LogRecordTypes level)
+            : this(loggerType, level, null)
         {
-            LoggerType = loggerType;
-            Level = level;
         }
 
         /// <param name="loggerType">The logging service type</param>
         /// <param name="level" >The minimum logging level</param>
         /// <param name="logFilePath">The full path of the log file</param>
-        public LoggerOptions(LoggerTypes loggerType, LogRecordTypes level, string logFilePath) : this(loggerType, level)
+        public LoggerOptions(LoggerTypes loggerType, LogRecordTypes level,string logFilePath)
         {
+            LoggerType = loggerType;
+            Level = level;
+
             if (string.IsNullOrEmpty(logFilePath))
                 logFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "log.txt");
             LogFilePath = logFilePath;
@@ -67,7 +69,7 @@ namespace Coddee.Windows.AppBuilder
             var logger = (LogAggregator)container.Resolve<ILogger>();
             var level = options.Level;
             var loggerType = options.LoggerType;
-            var filePath =options.LogFilePath;
+            var filePath = options.LogFilePath;
             logger.SetLogLevel(options.Level);
             logger.AllowedTypes = options.LoggerType;
 

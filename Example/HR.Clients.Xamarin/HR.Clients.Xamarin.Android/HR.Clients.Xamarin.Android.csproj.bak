@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>HR.Clients.Xamarin.Droid</RootNamespace>
     <AssemblyName>HR.Clients.Xamarin.Android</AssemblyName>
-    <TargetFrameworkVersion>v7.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v8.0</TargetFrameworkVersion>
     <AndroidApplication>True</AndroidApplication>
     <AndroidResgenFile>Resources\Resource.designer.cs</AndroidResgenFile>
     <AndroidResgenClass>Resource</AndroidResgenClass>
@@ -49,6 +49,9 @@
   <ItemGroup>
     <PackageReference Include="CommonServiceLocator">
       <Version>2.0.2</Version>
+    </PackageReference>
+    <PackageReference Include="Newtonsoft.Json">
+      <Version>11.0.1</Version>
     </PackageReference>
     <PackageReference Include="Unity">
       <Version>5.6.0</Version>
@@ -94,13 +97,21 @@
       <Project>{200805c2-e25c-4d1b-ac1e-0dbb5869aeb9}</Project>
       <Name>Coddee.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\src\Coddee.Data\Coddee.Data.csproj">
-      <Project>{9541018b-0cc1-4237-8370-df8f20940eed}</Project>
-      <Name>Coddee.Data</Name>
+    <ProjectReference Include="..\..\..\src\Coddee.Security\Coddee.Security.csproj">
+      <Project>{86cfa30d-188c-485d-8df5-544313d445c7}</Project>
+      <Name>Coddee.Security</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\..\src\Coddee.Unity\Coddee.Unity.csproj">
       <Project>{602298c6-5140-465b-835b-7b79551c84e5}</Project>
       <Name>Coddee.Unity</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\HR.Data.REST\HR.Data.REST.csproj">
+      <Project>{7acf3991-336e-49eb-835a-b29d6762c483}</Project>
+      <Name>HR.Data.REST</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\HR.Data\HR.Data.csproj">
+      <Project>{218ff723-ceb7-4beb-834c-538b713839e3}</Project>
+      <Name>HR.Data</Name>
     </ProjectReference>
     <ProjectReference Include="..\HR.Clients.Xamarin\HR.Clients.Xamarin.csproj">
       <Project>{A1CE1FC8-9155-408D-8520-B4DDF6C518FD}</Project>
