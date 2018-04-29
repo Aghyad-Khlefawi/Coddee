@@ -10,6 +10,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
 
 namespace Coddee.Data.REST
@@ -19,6 +20,19 @@ namespace Coddee.Data.REST
     /// </summary>
     public abstract class RESTRepositoryBase : RepositoryBase, IRESTRepository
     {
+        /// <summary>
+        /// The default format of DateTime.
+        /// </summary>
+        public static string DefaultDateTimeFormat = "dd/MM/yyyy HH:mm:ss";
+
+        /// <summary>
+        /// The default Json DateTime converter.
+        /// </summary>
+        public static IsoDateTimeConverter DefaultDateTimeConverter = new IsoDateTimeConverter
+        {
+            DateTimeFormat = DefaultDateTimeFormat
+        };
+
         /// <inheritdoc />
         public override int RepositoryType { get; } = (int)RepositoryTypes.REST;
 
@@ -77,7 +91,7 @@ namespace Coddee.Data.REST
                                   object param = null)
         {
             var content = param != null
-                ? new StringContent(JsonConvert.SerializeObject(param), Encoding.UTF8, "application/json")
+                ? new StringContent(SerializeObject(param), Encoding.UTF8, "application/json")
                 : null;
             var res = await _httpClient.PostAsync(url, content);
             var resString = await res.Content.ReadAsStringAsync();
@@ -118,7 +132,7 @@ namespace Coddee.Data.REST
                                         object param = null)
         {
             var content = param != null
-                ? new StringContent(JsonConvert.SerializeObject(param), Encoding.UTF8, "application/json")
+                ? new StringContent(SerializeObject(param), Encoding.UTF8, "application/json")
                 : null;
             var res = await _httpClient.PostAsync(url, content);
             var resString = await res.Content.ReadAsStringAsync();
@@ -170,7 +184,7 @@ namespace Coddee.Data.REST
                                  object param = null)
         {
             var content = param != null
-                ? new StringContent(JsonConvert.SerializeObject(param), Encoding.UTF8, "application/json")
+                ? new StringContent(SerializeObject(param), Encoding.UTF8, "application/json")
                 : null;
             var res = await _httpClient.PutAsync(url, content);
             var resString = await res.Content.ReadAsStringAsync();
@@ -344,6 +358,14 @@ namespace Coddee.Data.REST
         protected virtual KeyValuePair<string, string> KeyValue(string name, object value)
         {
             return new KeyValuePair<string, string>(name, value.ToString());
+        }
+
+        /// <summary>
+        /// Serialize an object to JSON.
+        /// </summary>
+        protected virtual string SerializeObject<T>(T obj)
+        {
+            return JsonConvert.SerializeObject(obj, DefaultDateTimeConverter);
         }
     }
 

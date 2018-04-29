@@ -2,6 +2,7 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -17,14 +18,14 @@ namespace Coddee.AspNet
         public CoddeeControllersManager(IServiceCollection container)
         {
             _container = container;
-            _apiActions = new Dictionary<string, IApiAction>();
+            _apiActions = new ConcurrentDictionary<string, IApiAction>();
             _controllerTypes = new List<Type>();
         }
 
         private readonly List<Type> _controllerTypes;
-        private readonly Dictionary<string, IApiAction> _apiActions;
+        private readonly ConcurrentDictionary<string, IApiAction> _apiActions;
 
-        public Dictionary<string, IApiAction> GetRegisteredActions()
+        public ConcurrentDictionary<string, IApiAction> GetRegisteredActions()
         {
             foreach (var type in _controllerTypes)
             {
@@ -48,8 +49,8 @@ namespace Coddee.AspNet
                             delegateAction.RequiredAuthentication = true;
                             delegateAction.Claim = authAttr.Claim;
                         }
-
-                        _apiActions.Add(pathLower, delegateAction);
+                        if (!_apiActions.ContainsKey(pathLower))
+                            _apiActions.TryAdd(pathLower, delegateAction);
                     }
                 }
             }

@@ -2,7 +2,9 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -15,6 +17,7 @@ using Coddee.Data;
 using Coddee.Loggers;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
 
 namespace Coddee.AspNet
@@ -24,6 +27,19 @@ namespace Coddee.AspNet
     /// </summary>
     public class CoddeeDynamicApi
     {
+        /// <summary>
+        /// The default format of DateTime.
+        /// </summary>
+        public static string DefaultDateTimeFormat = "dd/MM/yyyy HH:mm:ss";
+
+        /// <summary>
+        /// The default Json serializer used to deserialize objects.
+        /// </summary>
+        public static JsonSerializer DefaultJsonSerializer = JsonSerializer.Create(new JsonSerializerSettings
+        {
+            DateFormatString = DefaultDateTimeFormat
+        });
+
         private const string _eventsSource = "CoddeeDynamicApi";
 
         private readonly ILogger _logger;
@@ -47,7 +63,7 @@ namespace Coddee.AspNet
                 _logger = container.Resolve<ILogger>();
         }
 
-        private readonly Dictionary<string, IApiAction> _apiActions;
+        private readonly ConcurrentDictionary<string, IApiAction> _apiActions;
 
         /// <summary>
         /// Returns the requested repository either by the class name
@@ -250,10 +266,13 @@ namespace Coddee.AspNet
                         action.Claim = authAttr.Claim;
                     }
                 }
-
-                _apiActions.Add(path, action);
+                if (!_apiActions.ContainsKey(path))
+                    _apiActions.TryAdd(path, action);
             }
-
+            else
+            {
+                _logger?.Log(_eventsSource, $"repository '{repositoryName}' not found", LogRecordTypes.Debug);
+            }
             return action;
         }
 
@@ -278,7 +297,7 @@ namespace Coddee.AspNet
                                 {
                                     if (parameterInfo.Type == typeof(DateTime))
                                     {
-                                        args.Add(DateTime.Parse(queryParam.Value));
+                                        args.Add(DateTime.ParseExact(queryParam.Value, DefaultDateTimeFormat, null));
                                     }
                                     else if (parameterInfo.Type == typeof(Guid))
                                     {
@@ -298,7 +317,10 @@ namespace Coddee.AspNet
                                     }
                                     else
                                     {
-                                        args.Add(JsonConvert.DeserializeObject(queryParam.Value, parameterInfo.Type));
+                                        args.Add(JsonConvert.DeserializeObject(queryParam.Value, parameterInfo.Type, new IsoDateTimeConverter
+                                        {
+                                            DateTimeFormat = DefaultDateTimeFormat
+                                        }));
                                     }
                                 }
                                 catch (Exception)
@@ -335,7 +357,7 @@ namespace Coddee.AspNet
                     }
                     else if (bodyParams != null && param.Count() == 1)
                     {
-                        args.Add(bodyParams.ToObject(param.ElementAt(0).Type));
+                        args.Add(bodyParams.ToObject(param.ElementAt(0).Type, DefaultJsonSerializer));
                     }
                     else
                         foreach (var parameterInfo in param)
