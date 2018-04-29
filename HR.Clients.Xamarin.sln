@@ -5,12 +5,12 @@ VisualStudioVersion = 15.0.26730.10
 MinimumVisualStudioVersion = 10.0.40219.1
 
 
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HR.Clients.Xamarin", "HR.Clients.Xamarin\HR.Clients.Xamarin\HR.Clients.Xamarin.csproj", "{0533715D-98A1-481B-B880-0ACC0B41CA92}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HR.Clients.Xamarin", "Example\HR.Clients.Xamarin\HR.Clients.Xamarin\HR.Clients.Xamarin.csproj", "{0533715D-98A1-481B-B880-0ACC0B41CA92}"
 EndProject
 
 
 
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HR.Clients.Xamarin.Android", "HR.Clients.Xamarin\HR.Clients.Xamarin.Android\HR.Clients.Xamarin.Android.csproj", "{94069B97-99B5-41DA-AE13-E0DF232B8627}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HR.Clients.Xamarin.Android", "Example\HR.Clients.Xamarin\HR.Clients.Xamarin.Android\HR.Clients.Xamarin.Android.csproj", "{94069B97-99B5-41DA-AE13-E0DF232B8627}"
 EndProject
 
 

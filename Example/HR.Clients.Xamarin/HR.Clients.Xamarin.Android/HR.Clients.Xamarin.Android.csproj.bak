@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{1FA1E962-E9B9-4B51-90DA-9859060EDBBE}</ProjectGuid>
+    <ProjectGuid>{94069B97-99B5-41DA-AE13-E0DF232B8627}</ProjectGuid>
     <ProjectTypeGuids>{EFBA0AD7-5A72-4C68-AF49-83D382785DCF};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <RootNamespace>HR.Clients.Xamarin.Droid</RootNamespace>
@@ -47,21 +47,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="CommonServiceLocator">
-      <Version>2.0.2</Version>
-    </PackageReference>
-    <PackageReference Include="Newtonsoft.Json">
-      <Version>11.0.1</Version>
-    </PackageReference>
     <PackageReference Include="Unity">
-      <Version>5.6.0</Version>
+      <Version>4.0.1</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.Forms" Version="2.5.0.122203" />
-    <PackageReference Include="Xamarin.Android.Support.Design" Version="25.4.0.2" />
-    <PackageReference Include="Xamarin.Android.Support.v7.AppCompat" Version="25.4.0.2" />
-    <PackageReference Include="Xamarin.Android.Support.v4" Version="25.4.0.2" />
-    <PackageReference Include="Xamarin.Android.Support.v7.CardView" Version="25.4.0.2" />
-    <PackageReference Include="Xamarin.Android.Support.v7.MediaRouter" Version="25.4.0.2" />
+    <PackageReference Include="Xamarin.Android.Support.Design" Version="26.1.0.1" />
+    <PackageReference Include="Xamarin.Android.Support.v7.AppCompat" Version="26.1.0.1" />
+    <PackageReference Include="Xamarin.Android.Support.v4" Version="26.1.0.1" />
+    <PackageReference Include="Xamarin.Android.Support.v7.CardView" Version="26.1.0.1" />
+    <PackageReference Include="Xamarin.Android.Support.v7.MediaRouter" Version="26.1.0.1" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MainActivity.cs" />
@@ -89,32 +83,8 @@
     </AndroidResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Coddee.Xamarin\Coddee.Xamarin.csproj">
-      <Project>{ef69337f-2b0b-4268-96d3-9dbe65bf38e1}</Project>
-      <Name>Coddee.Xamarin</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\src\Coddee.Core\Coddee.Core.csproj">
-      <Project>{200805c2-e25c-4d1b-ac1e-0dbb5869aeb9}</Project>
-      <Name>Coddee.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\src\Coddee.Security\Coddee.Security.csproj">
-      <Project>{86cfa30d-188c-485d-8df5-544313d445c7}</Project>
-      <Name>Coddee.Security</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\src\Coddee.Unity\Coddee.Unity.csproj">
-      <Project>{602298c6-5140-465b-835b-7b79551c84e5}</Project>
-      <Name>Coddee.Unity</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\HR.Data.REST\HR.Data.REST.csproj">
-      <Project>{7acf3991-336e-49eb-835a-b29d6762c483}</Project>
-      <Name>HR.Data.REST</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\HR.Data\HR.Data.csproj">
-      <Project>{218ff723-ceb7-4beb-834c-538b713839e3}</Project>
-      <Name>HR.Data</Name>
-    </ProjectReference>
     <ProjectReference Include="..\HR.Clients.Xamarin\HR.Clients.Xamarin.csproj">
-      <Project>{A1CE1FC8-9155-408D-8520-B4DDF6C518FD}</Project>
+      <Project>{08c51f2b-8b91-4ea7-8a68-de9f14eebfff}</Project>
       <Name>HR.Clients.Xamarin</Name>
     </ProjectReference>
   </ItemGroup>

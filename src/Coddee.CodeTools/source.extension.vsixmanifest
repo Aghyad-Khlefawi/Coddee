@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
+    <Metadata>
+        <Identity Id="$safeprojectname$.Company.c2cdd384-3888-4ce4-9b16-3499794d1bfd" Version="1.2" Language="en-US" Publisher="Aghyad khlefawi" />
+        <DisplayName>CoddeeTools</DisplayName>
+        <Description xml:space="preserve">CoddeeTools</Description>
+        <Icon />
+        <PreviewImage />
+    </Metadata>
+    <Installation>
+        <InstallationTarget Version="[15.0,)" Id="Microsoft.VisualStudio.Community" />
+    </Installation>
+    <Dependencies>
+        <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="[4.5,)" />
+        <Dependency Id="Microsoft.VisualStudio.MPF.15.0" DisplayName="Visual Studio MPF 15.0" d:Source="Installed" Version="[15.0]" />
+    </Dependencies>
+    <Assets>
+        <Asset Type="Microsoft.VisualStudio.ToolboxControl" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%;PkgdefProjectOutputGroup|" />
+        <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%;PkgdefProjectOutputGroup|" />
+    </Assets>
+    <Prerequisites>
+        <Prerequisite Id="Microsoft.Net.Component.4.6.TargetingPack" Version="[15.0.26621.2,16.0)" DisplayName=".NET Framework 4.6 targeting pack" />
+    </Prerequisites>
+</PackageManifest>

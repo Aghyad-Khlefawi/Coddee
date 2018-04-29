@@ -1,0 +1,12 @@
+CREATE TABLE dbo.Countries
+(
+    Id INT NOT NULL PRIMARY KEY IDENTITY(0,1),
+    Name NVARCHAR(100)
+)
+
+CREATE TABLE dbo.Cities(
+    Id INT NOT NULL PRIMARY KEY IDENTITY(0,1),
+    CountryId INT NOT NULL FOREIGN KEY REFERENCES dbo.Countries(Id),
+    Name NVARCHAR(100)
+)
+
