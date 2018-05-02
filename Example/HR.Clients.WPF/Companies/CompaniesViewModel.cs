@@ -151,7 +151,7 @@ namespace HR.Clients.WPF.Companies
         {
             var companyRepo = Resolve<ICompanyRepository>();
 
-            Companies = AsyncObservableDictionaryView<Guid, Company>.Create(CompanySearch, await companyRepo.GetDetailedItems(Guid.Empty,DateTime.Now));
+            Companies = AsyncObservableDictionaryView<Guid, Company>.Create(CompanySearch, await companyRepo.GetDetailedItems());
             Employees = AsyncObservableCollectionView<Employee>.Create(EmployeeSearch);
             
             _companyEditor = CreateViewModel<CompanyEditorViewModel>();

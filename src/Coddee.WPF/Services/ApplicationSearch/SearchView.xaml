@@ -17,7 +17,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="../../Resources.xaml" />
                 <ResourceDictionary>
-                    <local:SearchViewModel x:Key="designData" IsBusy="True"/>
+                    <local:SearchViewModel x:Key="designData"/>
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
