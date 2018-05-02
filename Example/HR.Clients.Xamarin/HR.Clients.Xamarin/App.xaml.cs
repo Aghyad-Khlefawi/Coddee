@@ -1,4 +1,4 @@
-﻿using Microsoft.Practices.Unity;
+﻿using Unity;
 using Xamarin.Forms;
 
 namespace HR.Clients.Xamarin
