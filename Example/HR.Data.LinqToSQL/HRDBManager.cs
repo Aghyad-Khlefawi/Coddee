@@ -2,7 +2,7 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
 using Coddee.Data.LinqToSQL;
-using HR.Data.LinqToSQL.DB;
+using HR.Data.Linq.DB;
 
 namespace HR.Data.LinqToSQL
 {

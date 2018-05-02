@@ -77,32 +77,12 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Companies\CompaniesView.xaml.cs">
-      <DependentUpon>CompaniesView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Companies\CompaniesViewModel.cs" />
-    <Compile Include="Companies\Editors\CompanyEditorView.xaml.cs">
-      <DependentUpon>CompanyEditorView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Companies\Editors\CompanyEditorViewModel.cs" />
-    <Compile Include="Companies\Editors\EmployeeEditorView.xaml.cs">
-      <DependentUpon>EmployeeEditorView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Companies\Editors\EmployeeEditorViewModelBase.cs" />
     <Compile Include="Navigation.cs" />
     <Compile Include="Properties\Resources.ar-SY.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.ar-SY.resx</DependentUpon>
     </Compile>
-    <Compile Include="Settings\SettingsView.xaml.cs">
-      <DependentUpon>SettingsView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Settings\SettingsViewModel.cs" />
-    <Compile Include="States\StatesView.xaml.cs">
-      <DependentUpon>StatesView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="States\StatesViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Globals.cs" />
@@ -135,7 +115,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="DB\HRDatabase.sqlite" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -182,10 +161,6 @@
       <Project>{c7cdd99f-b288-45d9-b06c-4aa535e2c4a8}</Project>
       <Name>HR.Data.LinqToSQL</Name>
     </ProjectReference>
-    <ProjectReference Include="..\HR.Data.Mongo\HR.Data.Mongo.csproj">
-      <Project>{70c08f57-4641-427f-ad33-1a280efdd39f}</Project>
-      <Name>HR.Data.Mongo</Name>
-    </ProjectReference>
     <ProjectReference Include="..\HR.Data.REST\HR.Data.REST.csproj">
       <Project>{7acf3991-336e-49eb-835a-b29d6762c483}</Project>
       <Name>HR.Data.REST</Name>
@@ -199,18 +174,6 @@
     <Resource Include="LICENSE.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Companies\CompaniesView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Companies\Editors\CompanyEditorView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Companies\Editors\EmployeeEditorView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Login\LoginView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -219,23 +182,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Settings\SettingsView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="States\StatesView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="DB\HRDatabase.mdf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="DB\HRDatabase_log.ldf">
-      <DependentUpon>HRDatabase.mdf</DependentUpon>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">

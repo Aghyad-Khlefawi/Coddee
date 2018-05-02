@@ -69,9 +69,13 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="Repositories\BranchRepository.cs" />
+    <Compile Include="Repositories\CityRepository.cs" />
     <Compile Include="Repositories\CompanyRepository.cs" />
+    <Compile Include="Repositories\CountryRepository.cs" />
+    <Compile Include="Repositories\DepartmentRepository.cs" />
     <Compile Include="Repositories\EmployeeRepository.cs" />
-    <Compile Include="Repositories\StateRepository.cs" />
+    <Compile Include="Repositories\JobRepository.cs" />
     <Compile Include="Repositories\UserRepository.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -102,6 +106,7 @@
       <Generator>MSLinqToSQLGenerator</Generator>
       <LastGenOutput>HRDataClasses.designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <CustomToolNamespace>HR.Data.Linq.DB</CustomToolNamespace>
     </None>
     <None Include="DB\HRDataClasses.dbml.layout">
       <DependentUpon>HRDataClasses.dbml</DependentUpon>
@@ -122,8 +127,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="CreateQueries\CreateTables.sql" />
-    <Content Include="CreateQueries\CreateViews.sql" />
     <None Include="LICENSE.txt" />
   </ItemGroup>
   <ItemGroup />

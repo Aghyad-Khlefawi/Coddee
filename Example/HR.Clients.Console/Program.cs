@@ -12,7 +12,7 @@ namespace HR.Clients.Console
     {
         static void Main(string[] args)
         {
-            var dbLocation = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "DB"));
+            var dbLocation = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"..\\", "..\\", "..\\", "DB"));
             var connection = $@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename={dbLocation}\HRDatabase.mdf;Integrated Security=True;Connect Timeout=30";
 
             new ConsoleApplication("HR Application", new CoddeeUnityContainer()).Run(app =>

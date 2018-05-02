@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>HR.Clients.Xamarin.Droid</RootNamespace>
     <AssemblyName>HR.Clients.Xamarin.Android</AssemblyName>
-    <TargetFrameworkVersion>v7.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v7.1</TargetFrameworkVersion>
     <AndroidApplication>True</AndroidApplication>
     <AndroidResgenFile>Resources\Resource.designer.cs</AndroidResgenFile>
     <AndroidResgenClass>Resource</AndroidResgenClass>

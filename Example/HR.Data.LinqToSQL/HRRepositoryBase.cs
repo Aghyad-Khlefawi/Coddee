@@ -3,9 +3,9 @@
 
 using Coddee;
 using Coddee.Data.LinqToSQL;
-using HR.Data.LinqToSQL.DB;
+using HR.Data.Linq.DB;
 
-namespace HR.Data.LinqToSQL
+namespace HR.Data.Linq.Repositories
 {
     public class HRRepositoryBase:LinqRepositoryBase<HRDataClassesDataContext>
     {

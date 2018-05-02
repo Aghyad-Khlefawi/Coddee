@@ -50,7 +50,8 @@ namespace HR.Clients.WPF
                              .UseILMapper()
 
                              //Use the shell created  by the library with a login window
-                             .UseDefaultShellWithLogin<MainViewModel, LoginViewModel>()
+                             //.UseDefaultShellWithLogin<MainViewModel, LoginViewModel>()
+                             .UseDefaultShell<MainViewModel>()
 
                              //Configure a navigation bar for the application
                              .UseNavigation(HRNavigation.Navigations)
