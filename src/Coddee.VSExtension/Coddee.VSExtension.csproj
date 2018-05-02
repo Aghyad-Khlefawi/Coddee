@@ -58,7 +58,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Coddee.CodeTools\Coddee.CodeTools.csproj">
+    <ProjectReference Include="..\Coddee.CodeTools\Coddee.CodeTools.csproj">
       <Project>{46562BDE-391D-4033-9F96-21ED349D5C1E}</Project>
       <Name>Coddee.CodeTools</Name>
       <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup%3bBuiltProjectOutputGroupDependencies%3bGetCopyToOutputDirectoryItems%3bSatelliteDllsProjectOutputGroup%3bPkgdefProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
