@@ -39,64 +39,69 @@
                 BorderBrush="LightGray"
                 BorderThickness="1">
             <DockPanel>
-                <DockPanel Background="{x:Static local:ApplicationColors.ApplicationAccentColor}"
+                <Border DockPanel.Dock="Top"
+                        BorderThickness="0 0 0 2"
+                        Background="{x:Static local:ApplicationTheme.ApplicationAccentColor}"
+                        BorderBrush="{x:Static local:ApplicationTheme.ApplicationAccentColorDarker}">
+                    <DockPanel 
                            x:Name="ToolBar"
                            Margin="0 0 0 0"
                            LastChildFill="False"
-                           Dock="Top"
                            Height="35">
-                    <Label Content="{Binding ApplicationName}"
+                        <Label Content="{Binding ApplicationName}"
                            VerticalAlignment="Center"
                            Foreground="White"
                            FontSize="16" />
-                    <DockPanel HorizontalAlignment="Right"
+                        <DockPanel HorizontalAlignment="Right"
                                Dock="Right">
-                        <DockPanel.Resources>
-                            <Style TargetType="Button"
+                            <DockPanel.Resources>
+                                <Style TargetType="Button"
                                    BasedOn="{StaticResource HighlightButton}">
-                                <Setter Property="Padding" Value="10 0" />
-                            </Style>
-                        </DockPanel.Resources>
-                        <Button IsTabStop="False"
+                                    <Setter Property="Padding" Value="10 0" />
+                                </Style>
+                            </DockPanel.Resources>
+                            <Button IsTabStop="False"
                                 Command="{Binding MinimizeCommand}">
-                            <Path Style="{StaticResource Shape_Minimize}"
+                                <Path Style="{StaticResource Shape_Minimize}"
                                   Height="3"
                                   Width="15" />
-                        </Button>
-                        <Button x:Name="RestoreButton"
+                            </Button>
+                            <Button x:Name="RestoreButton"
                                 Click="Restore">
-                            <Path Style="{StaticResource Shape_RestoreWindow}"
+                                <Path Style="{StaticResource Shape_RestoreWindow}"
                                   Stretch="Fill"
                                   Width="15"
                                   FlowDirection="RightToLeft"
                                   Height="15" />
-                        </Button>
+                            </Button>
 
-                        <Button x:Name="MaximizeButton"
+                            <Button x:Name="MaximizeButton"
                                 Click="Maximaize">
-                            <Path Style="{StaticResource Shape_MaximaizeWindow}"
+                                <Path Style="{StaticResource Shape_MaximaizeWindow}"
                                   Stretch="Fill"
                                   Width="15"
                                   Height="15" />
-                        </Button>
+                            </Button>
 
-                        <Button IsTabStop="False"
+                            <Button IsTabStop="False"
                                 Command="{Binding ExitCommand}">
-                            <Path Style="{StaticResource Shape_Exit}"
+                                <Path Style="{StaticResource Shape_Exit}"
                                   Height="15"
                                   Width="15" />
-                        </Button>
-                    </DockPanel>
+                            </Button>
+                        </DockPanel>
 
-                    <ContentPresenter Content="{Binding ToolbarContent}"
+                        <ContentPresenter Content="{Binding ToolbarContent}"
                                       DockPanel.Dock="Right"
                                       HorizontalAlignment="Right"/>
-                    <controls:ViewModelPresenter ViewModel="{Binding DialogExplorer}" 
+                        <controls:ViewModelPresenter ViewModel="{Binding DialogExplorer}" 
                                                  DockPanel.Dock="Right"
                                                  Margin="0 0 5 0"
                                                  HorizontalAlignment="Right"
                                                  VerticalAlignment="Center"/>
-                </DockPanel>
+                    </DockPanel>
+
+                </Border>
                 <Grid>
 
                     <Grid>

@@ -81,7 +81,7 @@ namespace HR.Web
 
             app.UseAuthentication();
 
-            app.UseCoddeeDynamicApi(i => new { Username = ((ClaimsIdentity)i).Claims.First(e => e.Type == "username") });
+            app.UseCoddeeDynamicApi(i => new { Username = ((ClaimsIdentity)i).Claims.FirstOrDefault(e => e.Type == "username") });
         }
     }
 }

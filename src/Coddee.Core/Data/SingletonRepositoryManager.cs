@@ -79,7 +79,7 @@ namespace Coddee.Data
                     bool hasDefaultConstructor = false;
                     foreach (var constructor in typeInfo.DeclaredConstructors)
                     {
-                        if (constructor.IsPublic)
+                        if (!constructor.IsPublic)
                             continue;
                         var param = constructor.GetParameters();
                         if (param == null || !param.Any())

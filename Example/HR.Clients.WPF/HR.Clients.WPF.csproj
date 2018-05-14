@@ -77,6 +77,23 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Components\CompaniesView.xaml.cs">
+      <DependentUpon>CompaniesView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Components\CompaniesViewModel.cs" />
+    <Compile Include="Components\CountriesView.xaml.cs">
+      <DependentUpon>CountriesView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Components\CountriesViewModel.cs" />
+    <Compile Include="Components\CountryEditorView.xaml.cs">
+      <DependentUpon>CountryEditorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Components\CountryEditorViewModel.cs" />
+    <Compile Include="Components\ManagementMainView.xaml.cs">
+      <DependentUpon>ManagementMainView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Components\ManagementMainViewModel.cs" />
+    <Compile Include="IManagementViewModel.cs" />
     <Compile Include="Navigation.cs" />
     <Compile Include="Properties\Resources.ar-SY.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -174,6 +191,22 @@
     <Resource Include="LICENSE.txt" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Components\CompaniesView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Components\CountriesView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Components\CountryEditorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Components\ManagementMainView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Login\LoginView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -189,6 +222,9 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Components\Companies\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

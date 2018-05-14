@@ -36,7 +36,7 @@
     </Style>
 
     <Style TargetType="{x:Type local:BusyIndicator}">
-        <Setter Property="FillColor" Value="{x:Static wpf:ApplicationColors.ApplicationAccentColor}"/>
+        <Setter Property="FillColor" Value="{x:Static wpf:ApplicationTheme.ApplicationAccentColor}"/>
         <Setter Property="IsTabStop"
                 Value="False" />
         <Setter Property="Template">
@@ -878,7 +878,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:ViewModelPresenter}">
-                    <ContentPresenter Content="{Binding RelativeSource={RelativeSource TemplatedParent},Path=Content}" />
+                    <ContentPresenter Margin="{TemplateBinding Padding}" Content="{Binding RelativeSource={RelativeSource TemplatedParent},Path=Content}" />
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
@@ -955,7 +955,7 @@
                     <DataTrigger Binding="{Binding IsCompleted}"
                                  Value="true">
                         <Setter Property="Fill"
-                                Value="{x:Static wpf:ApplicationColors.ApplicationAccentColor}" />
+                                Value="{x:Static wpf:ApplicationTheme.ApplicationAccentColor}" />
                     </DataTrigger>
                     <MultiDataTrigger>
                         <MultiDataTrigger.Conditions>
@@ -980,7 +980,7 @@
                     <DataTrigger Binding="{Binding IsCurrent}"
                                  Value="true">
                         <Setter Property="Fill"
-                                Value="{x:Static wpf:ApplicationColors.ApplicationAccentColorDarker}" />
+                                Value="{x:Static wpf:ApplicationTheme.ApplicationAccentColorDarker}" />
                     </DataTrigger>
 
                 </Style.Triggers>
@@ -1016,7 +1016,7 @@
                     <DataTrigger Binding="{Binding IsCompleted}"
                                  Value="true">
                         <Setter Property="Fill"
-                                Value="{x:Static wpf:ApplicationColors.ApplicationAccentColor}" />
+                                Value="{x:Static wpf:ApplicationTheme.ApplicationAccentColor}" />
                     </DataTrigger>
                     <MultiDataTrigger>
                         <MultiDataTrigger.Conditions>
@@ -1042,7 +1042,7 @@
                     <DataTrigger Binding="{Binding IsCurrent}"
                                  Value="true">
                         <Setter Property="Fill"
-                                Value="{x:Static wpf:ApplicationColors.ApplicationAccentColorDarker}" />
+                                Value="{x:Static wpf:ApplicationTheme.ApplicationAccentColorDarker}" />
                     </DataTrigger>
 
                 </Style.Triggers>

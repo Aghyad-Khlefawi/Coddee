@@ -578,7 +578,7 @@ namespace Coddee.Data.LinqToSQL
         /// <summary>
         /// Updates and items in the repository
         /// </summary>
-        public virtual Task<TModel> UpdateItem(TModel item, TDataContext context)
+        public virtual Task<TModel> UpdateItemInner(TModel item, TDataContext context)
         {
             return TransactionalExecute(context, (db, table) =>
               {
@@ -596,7 +596,7 @@ namespace Coddee.Data.LinqToSQL
             using (var context = _dbManager.CreateContext())
             {
                 var transcation = CreateTransaction(context);
-                var res = await UpdateItem(item, context);
+                var res = await UpdateItemInner(item, context);
                 transcation.Commit();
                 return res;
             }
@@ -638,7 +638,7 @@ namespace Coddee.Data.LinqToSQL
             using (var context = _dbManager.CreateContext())
             {
                 var transcation = CreateTransaction(context);
-                var res = await InsertItem(item, context);
+                var res = await InsertItemInner(item, context);
                 transcation.Commit();
                 return res;
             }
@@ -647,7 +647,7 @@ namespace Coddee.Data.LinqToSQL
         /// <summary>
         /// Inserts a new items to the repository
         /// </summary>
-        public virtual Task<TModel> InsertItem(TModel item, TDataContext context)
+        public virtual Task<TModel> InsertItemInner(TModel item, TDataContext context)
         {
             return TransactionalExecute(context, (db, table) =>
              {
@@ -696,7 +696,7 @@ namespace Coddee.Data.LinqToSQL
             using (var context = _dbManager.CreateContext())
             {
                 CreateTransaction(context);
-                await DeleteItemByKey(ID, context);
+                await DeleteItemByKeyInner(ID, context);
                 context.Transaction.Commit();
             }
         }
@@ -704,7 +704,7 @@ namespace Coddee.Data.LinqToSQL
         /// <summary>
         /// Deletes an item from the repository by it's key
         /// </summary>
-        public virtual async Task DeleteItemByKey(TKey ID, TDataContext context)
+        public virtual async Task DeleteItemByKeyInner(TKey ID, TDataContext context)
         {
             await TransactionalExecute(context, (db, table) =>
             {
@@ -738,9 +738,9 @@ namespace Coddee.Data.LinqToSQL
         /// <summary>
         /// Deletes an item from the repository
         /// </summary>
-        public virtual Task DeleteItem(TModel item, TDataContext context)
+        public virtual Task DeleteItemInner(TModel item, TDataContext context)
         {
-            return DeleteItemByKey(item.GetKey, context);
+            return DeleteItemByKeyInner(item.GetKey, context);
         }
         /// <summary>
         /// Maps a model item to table item the default behavior is using the object mapper

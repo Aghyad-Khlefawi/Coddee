@@ -24,14 +24,14 @@
                                      Color="#888888" />-->
                     
                     <Style TargetType="wpf:BusyIndicator" >
-                        <Setter Property="FillColor" Value="{x:Static wpf:ApplicationColors.ApplicationAccentColor}"/>
+                        <Setter Property="FillColor" Value="{x:Static wpf:ApplicationTheme.ApplicationAccentColor}"/>
                     </Style>
                     <Style
                         x:Key="ButtonBase"
                         TargetType="Button"
                         BasedOn="{StaticResource HighlightButton}">
                         <Setter Property="Background"
-                                Value="{x:Static wpf:ApplicationColors.ApplicationAccentColor}" />
+                                Value="{x:Static wpf:ApplicationTheme.ApplicationAccentColor}" />
                         <Setter Property="Foreground" Value="White" />
                     </Style>
                     <Style TargetType="Button"

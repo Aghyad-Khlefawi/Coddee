@@ -230,7 +230,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate>
-                    <Rectangle StrokeThickness="3" Margin="-2" Stroke="{x:Static local:ApplicationColors.ApplicationAccentColor}"
+                    <Rectangle StrokeThickness="3" Margin="-2" Stroke="{x:Static local:ApplicationTheme.ApplicationAccentColor}"
                                Opacity=".8"
                                Fill="Transparent"/>
                 </ControlTemplate>
@@ -239,8 +239,8 @@
     </Style>
     <Style  x:Key="BorderedButton"  TargetType="Button" >
         <Setter Property="Foreground" Value="White"/>
-        <Setter Property="BorderBrush" Value="{x:Static local:ApplicationColors.ApplicationAccentColorDarker}" />
-        <Setter Property="Background" Value="{x:Static local:ApplicationColors.ApplicationAccentColor}" />
+        <Setter Property="BorderBrush" Value="{x:Static local:ApplicationTheme.ApplicationAccentColorDarker}" />
+        <Setter Property="Background" Value="{x:Static local:ApplicationTheme.ApplicationAccentColor}" />
         <Setter Property="HorizontalContentAlignment" Value="Center"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
         <Setter Property="FocusVisualStyle" Value="{StaticResource ButtonFocusVisualStyle}"/>
@@ -276,7 +276,7 @@
                                                 </DataTrigger.Setters>
                                             </DataTrigger>
                                             <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=Button,Mode=FindAncestor},Path=IsPressed}" Value="true">
-                                                <Setter Property="Background" Value="{x:Static local:ApplicationColors.ApplicationAccentColorDarker}"/>
+                                                <Setter Property="Background" Value="{x:Static local:ApplicationTheme.ApplicationAccentColorDarker}"/>
                                             </DataTrigger>
                                         </Style.Triggers>
                                     </Style>
@@ -305,7 +305,7 @@
         <Setter Property="HorizontalContentAlignment" Value="Center" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="Background"
-                Value="{x:Static local:ApplicationColors.ApplicationAccentColor}" />
+                Value="{x:Static local:ApplicationTheme.ApplicationAccentColor}" />
         <Setter Property="Foreground" Value="White" />
         <Setter Property="Padding"
                 Value="3" />
@@ -464,7 +464,7 @@
                         <Border Width="6"
                                 Visibility="{Binding IsSelected,Converter={StaticResource BoolToVisibilityConverter}}"
                                 HorizontalAlignment="Left"
-                                Background="{x:Static local:ApplicationColors.ApplicationAccentColor}" />
+                                Background="{x:Static local:ApplicationTheme.ApplicationAccentColor}" />
                         <DockPanel>
                             <Border DockPanel.Dock="Right"
                                     Width="250"
@@ -676,9 +676,9 @@
             Command="{Binding OpenCommand}">
             <Button.Template>
                 <ControlTemplate>
-                    <Border Background="{x:Static local:ApplicationColors.ApplicationAccentColor}"
+                    <Border Background="{x:Static local:ApplicationTheme.ApplicationAccentColor}"
                             BorderThickness="2"
-                            BorderBrush="{x:Static local:ApplicationColors.ApplicationAccentColorDarker}">
+                            BorderBrush="{x:Static local:ApplicationTheme.ApplicationAccentColorDarker}">
                         <DockPanel Margin="5 0 0 0">
                             <Path Style="{StaticResource Shape_Information}" Height="40" Margin="5 0 10 0"/>
                             <DockPanel DockPanel.Dock="Top">

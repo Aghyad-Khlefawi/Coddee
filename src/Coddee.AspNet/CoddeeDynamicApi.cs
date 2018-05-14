@@ -333,7 +333,7 @@ namespace Coddee.AspNet
                             }
                         }
                         if (!found)
-                            throw new APIException(0, $"Missing parameters '{parameterInfo.Name}'");
+                            throw new APIException(APIExceptionCodes.MissingParamters, $"Missing parameters '{parameterInfo.Name}'");
                     }
                 }
                 else

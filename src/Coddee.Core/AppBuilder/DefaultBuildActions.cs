@@ -124,6 +124,14 @@ namespace Coddee.AppBuilder
         }
 
         /// <summary>
+        /// Creates a build action for the application theme.
+        /// </summary>
+        public static BuildAction ApplicationThemeAction(Action<IContainer> action)
+        {
+            return new BuildAction(BuildActionsKeys.ApplicationTheme, action, 9);
+        }
+
+        /// <summary>
         /// Creates a build action for setting up the ViewModel base class.
         /// </summary>
         public static BuildAction SetupViewModelBaseBuildAction(Action<IContainer> action)
@@ -146,6 +154,7 @@ namespace Coddee.AppBuilder
         {
             return new BuildAction(BuildActionsKeys.Shell, action, 11);
         }
+
 
         /// <summary>
         /// Creates a build action for the application console.

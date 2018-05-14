@@ -33,6 +33,7 @@ namespace Coddee.AppBuilder
         public const string RegisterDefaultModules = nameof(RegisterDefaultModules);
         public const string ConfigureGlobalVariabls = nameof(ConfigureGlobalVariabls);
         public const string ConsoleMain = nameof(ConsoleMain);
+        public const string ApplicationTheme = nameof(ApplicationTheme);
 #pragma warning restore 1591
     }
 }

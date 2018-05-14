@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using Coddee.Collections;
+using Coddee.Data;
 using Coddee.Mvvm;
 using Coddee.Services;
 using Coddee.Services.Dialogs;
@@ -61,6 +62,19 @@ namespace Coddee.WPF
         public static async Task<IEnumerable<SelectableItem<T>>> AsSelectable<T>(this Task<IEnumerable<T>> collection)
         {
             return (await collection).AsSelectable();
+        }
+
+
+        /// <summary>
+        /// Creates an <see cref="AsyncObservableCollectionView{T}"/> and binds the repository changes to the collection
+        /// </summary>
+        public static async Task<AsyncObservableCollectionView<T>> ToAsyncObservableCollectionView<T, TKey>(this ICRUDRepository<T, TKey> repo,FilterHandler<T> filter)
+            where T : IUniqueObject<TKey>
+        {
+            var items = await repo.GetItems();
+            var collection = AsyncObservableCollectionView<T>.Create(filter, items);
+            collection.BindToRepositoryChanges(repo);
+            return collection;
         }
 
         /// <summary>

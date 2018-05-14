@@ -20,7 +20,7 @@
         <Button x:Name="ExplorerButton"
                 Command="{Binding ToggleCommand}">
             <StackPanel Orientation="Horizontal">
-                <TextBlock Foreground="{x:Static wpf:ApplicationColors.ApplicationAccentColorDarker}"
+                <TextBlock Foreground="{x:Static wpf:ApplicationTheme.ApplicationAccentColorDarker}"
                            Text="{Binding DialogsCount}"
                            Visibility="{Binding DialogsCount,Converter={StaticResource InequalityVisibilityConverter},ConverterParameter={StaticResource Int32_0}}"
                            VerticalAlignment="Center"

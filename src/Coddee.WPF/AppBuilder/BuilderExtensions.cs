@@ -150,6 +150,20 @@ namespace Coddee.AppBuilder
             return builder;
         }
 
+
+        /// <summary>
+        /// Sets the application theme colors
+        /// </summary>
+        /// <returns></returns>
+        public static IApplicationBuilder UseTheme(this IApplicationBuilder builder, ApplicationColors colors)
+        {
+            builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.ApplicationThemeAction((container) =>
+            {
+                ApplicationTheme.SetTheme(colors);
+            }));
+            return builder;
+        }
+
         /// <summary>
         /// Sets a custom shell for the WPF application
         /// </summary>
@@ -354,13 +368,13 @@ namespace Coddee.AppBuilder
         /// <summary>
         /// Initializes the <see cref="INotificationService"/>
         /// </summary>
-        public static IApplicationBuilder UseNotification(this IApplicationBuilder builder,Region notificationRegion,double duration)
+        public static IApplicationBuilder UseNotification(this IApplicationBuilder builder, Region notificationRegion, double duration)
         {
             builder.BuildActionsCoordinator.AddActionAfter(new BuildAction(BuildActionsKeys.Notification,
                                                                            container =>
                                                                            {
-                                                                               NotificationService service= (NotificationService)container.Resolve<INotificationService>();
-                                                                               service.Inititlize(notificationRegion,duration);
+                                                                               NotificationService service = (NotificationService)container.Resolve<INotificationService>();
+                                                                               service.Inititlize(notificationRegion, duration);
                                                                            }), BuildActionsKeys.Toast);
             return builder;
         }

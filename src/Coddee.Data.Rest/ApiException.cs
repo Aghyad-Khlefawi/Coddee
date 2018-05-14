@@ -57,4 +57,22 @@ namespace Coddee.Data
         /// </summary>
         public Type InnerExceptionType { get; set; }
     }
+
+    /// <summary>
+    /// Defines the commonly used exception codes
+    /// </summary>
+    public static class APIExceptionCodes
+    {
+        /// <summary>
+        /// Indicates that the request is missing a parameter.
+        /// </summary>
+        public static int MissingParamters = 0;
+
+        /// <summary>
+        /// Indicates that the server returned an empty response.
+        /// </summary>
+        public static int EmptyResponse = 1;
+
+
+    }
 }

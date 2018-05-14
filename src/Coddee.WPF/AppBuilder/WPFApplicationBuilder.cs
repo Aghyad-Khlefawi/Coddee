@@ -52,6 +52,9 @@ namespace Coddee.WPF
             {
                 SetupViewModelBase();
             }));
+
+            if (BuildActionsCoordinator.GetAction(BuildActionsKeys.ApplicationTheme) == null)
+                this.UseTheme(ApplicationColors.Default);
         }
 
 

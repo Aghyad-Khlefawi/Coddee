@@ -141,7 +141,7 @@ namespace Coddee.Data.REST
 
             if (res.IsSuccessStatusCode)
             {
-                
+
                 return JsonConvert.DeserializeObject<T>(resString);
             }
 
@@ -217,13 +217,7 @@ namespace Coddee.Data.REST
                 ? new StringContent(JsonConvert.SerializeObject(param), Encoding.UTF8, "application/json")
                 : null;
             var res = await _httpClient.PutAsync(url, content);
-            var resString = await res.Content.ReadAsStringAsync();
-            if (res.IsSuccessStatusCode)
-                return JsonConvert.DeserializeObject<T>(resString);
-            if (res.StatusCode == HttpStatusCode.Unauthorized || res.StatusCode == HttpStatusCode.Forbidden)
-                _unauthorizedRequestHandler?.Invoke();
-
-            throw HandleBadRequest(resString);
+            return await HandleResquestResponse<T>(res);
         }
 
         /// <summary>
@@ -268,12 +262,32 @@ namespace Coddee.Data.REST
                                                                param != null
                                                                    ? urlBuilder.Length - 1
                                                                    : urlBuilder.Length));
+            return await HandleResquestResponse<T>(res);
+        }
+
+        /// <summary>
+        /// Handle the <see cref="HttpResponseMessage"/> and return the result of the response.
+        /// </summary>
+        protected virtual async Task<T> HandleResquestResponse<T>(HttpResponseMessage res)
+        {
             var resString = await res.Content.ReadAsStringAsync();
-            if (res.IsSuccessStatusCode)
-                return JsonConvert.DeserializeObject<T>(resString);
             if (res.StatusCode == HttpStatusCode.Unauthorized || res.StatusCode == HttpStatusCode.Forbidden)
                 _unauthorizedRequestHandler?.Invoke();
-            throw HandleBadRequest(resString);
+
+            if (!res.IsSuccessStatusCode)
+                throw HandleBadRequest(resString);
+
+            if (string.IsNullOrEmpty(resString))
+                throw new APIException(APIExceptionCodes.EmptyResponse, "Server returned an empty response");
+
+            try
+            {
+                return JsonConvert.DeserializeObject<T>(resString);
+            }
+            catch (Exception e)
+            {
+                throw new RestClientException(0, "Failed to deserialize the response", e, resString);
+            }
         }
 
         /// <summary>

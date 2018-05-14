@@ -130,7 +130,7 @@
     <Compile Include="Common\Extensions.cs" />
     <Compile Include="Common\IEditorViewModel.cs" />
     <Compile Include="Services\Dialogs\ActionCommandWrapper.cs" />
-    <Compile Include="Themes\ApplicationColors.cs" />
+    <Compile Include="Themes\ApplicationTheme.cs" />
     <Compile Include="XamlHelpers\InputMask.cs" />
     <Compile Include="Notification\NotificationModule.cs" />
     <Compile Include="Notification\NotificationPopupViewModel.cs" />
