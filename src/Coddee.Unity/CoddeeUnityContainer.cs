@@ -14,6 +14,14 @@ namespace Coddee.Unity
         private readonly IUnityContainer _container;
 
 
+        /// <summary>
+        /// The internal unity container instance.
+        /// </summary>
+        public IUnityContainer Container
+        {
+            get { return _container; }
+        }
+
         /// <inheritdoc />
         public CoddeeUnityContainer()
         {

@@ -90,10 +90,7 @@ namespace Coddee.Data.REST
         protected async Task Post(string url,
                                   object param = null)
         {
-            var content = param != null
-                ? new StringContent(SerializeObject(param), Encoding.UTF8, "application/json")
-                : null;
-            var res = await _httpClient.PostAsync(url, content);
+            var res = await SendPostRequest(url, param);
             var resString = await res.Content.ReadAsStringAsync();
             if (!res.IsSuccessStatusCode)
             {
@@ -101,6 +98,14 @@ namespace Coddee.Data.REST
                     _unauthorizedRequestHandler?.Invoke();
                 throw HandleBadRequest(resString);
             }
+        }
+
+        private async Task<HttpResponseMessage> SendPostRequest(string url, object param)
+        {
+            var content = param != null
+                              ? new StringContent(SerializeObject(param), Encoding.UTF8, "application/json")
+                              : null;
+            return await _httpClient.PostAsync(url, content);
         }
 
         /// <summary>
@@ -131,13 +136,15 @@ namespace Coddee.Data.REST
         protected async Task<T> Post<T>(string url,
                                         object param = null)
         {
-            var content = param != null
-                ? new StringContent(SerializeObject(param), Encoding.UTF8, "application/json")
-                : null;
-            var res = await _httpClient.PostAsync(url, content);
+            var res = await SendPostRequest(url, param);
             var resString = await res.Content.ReadAsStringAsync();
+
             if (res.IsSuccessStatusCode)
+            {
+                
                 return JsonConvert.DeserializeObject<T>(resString);
+            }
+
             if (res.StatusCode == HttpStatusCode.Unauthorized || res.StatusCode == HttpStatusCode.Forbidden)
                 _unauthorizedRequestHandler?.Invoke();
 

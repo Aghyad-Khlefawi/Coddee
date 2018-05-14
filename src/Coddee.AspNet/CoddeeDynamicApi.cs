@@ -93,6 +93,7 @@ namespace Coddee.AspNet
         {
             if (req.Path.HasValue)
             {
+                context.Response.Headers.Add("X-Powered-By","Coddee dynamic API");
                 _logger?.Log(_eventsSource, $"Request received to path {req.Path.Value}", LogRecordTypes.Debug);
 
                 //  Split the path
