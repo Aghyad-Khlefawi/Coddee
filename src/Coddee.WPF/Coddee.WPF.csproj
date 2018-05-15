@@ -88,6 +88,7 @@
     <Compile Include="Controls\GlowBorder.cs" />
     <Compile Include="Controls\MultiSelect.cs" />
     <Compile Include="Controls\RegionControl.cs" />
+    <Compile Include="Controls\SelectableItemsControl.cs" />
     <Compile Include="Controls\TabsPanel.cs" />
     <Compile Include="Controls\ValidationBorder.cs" />
     <Compile Include="Controls\ViewModelPresenter.cs" />

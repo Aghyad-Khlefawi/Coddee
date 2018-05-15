@@ -1297,5 +1297,44 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+    <Style TargetType="{x:Type local:SelectableItemsControl}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:SelectableItemsControl}">
+                    <ItemsControl
+                        x:Name="Root"
+                        ItemsSource="{TemplateBinding Selectables}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="{x:Type local:SelectableItem}">
+                                <Grid>
+                                    <Button Command="{Binding SelectCommand}"
+                                            Cursor="Hand"
+                                            Visibility="{Binding IsSelected,Converter={StaticResource BoolToVisibilityConverter}}">
+                                        <Button.Template>
+                                            <ControlTemplate>
+
+                                                <ContentPresenter Content="{Binding Item}"  ContentTemplate="{Binding RelativeSource={RelativeSource AncestorType=local:SelectableItemsControl,Mode=FindAncestor},Path=SelectedItemTemplate}"/>
+
+                                            </ControlTemplate>
+                                        </Button.Template>
+                                    </Button>
+                                    <Button Command="{Binding SelectCommand}"
+                                            Cursor="Hand"
+                                            Visibility="{Binding IsSelected,Converter={StaticResource BoolToVisibilityConverter},ConverterParameter=R}">
+                                        <Button.Template>
+                                            <ControlTemplate>
+                                                <ContentPresenter Content="{Binding Item}"  ContentTemplate="{Binding RelativeSource={RelativeSource AncestorType=local:SelectableItemsControl,Mode=FindAncestor},Path=ItemTemplate}"/>
+                                            </ControlTemplate>
+                                        </Button.Template>
+                                    </Button>
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 </ResourceDictionary>
     

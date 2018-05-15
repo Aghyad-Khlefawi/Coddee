@@ -26,8 +26,8 @@ namespace HR.Clients.WPF.Components
         private SelectableCompany _lastSelected;
         private ICompanyRepository _companyRepository;
 
-        private AsyncObservableCollection<SelectableCompany> _companies;
-        public AsyncObservableCollection<SelectableCompany> Companies
+        private AsyncObservableCollection<Company> _companies;
+        public AsyncObservableCollection<Company> Companies
         {
             get { return _companies; }
             set { SetProperty(ref _companies, value); }
@@ -37,7 +37,11 @@ namespace HR.Clients.WPF.Components
         public Company SelectedCompany
         {
             get { return _selectedCompany; }
-            set { SetProperty(ref _selectedCompany, value); }
+            set
+            {
+                SetProperty(ref _selectedCompany, value);
+                ToastInformation($"Selected {value.Name}");
+            }
         }
 
         private IReactiveCommand _addCompanyCommand;
@@ -71,24 +75,40 @@ namespace HR.Clients.WPF.Components
         protected override void OnDesignMode()
         {
             base.OnDesignMode();
-            Companies = new AsyncObservableCollection<SelectableCompany>
+            Companies = new AsyncObservableCollection<Company>
             {
-                new SelectableCompany(new Company
+                //new SelectableCompany(new Company
+                //{
+                //    Name="Microsoft"
+                //}),
+                //new SelectableCompany(new Company
+                //{
+                //    Name="Apple"
+                //}),
+                //new SelectableCompany(new Company
+                //{
+                //    Name="Google"
+                //},true),
+                //new SelectableCompany(new Company
+                //{
+                //    Name="Amazon"
+                //})
+                new Company
                 {
                     Name="Microsoft"
-                }),
-                new SelectableCompany(new Company
+                },
+                new Company
                 {
                     Name="Apple"
-                }),
-                new SelectableCompany(new Company
+                },
+                new Company
                 {
                     Name="Google"
-                },true),
-                new SelectableCompany(new Company
+                },
+                new Company
                 {
                     Name="Amazon"
-                })
+                }
             };
         }
 
@@ -99,8 +119,9 @@ namespace HR.Clients.WPF.Components
             _companyEditor.Saved += companyEditorSaved;
 
             _companyRepository = GetRepository<ICompanyRepository>();
-            Companies = (await _companyRepository.GetItems()).Select(CreateSelectableCompany).ToAsyncObservableCollection();
-            Companies.BindToRepositoryChanges(_companyRepository, CreateSelectableCompany, e => Companies.First(c => c.Item.Id.Equals(e.Id)));
+            Companies = await _companyRepository.ToAsyncObservableCollection();
+            //Companies = (await _companyRepository.GetItems()).Select(CreateSelectableCompany).ToAsyncObservableCollection();
+            //Companies.BindToRepositoryChanges(_companyRepository, CreateSelectableCompany, e => Companies.First(c => c.Item.Id.Equals(e.Id)));
         }
 
         private SelectableCompany CreateSelectableCompany(Company sourceitem)

@@ -8,10 +8,32 @@ using Coddee.WPF.Commands;
 namespace Coddee.WPF
 {
     /// <summary>
+    /// Indicate that the object can be selected by the user.
+    /// </summary>
+    public interface ISelecatble
+    {
+        /// <summary>
+        /// The object selection status
+        /// </summary>
+        bool IsSelected { get; set; }
+
+        /// <summary>
+        /// Set is <see cref="IsSelected"/> property to true.
+        /// </summary>
+        void Select();
+
+        /// <summary>
+        /// Returns the item wrapped by the selectable object.
+        /// </summary>
+        /// <returns></returns>
+        object GetInnerItem();
+    }
+
+    /// <summary>
     /// A wrapper object that can be selected (using CheckBox-list or radio buttons)
     /// </summary>
     /// <typeparam name="TItem"></typeparam>
-    public class SelectableItem<TItem> : BindableBase
+    public class SelectableItem<TItem> : BindableBase, ISelecatble
     {
         /// <inheritdoc />
         public SelectableItem(TItem item, bool isSelected = false)
@@ -112,13 +134,17 @@ namespace Coddee.WPF
             IsSelected = !IsSelected;
         }
 
-        /// <summary>
-        /// Set is <see cref="IsSelected"/> property to true.
-        /// </summary>
+        /// <inheritdoc />
         public void Select()
         {
             if (IsSelected != true)
                 IsSelected = true;
+        }
+
+        /// <inheritdoc />
+        public object GetInnerItem()
+        {
+            return Item;
         }
     }
 }

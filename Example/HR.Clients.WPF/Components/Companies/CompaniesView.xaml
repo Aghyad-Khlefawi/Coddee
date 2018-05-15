@@ -10,6 +10,17 @@
              d:DesignHeight="300" d:DesignWidth="1300">
     <UserControl.Resources>
         <local:CompaniesViewModel x:Key="designData" />
+        <Style x:Key="ItemsControlStyle1" TargetType="{x:Type ItemsControl}">
+            <Setter Property="VirtualizingPanel.IsVirtualizing" Value="True"/>
+            <Setter Property="ScrollViewer.CanContentScroll" Value="True"/>
+            <Setter Property="ItemsPanel">
+                <Setter.Value>
+                    <ItemsPanelTemplate>
+                        <VirtualizingStackPanel/>
+                    </ItemsPanelTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </UserControl.Resources>
     <coddee:BusyIndicator IsBusy="{Binding IsBusy}" d:DataContext="{StaticResource designData}">
         <DockPanel>
@@ -30,53 +41,46 @@
                 <Border BorderBrush="DimGray"
                         Background="WhiteSmoke"
                         BorderThickness="1">
-                    <ItemsControl
-                        ItemsSource="{Binding Companies}"
-                        Style="{StaticResource VirtualizingItemsControl}">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate DataType="{x:Type local:SelectableCompany}">
-                                <Button Command="{Binding SelectCommand}"
-                                        Cursor="Hand">
-                                    <Button.Template>
-                                        <ControlTemplate>
-                                            <Grid>
-                                                <coddee:ColorsHolder x:Name="ColorsHolder">
-                                                    <coddee:ColorsHolder.Style>
-                                                        <Style TargetType="coddee:ColorsHolder">
-                                                            <Setter Property="Color1" Value="#FF343434"/>
-                                                            <Setter Property="Color2" Value="WhiteSmoke"/>
-                                                            <Style.Triggers>
-                                                                <DataTrigger Binding="{Binding IsSelected}" Value="true">
-                                                                    <Setter Property="Color2" Value="{x:Static coddee:ApplicationTheme.ApplicationAccentColor}"/>
-                                                                    <Setter Property="Color1" Value="WhiteSmoke"/>
-                                                                </DataTrigger>
-                                                            </Style.Triggers>
-                                                        </Style>
-                                                    </coddee:ColorsHolder.Style>
-                                                </coddee:ColorsHolder>
-                                            <Border BorderBrush="DimGray"
-                                                    Background="{Binding ElementName=ColorsHolder,Path=Color2}"
+                    <coddee:SelectableItemsControl ItemsSource="{Binding Companies}"
+                                                   SelectedItem="{Binding SelectedCompany}">
+                        <coddee:SelectableItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border BorderBrush="DimGray"
+                                                    Background="WhiteSmoke"
                                                     Padding="5"
                                                     BorderThickness="0 0 0 1">
-                                                <DockPanel>
-                                                   
-                                                    <Path DockPanel.Dock="Left"
+                                    <DockPanel>
+
+                                        <Path DockPanel.Dock="Left"
                                                           Data="{StaticResource Shape_Company}"
-                                                          Fill="{Binding ElementName=ColorsHolder,Path=Color1}" />
-                                                    <Label Content="{Binding Item.Name}"
+                                                          Fill="#FF343434" />
+                                        <Label Content="{Binding Name}"
                                                            VerticalAlignment="Center"
                                                            Margin="10 0 0 0"
-                                                           Foreground="{Binding ElementName=ColorsHolder,Path=Color1}" />
-                                                </DockPanel>
-                                            </Border>
-                                            </Grid>
-
-                                        </ControlTemplate>
-                                    </Button.Template>
-                                </Button>
+                                                           Foreground="#FF343434" />
+                                    </DockPanel>
+                                </Border>
                             </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
+                        </coddee:SelectableItemsControl.ItemTemplate>
+                        <coddee:SelectableItemsControl.SelectedItemTemplate>
+                            <DataTemplate>
+                                <Border BorderBrush="DimGray"
+                                        Background="{x:Static coddee:ApplicationTheme.ApplicationAccentColor}"
+                                        Padding="5"
+                                        BorderThickness="0 0 0 1">
+                                    <DockPanel>
+                                        <Path DockPanel.Dock="Left"
+                                              Data="{StaticResource Shape_Company}"
+                                              Fill="WhiteSmoke" />
+                                        <Label Content="{Binding Name}"
+                                               VerticalAlignment="Center"
+                                               Margin="10 0 0 0"
+                                               Foreground="WhiteSmoke" />
+                                    </DockPanel>
+                                </Border>
+                            </DataTemplate>
+                        </coddee:SelectableItemsControl.SelectedItemTemplate>
+                    </coddee:SelectableItemsControl>
                 </Border>
             </DockPanel>
             <DockPanel></DockPanel>
