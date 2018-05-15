@@ -11,6 +11,10 @@
                 <!--This ResourceDictionary is required for the built in modules-->
                 <ResourceDictionary Source="pack://application:,,,/Coddee.WPF;component/Resources.xaml" />
                 <ResourceDictionary>
+                    
+                    <SolidColorBrush x:Key="Foreground"
+                                     Color="#FF343434"/>
+
                     <Style TargetType="wpf:BusyIndicator" >
                         <Setter Property="FillColor" Value="{x:Static wpf:ApplicationTheme.ApplicationAccentColor}"/>
                     </Style>

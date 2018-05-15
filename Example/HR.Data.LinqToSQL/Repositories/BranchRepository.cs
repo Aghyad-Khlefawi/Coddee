@@ -14,6 +14,7 @@ using HR.Data.Models;
 using HR.Data.Repositories;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 
@@ -23,5 +24,20 @@ namespace HR.Data.Linq.Repositories
     [Coddee.Data.RepositoryAttribute(typeof(IBranchRepository))]
     public class BranchRepository : CRUDHRRepositoryBase<DB.Branch, Branch, int>, IBranchRepository
     {
+        public override void RegisterMappings(IObjectMapper mapper)
+        {
+            base.RegisterMappings(mapper);
+            mapper.RegisterMap<DB.BranchesView,Branch>();
+        }
+
+        public Task<IEnumerable<Branch>> GetItemsWithDetails()
+        {
+            return ExecuteAndMapCollection(db => db.BranchesViews.ToList());
+        }
+
+        public Task<IEnumerable<Branch>> GetItemsWithDetailsByCompany(int companyId)
+        {
+            return ExecuteAndMapCollection(db => db.BranchesViews.Where(e => e.CompanyId == companyId).ToList());
+        }
     }
 }

@@ -20,6 +20,10 @@ namespace HR.Data.Models
     {
 		public System.Int32 Id { get; set; }
 		public System.String Name { get; set; }
+
+        public int BranchCount { get; set; }
+        public int EmployeeCount { get; set; }
+
 		[IgnoreDataMember]
 		public System.Int32 GetKey =>Id;
 

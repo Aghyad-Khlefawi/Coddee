@@ -13,7 +13,8 @@ using Coddee.Data.REST;
 using HR.Data.Models;
 using HR.Data.Repositories;
 using System;
-
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace HR.Data.Rest.Repositories
 {
@@ -24,6 +25,16 @@ namespace HR.Data.Rest.Repositories
         public BranchRepository() : 
                 base("Branch")
         {
+        }
+
+        public Task<IEnumerable<Branch>> GetItemsWithDetails()
+        {
+            return GetFromController<IEnumerable<Branch>>();
+        }
+
+        public Task<IEnumerable<Branch>> GetItemsWithDetailsByCompany(int companyId)
+        {
+            return GetFromController<IEnumerable<Branch>>(KeyValue(nameof(companyId), companyId));
         }
     }
 }

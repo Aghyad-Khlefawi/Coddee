@@ -31,5 +31,10 @@ namespace HR.Data.Rest.Repositories
         {
             return GetFromController<IEnumerable<City>>();
         }
+
+        public Task<IEnumerable<City>> GetItemsByCountry(int countryId)
+        {
+            return GetFromController<IEnumerable<City>>(KeyValue(nameof(countryId), countryId));
+        }
     }
 }

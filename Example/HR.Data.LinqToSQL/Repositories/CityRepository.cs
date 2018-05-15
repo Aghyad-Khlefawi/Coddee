@@ -34,5 +34,10 @@ namespace HR.Data.Linq.Repositories
         {
             return ExecuteAndMapCollection(db => db.CitiesViews.ToList());
         }
+
+        public Task<IEnumerable<City>> GetItemsByCountry(int countryId)
+        {
+            return ExecuteAndMapCollection(db => db.Cities.Where(e => e.CountryId == countryId).ToList());
+        }
     }
 }

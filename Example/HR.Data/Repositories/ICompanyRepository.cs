@@ -21,5 +21,6 @@ namespace HR.Data.Repositories
     
     public interface ICompanyRepository : ICRUDRepository<Company, int>
     {
+        Task<IEnumerable<Company>> GetItemsWithDetails();
     }
 }

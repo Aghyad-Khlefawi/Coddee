@@ -14,17 +14,12 @@ using HR.Clients.WPF.Interfaces;
 
 namespace HR.Clients.WPF.Components
 {
-    public class SelectableCompany : SelectableItem<Company>
-    {
-        public SelectableCompany(Company item, bool isSelected = false) : base(item, isSelected)
-        {
-        }
-    }
     public class CompaniesViewModel : ViewModelBase<CompaniesView>
     {
         private ICompanyEditor _companyEditor;
-        private SelectableCompany _lastSelected;
+        private IBranchEditor _branchEditor;
         private ICompanyRepository _companyRepository;
+        private IBranchRepository _branchRepository;
 
         private AsyncObservableCollection<Company> _companies;
         public AsyncObservableCollection<Company> Companies
@@ -40,8 +35,16 @@ namespace HR.Clients.WPF.Components
             set
             {
                 SetProperty(ref _selectedCompany, value);
-                ToastInformation($"Selected {value.Name}");
+                OnCompanySelected(value);
             }
+        }
+
+
+        private AsyncObservableCollection<Branch> _companyBranches;
+        public AsyncObservableCollection<Branch> CompanyBranches
+        {
+            get { return _companyBranches; }
+            set { SetProperty(ref _companyBranches, value); }
         }
 
         private IReactiveCommand _addCompanyCommand;
@@ -65,6 +68,20 @@ namespace HR.Clients.WPF.Components
             set { SetProperty(ref _deleteCompanyCommand, value); }
         }
 
+        private IReactiveCommand _createBranchCommand;
+        public IReactiveCommand CreateBranchCommand
+        {
+            get { return _createBranchCommand ?? (_createBranchCommand = CreateReactiveCommand(this,CreateBranch).ObserveProperty(e=>e.SelectedCompany)); }
+            set { SetProperty(ref _createBranchCommand, value); }
+        }
+
+        public async void CreateBranch()
+        {
+            await _branchEditor.Initialize();
+            _branchEditor.Add(SelectedCompany.Id);
+            _branchEditor.Show();
+        }
+
         public async void AddCompany()
         {
             await _companyEditor.Initialize();
@@ -77,22 +94,7 @@ namespace HR.Clients.WPF.Components
             base.OnDesignMode();
             Companies = new AsyncObservableCollection<Company>
             {
-                //new SelectableCompany(new Company
-                //{
-                //    Name="Microsoft"
-                //}),
-                //new SelectableCompany(new Company
-                //{
-                //    Name="Apple"
-                //}),
-                //new SelectableCompany(new Company
-                //{
-                //    Name="Google"
-                //},true),
-                //new SelectableCompany(new Company
-                //{
-                //    Name="Amazon"
-                //})
+               
                 new Company
                 {
                     Name="Microsoft"
@@ -116,29 +118,19 @@ namespace HR.Clients.WPF.Components
         {
             await base.OnInitialization();
             _companyEditor = CreateViewModel<ICompanyEditor>();
-            _companyEditor.Saved += companyEditorSaved;
+            _companyEditor.Saved += CompanyEditorSaved;
+
+            _branchEditor = CreateViewModel<IBranchEditor>();
 
             _companyRepository = GetRepository<ICompanyRepository>();
-            Companies = await _companyRepository.ToAsyncObservableCollection();
-            //Companies = (await _companyRepository.GetItems()).Select(CreateSelectableCompany).ToAsyncObservableCollection();
-            //Companies.BindToRepositoryChanges(_companyRepository, CreateSelectableCompany, e => Companies.First(c => c.Item.Id.Equals(e.Id)));
+            _branchRepository = GetRepository<IBranchRepository>();
+
+
+            Companies = await _companyRepository.GetItemsWithDetails().ToAsyncObservableCollection();
+            Companies.BindToRepositoryChanges(_companyRepository);
         }
 
-        private SelectableCompany CreateSelectableCompany(Company sourceitem)
-        {
-            var item = new SelectableCompany(sourceitem);
-            item.Selected += (s, e) =>
-            {
-                if (_lastSelected != null)
-                    _lastSelected.IsSelected = false;
-
-                _lastSelected = (SelectableCompany)s;
-                SelectedCompany = e;
-            };
-            return item;
-        }
-
-        private void companyEditorSaved(object sender, EditorSaveArgs<Company> e)
+        private void CompanyEditorSaved(object sender, EditorSaveArgs<Company> e)
         {
             ToastSuccess();
         }
@@ -160,5 +152,11 @@ namespace HR.Clients.WPF.Components
             _companyEditor.Show();
         }
 
+
+        private async void OnCompanySelected(Company value)
+        {
+            CompanyBranches = await _branchRepository.GetItemsWithDetailsByCompany(value.Id).ToAsyncObservableCollection();
+            CompanyBranches.BindToRepositoryChanges(_branchRepository,e=>e.CompanyId == value.Id);
+        }
     }
 }

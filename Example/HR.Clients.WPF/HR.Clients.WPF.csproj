@@ -77,6 +77,10 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Components\Companies\BranchEditorView.xaml.cs">
+      <DependentUpon>BranchEditorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Components\Companies\BranchEditorViewModel.cs" />
     <Compile Include="Components\Companies\CompanyEditorView.xaml.cs">
       <DependentUpon>CompanyEditorView.xaml</DependentUpon>
     </Compile>
@@ -106,6 +110,7 @@
     </Compile>
     <Compile Include="Components\Managements\ManagementMainViewModel.cs" />
     <Compile Include="IManagementViewModel.cs" />
+    <Compile Include="Interfaces\IBranchEditor.cs" />
     <Compile Include="Interfaces\ICityEditor.cs" />
     <Compile Include="Interfaces\ICompanyEditor.cs" />
     <Compile Include="Interfaces\ICountryEditor.cs" />
@@ -207,6 +212,10 @@
     <Resource Include="LICENSE.txt" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Components\Companies\BranchEditorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Components\Companies\CompanyEditorView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

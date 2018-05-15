@@ -18,6 +18,7 @@ namespace HR.Clients.WPF.Modules
             container.RegisterType<ICityEditor, CityEditorViewModel>();
             container.RegisterType<ICountryEditor, CountryEditorViewModel>();
             container.RegisterType<ICompanyEditor, CompanyEditorViewModel>();
+            container.RegisterType<IBranchEditor, BranchEditorViewModel>();
             return Task.FromResult(true);
         }
     }

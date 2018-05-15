@@ -134,3 +134,40 @@ GO
  -- WITH CHECK OPTION
  GO
 /*---------------------------------------------------*/
+
+/*-----------------------BranchesView-----------------------*/
+ CREATE VIEW dbo.BranchesView
+ --WITH ENCRYPTION, SCHEMABINDING, VIEW_METADATA
+ AS
+     SELECT Branches.Id,
+            Branches.Name,
+            Branches.CompanyId,
+            Branches.CityId,
+			dbo.Cities.CountryId,
+			dbo.Cities.Name AS CityName,
+			dbo.Countries.Name AS CountryName,
+			dbo.Companies.Name AS CompanyName
+			FROM dbo.Branches
+			INNER JOIN dbo.Cities ON Cities.Id = Branches.CityId
+			INNER JOIN dbo.Countries ON Countries.Id = Cities.CountryId
+			INNER JOIN dbo.Companies ON Companies.Id = Branches.CompanyId 
+ -- WITH CHECK OPTION
+ GO
+ 
+/*---------------------------------------------------*/
+
+/*-----------------------CompaniesView-----------------------*/
+ CREATE VIEW dbo.CompaniesView
+ --WITH ENCRYPTION, SCHEMABINDING, VIEW_METADATA
+ AS
+     SELECT Companies.Id,
+            Companies.Name,
+			(SELECT COUNT(*) FROM dbo.Branches WHERE CompanyId = dbo.Companies.Id) AS BranchCount,
+			(SELECT COUNT(*) FROM dbo.EmployeeJobs 
+				INNER JOIN dbo.Branches ON Branches.Id = EmployeeJobs.BranchId
+				WHERE CompanyId = dbo.Companies.Id) AS EmployeeCount
+			FROM dbo.Companies
+ -- WITH CHECK OPTION
+ GO
+ 
+/*---------------------------------------------------*/

@@ -25,6 +25,12 @@ namespace HR.Data.Models
 		[IgnoreDataMember]
 		public System.Int32 GetKey =>Id;
 
+        public int CountryId { get; set; }
+
+        public string CompanyName { get; set; }
+        public string CountryName { get; set; }
+        public string CityName { get; set; }
+
         public override bool Equals(object obj)
         {
 			var other = obj as IUniqueObject<System.Int32>;

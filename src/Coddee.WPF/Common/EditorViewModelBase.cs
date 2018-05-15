@@ -231,25 +231,27 @@ namespace Coddee.WPF
         /// Executed when the <see cref="Edit"/> method is called
         /// </summary>
         /// <param name="item">The edited item.</param>
-        protected virtual void OnEdit(TModel item)
+        protected virtual async Task OnEdit(TModel item)
         {
-            MapEditedItemToEditor(item);
+            await MapEditedItemToEditor(item);
         }
 
         /// <summary>
         /// Map the values from the edited item to the editor fields.
         /// </summary>
-        protected virtual void MapEditedItemToEditor(TModel item)
+        protected virtual Task MapEditedItemToEditor(TModel item)
         {
             _mapper.MapInstance(item, (TEditor)this);
+            return completedTask;
         }
         /// <summary>
         /// Map the values from the  editor fields to the edited item .
         /// </summary>
         /// <param name="item"></param>
-        protected virtual void MapEditorToEditedItem(TModel item)
+        protected virtual Task MapEditorToEditedItem(TModel item)
         {
             _mapper.MapInstance((TEditor)this, item);
+            return completedTask;
         }
 
         /// <inheritdoc />
@@ -261,9 +263,9 @@ namespace Coddee.WPF
         /// <summary>
         /// Called perform the edited item is sent to the repository.
         /// </summary>
-        public virtual void PreSave()
+        public virtual async Task PreSave()
         {
-            MapEditorToEditedItem(EditedItem);
+            await MapEditorToEditedItem(EditedItem);
         }
 
         /// <inheritdoc />

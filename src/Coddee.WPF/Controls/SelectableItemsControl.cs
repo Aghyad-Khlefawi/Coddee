@@ -18,6 +18,9 @@ namespace Coddee.WPF.Controls
         public SelectableItem(object item, bool isSelected = false) : base(item, isSelected)
         {
         }
+
+        public DataTemplate SelectedItemTemplate { get; set; }
+        public DataTemplate ItemTemplate { get; set; }
     }
 
     /// <summary>
@@ -110,9 +113,14 @@ namespace Coddee.WPF.Controls
                 oldNotify.CollectionChanged -= OnCollectionChanged;
         }
 
+
         private SelectableItem CreateSelectable(object newItem)
         {
-            var selectableItem = new SelectableItem(newItem);
+            var selectableItem = new SelectableItem(newItem)
+            {
+                ItemTemplate = ItemTemplate,
+                SelectedItemTemplate = SelectedItemTemplate
+            };
             selectableItem.Selected += ItemSelected;
             return selectableItem;
         }

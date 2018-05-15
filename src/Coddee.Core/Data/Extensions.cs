@@ -92,6 +92,19 @@ namespace Coddee.Data
         /// <summary>
         /// Updates the collection base on the operation type 
         /// </summary>
+        public static void BindToRepositoryChanges<T, TKey>(this IList<T> collection, ICRUDRepository<T, TKey> repo,Func<T,bool> predicate)
+            where T : IUniqueObject<TKey>
+        {
+            repo.ItemsChanged += (s, e) =>
+            {
+                if (predicate(e.Item))
+                    collection.Update(e);
+            };
+        }
+
+        /// <summary>
+        /// Updates the collection base on the operation type 
+        /// </summary>
         public static void BindToRepositoryChanges<T, TKey, TTarget>(this IList<TTarget> collection, ICRUDRepository<T, TKey> repo, Projection<T, TTarget> porjection, ItemLocator<T, TTarget> locator)
             where T : IUniqueObject<TKey>
         {

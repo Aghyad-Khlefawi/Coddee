@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 13.75, 9.875" name="HRDataClasses">
+<ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 14.125, 11" name="HRDataClasses">
   <DataContextMoniker Name="/HRDataClassesDataContext" />
   <nestedChildShapes>
     <classShape Id="cd9194ba-2507-4216-8b6e-f3a5f1f38a07" absoluteBounds="6.25, 1.125, 2, 1.5785953776041666">
@@ -102,6 +102,18 @@
       <DataClassMoniker Name="/HRDataClassesDataContext/CitiesView" />
       <nestedChildShapes>
         <elementListCompartment Id="8bc3192d-e6cd-4ec7-acae-51f07e12cebb" absoluteBounds="11.515, 8.46, 1.9700000000000002, 1.0185953776041665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="5f89d2bb-3a92-4ad7-8710-9c4b95967bcf" absoluteBounds="8.875, 8.375, 2, 2.3478011067708335">
+      <DataClassMoniker Name="/HRDataClassesDataContext/BranchesView" />
+      <nestedChildShapes>
+        <elementListCompartment Id="ddc123fc-b333-48f3-bba7-dc3c569c1d5e" absoluteBounds="8.89, 8.835, 1.9700000000000002, 1.7878011067708335" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="5127a124-236d-4194-8bcb-99971984ff55" absoluteBounds="11.875, 4.75, 2, 1.5785953776041666">
+      <DataClassMoniker Name="/HRDataClassesDataContext/CompaniesView" />
+      <nestedChildShapes>
+        <elementListCompartment Id="237bffbc-c905-4dba-b5a9-cab0dc694ffb" absoluteBounds="11.89, 5.21, 1.9700000000000002, 1.0185953776041665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
   </nestedChildShapes>

@@ -1304,7 +1304,7 @@
                 <ControlTemplate TargetType="{x:Type local:SelectableItemsControl}">
                     <ItemsControl
                         x:Name="Root"
-                        ItemsSource="{TemplateBinding Selectables}">
+                        ItemsSource="{Binding RelativeSource={RelativeSource TemplatedParent},Path=Selectables}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate DataType="{x:Type local:SelectableItem}">
                                 <Grid>
@@ -1313,9 +1313,7 @@
                                             Visibility="{Binding IsSelected,Converter={StaticResource BoolToVisibilityConverter}}">
                                         <Button.Template>
                                             <ControlTemplate>
-
-                                                <ContentPresenter Content="{Binding Item}"  ContentTemplate="{Binding RelativeSource={RelativeSource AncestorType=local:SelectableItemsControl,Mode=FindAncestor},Path=SelectedItemTemplate}"/>
-
+                                                <ContentPresenter Content="{Binding Item}" ContentTemplate="{Binding RelativeSource={RelativeSource AncestorType=local:SelectableItemsControl,Mode=FindAncestor},Path=SelectedItemTemplate}"/>
                                             </ControlTemplate>
                                         </Button.Template>
                                     </Button>
@@ -1324,7 +1322,7 @@
                                             Visibility="{Binding IsSelected,Converter={StaticResource BoolToVisibilityConverter},ConverterParameter=R}">
                                         <Button.Template>
                                             <ControlTemplate>
-                                                <ContentPresenter Content="{Binding Item}"  ContentTemplate="{Binding RelativeSource={RelativeSource AncestorType=local:SelectableItemsControl,Mode=FindAncestor},Path=ItemTemplate}"/>
+                                                <ContentPresenter Content="{Binding Item}" ContentTemplate="{Binding RelativeSource={RelativeSource AncestorType=local:SelectableItemsControl,Mode=FindAncestor},Path=ItemTemplate}"/>
                                             </ControlTemplate>
                                         </Button.Template>
                                     </Button>

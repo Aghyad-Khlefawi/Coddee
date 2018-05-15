@@ -11,7 +11,7 @@ using HR.Data.Repositories;
 
 namespace HR.Clients.WPF.Components
 {
-    public class CityEditorViewModel : EditorViewModelBase<CityEditorViewModel, CityEditorView, ICityRepository, City, int>,ICityEditor
+    public class CityEditorViewModel : EditorViewModelBase<CityEditorViewModel, CityEditorView, ICityRepository, City, int>, ICityEditor
     {
         public CityEditorViewModel()
         {
@@ -47,17 +47,17 @@ namespace HR.Clients.WPF.Components
             Countries = await GetRepository<ICountryRepository>().ToAsyncObservableCollection();
         }
 
-        protected override void MapEditedItemToEditor(City item)
+        protected override Task MapEditedItemToEditor(City item)
         {
-            base.MapEditedItemToEditor(item);
             SelectedCountry = Countries.FirstOrDefault(e => e.Id == item.CountryId);
+            return base.MapEditedItemToEditor(item);
         }
 
-        protected override void MapEditorToEditedItem(City item)
+        protected override Task MapEditorToEditedItem(City item)
         {
-            base.MapEditorToEditedItem(item);
             item.CountryId = SelectedCountry.Id;
             item.CountryName = SelectedCountry.Name;
+            return base.MapEditorToEditedItem(item);
         }
 
         protected override void SetValidationRules(List<IValidationRule> validationRules)

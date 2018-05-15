@@ -14,6 +14,7 @@ using HR.Data.Models;
 using HR.Data.Repositories;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 
@@ -23,5 +24,15 @@ namespace HR.Data.Linq.Repositories
     [Coddee.Data.RepositoryAttribute(typeof(ICompanyRepository))]
     public class CompanyRepository : CRUDHRRepositoryBase<DB.Company, Company, int>, ICompanyRepository
     {
+        public override void RegisterMappings(IObjectMapper mapper)
+        {
+            base.RegisterMappings(mapper);
+            mapper.RegisterMap<DB.CompaniesView,Company>();
+        }
+
+        public Task<IEnumerable<Company>> GetItemsWithDetails()
+        {
+            return ExecuteAndMapCollection(db => db.CompaniesViews.ToList());
+        }
     }
 }

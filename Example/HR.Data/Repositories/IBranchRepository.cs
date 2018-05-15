@@ -14,12 +14,14 @@ using HR.Data.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-
+using Coddee.Collections;
 
 namespace HR.Data.Repositories
 {
     
     public interface IBranchRepository : ICRUDRepository<Branch, int>
     {
+        Task<IEnumerable<Branch>> GetItemsWithDetails();
+        Task<IEnumerable<Branch>> GetItemsWithDetailsByCompany(int companyId);
     }
 }

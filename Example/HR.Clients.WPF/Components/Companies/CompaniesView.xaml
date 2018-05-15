@@ -11,12 +11,12 @@
     <UserControl.Resources>
         <local:CompaniesViewModel x:Key="designData" />
         <Style x:Key="ItemsControlStyle1" TargetType="{x:Type ItemsControl}">
-            <Setter Property="VirtualizingPanel.IsVirtualizing" Value="True"/>
-            <Setter Property="ScrollViewer.CanContentScroll" Value="True"/>
+            <Setter Property="VirtualizingPanel.IsVirtualizing" Value="True" />
+            <Setter Property="ScrollViewer.CanContentScroll" Value="True" />
             <Setter Property="ItemsPanel">
                 <Setter.Value>
                     <ItemsPanelTemplate>
-                        <VirtualizingStackPanel/>
+                        <VirtualizingStackPanel />
                     </ItemsPanelTemplate>
                 </Setter.Value>
             </Setter>
@@ -46,18 +46,28 @@
                         <coddee:SelectableItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <Border BorderBrush="DimGray"
-                                                    Background="WhiteSmoke"
-                                                    Padding="5"
-                                                    BorderThickness="0 0 0 1">
+                                        Background="WhiteSmoke"
+                                        Padding="5"
+                                        BorderThickness="0 0 0 1">
                                     <DockPanel>
 
                                         <Path DockPanel.Dock="Left"
-                                                          Data="{StaticResource Shape_Company}"
-                                                          Fill="#FF343434" />
-                                        <Label Content="{Binding Name}"
-                                                           VerticalAlignment="Center"
-                                                           Margin="10 0 0 0"
-                                                           Foreground="#FF343434" />
+                                              Data="{StaticResource Shape_Company}"
+                                              VerticalAlignment="Center"
+                                              Fill="{StaticResource Foreground}" />
+                                        <StackPanel Margin="15 0 0 0">
+                                            <Label Content="{Binding Name}"
+                                                   VerticalAlignment="Center"
+                                                   FontSize="16"
+                                                   Padding="0"
+                                                   Foreground="{StaticResource Foreground}" />
+                                            <TextBlock Text="{Binding BranchCount,StringFormat={}Branches: {0}}"
+                                                       Opacity=".7" FontSize="12"
+                                                       Foreground="{StaticResource Foreground}" />
+                                            <TextBlock Text="{Binding EmployeeCount,StringFormat={}Employees: {0}}"
+                                                       Opacity=".7" FontSize="12"
+                                                       Foreground="{StaticResource Foreground}" />
+                                        </StackPanel>
                                     </DockPanel>
                                 </Border>
                             </DataTemplate>
@@ -70,12 +80,23 @@
                                         BorderThickness="0 0 0 1">
                                     <DockPanel>
                                         <Path DockPanel.Dock="Left"
+                                              VerticalAlignment="Center"
                                               Data="{StaticResource Shape_Company}"
                                               Fill="WhiteSmoke" />
-                                        <Label Content="{Binding Name}"
-                                               VerticalAlignment="Center"
-                                               Margin="10 0 0 0"
-                                               Foreground="WhiteSmoke" />
+                                        <StackPanel Margin="15 0 0 0">
+                                            <Label Content="{Binding Name}"
+                                                   VerticalAlignment="Center"
+                                                   FontSize="16"
+                                                   FontWeight="Medium"
+                                                   Padding="0"
+                                                   Foreground="WhiteSmoke" />
+                                            <TextBlock Text="{Binding BranchCount,StringFormat={}Branches: {0}}"
+                                                       FontWeight="Medium"
+                                                       Opacity=".7" FontSize="12" Foreground="WhiteSmoke" />
+                                            <TextBlock Text="{Binding EmployeeCount,StringFormat={}Employees: {0}}"
+                                                       FontWeight="Medium"
+                                                       Opacity=".7" FontSize="12" Foreground="WhiteSmoke" />
+                                        </StackPanel>
                                     </DockPanel>
                                 </Border>
                             </DataTemplate>
@@ -83,7 +104,34 @@
                     </coddee:SelectableItemsControl>
                 </Border>
             </DockPanel>
-            <DockPanel></DockPanel>
+            <Border Margin="20 0"
+                    Background="DimGray"
+                    Width="1" />
+            <DockPanel>
+                <Border DockPanel.Dock="Top"
+                        BorderThickness="0 0 0 1"
+                        BorderBrush="{StaticResource Foreground}">
+                    <DockPanel Dock="Top">
+                        <Button Content="Create"
+                                Width="60"
+                                Command="{Binding CreateBranchCommand}"
+                                DockPanel.Dock="Right" />
+                        <Label Content="Branches"
+                               FontSize="24"
+                               Foreground="{StaticResource Foreground}"
+                               DockPanel.Dock="Top" />
+
+                    </DockPanel>
+                </Border>
+                <ItemsControl Margin="0 5 0 0"
+                              ItemsSource="{Binding CompanyBranches}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Label Content="{Binding Name}" />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </DockPanel>
         </DockPanel>
     </coddee:BusyIndicator>
 </UserControl>

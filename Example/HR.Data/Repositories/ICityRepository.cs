@@ -14,7 +14,7 @@ using HR.Data.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-
+using Coddee.Collections;
 
 namespace HR.Data.Repositories
 {
@@ -22,5 +22,6 @@ namespace HR.Data.Repositories
     public interface ICityRepository : ICRUDRepository<City, int>
     {
         Task<IEnumerable<City>> GetItemsWithDetails();
+        Task<IEnumerable<City>> GetItemsByCountry(int countryId);
     }
 }
