@@ -1,9 +1,11 @@
 ﻿using System.Threading.Tasks;
 using System.Windows.Input;
 using Coddee.Collections;
+using Coddee.Commands;
 using Coddee.Data;
 using Coddee.WPF;
 using Coddee.WPF.Commands;
+using HR.Clients.WPF.Interfaces;
 using HR.Data.Models;
 using HR.Data.Repositories;
 
@@ -17,7 +19,7 @@ namespace HR.Clients.WPF.Components
         }
 
         private ICityRepository _cityRepository;
-        private CityEditorViewModel _cityEditorViewModel;
+        private ICityEditor _cityEditorViewModel;
 
         private AsyncObservableCollectionView<City> _cities;
         public AsyncObservableCollectionView<City> Cities
@@ -59,10 +61,10 @@ namespace HR.Clients.WPF.Components
         {
             await base.OnInitialization();
             _cityRepository = GetRepository<ICityRepository>();
-            _cityEditorViewModel = CreateViewModel<CityEditorViewModel>();
+            _cityEditorViewModel = CreateViewModel<ICityEditor>();
             _cityEditorViewModel.Saved += CityEditorSaved;
 
-            Cities = await _cityRepository.GetItemsWithDetails().ToAsyncObservableCollectionView(filter);
+            Cities = await _cityRepository.GetItemsWithDetails().ToAsyncObservableCollectionView(Filter);
             Cities.BindToRepositoryChanges(_cityRepository);
         }
 
@@ -71,7 +73,7 @@ namespace HR.Clients.WPF.Components
             ToastSuccess();
         }
 
-        private bool filter(City item, string term)
+        private bool Filter(City item, string term)
         {
             return item.Name.ToLower().Contains(term.ToLower());
         }

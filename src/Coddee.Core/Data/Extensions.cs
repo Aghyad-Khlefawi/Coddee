@@ -90,6 +90,47 @@ namespace Coddee.Data
         }
 
         /// <summary>
+        /// Updates the collection base on the operation type 
+        /// </summary>
+        public static void BindToRepositoryChanges<T, TKey, TTarget>(this IList<TTarget> collection, ICRUDRepository<T, TKey> repo, Projection<T, TTarget> porjection, ItemLocator<T, TTarget> locator)
+            where T : IUniqueObject<TKey>
+        {
+            repo.ItemsChanged += (s, e) =>
+            {
+                var target = porjection(e.Item);
+                UpdateCollectionOnRepositoryChange<T, TKey, TTarget>(collection, locator, e, target);
+            };
+        }
+
+        /// <summary>
+        /// Updates the collection base on the operation type 
+        /// </summary>
+        public static void BindToRepositoryChangesAsync<T, TKey, TTarget>(this IList<TTarget> collection, ICRUDRepository<T, TKey> repo, Projection<T, Task<TTarget>> porjection, ItemLocator<T, TTarget> locator)
+            where T : IUniqueObject<TKey>
+        {
+            repo.ItemsChanged += async (s, e) =>
+            {
+                var target = await porjection(e.Item);
+                UpdateCollectionOnRepositoryChange<T, TKey, TTarget>(collection, locator, e, target);
+            };
+        }
+
+        private static void UpdateCollectionOnRepositoryChange<T, TKey, TTarget>(IList<TTarget> collection, ItemLocator<T, TTarget> locator, RepositoryChangeEventArgs<T> e, TTarget target) where T : IUniqueObject<TKey>
+        {
+
+            if (e.OperationType == OperationType.Add)
+                collection.Add(target);
+            else
+            {
+                var original = locator(e.Item);
+                if (e.OperationType == OperationType.Edit)
+                    collection.Update(target, p => p.Equals(original));
+                else if (e.OperationType == OperationType.Delete)
+                    collection.Remove(original);
+            }
+        }
+
+        /// <summary>
         /// Creates an <see cref="AsyncObservableCollection{T}"/> and binds the repository changes to the collection
         /// </summary>
         public static async Task<AsyncObservableCollection<T>> ToAsyncObservableCollection<T, TKey>(this ICRUDRepository<T, TKey> repo)

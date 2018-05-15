@@ -106,6 +106,10 @@
     </Compile>
     <Compile Include="Components\Managements\ManagementMainViewModel.cs" />
     <Compile Include="IManagementViewModel.cs" />
+    <Compile Include="Interfaces\ICityEditor.cs" />
+    <Compile Include="Interfaces\ICompanyEditor.cs" />
+    <Compile Include="Interfaces\ICountryEditor.cs" />
+    <Compile Include="Modules\EditorsModule.cs" />
     <Compile Include="Navigation.cs" />
     <Compile Include="Properties\Resources.ar-SY.Designer.cs">
       <AutoGen>True</AutoGen>

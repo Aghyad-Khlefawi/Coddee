@@ -87,6 +87,7 @@
     <Compile Include="Data\SingletonRepositoryManager.cs" />
     <Compile Include="Data\TransientRepositoryManager.cs" />
     <Compile Include="DefaultMessages.cs" />
+    <Compile Include="Delegates.cs" />
     <Compile Include="Diff.cs" />
     <Compile Include="Exceptions\ValidationException.cs" />
     <Compile Include="Mvvm\BindableBase.cs" />

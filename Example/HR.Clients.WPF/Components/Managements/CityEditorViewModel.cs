@@ -5,12 +5,13 @@ using Coddee.Collections;
 using Coddee.Data;
 using Coddee.Validation;
 using Coddee.WPF;
+using HR.Clients.WPF.Interfaces;
 using HR.Data.Models;
 using HR.Data.Repositories;
 
 namespace HR.Clients.WPF.Components
 {
-    public class CityEditorViewModel : EditorViewModelBase<CityEditorViewModel, CityEditorView, ICityRepository, City, int>
+    public class CityEditorViewModel : EditorViewModelBase<CityEditorViewModel, CityEditorView, ICityRepository, City, int>,ICityEditor
     {
         public CityEditorViewModel()
         {

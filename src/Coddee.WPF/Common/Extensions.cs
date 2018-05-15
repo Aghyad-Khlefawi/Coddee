@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using Coddee.Collections;
+using Coddee.Commands;
 using Coddee.Data;
 using Coddee.Mvvm;
 using Coddee.Services;
@@ -168,7 +169,7 @@ namespace Coddee.WPF
         {
             return AsyncObservableCollectionView<T>.Create(filterPredicate, collection);
         }
-
+        
         /// <summary>
         /// Creates an <see cref="AsyncObservableCollectionView{T}"/> from a collection.
         /// </summary>

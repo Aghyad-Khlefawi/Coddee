@@ -22,7 +22,7 @@ namespace Coddee.WPF
 
 
         private string _title;
-        
+
         /// <summary>
         /// Title for the wrapped item.
         /// </summary>
@@ -117,7 +117,8 @@ namespace Coddee.WPF
         /// </summary>
         public void Select()
         {
-            IsSelected = true;
+            if (IsSelected != true)
+                IsSelected = true;
         }
     }
 }

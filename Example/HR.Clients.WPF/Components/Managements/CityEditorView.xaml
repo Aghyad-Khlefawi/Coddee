@@ -13,13 +13,15 @@
     </UserControl.Resources>
     <coddee:BusyIndicator IsBusy="{Binding IsBusy}"  d:DataContext="{StaticResource designData}">
         <coddee:Form>
-            <coddee:FormField Title="Country">
+            <coddee:FormField Title="Country" 
+                              ValidatedPropertyName="SelectedCountry">
                 <ComboBox DisplayMemberPath="Name"
                           ItemsSource="{Binding Countries}"
                           SelectedItem="{Binding SelectedCountry}"/>
             </coddee:FormField>
-            <coddee:FormField Title="Name">
-                <TextBox Text="{Binding Name}"/>
+            <coddee:FormField Title="Name"
+                              ValidatedPropertyName="Name">
+                <TextBox Text="{Binding Name,UpdateSourceTrigger=PropertyChanged}"/>
             </coddee:FormField>
         </coddee:Form>
     </coddee:BusyIndicator>

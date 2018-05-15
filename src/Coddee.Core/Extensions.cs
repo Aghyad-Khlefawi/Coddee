@@ -133,6 +133,8 @@ namespace Coddee
                 collection.Remove(predicate);
         }
 
+
+
         /// <summary>
         /// Updates the collection base on the operation type 
         /// </summary>

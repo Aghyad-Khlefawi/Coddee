@@ -5,12 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using Coddee.Validation;
 using Coddee.WPF;
+using HR.Clients.WPF.Interfaces;
 using HR.Data.Models;
 using HR.Data.Repositories;
 
 namespace HR.Clients.WPF.Components
 {
-    public class CountryEditorViewModel : EditorViewModelBase<CountryEditorViewModel, CountryEditorView, ICountryRepository, Country, int>
+    public class CountryEditorViewModel : EditorViewModelBase<CountryEditorViewModel, CountryEditorView, ICountryRepository, Country, int>,ICountryEditor
     {
         public CountryEditorViewModel()
         {

@@ -32,9 +32,9 @@ namespace Coddee.WPF
         /// </summary>
         public static ApplicationColors Default { get; } = new ApplicationColors
         {
-            ApplicationAccentColor = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#065FCF")),
-            ApplicationAccentColorDarker = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#06438F")),
-            NavigationBarBorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#06438F")),
+            ApplicationAccentColor = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#1987c4")),
+            ApplicationAccentColorDarker = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#10729d")),
+            NavigationBarBorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#10729d")),
             NavbarBackground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#888888"))
         };
 

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using Coddee.Collections;
+using Coddee.Commands;
 using Coddee.Services.Dialogs;
 using Coddee.WPF.Commands;
 

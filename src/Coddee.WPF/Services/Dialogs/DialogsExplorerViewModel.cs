@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using Coddee.Collections;
+using Coddee.Commands;
 using Coddee.WPF.Commands;
 
 namespace Coddee.WPF.Services.Dialogs

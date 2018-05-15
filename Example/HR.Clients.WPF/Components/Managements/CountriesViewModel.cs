@@ -5,9 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Coddee.Collections;
+using Coddee.Commands;
 using Coddee.Data;
 using Coddee.WPF;
 using Coddee.WPF.Commands;
+using HR.Clients.WPF.Interfaces;
 using HR.Data.Models;
 using HR.Data.Repositories;
 
@@ -21,7 +23,7 @@ namespace HR.Clients.WPF.Components
             get { return "Countries"; }
         }
 
-        private CountryEditorViewModel _countryEditor;
+        private ICountryEditor _countryEditor;
         private ICountryRepository _countryRepository;
 
 
@@ -65,9 +67,9 @@ namespace HR.Clients.WPF.Components
         {
             await base.OnInitialization();
             _countryRepository = GetRepository<ICountryRepository>();
-            _countryEditor = CreateViewModel<CountryEditorViewModel>();
+            _countryEditor = CreateViewModel<ICountryEditor>();
             _countryEditor.Saved += CountryEditorSaved;
-            Countries = await _countryRepository.ToAsyncObservableCollectionView(filter);
+            Countries = await _countryRepository.ToAsyncObservableCollectionView(Filter);
         }
 
         private void CountryEditorSaved(object sender, Coddee.EditorSaveArgs<Country> e)
@@ -75,7 +77,7 @@ namespace HR.Clients.WPF.Components
             ToastSuccess();
         }
 
-        private bool filter(Country item, string term)
+        private bool Filter(Country item, string term)
         {
             return item.Name.ToLower().Contains(term.ToLower());
         }

@@ -4,7 +4,6 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:HR.Clients.WPF.Components"
-             xmlns:global="clr-namespace:"
              xmlns:coddee="http://schemas.Coddee.com/2017/WPF"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
@@ -31,7 +30,7 @@
             <DataGrid ItemsSource="{Binding Countries.CollectionView}"
                       SelectedItem="{Binding SelectedCountry}"
                       AutoGenerateColumns="False">
-                <DataGrid.Columns>
+                <DataGrid.Columns >
                     <DataGridTextColumn Binding="{Binding Name}"
                                         MinWidth="75"
                                         Header=" Name"/>
