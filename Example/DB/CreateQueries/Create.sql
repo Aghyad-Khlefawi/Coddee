@@ -120,3 +120,17 @@ GO
  ALTER TABLE dbo.Users ADD CONSTRAINT [PK_Users_Id] PRIMARY KEY CLUSTERED(Id) 
  GO
 /*---------------------------------------------------*/
+
+/*-----------------------CitiesView-----------------------*/
+ CREATE VIEW dbo.CitiesView
+ --WITH ENCRYPTION, SCHEMABINDING, VIEW_METADATA
+ AS
+     SELECT Cities.Id,
+            Cities.CountryId,
+            Cities.Name,
+			dbo.Countries.Name AS CountryName
+			FROM dbo.Cities
+			INNER JOIN dbo.Countries ON Countries.Id = Cities.CountryId
+ -- WITH CHECK OPTION
+ GO
+/*---------------------------------------------------*/

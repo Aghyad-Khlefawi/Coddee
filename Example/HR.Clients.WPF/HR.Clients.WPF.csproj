@@ -77,22 +77,34 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Components\CompaniesView.xaml.cs">
+    <Compile Include="Components\Companies\CompanyEditorView.xaml.cs">
+      <DependentUpon>CompanyEditorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Components\Companies\CompanyEditorViewModel.cs" />
+    <Compile Include="Components\Managements\CitiesView.xaml.cs">
+      <DependentUpon>CitiesView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Components\Managements\CitiesViewModel.cs" />
+    <Compile Include="Components\Managements\CityEditorView.xaml.cs">
+      <DependentUpon>CityEditorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Components\Managements\CityEditorViewModel.cs" />
+    <Compile Include="Components\Companies\CompaniesView.xaml.cs">
       <DependentUpon>CompaniesView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Components\CompaniesViewModel.cs" />
-    <Compile Include="Components\CountriesView.xaml.cs">
+    <Compile Include="Components\Companies\CompaniesViewModel.cs" />
+    <Compile Include="Components\Managements\CountriesView.xaml.cs">
       <DependentUpon>CountriesView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Components\CountriesViewModel.cs" />
-    <Compile Include="Components\CountryEditorView.xaml.cs">
+    <Compile Include="Components\Managements\CountriesViewModel.cs" />
+    <Compile Include="Components\Managements\CountryEditorView.xaml.cs">
       <DependentUpon>CountryEditorView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Components\CountryEditorViewModel.cs" />
-    <Compile Include="Components\ManagementMainView.xaml.cs">
+    <Compile Include="Components\Managements\CountryEditorViewModel.cs" />
+    <Compile Include="Components\Managements\ManagementMainView.xaml.cs">
       <DependentUpon>ManagementMainView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Components\ManagementMainViewModel.cs" />
+    <Compile Include="Components\Managements\ManagementMainViewModel.cs" />
     <Compile Include="IManagementViewModel.cs" />
     <Compile Include="Navigation.cs" />
     <Compile Include="Properties\Resources.ar-SY.Designer.cs">
@@ -191,19 +203,31 @@
     <Resource Include="LICENSE.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Components\CompaniesView.xaml">
+    <Page Include="Components\Companies\CompanyEditorView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Components\CountriesView.xaml">
+    <Page Include="Components\Managements\CitiesView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Components\CountryEditorView.xaml">
+    <Page Include="Components\Managements\CityEditorView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Components\ManagementMainView.xaml">
+    <Page Include="Components\Companies\CompaniesView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Components\Managements\CountriesView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Components\Managements\CountryEditorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Components\Managements\ManagementMainView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -223,8 +247,6 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Components\Companies\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -13,7 +13,8 @@ using Coddee.Data.REST;
 using HR.Data.Models;
 using HR.Data.Repositories;
 using System;
-
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace HR.Data.Rest.Repositories
 {
@@ -24,6 +25,11 @@ namespace HR.Data.Rest.Repositories
         public CityRepository() : 
                 base("City")
         {
+        }
+
+        public Task<IEnumerable<City>> GetItemsWithDetails()
+        {
+            return GetFromController<IEnumerable<City>>();
         }
     }
 }

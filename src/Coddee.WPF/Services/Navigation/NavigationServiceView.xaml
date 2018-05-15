@@ -35,7 +35,7 @@
             </Border>
             <Grid>
                 <Border Style="{StaticResource MenuBorder}"
-                        Background="{DynamicResource NavbarBackground}">
+                        Background="{x:Static wpf:ApplicationTheme.NavbarBackground}">
                     <Border MinWidth="{StaticResource MenuWidth}" />
                 </Border>
                 <ItemsControl ItemsSource="{Binding NavigationItems}">
@@ -57,7 +57,7 @@
                                     Height="50">
                                 <Button Style="{StaticResource MenuItem}"
                                         MinWidth="{StaticResource MenuWidth}"
-                                        Background="{DynamicResource NavbarBackground}"
+                                        Background="{x:Static wpf:ApplicationTheme.NavbarBackground}"
                                         Command="{Binding NavigateCommand}">
                                     <Path Data="{Binding Icon}"
                                           Style="{StaticResource ShapeBase}"

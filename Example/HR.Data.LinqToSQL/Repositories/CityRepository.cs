@@ -14,6 +14,7 @@ using HR.Data.Models;
 using HR.Data.Repositories;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 
@@ -23,5 +24,15 @@ namespace HR.Data.Linq.Repositories
     [Coddee.Data.RepositoryAttribute(typeof(ICityRepository))]
     public class CityRepository : CRUDHRRepositoryBase<DB.City, City, int>, ICityRepository
     {
+        public override void RegisterMappings(IObjectMapper mapper)
+        {
+            base.RegisterMappings(mapper);
+            mapper.RegisterMap<DB.CitiesView,City>();
+        }
+
+        public Task<IEnumerable<City>> GetItemsWithDetails()
+        {
+            return ExecuteAndMapCollection(db => db.CitiesViews.ToList());
+        }
     }
 }

@@ -77,4 +77,12 @@
       <Association Name="Job_EmployeeJob" Member="EmployeeJobs" ThisKey="Id" OtherKey="JobId" Type="EmployeeJob" />
     </Type>
   </Table>
+  <Table Name="dbo.CitiesView" Member="CitiesViews">
+    <Type Name="CitiesView">
+      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="CountryId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Name" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="CountryName" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" />
+    </Type>
+  </Table>
 </Database>

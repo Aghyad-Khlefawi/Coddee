@@ -23,6 +23,7 @@ namespace HR.Data.Models
 		public System.String Name { get; set; }
 		[IgnoreDataMember]
 		public System.Int32 GetKey =>Id;
+        public string CountryName { get; set; }
 
         public override bool Equals(object obj)
         {
