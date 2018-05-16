@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Coddee.Collections;
 using Coddee.Data;
 using Coddee.WPF;
@@ -19,7 +15,13 @@ namespace HR.Clients.WPF.Components
         private ICompanyEditor _companyEditor;
         private IBranchEditor _branchEditor;
         private ICompanyRepository _companyRepository;
-        private IBranchRepository _branchRepository;
+
+        private IBranchViewer _branchViewer;
+        public IBranchViewer BranchViewer
+        {
+            get { return _branchViewer; }
+            set { SetProperty(ref _branchViewer, value); }
+        }
 
         private AsyncObservableCollection<Company> _companies;
         public AsyncObservableCollection<Company> Companies
@@ -39,13 +41,6 @@ namespace HR.Clients.WPF.Components
             }
         }
 
-
-        private AsyncObservableCollection<Branch> _companyBranches;
-        public AsyncObservableCollection<Branch> CompanyBranches
-        {
-            get { return _companyBranches; }
-            set { SetProperty(ref _companyBranches, value); }
-        }
 
         private IReactiveCommand _addCompanyCommand;
         public IReactiveCommand AddCompanyCommand
@@ -121,13 +116,20 @@ namespace HR.Clients.WPF.Components
             _companyEditor.Saved += CompanyEditorSaved;
 
             _branchEditor = CreateViewModel<IBranchEditor>();
-
             _companyRepository = GetRepository<ICompanyRepository>();
-            _branchRepository = GetRepository<IBranchRepository>();
+            
+            async Task LoadCompanies()
+            {
+                Companies = await _companyRepository.GetItemsWithDetails().ToAsyncObservableCollection();
+                Companies.BindToRepositoryChanges(_companyRepository);
+            }
 
+            async Task InitializeBranchViewer()
+            {
+                BranchViewer = await InitializeViewModel<IBranchViewer>();
+            }
 
-            Companies = await _companyRepository.GetItemsWithDetails().ToAsyncObservableCollection();
-            Companies.BindToRepositoryChanges(_companyRepository);
+            await Task.WhenAll(LoadCompanies(), InitializeBranchViewer());
         }
 
         private void CompanyEditorSaved(object sender, EditorSaveArgs<Company> e)
@@ -155,8 +157,7 @@ namespace HR.Clients.WPF.Components
 
         private async void OnCompanySelected(Company value)
         {
-            CompanyBranches = await _branchRepository.GetItemsWithDetailsByCompany(value.Id).ToAsyncObservableCollection();
-            CompanyBranches.BindToRepositoryChanges(_branchRepository,e=>e.CompanyId == value.Id);
+            await _branchViewer.SetCompany(value.Id);
         }
     }
 }

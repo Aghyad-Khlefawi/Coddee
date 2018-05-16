@@ -11,9 +11,7 @@ using Coddee.Loggers;
 using Coddee.Unity;
 using Coddee.Windows.AppBuilder;
 using Coddee.WPF;
-using HR.Clients.WPF.Login;
 using HR.Clients.WPF.Main;
-using HR.Data.LinqToSQL;
 
 namespace HR.Clients.WPF
 {

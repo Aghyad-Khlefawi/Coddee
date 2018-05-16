@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using System.Windows.Input;
 using Coddee.Collections;
 using Coddee.Commands;
-using Coddee.Data;
 using Coddee.WPF;
 using Coddee.WPF.Commands;
 using HR.Clients.WPF.Interfaces;
@@ -28,11 +23,11 @@ namespace HR.Clients.WPF.Components
 
 
 
-        private AsyncObservableCollectionView<Country> _countries;
-        public AsyncObservableCollectionView<Country> Countries
+        private AsyncObservableCollectionView<Country> _items;
+        public AsyncObservableCollectionView<Country> Items
         {
-            get { return _countries; }
-            set { SetProperty(ref _countries, value); }
+            get { return _items; }
+            set { SetProperty(ref _items, value); }
         }
 
         private Country _selectedCountry;
@@ -69,7 +64,7 @@ namespace HR.Clients.WPF.Components
             _countryRepository = GetRepository<ICountryRepository>();
             _countryEditor = CreateViewModel<ICountryEditor>();
             _countryEditor.Saved += CountryEditorSaved;
-            Countries = await _countryRepository.ToAsyncObservableCollectionView(Filter);
+            Items = await _countryRepository.ToAsyncObservableCollectionView(Filter);
         }
 
         private void CountryEditorSaved(object sender, Coddee.EditorSaveArgs<Country> e)

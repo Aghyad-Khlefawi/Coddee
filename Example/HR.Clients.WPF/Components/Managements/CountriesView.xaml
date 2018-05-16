@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:HR.Clients.WPF.Components"
              xmlns:coddee="http://schemas.Coddee.com/2017/WPF"
+             xmlns:managements="clr-namespace:HR.Clients.WPF.Components.Managements"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
@@ -12,22 +13,9 @@
     </UserControl.Resources>
     <coddee:BusyIndicator IsBusy="{Binding IsBusy}"  d:DataContext="{StaticResource designData}">
         <DockPanel>
-            <Grid DockPanel.Dock="Top"
-                  HorizontalAlignment="Left"
-                  Width="250"
-                  Margin="0 0 0 5">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
-                <Button Content="Add" Command="{Binding AddCommand}" Grid.Column="0"/>
-                <Button Content="Edit" Command="{Binding EditCommand}" Grid.Column="1"/>
-                <Button Content="Delete" Command="{Binding DeleteCommand}" Grid.Column="2"/>
-            </Grid>
-            <coddee:WaterMarkTextBox DockPanel.Dock="Top" WaterMarkContent="Search..." Height="25"
-                                     Text="{Binding Countries.SearchText}"/>
-            <DataGrid ItemsSource="{Binding Countries.CollectionView}"
+            <managements:ManagementHeader
+                DockPanel.Dock="Top"/>
+            <DataGrid ItemsSource="{Binding Items.CollectionView}"
                       SelectedItem="{Binding SelectedCountry}"
                       AutoGenerateColumns="False">
                 <DataGrid.Columns >

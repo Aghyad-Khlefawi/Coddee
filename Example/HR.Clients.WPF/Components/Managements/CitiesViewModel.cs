@@ -21,11 +21,11 @@ namespace HR.Clients.WPF.Components
         private ICityRepository _cityRepository;
         private ICityEditor _cityEditorViewModel;
 
-        private AsyncObservableCollectionView<City> _cities;
-        public AsyncObservableCollectionView<City> Cities
+        private AsyncObservableCollectionView<City> _items;
+        public AsyncObservableCollectionView<City> Items
         {
-            get { return _cities; }
-            set { SetProperty(ref _cities, value); }
+            get { return _items; }
+            set { SetProperty(ref _items, value); }
         }
 
         private City _selectedCity;
@@ -64,8 +64,8 @@ namespace HR.Clients.WPF.Components
             _cityEditorViewModel = CreateViewModel<ICityEditor>();
             _cityEditorViewModel.Saved += CityEditorSaved;
 
-            Cities = await _cityRepository.GetItemsWithDetails().ToAsyncObservableCollectionView(Filter);
-            Cities.BindToRepositoryChanges(_cityRepository);
+            Items = await _cityRepository.GetItemsWithDetails().ToAsyncObservableCollectionView(Filter);
+            Items.BindToRepositoryChanges(_cityRepository);
         }
 
         private void CityEditorSaved(object sender, Coddee.EditorSaveArgs<City> e)

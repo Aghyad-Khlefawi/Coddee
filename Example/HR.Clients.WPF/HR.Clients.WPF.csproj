@@ -81,6 +81,10 @@
       <DependentUpon>BranchEditorView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Components\Companies\BranchEditorViewModel.cs" />
+    <Compile Include="Components\Companies\BranchViewerView.xaml.cs">
+      <DependentUpon>BranchViewerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Components\Companies\BranchViewerViewModel.cs" />
     <Compile Include="Components\Companies\CompanyEditorView.xaml.cs">
       <DependentUpon>CompanyEditorView.xaml</DependentUpon>
     </Compile>
@@ -105,16 +109,20 @@
       <DependentUpon>CountryEditorView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Components\Managements\CountryEditorViewModel.cs" />
+    <Compile Include="Components\Managements\ManagementHeader.xaml.cs">
+      <DependentUpon>ManagementHeader.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Components\Managements\ManagementMainView.xaml.cs">
       <DependentUpon>ManagementMainView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Components\Managements\ManagementMainViewModel.cs" />
     <Compile Include="IManagementViewModel.cs" />
     <Compile Include="Interfaces\IBranchEditor.cs" />
+    <Compile Include="Interfaces\IBranchViewer.cs" />
     <Compile Include="Interfaces\ICityEditor.cs" />
     <Compile Include="Interfaces\ICompanyEditor.cs" />
     <Compile Include="Interfaces\ICountryEditor.cs" />
-    <Compile Include="Modules\EditorsModule.cs" />
+    <Compile Include="Modules\HRModule.cs" />
     <Compile Include="Navigation.cs" />
     <Compile Include="Properties\Resources.ar-SY.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -216,6 +224,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Components\Companies\BranchViewerView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Components\Companies\CompanyEditorView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -237,6 +249,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Components\Managements\CountryEditorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Components\Managements\ManagementHeader.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
