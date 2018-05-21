@@ -21,8 +21,16 @@ namespace HR.Data.Models
 		public System.Int32 Id { get; set; }
 		public System.String FirstName { get; set; }
 		public System.String LastName { get; set; }
-		[IgnoreDataMember]
+
+
+        [IgnoreDataMember]
 		public System.Int32 GetKey =>Id;
+        public string FullName
+        {
+            get { return string.Format("{0} {1}", FirstName, LastName); }
+        }
+
+        public string JobTitle { get; set; }
 
         public override bool Equals(object obj)
         {

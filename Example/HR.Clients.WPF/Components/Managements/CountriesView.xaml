@@ -15,8 +15,8 @@
         <DockPanel>
             <managements:ManagementHeader
                 DockPanel.Dock="Top"/>
-            <DataGrid ItemsSource="{Binding Items.CollectionView}"
-                      SelectedItem="{Binding SelectedCountry}"
+            <DataGrid ItemsSource="{Binding ItemList.CollectionView}"
+                      SelectedItem="{Binding SelectedItem}"
                       AutoGenerateColumns="False">
                 <DataGrid.Columns >
                     <DataGridTextColumn Binding="{Binding Name}"

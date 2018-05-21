@@ -3,6 +3,7 @@
 
 using System.Threading.Tasks;
 using Coddee.CodeTools.Config;
+using Coddee.Commands;
 using Coddee.Mvvm;
 using Coddee.Services;
 using Coddee.WPF;

@@ -89,6 +89,14 @@
       <DependentUpon>CompanyEditorView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Components\Companies\CompanyEditorViewModel.cs" />
+    <Compile Include="Components\Companies\EmployeeEditorView.xaml.cs">
+      <DependentUpon>EmployeeEditorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Components\Companies\EmployeeEditorViewModel.cs" />
+    <Compile Include="Components\Companies\EmployeesView.xaml.cs">
+      <DependentUpon>EmployeesView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Components\Companies\EmployeesViewModel.cs" />
     <Compile Include="Components\Managements\CitiesView.xaml.cs">
       <DependentUpon>CitiesView.xaml</DependentUpon>
     </Compile>
@@ -109,6 +117,14 @@
       <DependentUpon>CountryEditorView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Components\Managements\CountryEditorViewModel.cs" />
+    <Compile Include="Components\Managements\JobEditorView.xaml.cs">
+      <DependentUpon>JobEditorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Components\Managements\JobEditorViewModel.cs" />
+    <Compile Include="Components\Managements\JobsView.xaml.cs">
+      <DependentUpon>JobsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Components\Managements\JobsViewModel.cs" />
     <Compile Include="Components\Managements\ManagementHeader.xaml.cs">
       <DependentUpon>ManagementHeader.xaml</DependentUpon>
     </Compile>
@@ -116,12 +132,15 @@
       <DependentUpon>ManagementMainView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Components\Managements\ManagementMainViewModel.cs" />
+    <Compile Include="Components\Managements\ManagementViewModelBase.cs" />
     <Compile Include="IManagementViewModel.cs" />
     <Compile Include="Interfaces\IBranchEditor.cs" />
     <Compile Include="Interfaces\IBranchViewer.cs" />
     <Compile Include="Interfaces\ICityEditor.cs" />
     <Compile Include="Interfaces\ICompanyEditor.cs" />
     <Compile Include="Interfaces\ICountryEditor.cs" />
+    <Compile Include="Interfaces\IEmployeeEditor.cs" />
+    <Compile Include="Interfaces\IJobEditor.cs" />
     <Compile Include="Modules\HRModule.cs" />
     <Compile Include="Navigation.cs" />
     <Compile Include="Properties\Resources.ar-SY.Designer.cs">
@@ -232,6 +251,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Components\Companies\EmployeeEditorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Components\Companies\EmployeesView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Components\Managements\CitiesView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -249,6 +276,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Components\Managements\CountryEditorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Components\Managements\JobEditorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Components\Managements\JobsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

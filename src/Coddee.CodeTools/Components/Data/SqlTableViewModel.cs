@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using Coddee.CodeTools.Sql.Queries;
+using Coddee.Commands;
 using Coddee.WPF;
 using Coddee.WPF.Commands;
 

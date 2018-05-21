@@ -1,0 +1,22 @@
+﻿<UserControl x:Class="HR.Clients.WPF.Components.Managements.JobEditorView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:HR.Clients.WPF.Components.Managements"
+             xmlns:coddee="http://schemas.Coddee.com/2017/WPF"
+             mc:Ignorable="d" 
+             coddee:FocusOnLoad.Element="{Binding ElementName=FirstField}"
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <local:JobEditorViewModel x:Key="designData" />
+    </UserControl.Resources>
+    <coddee:BusyIndicator IsBusy="{Binding IsBusy}"  d:DataContext="{StaticResource designData}">
+        <coddee:Form>
+            <coddee:FormField Title="Title"
+                              ValidatedPropertyName="JobTitle">
+                <TextBox Text="{Binding JobTitle,UpdateSourceTrigger=PropertyChanged}" Name="FirstField"/>
+            </coddee:FormField>
+        </coddee:Form>
+    </coddee:BusyIndicator>
+</UserControl>

@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using Coddee.CodeTools.Sql;
 using Coddee.CodeTools.Sql.Queries;
 using Coddee.Collections;
+using Coddee.Commands;
 using Coddee.Mvvm;
 using Coddee.Services;
 using Coddee.WPF;

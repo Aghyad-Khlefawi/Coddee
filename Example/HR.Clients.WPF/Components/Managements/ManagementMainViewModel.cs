@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Coddee.WPF;
 using Coddee.WPF.Commands;
+using HR.Clients.WPF.Components.Managements;
 
 namespace HR.Clients.WPF.Components
 {
@@ -35,7 +36,8 @@ namespace HR.Clients.WPF.Components
             Managements = new List<IManagementViewModel>
             {
                 CreateViewModel<CountriesViewModel>(),
-                CreateViewModel<CitiesViewModel>()
+                CreateViewModel<CitiesViewModel>(),
+                CreateViewModel<JobsViewModel>(),
             };
         }
 

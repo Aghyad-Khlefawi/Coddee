@@ -17,10 +17,8 @@
 
             <managements:ManagementHeader
                 DockPanel.Dock="Top"/>
-            <coddee:WaterMarkTextBox DockPanel.Dock="Top" WaterMarkContent="Search..." Height="25"
-                                     Text="{Binding Items.SearchText}"/>
-            <DataGrid ItemsSource="{Binding Items.CollectionView}"
-                      SelectedItem="{Binding SelectedCity}"
+            <DataGrid ItemsSource="{Binding ItemList.CollectionView}"
+                      SelectedItem="{Binding SelectedItem}"
                       AutoGenerateColumns="False">
                 <DataGrid.Columns>
                     <DataGridTextColumn Binding="{Binding CountryName}"

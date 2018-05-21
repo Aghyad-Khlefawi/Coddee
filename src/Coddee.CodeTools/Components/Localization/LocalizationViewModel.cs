@@ -12,6 +12,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 using Coddee.Collections;
+using Coddee.Commands;
 using Coddee.Services;
 using Coddee.WPF;
 using Coddee.WPF.Commands;

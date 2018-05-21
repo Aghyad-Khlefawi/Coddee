@@ -2,6 +2,7 @@
 using Coddee;
 using HR.Clients.WPF.Components;
 using HR.Clients.WPF.Components.Companies;
+using HR.Clients.WPF.Components.Managements;
 using HR.Clients.WPF.Interfaces;
 
 namespace HR.Clients.WPF.Modules
@@ -15,7 +16,9 @@ namespace HR.Clients.WPF.Modules
             container.RegisterType<ICountryEditor, CountryEditorViewModel>();
             container.RegisterType<ICompanyEditor, CompanyEditorViewModel>();
             container.RegisterType<IBranchEditor, BranchEditorViewModel>();
+            container.RegisterType<IJobEditor, JobEditorViewModel>();
 
+            container.RegisterType<IEmployeeEditor, EmployeeEditorViewModel>();
             container.RegisterType<IBranchViewer, BranchViewerViewModel>();
             return Task.FromResult(true);
         }

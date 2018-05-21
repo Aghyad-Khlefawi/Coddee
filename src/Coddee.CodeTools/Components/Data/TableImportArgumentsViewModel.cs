@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Coddee.CodeTools.Sql.Queries;
 using Coddee.Collections;
+using Coddee.Commands;
 using Coddee.Data;
 using Coddee.WPF.Commands;
 
