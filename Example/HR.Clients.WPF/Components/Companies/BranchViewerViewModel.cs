@@ -20,6 +20,22 @@ namespace HR.Clients.WPF.Components.Companies
             set { SetProperty(ref _companyBranches, value); }
         }
 
+        protected override void OnDesignMode()
+        {
+            base.OnDesignMode();
+            CompanyBranches = new AsyncObservableCollection<Branch>
+            {
+                new Branch
+                {
+                    Name = "Branch 1",
+                    CompanyName = "Company",
+                    CityName = "City",
+                    CountryName = "Country",
+                    EmployeeCount = 12
+                }
+            };
+        }
+
         protected override async Task OnInitialization()
         {
             await base.OnInitialization();
