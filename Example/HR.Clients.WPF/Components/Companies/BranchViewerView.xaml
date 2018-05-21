@@ -15,7 +15,25 @@
                       ItemsSource="{Binding CompanyBranches}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Label Content="{Binding Name}" />
+                    <Expander>
+                        <Expander.Header>
+                            <StackPanel Margin="5 0 0 0" Orientation="Vertical">
+                                <StackPanel.Resources>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Foreground" Value="{StaticResource Foreground}"/>
+                                        <Setter Property="Opacity" Value=".7"/>
+                                    </Style>
+                                </StackPanel.Resources>
+                                <Label Content="{Binding Name}"
+                                       Padding="0 5 5 5"/>
+                                <StackPanel Orientation="Vertical">
+                                    <TextBlock Text="{Binding CompanyName,StringFormat={}Company: {0}}"/>
+                                    <TextBlock Text="{Binding CityName,StringFormat={}City: {0}}"/>
+                                    <TextBlock Text="{Binding EmployeeCount,StringFormat={}Employees: {0}}"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Expander.Header>
+                    </Expander>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
