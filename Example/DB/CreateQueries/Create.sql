@@ -99,9 +99,11 @@ CREATE TABLE dbo.EmployeeJobs
 GO
 ALTER TABLE dbo.EmployeeJobs ADD CONSTRAINT [PK_EmployeeJobs_Id] PRIMARY KEY CLUSTERED (EmployeeId,JobId) 
 GO
-ALTER TABLE dbo.EmployeeJobs ADD CONSTRAINT [FK_Departments_Employees_EmployeeId] FOREIGN KEY (EmployeeId) REFERENCES dbo.Employees(Id) 
+ALTER TABLE dbo.EmployeeJobs ADD CONSTRAINT [FK_EmployeeJobs_Employees_EmployeeId] FOREIGN KEY (EmployeeId) REFERENCES dbo.Employees(Id) 
 GO
-ALTER TABLE dbo.EmployeeJobs ADD CONSTRAINT [FK_Departments_Jobs_JobId] FOREIGN KEY (JobId) REFERENCES dbo.Jobs(Id) 
+ALTER TABLE dbo.EmployeeJobs ADD CONSTRAINT [FK_EmployeeJobs_Jobs_JobId] FOREIGN KEY (JobId) REFERENCES dbo.Jobs(Id) 
+GO
+ALTER TABLE dbo.EmployeeJobs ADD CONSTRAINT [FK_EmployeeJobs_Departments_DepartmentId] FOREIGN KEY (DepartmentId) REFERENCES dbo.Departments(Id) 
 GO
 ALTER TABLE dbo.EmployeeJobs ADD CONSTRAINT [FK_EmployeeJobs_Branches_BranchId] FOREIGN KEY (BranchId) REFERENCES dbo.Branches(Id) 
 GO 

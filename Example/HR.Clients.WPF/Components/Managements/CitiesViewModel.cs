@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Coddee.Collections;
 using Coddee.Commands;
@@ -22,6 +23,11 @@ namespace HR.Clients.WPF.Components
         protected override bool Filter(City item, string term)
         {
             return item.Name.ToLower().Contains(term.ToLower());
+        }
+
+        protected override Task<IEnumerable<City>> GetItems()
+        {
+            return _repository.GetItemsWithDetails();
         }
 
         protected override string GetItemDescription(City item)

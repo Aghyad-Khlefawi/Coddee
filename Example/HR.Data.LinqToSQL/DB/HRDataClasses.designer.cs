@@ -48,15 +48,15 @@ namespace HR.Data.Linq.DB
     partial void InsertDepartment(Department instance);
     partial void UpdateDepartment(Department instance);
     partial void DeleteDepartment(Department instance);
-    partial void InsertEmployeeJob(EmployeeJob instance);
-    partial void UpdateEmployeeJob(EmployeeJob instance);
-    partial void DeleteEmployeeJob(EmployeeJob instance);
     partial void InsertEmployee(Employee instance);
     partial void UpdateEmployee(Employee instance);
     partial void DeleteEmployee(Employee instance);
     partial void InsertJob(Job instance);
     partial void UpdateJob(Job instance);
     partial void DeleteJob(Job instance);
+    partial void InsertEmployeeJob(EmployeeJob instance);
+    partial void UpdateEmployeeJob(EmployeeJob instance);
+    partial void DeleteEmployeeJob(EmployeeJob instance);
     #endregion
 		
 		public HRDataClassesDataContext() : 
@@ -137,14 +137,6 @@ namespace HR.Data.Linq.DB
 			}
 		}
 		
-		public System.Data.Linq.Table<EmployeeJob> EmployeeJobs
-		{
-			get
-			{
-				return this.GetTable<EmployeeJob>();
-			}
-		}
-		
 		public System.Data.Linq.Table<Employee> Employees
 		{
 			get
@@ -182,6 +174,22 @@ namespace HR.Data.Linq.DB
 			get
 			{
 				return this.GetTable<CompaniesView>();
+			}
+		}
+		
+		public System.Data.Linq.Table<EmployeeJob> EmployeeJobs
+		{
+			get
+			{
+				return this.GetTable<EmployeeJob>();
+			}
+		}
+		
+		public System.Data.Linq.Table<EmployeeJobsView> EmployeeJobsViews
+		{
+			get
+			{
+				return this.GetTable<EmployeeJobsView>();
 			}
 		}
 	}
@@ -1005,6 +1013,8 @@ namespace HR.Data.Linq.DB
 		
 		private string _Title;
 		
+		private EntitySet<EmployeeJob> _EmployeeJobs;
+		
     #region Extensibility Method Definitions
     partial void OnLoaded();
     partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -1017,6 +1027,7 @@ namespace HR.Data.Linq.DB
 		
 		public Department()
 		{
+			this._EmployeeJobs = new EntitySet<EmployeeJob>(new Action<EmployeeJob>(this.attach_EmployeeJobs), new Action<EmployeeJob>(this.detach_EmployeeJobs));
 			OnCreated();
 		}
 		
@@ -1060,308 +1071,16 @@ namespace HR.Data.Linq.DB
 			}
 		}
 		
-		public event PropertyChangingEventHandler PropertyChanging;
-		
-		public event PropertyChangedEventHandler PropertyChanged;
-		
-		protected virtual void SendPropertyChanging()
-		{
-			if ((this.PropertyChanging != null))
-			{
-				this.PropertyChanging(this, emptyChangingEventArgs);
-			}
-		}
-		
-		protected virtual void SendPropertyChanged(String propertyName)
-		{
-			if ((this.PropertyChanged != null))
-			{
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.EmployeeJobs")]
-	public partial class EmployeeJob : INotifyPropertyChanging, INotifyPropertyChanged
-	{
-		
-		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-		
-		private int _EmployeeId;
-		
-		private int _JobId;
-		
-		private int _DepartmentId;
-		
-		private System.DateTime _StartDate;
-		
-		private System.Nullable<System.DateTime> _EndDate;
-		
-		private int _BranchId;
-		
-		private EntityRef<Branch> _Branch;
-		
-		private EntityRef<Employee> _Employee;
-		
-		private EntityRef<Job> _Job;
-		
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnEmployeeIdChanging(int value);
-    partial void OnEmployeeIdChanged();
-    partial void OnJobIdChanging(int value);
-    partial void OnJobIdChanged();
-    partial void OnDepartmentIdChanging(int value);
-    partial void OnDepartmentIdChanged();
-    partial void OnStartDateChanging(System.DateTime value);
-    partial void OnStartDateChanged();
-    partial void OnEndDateChanging(System.Nullable<System.DateTime> value);
-    partial void OnEndDateChanged();
-    partial void OnBranchIdChanging(int value);
-    partial void OnBranchIdChanged();
-    #endregion
-		
-		public EmployeeJob()
-		{
-			this._Branch = default(EntityRef<Branch>);
-			this._Employee = default(EntityRef<Employee>);
-			this._Job = default(EntityRef<Job>);
-			OnCreated();
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_EmployeeId", DbType="Int NOT NULL", IsPrimaryKey=true)]
-		public int EmployeeId
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Department_EmployeeJob", Storage="_EmployeeJobs", ThisKey="Id", OtherKey="DepartmentId")]
+		public EntitySet<EmployeeJob> EmployeeJobs
 		{
 			get
 			{
-				return this._EmployeeId;
+				return this._EmployeeJobs;
 			}
 			set
 			{
-				if ((this._EmployeeId != value))
-				{
-					if (this._Employee.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.OnEmployeeIdChanging(value);
-					this.SendPropertyChanging();
-					this._EmployeeId = value;
-					this.SendPropertyChanged("EmployeeId");
-					this.OnEmployeeIdChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_JobId", DbType="Int NOT NULL", IsPrimaryKey=true)]
-		public int JobId
-		{
-			get
-			{
-				return this._JobId;
-			}
-			set
-			{
-				if ((this._JobId != value))
-				{
-					if (this._Job.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.OnJobIdChanging(value);
-					this.SendPropertyChanging();
-					this._JobId = value;
-					this.SendPropertyChanged("JobId");
-					this.OnJobIdChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DepartmentId", DbType="Int NOT NULL")]
-		public int DepartmentId
-		{
-			get
-			{
-				return this._DepartmentId;
-			}
-			set
-			{
-				if ((this._DepartmentId != value))
-				{
-					this.OnDepartmentIdChanging(value);
-					this.SendPropertyChanging();
-					this._DepartmentId = value;
-					this.SendPropertyChanged("DepartmentId");
-					this.OnDepartmentIdChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_StartDate", DbType="Date NOT NULL")]
-		public System.DateTime StartDate
-		{
-			get
-			{
-				return this._StartDate;
-			}
-			set
-			{
-				if ((this._StartDate != value))
-				{
-					this.OnStartDateChanging(value);
-					this.SendPropertyChanging();
-					this._StartDate = value;
-					this.SendPropertyChanged("StartDate");
-					this.OnStartDateChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_EndDate", DbType="Date")]
-		public System.Nullable<System.DateTime> EndDate
-		{
-			get
-			{
-				return this._EndDate;
-			}
-			set
-			{
-				if ((this._EndDate != value))
-				{
-					this.OnEndDateChanging(value);
-					this.SendPropertyChanging();
-					this._EndDate = value;
-					this.SendPropertyChanged("EndDate");
-					this.OnEndDateChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_BranchId", DbType="Int NOT NULL")]
-		public int BranchId
-		{
-			get
-			{
-				return this._BranchId;
-			}
-			set
-			{
-				if ((this._BranchId != value))
-				{
-					if (this._Branch.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.OnBranchIdChanging(value);
-					this.SendPropertyChanging();
-					this._BranchId = value;
-					this.SendPropertyChanged("BranchId");
-					this.OnBranchIdChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Branch_EmployeeJob", Storage="_Branch", ThisKey="BranchId", OtherKey="Id", IsForeignKey=true)]
-		public Branch Branch
-		{
-			get
-			{
-				return this._Branch.Entity;
-			}
-			set
-			{
-				Branch previousValue = this._Branch.Entity;
-				if (((previousValue != value) 
-							|| (this._Branch.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._Branch.Entity = null;
-						previousValue.EmployeeJobs.Remove(this);
-					}
-					this._Branch.Entity = value;
-					if ((value != null))
-					{
-						value.EmployeeJobs.Add(this);
-						this._BranchId = value.Id;
-					}
-					else
-					{
-						this._BranchId = default(int);
-					}
-					this.SendPropertyChanged("Branch");
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Employee_EmployeeJob", Storage="_Employee", ThisKey="EmployeeId", OtherKey="Id", IsForeignKey=true)]
-		public Employee Employee
-		{
-			get
-			{
-				return this._Employee.Entity;
-			}
-			set
-			{
-				Employee previousValue = this._Employee.Entity;
-				if (((previousValue != value) 
-							|| (this._Employee.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._Employee.Entity = null;
-						previousValue.EmployeeJobs.Remove(this);
-					}
-					this._Employee.Entity = value;
-					if ((value != null))
-					{
-						value.EmployeeJobs.Add(this);
-						this._EmployeeId = value.Id;
-					}
-					else
-					{
-						this._EmployeeId = default(int);
-					}
-					this.SendPropertyChanged("Employee");
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Job_EmployeeJob", Storage="_Job", ThisKey="JobId", OtherKey="Id", IsForeignKey=true)]
-		public Job Job
-		{
-			get
-			{
-				return this._Job.Entity;
-			}
-			set
-			{
-				Job previousValue = this._Job.Entity;
-				if (((previousValue != value) 
-							|| (this._Job.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._Job.Entity = null;
-						previousValue.EmployeeJobs.Remove(this);
-					}
-					this._Job.Entity = value;
-					if ((value != null))
-					{
-						value.EmployeeJobs.Add(this);
-						this._JobId = value.Id;
-					}
-					else
-					{
-						this._JobId = default(int);
-					}
-					this.SendPropertyChanged("Job");
-				}
+				this._EmployeeJobs.Assign(value);
 			}
 		}
 		
@@ -1383,6 +1102,18 @@ namespace HR.Data.Linq.DB
 			{
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
+		}
+		
+		private void attach_EmployeeJobs(EmployeeJob entity)
+		{
+			this.SendPropertyChanging();
+			entity.Department = this;
+		}
+		
+		private void detach_EmployeeJobs(EmployeeJob entity)
+		{
+			this.SendPropertyChanging();
+			entity.Department = null;
 		}
 	}
 	
@@ -1948,6 +1679,595 @@ namespace HR.Data.Linq.DB
 				if ((this._EmployeeCount != value))
 				{
 					this._EmployeeCount = value;
+				}
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.EmployeeJobs")]
+	public partial class EmployeeJob : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _EmployeeId;
+		
+		private int _JobId;
+		
+		private int _DepartmentId;
+		
+		private System.DateTime _StartDate;
+		
+		private System.Nullable<System.DateTime> _EndDate;
+		
+		private int _BranchId;
+		
+		private EntityRef<Branch> _Branch;
+		
+		private EntityRef<Department> _Department;
+		
+		private EntityRef<Employee> _Employee;
+		
+		private EntityRef<Job> _Job;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnEmployeeIdChanging(int value);
+    partial void OnEmployeeIdChanged();
+    partial void OnJobIdChanging(int value);
+    partial void OnJobIdChanged();
+    partial void OnDepartmentIdChanging(int value);
+    partial void OnDepartmentIdChanged();
+    partial void OnStartDateChanging(System.DateTime value);
+    partial void OnStartDateChanged();
+    partial void OnEndDateChanging(System.Nullable<System.DateTime> value);
+    partial void OnEndDateChanged();
+    partial void OnBranchIdChanging(int value);
+    partial void OnBranchIdChanged();
+    #endregion
+		
+		public EmployeeJob()
+		{
+			this._Branch = default(EntityRef<Branch>);
+			this._Department = default(EntityRef<Department>);
+			this._Employee = default(EntityRef<Employee>);
+			this._Job = default(EntityRef<Job>);
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_EmployeeId", DbType="Int NOT NULL", IsPrimaryKey=true)]
+		public int EmployeeId
+		{
+			get
+			{
+				return this._EmployeeId;
+			}
+			set
+			{
+				if ((this._EmployeeId != value))
+				{
+					if (this._Employee.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnEmployeeIdChanging(value);
+					this.SendPropertyChanging();
+					this._EmployeeId = value;
+					this.SendPropertyChanged("EmployeeId");
+					this.OnEmployeeIdChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_JobId", DbType="Int NOT NULL", IsPrimaryKey=true)]
+		public int JobId
+		{
+			get
+			{
+				return this._JobId;
+			}
+			set
+			{
+				if ((this._JobId != value))
+				{
+					if (this._Job.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnJobIdChanging(value);
+					this.SendPropertyChanging();
+					this._JobId = value;
+					this.SendPropertyChanged("JobId");
+					this.OnJobIdChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DepartmentId", DbType="Int NOT NULL")]
+		public int DepartmentId
+		{
+			get
+			{
+				return this._DepartmentId;
+			}
+			set
+			{
+				if ((this._DepartmentId != value))
+				{
+					if (this._Department.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnDepartmentIdChanging(value);
+					this.SendPropertyChanging();
+					this._DepartmentId = value;
+					this.SendPropertyChanged("DepartmentId");
+					this.OnDepartmentIdChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_StartDate", DbType="Date NOT NULL")]
+		public System.DateTime StartDate
+		{
+			get
+			{
+				return this._StartDate;
+			}
+			set
+			{
+				if ((this._StartDate != value))
+				{
+					this.OnStartDateChanging(value);
+					this.SendPropertyChanging();
+					this._StartDate = value;
+					this.SendPropertyChanged("StartDate");
+					this.OnStartDateChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_EndDate", DbType="Date")]
+		public System.Nullable<System.DateTime> EndDate
+		{
+			get
+			{
+				return this._EndDate;
+			}
+			set
+			{
+				if ((this._EndDate != value))
+				{
+					this.OnEndDateChanging(value);
+					this.SendPropertyChanging();
+					this._EndDate = value;
+					this.SendPropertyChanged("EndDate");
+					this.OnEndDateChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_BranchId", DbType="Int NOT NULL")]
+		public int BranchId
+		{
+			get
+			{
+				return this._BranchId;
+			}
+			set
+			{
+				if ((this._BranchId != value))
+				{
+					if (this._Branch.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnBranchIdChanging(value);
+					this.SendPropertyChanging();
+					this._BranchId = value;
+					this.SendPropertyChanged("BranchId");
+					this.OnBranchIdChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Branch_EmployeeJob", Storage="_Branch", ThisKey="BranchId", OtherKey="Id", IsForeignKey=true)]
+		public Branch Branch
+		{
+			get
+			{
+				return this._Branch.Entity;
+			}
+			set
+			{
+				Branch previousValue = this._Branch.Entity;
+				if (((previousValue != value) 
+							|| (this._Branch.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Branch.Entity = null;
+						previousValue.EmployeeJobs.Remove(this);
+					}
+					this._Branch.Entity = value;
+					if ((value != null))
+					{
+						value.EmployeeJobs.Add(this);
+						this._BranchId = value.Id;
+					}
+					else
+					{
+						this._BranchId = default(int);
+					}
+					this.SendPropertyChanged("Branch");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Department_EmployeeJob", Storage="_Department", ThisKey="DepartmentId", OtherKey="Id", IsForeignKey=true)]
+		public Department Department
+		{
+			get
+			{
+				return this._Department.Entity;
+			}
+			set
+			{
+				Department previousValue = this._Department.Entity;
+				if (((previousValue != value) 
+							|| (this._Department.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Department.Entity = null;
+						previousValue.EmployeeJobs.Remove(this);
+					}
+					this._Department.Entity = value;
+					if ((value != null))
+					{
+						value.EmployeeJobs.Add(this);
+						this._DepartmentId = value.Id;
+					}
+					else
+					{
+						this._DepartmentId = default(int);
+					}
+					this.SendPropertyChanged("Department");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Employee_EmployeeJob", Storage="_Employee", ThisKey="EmployeeId", OtherKey="Id", IsForeignKey=true)]
+		public Employee Employee
+		{
+			get
+			{
+				return this._Employee.Entity;
+			}
+			set
+			{
+				Employee previousValue = this._Employee.Entity;
+				if (((previousValue != value) 
+							|| (this._Employee.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Employee.Entity = null;
+						previousValue.EmployeeJobs.Remove(this);
+					}
+					this._Employee.Entity = value;
+					if ((value != null))
+					{
+						value.EmployeeJobs.Add(this);
+						this._EmployeeId = value.Id;
+					}
+					else
+					{
+						this._EmployeeId = default(int);
+					}
+					this.SendPropertyChanged("Employee");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Job_EmployeeJob", Storage="_Job", ThisKey="JobId", OtherKey="Id", IsForeignKey=true)]
+		public Job Job
+		{
+			get
+			{
+				return this._Job.Entity;
+			}
+			set
+			{
+				Job previousValue = this._Job.Entity;
+				if (((previousValue != value) 
+							|| (this._Job.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Job.Entity = null;
+						previousValue.EmployeeJobs.Remove(this);
+					}
+					this._Job.Entity = value;
+					if ((value != null))
+					{
+						value.EmployeeJobs.Add(this);
+						this._JobId = value.Id;
+					}
+					else
+					{
+						this._JobId = default(int);
+					}
+					this.SendPropertyChanged("Job");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.EmployeeJobsView")]
+	public partial class EmployeeJobsView
+	{
+		
+		private int _EmployeeId;
+		
+		private int _JobId;
+		
+		private int _DepartmentId;
+		
+		private System.DateTime _StartDate;
+		
+		private System.Nullable<System.DateTime> _EndDate;
+		
+		private int _BranchId;
+		
+		private string _BranchName;
+		
+		private string _JobTitle;
+		
+		private string _DepartmentTitle;
+		
+		private string _EmployeeFirstName;
+		
+		private string _EmployeeLastName;
+		
+		private int _CompanyId;
+		
+		private string _CompanyName;
+		
+		public EmployeeJobsView()
+		{
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_EmployeeId", DbType="Int NOT NULL")]
+		public int EmployeeId
+		{
+			get
+			{
+				return this._EmployeeId;
+			}
+			set
+			{
+				if ((this._EmployeeId != value))
+				{
+					this._EmployeeId = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_JobId", DbType="Int NOT NULL")]
+		public int JobId
+		{
+			get
+			{
+				return this._JobId;
+			}
+			set
+			{
+				if ((this._JobId != value))
+				{
+					this._JobId = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DepartmentId", DbType="Int NOT NULL")]
+		public int DepartmentId
+		{
+			get
+			{
+				return this._DepartmentId;
+			}
+			set
+			{
+				if ((this._DepartmentId != value))
+				{
+					this._DepartmentId = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_StartDate", DbType="Date NOT NULL")]
+		public System.DateTime StartDate
+		{
+			get
+			{
+				return this._StartDate;
+			}
+			set
+			{
+				if ((this._StartDate != value))
+				{
+					this._StartDate = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_EndDate", DbType="Date")]
+		public System.Nullable<System.DateTime> EndDate
+		{
+			get
+			{
+				return this._EndDate;
+			}
+			set
+			{
+				if ((this._EndDate != value))
+				{
+					this._EndDate = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_BranchId", DbType="Int NOT NULL")]
+		public int BranchId
+		{
+			get
+			{
+				return this._BranchId;
+			}
+			set
+			{
+				if ((this._BranchId != value))
+				{
+					this._BranchId = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_BranchName", DbType="NVarChar(50) NOT NULL", CanBeNull=false)]
+		public string BranchName
+		{
+			get
+			{
+				return this._BranchName;
+			}
+			set
+			{
+				if ((this._BranchName != value))
+				{
+					this._BranchName = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_JobTitle", DbType="NVarChar(50) NOT NULL", CanBeNull=false)]
+		public string JobTitle
+		{
+			get
+			{
+				return this._JobTitle;
+			}
+			set
+			{
+				if ((this._JobTitle != value))
+				{
+					this._JobTitle = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DepartmentTitle", DbType="NVarChar(50) NOT NULL", CanBeNull=false)]
+		public string DepartmentTitle
+		{
+			get
+			{
+				return this._DepartmentTitle;
+			}
+			set
+			{
+				if ((this._DepartmentTitle != value))
+				{
+					this._DepartmentTitle = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_EmployeeFirstName", DbType="NVarChar(30) NOT NULL", CanBeNull=false)]
+		public string EmployeeFirstName
+		{
+			get
+			{
+				return this._EmployeeFirstName;
+			}
+			set
+			{
+				if ((this._EmployeeFirstName != value))
+				{
+					this._EmployeeFirstName = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_EmployeeLastName", DbType="NVarChar(30) NOT NULL", CanBeNull=false)]
+		public string EmployeeLastName
+		{
+			get
+			{
+				return this._EmployeeLastName;
+			}
+			set
+			{
+				if ((this._EmployeeLastName != value))
+				{
+					this._EmployeeLastName = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CompanyId", DbType="Int NOT NULL")]
+		public int CompanyId
+		{
+			get
+			{
+				return this._CompanyId;
+			}
+			set
+			{
+				if ((this._CompanyId != value))
+				{
+					this._CompanyId = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CompanyName", DbType="NVarChar(50) NOT NULL", CanBeNull=false)]
+		public string CompanyName
+		{
+			get
+			{
+				return this._CompanyName;
+			}
+			set
+			{
+				if ((this._CompanyName != value))
+				{
+					this._CompanyName = value;
 				}
 			}
 		}

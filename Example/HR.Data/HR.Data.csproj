@@ -50,6 +50,7 @@
     <Compile Include="Models\Country.cs" />
     <Compile Include="Models\Department.cs" />
     <Compile Include="Models\Employee.cs" />
+    <Compile Include="Models\EmployeeJob.cs" />
     <Compile Include="Models\HRAuthenticationResponse.cs" />
     <Compile Include="Models\Job.cs" />
     <Compile Include="Models\User.cs" />

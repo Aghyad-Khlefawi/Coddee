@@ -14,14 +14,36 @@ using HR.Data.Models;
 using HR.Data.Repositories;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 
 namespace HR.Data.Linq.Repositories
 {
-    
+
     [Coddee.Data.RepositoryAttribute(typeof(IEmployeeRepository))]
     public class EmployeeRepository : CRUDHRRepositoryBase<DB.Employee, Employee, int>, IEmployeeRepository
     {
+        public override void RegisterMappings(IObjectMapper mapper)
+        {
+            base.RegisterMappings(mapper);
+            mapper.RegisterTwoWayMap<DB.EmployeeJob,EmployeeJob>();
+            mapper.RegisterMap<DB.EmployeeJobsView,EmployeeJob>();
+        }
+
+        public Task<EmployeeJob> InsertEmployeeJob(EmployeeJob item)
+        {
+            return Execute(db =>
+            {
+                var dbItem = _mapper.Map<DB.EmployeeJob>(item);
+                db.EmployeeJobs.InsertOnSubmit(dbItem);
+                return item;
+            });
+        }
+
+        public Task<IEnumerable<EmployeeJob>> GetEmployeeJobsByEmployee(int employeeId)
+        {
+            return ExecuteAndMapCollection<EmployeeJob>(db => db.EmployeeJobsViews.ToList());
+        }
     }
 }

@@ -7,7 +7,7 @@
              Margin="10"
              xmlns:coddee="http://schemas.Coddee.com/2017/WPF"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="300" >
     <UserControl.Resources>
         <local:EmployeesViewModel x:Key="designData" />
     </UserControl.Resources>
@@ -90,8 +90,36 @@
             <Border Margin="20 0"
                     Background="DimGray"
                     Width="1" />
+            <DockPanel>
+                <Border DockPanel.Dock="Top"
+                        BorderThickness="0 0 0 1"
+                        BorderBrush="{StaticResource Foreground}">
+                    <DockPanel Dock="Top">
+                        <Button Content="Add"
+                                Width="60"
+                                Command="{Binding AddJobCommand}"
+                                DockPanel.Dock="Right" />
+                        <Label Content="Employee jobs"
+                               FontSize="24"
+                               Foreground="{StaticResource Foreground}"
+                               DockPanel.Dock="Top" />
 
-            <DockPanel></DockPanel>
+                    </DockPanel>
+                </Border>
+                <DataGrid Margin="0 5 0 0"
+                          AutoGenerateColumns="False"
+                          ItemsSource="{Binding EmployeeJobs}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn MinWidth="60" Header=" Company" Binding="{Binding CompanyName}"/>
+                        <DataGridTextColumn MinWidth="60" Header=" Branch" Binding="{Binding BranchName}"/>
+                        <DataGridTextColumn MinWidth="60" Header=" Department" Binding="{Binding DepartmentTitle}"/>
+                        <DataGridTextColumn MinWidth="60" Header=" Job" Binding="{Binding JobTitle}"/>
+                        <DataGridTextColumn MinWidth="60" Header=" Start date" Binding="{Binding StartDate,StringFormat={}{0:d}}"/>
+                        <DataGridTextColumn MinWidth="60" Header=" End date" Binding="{Binding EndDate,StringFormat={}{0:d}}"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </DockPanel>
+
         </DockPanel>
     </coddee:BusyIndicator>
 </UserControl>

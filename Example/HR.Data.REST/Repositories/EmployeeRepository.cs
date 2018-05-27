@@ -13,17 +13,28 @@ using Coddee.Data.REST;
 using HR.Data.Models;
 using HR.Data.Repositories;
 using System;
-
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace HR.Data.Rest.Repositories
 {
-    
+
     [Coddee.Data.RepositoryAttribute(typeof(IEmployeeRepository))]
     public class EmployeeRepository : CRUDRESTRepositoryBase<Employee, int>, IEmployeeRepository
     {
-        public EmployeeRepository() : 
+        public EmployeeRepository() :
                 base("Employee")
         {
+        }
+
+        public Task<EmployeeJob> InsertEmployeeJob(EmployeeJob item)
+        {
+            return PostToController<EmployeeJob>(nameof(InsertEmployeeJob), item);
+        }
+
+        public Task<IEnumerable<EmployeeJob>> GetEmployeeJobsByEmployee(int employeeId)
+        {
+            return GetFromController<IEnumerable<EmployeeJob>>(KeyValue(nameof(employeeId), employeeId));
         }
     }
 }

@@ -8,7 +8,7 @@ using HR.Clients.WPF.Interfaces;
 namespace HR.Clients.WPF.Modules
 {
     [Module(nameof(HRModule))]
-    public class HRModule:IModule
+    public class HRModule : IModule
     {
         public Task Initialize(IContainer container)
         {
@@ -17,9 +17,11 @@ namespace HR.Clients.WPF.Modules
             container.RegisterType<ICompanyEditor, CompanyEditorViewModel>();
             container.RegisterType<IBranchEditor, BranchEditorViewModel>();
             container.RegisterType<IJobEditor, JobEditorViewModel>();
+            container.RegisterType<IDepartmentEditor, DepartmentEditorViewModel>();
 
             container.RegisterType<IEmployeeEditor, EmployeeEditorViewModel>();
             container.RegisterType<IBranchViewer, BranchViewerViewModel>();
+            container.RegisterType<IEmployeeJobEditor, EmployeeJobEditorViewModel>();
             return Task.FromResult(true);
         }
     }

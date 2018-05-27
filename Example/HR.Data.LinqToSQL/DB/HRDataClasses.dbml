@@ -47,19 +47,7 @@
     <Type Name="Department">
       <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Column Name="Title" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
-    </Type>
-  </Table>
-  <Table Name="dbo.EmployeeJobs" Member="EmployeeJobs">
-    <Type Name="EmployeeJob">
-      <Column Name="EmployeeId" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
-      <Column Name="JobId" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
-      <Column Name="DepartmentId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="StartDate" Type="System.DateTime" DbType="Date NOT NULL" CanBeNull="false" />
-      <Column Name="EndDate" Type="System.DateTime" DbType="Date" CanBeNull="true" />
-      <Column Name="BranchId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Association Name="Branch_EmployeeJob" Member="Branch" ThisKey="BranchId" OtherKey="Id" Type="Branch" IsForeignKey="true" />
-      <Association Name="Employee_EmployeeJob" Member="Employee" ThisKey="EmployeeId" OtherKey="Id" Type="Employee" IsForeignKey="true" />
-      <Association Name="Job_EmployeeJob" Member="Job" ThisKey="JobId" OtherKey="Id" Type="Job" IsForeignKey="true" />
+      <Association Name="Department_EmployeeJob" Member="EmployeeJobs" ThisKey="Id" OtherKey="DepartmentId" Type="EmployeeJob" />
     </Type>
   </Table>
   <Table Name="dbo.Employees" Member="Employees">
@@ -103,6 +91,37 @@
       <Column Name="Name" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
       <Column Name="BranchCount" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="EmployeeCount" Type="System.Int32" DbType="Int" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.EmployeeJobs" Member="EmployeeJobs">
+    <Type Name="EmployeeJob">
+      <Column Name="EmployeeId" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="JobId" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="DepartmentId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="StartDate" Type="System.DateTime" DbType="Date NOT NULL" CanBeNull="false" />
+      <Column Name="EndDate" Type="System.DateTime" DbType="Date" CanBeNull="true" />
+      <Column Name="BranchId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="Branch_EmployeeJob" Member="Branch" ThisKey="BranchId" OtherKey="Id" Type="Branch" IsForeignKey="true" />
+      <Association Name="Department_EmployeeJob" Member="Department" ThisKey="DepartmentId" OtherKey="Id" Type="Department" IsForeignKey="true" />
+      <Association Name="Employee_EmployeeJob" Member="Employee" ThisKey="EmployeeId" OtherKey="Id" Type="Employee" IsForeignKey="true" />
+      <Association Name="Job_EmployeeJob" Member="Job" ThisKey="JobId" OtherKey="Id" Type="Job" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.EmployeeJobsView" Member="EmployeeJobsViews">
+    <Type Name="EmployeeJobsView">
+      <Column Name="EmployeeId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="JobId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="DepartmentId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="StartDate" Type="System.DateTime" DbType="Date NOT NULL" CanBeNull="false" />
+      <Column Name="EndDate" Type="System.DateTime" DbType="Date" CanBeNull="true" />
+      <Column Name="BranchId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="BranchName" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="JobTitle" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="DepartmentTitle" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="EmployeeFirstName" Type="System.String" DbType="NVarChar(30) NOT NULL" CanBeNull="false" />
+      <Column Name="EmployeeLastName" Type="System.String" DbType="NVarChar(30) NOT NULL" CanBeNull="false" />
+      <Column Name="CompanyId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="CompanyName" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
     </Type>
   </Table>
 </Database>

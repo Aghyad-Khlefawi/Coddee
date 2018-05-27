@@ -93,6 +93,10 @@
       <DependentUpon>EmployeeEditorView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Components\Companies\EmployeeEditorViewModel.cs" />
+    <Compile Include="Components\Companies\EmployeeJobEditorView.xaml.cs">
+      <DependentUpon>EmployeeJobEditorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Components\Companies\EmployeeJobEditorViewModel.cs" />
     <Compile Include="Components\Companies\EmployeesView.xaml.cs">
       <DependentUpon>EmployeesView.xaml</DependentUpon>
     </Compile>
@@ -117,6 +121,14 @@
       <DependentUpon>CountryEditorView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Components\Managements\CountryEditorViewModel.cs" />
+    <Compile Include="Components\Managements\DepartmentEditorView.xaml.cs">
+      <DependentUpon>DepartmentEditorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Components\Managements\DepartmentEditorViewModel.cs" />
+    <Compile Include="Components\Managements\DepartmentsView.xaml.cs">
+      <DependentUpon>DepartmentsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Components\Managements\DepartmentsViewModel.cs" />
     <Compile Include="Components\Managements\JobEditorView.xaml.cs">
       <DependentUpon>JobEditorView.xaml</DependentUpon>
     </Compile>
@@ -139,7 +151,9 @@
     <Compile Include="Interfaces\ICityEditor.cs" />
     <Compile Include="Interfaces\ICompanyEditor.cs" />
     <Compile Include="Interfaces\ICountryEditor.cs" />
+    <Compile Include="Interfaces\IDepartmentEditor.cs" />
     <Compile Include="Interfaces\IEmployeeEditor.cs" />
+    <Compile Include="Interfaces\IEmployeeJobEditor.cs" />
     <Compile Include="Interfaces\IJobEditor.cs" />
     <Compile Include="Modules\HRModule.cs" />
     <Compile Include="Navigation.cs" />
@@ -255,6 +269,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Components\Companies\EmployeeJobEditorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Components\Companies\EmployeesView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -276,6 +294,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Components\Managements\CountryEditorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Components\Managements\DepartmentEditorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Components\Managements\DepartmentsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

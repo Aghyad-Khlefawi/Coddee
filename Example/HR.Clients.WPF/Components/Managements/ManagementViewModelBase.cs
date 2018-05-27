@@ -21,8 +21,8 @@ namespace HR.Clients.WPF.Components.Managements
         where TRepository : ICRUDRepository<TModel, TKey>
         where TModel : IUniqueObject<TKey>, new()
     {
-        private TEditor _editor;
-        private TRepository _repository;
+        protected TEditor _editor;
+        protected TRepository _repository;
 
         private AsyncObservableCollectionView<TModel> _itemList;
         public AsyncObservableCollectionView<TModel> ItemList

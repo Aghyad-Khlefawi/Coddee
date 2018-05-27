@@ -21,5 +21,7 @@ namespace HR.Data.Repositories
     
     public interface IEmployeeRepository : ICRUDRepository<Employee, int>
     {
+        Task<EmployeeJob> InsertEmployeeJob(EmployeeJob item);
+        Task<IEnumerable<EmployeeJob>> GetEmployeeJobsByEmployee(int employeeId);
     }
 }

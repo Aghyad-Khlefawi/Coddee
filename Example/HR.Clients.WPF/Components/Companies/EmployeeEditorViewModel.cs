@@ -9,6 +9,11 @@ namespace HR.Clients.WPF.Components.Companies
 {
     public class EmployeeEditorViewModel : EditorViewModelBase<EmployeeEditorViewModel, EmployeeEditorView,IEmployeeRepository, Employee, int>, IEmployeeEditor
     {
+        public EmployeeEditorViewModel()
+        {
+            Title = "Employee";
+        }
+
         private string _firstName;
         [EditorField]
         public string FirstName

@@ -287,7 +287,7 @@ namespace Coddee.WPF
                     throw new ValidationException(validationResult);
                 }
 
-                PreSave();
+                await PreSave();
                 var result = await SaveItem();
                 Saved?.Invoke(this, new EditorSaveArgs<TModel>(OperationType, result));
                 IsBusy = false;

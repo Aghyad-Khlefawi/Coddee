@@ -37,6 +37,7 @@ namespace HR.Clients.WPF.Components
             {
                 CreateViewModel<CountriesViewModel>(),
                 CreateViewModel<CitiesViewModel>(),
+                CreateViewModel<DepartmentsViewModel>(),
                 CreateViewModel<JobsViewModel>(),
             };
         }

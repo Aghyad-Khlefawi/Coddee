@@ -12,6 +12,10 @@ namespace HR.Clients.WPF.Components.Companies
 {
     public class BranchEditorViewModel : EditorViewModelBase<BranchEditorViewModel, BranchEditorView, IBranchRepository, Branch, int>, IBranchEditor
     {
+        public BranchEditorViewModel()
+        {
+            Title = "Branch";
+        }
         private ICityRepository _cityRepository;
 
         private string _name;

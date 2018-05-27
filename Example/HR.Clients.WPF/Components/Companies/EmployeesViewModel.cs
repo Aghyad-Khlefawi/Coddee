@@ -16,9 +16,15 @@ namespace HR.Clients.WPF.Components.Companies
     {
         private IEmployeeRepository _employeeRepository;
         private IEmployeeEditor _employeeEditor;
+        private IEmployeeJobEditor _employeeJobEditor;
 
 
-
+        private AsyncObservableCollection<EmployeeJob> _employeeJobs;
+        public AsyncObservableCollection<EmployeeJob> EmployeeJobs
+        {
+            get { return _employeeJobs; }
+            set { SetProperty(ref _employeeJobs, value); }
+        }
 
         private AsyncObservableCollection<Employee> _employeeList;
         public AsyncObservableCollection<Employee> EmployeeList
@@ -31,10 +37,15 @@ namespace HR.Clients.WPF.Components.Companies
         public Employee SelectedEmployee
         {
             get { return _selectedEmployee; }
-            set { SetProperty(ref this._selectedEmployee, value); }
+            set
+            {
+                SetProperty(ref this._selectedEmployee, value);
+                OnEmployeeSelected(value);
+            }
         }
 
         private ICommand _addCommand;
+
         public ICommand AddCommand
         {
             get { return _addCommand ?? (_addCommand = new RelayCommand(Add)); }
@@ -42,6 +53,7 @@ namespace HR.Clients.WPF.Components.Companies
         }
 
         private IReactiveCommand _editCommand;
+
         public IReactiveCommand EditCommand
         {
             get { return _editCommand ?? (_editCommand = CreateReactiveCommand(this, Edit).ObserveProperty(e => e.SelectedEmployee)); }
@@ -49,22 +61,48 @@ namespace HR.Clients.WPF.Components.Companies
         }
 
         private IReactiveCommand _deleteCommand;
+
         public IReactiveCommand DeleteCommand
         {
             get { return _deleteCommand ?? (_deleteCommand = CreateReactiveCommand(this, Delete).ObserveProperty(e => e.SelectedEmployee)); }
             set { SetProperty(ref _deleteCommand, value); }
         }
 
+        private IReactiveCommand _addJobCommand;
 
+        public IReactiveCommand AddJobCommand
+        {
+            get { return _addJobCommand ?? (_addJobCommand = CreateReactiveCommand(this, AddJob).ObserveProperty(e => e.SelectedEmployee)); }
+            set { SetProperty(ref _addJobCommand, value); }
+        }
+
+        public async void AddJob()
+        {
+            await ToggleBusyAsync(_employeeJobEditor.Initialize());
+            _employeeJobEditor.AddFromEmployee(SelectedEmployee.Id);
+            _employeeJobEditor.Show();
+        }
 
         protected override async Task OnInitialization()
         {
             await base.OnInitialization();
             _employeeEditor = CreateViewModel<IEmployeeEditor>();
+            _employeeJobEditor = CreateViewModel<IEmployeeJobEditor>();
 
             _employeeRepository = GetRepository<IEmployeeRepository>();
             EmployeeList = await _employeeRepository.GetItems().ToAsyncObservableCollection();
             EmployeeList.BindToRepositoryChanges(_employeeRepository);
+        }
+
+        private async void OnEmployeeSelected(Employee value)
+        {
+            async Task LoadEmployees()
+            {
+                EmployeeJobs = await _employeeRepository.GetEmployeeJobsByEmployee(value.Id)
+                                                        .ToAsyncObservableCollection();
+            }
+
+            await ToggleBusyAsync(LoadEmployees());
         }
 
         public async void Edit()

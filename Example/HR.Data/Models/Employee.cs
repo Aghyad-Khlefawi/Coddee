@@ -72,5 +72,10 @@ namespace HR.Data.Models
                 return object.ReferenceEquals(this, other);
             }
         }
+
+        public override string ToString()
+        {
+            return FullName;
+        }
     }
 }
