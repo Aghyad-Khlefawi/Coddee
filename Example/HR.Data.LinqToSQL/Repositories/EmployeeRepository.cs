@@ -29,6 +29,7 @@ namespace HR.Data.Linq.Repositories
             base.RegisterMappings(mapper);
             mapper.RegisterTwoWayMap<DB.EmployeeJob,EmployeeJob>();
             mapper.RegisterMap<DB.EmployeeJobsView,EmployeeJob>();
+            mapper.RegisterMap<DB.EmployeesView,Employee>();
         }
 
         public Task<EmployeeJob> InsertEmployeeJob(EmployeeJob item)
@@ -44,6 +45,16 @@ namespace HR.Data.Linq.Repositories
         public Task<IEnumerable<EmployeeJob>> GetEmployeeJobsByEmployee(int employeeId)
         {
             return ExecuteAndMapCollection<EmployeeJob>(db => db.EmployeeJobsViews.ToList());
+        }
+
+        public Task<IEnumerable<Employee>> GetItemsWithDetailes()
+        {
+            return ExecuteAndMapCollection(db => db.EmployeesViews.ToList());
+        }
+
+        public Task<Employee> GetItemWithDetailes(int employeeId)
+        {
+            return ExecuteAndMap(db => db.EmployeesViews.First(e=>e.Id == employeeId));
         }
     }
 }

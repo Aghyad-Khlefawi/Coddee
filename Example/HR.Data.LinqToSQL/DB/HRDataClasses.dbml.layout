@@ -50,7 +50,7 @@
         <elementListCompartment Id="18146b37-5b43-48de-afc7-f8f40f89c424" absoluteBounds="6.265, 4.335, 1.9700000000000002, 0.63399251302083326" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <associationConnector edgePoints="[(5.5 : 1.94314697265625); (6.25 : 1.94314697265625)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+    <associationConnector edgePoints="[(5.5 : 1.94314697265625); (5.79166666666667 : 1.94314697265625 : JumpStart); (5.95833333333333 : 1.94314697265625 : JumpEnd); (6.25 : 1.94314697265625)]" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/HRDataClassesDataContext/City/City_Branch" />
       <nodes>
         <classShapeMoniker Id="6a304b26-22ef-45ea-8f7a-1ca0bb7b360e" />
@@ -77,12 +77,6 @@
         <elementListCompartment Id="8bc3192d-e6cd-4ec7-acae-51f07e12cebb" absoluteBounds="11.515, 8.46, 1.9700000000000002, 1.0185953776041665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <classShape Id="5f89d2bb-3a92-4ad7-8710-9c4b95967bcf" absoluteBounds="8.875, 8.375, 2, 2.3478011067708335">
-      <DataClassMoniker Name="/HRDataClassesDataContext/BranchesView" />
-      <nestedChildShapes>
-        <elementListCompartment Id="ddc123fc-b333-48f3-bba7-dc3c569c1d5e" absoluteBounds="8.89, 8.835, 1.9700000000000002, 1.7878011067708335" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
-      </nestedChildShapes>
-    </classShape>
     <classShape Id="5127a124-236d-4194-8bcb-99971984ff55" absoluteBounds="11.875, 4.75, 2, 1.5785953776041666">
       <DataClassMoniker Name="/HRDataClassesDataContext/CompaniesView" />
       <nestedChildShapes>
@@ -95,28 +89,28 @@
         <elementListCompartment Id="1e1bbd2d-8f91-4ae5-b05c-d7aa8ebfef43" absoluteBounds="9.265, 1.96, 1.9700000000000002, 1.4031982421875" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <associationConnector edgePoints="[(8.25 : 2.10179768880208); (9.25 : 2.10179768880208)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+    <associationConnector edgePoints="[(8.25 : 2.10179768880208); (9.25 : 2.10179768880208)]" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/HRDataClassesDataContext/Branch/Branch_EmployeeJob" />
       <nodes>
         <classShapeMoniker Id="cd9194ba-2507-4216-8b6e-f3a5f1f38a07" />
         <classShapeMoniker Id="40ce8637-15cb-4c9d-b79c-f63f50727ca5" />
       </nodes>
     </associationConnector>
-    <associationConnector edgePoints="[(10 : 3.75); (10 : 3.4631982421875)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+    <associationConnector edgePoints="[(10 : 3.75); (10 : 3.4631982421875)]" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/HRDataClassesDataContext/Department/Department_EmployeeJob" />
       <nodes>
         <classShapeMoniker Id="78ee13f7-85dd-414f-8943-2c7c5f98447b" />
         <classShapeMoniker Id="40ce8637-15cb-4c9d-b79c-f63f50727ca5" />
       </nodes>
     </associationConnector>
-    <associationConnector edgePoints="[(8.25 : 6.44314697265625); (11.03125 : 6.44314697265625); (11.03125 : 3.4631982421875)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+    <associationConnector edgePoints="[(8.25 : 6.44314697265625); (11.03125 : 6.44314697265625); (11.03125 : 3.4631982421875)]" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/HRDataClassesDataContext/Employee/Employee_EmployeeJob" />
       <nodes>
         <classShapeMoniker Id="fbb8d5ad-78f3-406c-a6b3-5279d5976989" />
         <classShapeMoniker Id="40ce8637-15cb-4c9d-b79c-f63f50727ca5" />
       </nodes>
     </associationConnector>
-    <associationConnector edgePoints="[(8.25 : 5.03774251302083); (10.8906225 : 5.03774251302083); (10.8906225 : 3.4631982421875)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+    <associationConnector edgePoints="[(8.25 : 5.03774251302083); (10.8906225 : 5.03774251302083); (10.8906225 : 3.4631982421875)]" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/HRDataClassesDataContext/Job/Job_EmployeeJob" />
       <nodes>
         <classShapeMoniker Id="5ece39da-e39d-4668-a1f8-b551d191d9e5" />
@@ -127,6 +121,18 @@
       <DataClassMoniker Name="/HRDataClassesDataContext/EmployeeJobsView" />
       <nestedChildShapes>
         <elementListCompartment Id="ef1a42c6-2be8-4f78-8147-1e96c33830ee" absoluteBounds="6.015, 8.335, 1.9700000000000002, 2.7493082682291665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="48dae737-d933-4da7-b53b-ebf3ae299e3f" absoluteBounds="11.875, 1.375, 2, 1.5785953776041666">
+      <DataClassMoniker Name="/HRDataClassesDataContext/EmployeesView" />
+      <nestedChildShapes>
+        <elementListCompartment Id="261c45b4-4911-4209-b61f-343ce1679cc2" absoluteBounds="11.89, 1.835, 1.9700000000000002, 1.0185953776041665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="0143b0e2-455c-4b1c-b699-6c8fbc5700a7" absoluteBounds="9, 8.375, 2, 2.5401025390625">
+      <DataClassMoniker Name="/HRDataClassesDataContext/BranchesView" />
+      <nestedChildShapes>
+        <elementListCompartment Id="525b7056-7857-43c2-a35c-2273c588fb72" absoluteBounds="9.015, 8.835, 1.9700000000000002, 1.9801025390625" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
   </nestedChildShapes>

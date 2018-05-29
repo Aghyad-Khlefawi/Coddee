@@ -21,7 +21,7 @@ namespace HR.Data.Models
 		public System.Int32 Id { get; set; }
 		public System.String FirstName { get; set; }
 		public System.String LastName { get; set; }
-
+        public string CurrentJobTitle { get; set; }
 
         [IgnoreDataMember]
 		public System.Int32 GetKey =>Id;

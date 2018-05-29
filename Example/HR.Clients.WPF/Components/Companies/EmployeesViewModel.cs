@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Coddee;
 using Coddee.Collections;
@@ -17,7 +18,6 @@ namespace HR.Clients.WPF.Components.Companies
         private IEmployeeRepository _employeeRepository;
         private IEmployeeEditor _employeeEditor;
         private IEmployeeJobEditor _employeeJobEditor;
-
 
         private AsyncObservableCollection<EmployeeJob> _employeeJobs;
         public AsyncObservableCollection<EmployeeJob> EmployeeJobs
@@ -76,6 +76,35 @@ namespace HR.Clients.WPF.Components.Companies
             set { SetProperty(ref _addJobCommand, value); }
         }
 
+        protected override void OnDesignMode()
+        {
+            base.OnDesignMode();
+            EmployeeJobs = new AsyncObservableCollection<EmployeeJob>
+            {
+                new EmployeeJob
+                {
+                    BranchName = "Branch1",
+                    CompanyName = "Samsongs",
+                    DepartmentTitle = "Development",
+                    EmployeeFirstName = "Aghyad",
+                    EmployeeLastName = "Khlefawi",
+                    JobTitle = "Developer",
+                    StartDate = DateTime.Now
+                },
+                new EmployeeJob
+                {
+                    BranchName = "Branch1",
+                    CompanyName = "Samsongs",
+                    DepartmentTitle = "Development",
+                    EmployeeFirstName = "Aghyad",
+                    EmployeeLastName = "Khlefawi",
+                    JobTitle = "Developer",
+                    StartDate = DateTime.Now,
+                    EndDate = DateTime.Now.AddYears(1)
+                }
+            };
+        }
+
         public async void AddJob()
         {
             await ToggleBusyAsync(_employeeJobEditor.Initialize());
@@ -88,10 +117,12 @@ namespace HR.Clients.WPF.Components.Companies
             await base.OnInitialization();
             _employeeEditor = CreateViewModel<IEmployeeEditor>();
             _employeeJobEditor = CreateViewModel<IEmployeeJobEditor>();
-
             _employeeRepository = GetRepository<IEmployeeRepository>();
-            EmployeeList = await _employeeRepository.GetItems().ToAsyncObservableCollection();
-            EmployeeList.BindToRepositoryChanges(_employeeRepository);
+
+            EmployeeList = await _employeeRepository.GetItemsWithDetailes().ToAsyncObservableCollection();
+            EmployeeList.BindToRepositoryChangesAsync(_employeeRepository,
+                                                      async e => await _employeeRepository.GetItemWithDetailes(e.Id),
+                                                      e => EmployeeList.First(e.Id));
         }
 
         private async void OnEmployeeSelected(Employee value)
@@ -118,6 +149,7 @@ namespace HR.Clients.WPF.Components.Companies
             _employeeEditor.Add();
             _employeeEditor.Show();
         }
+
         public void Delete()
         {
             _dialogService.CreateConfirmation(string.Format("Are you sure you want to delete the item '{0}'", SelectedEmployee.FullName),
@@ -125,8 +157,8 @@ namespace HR.Clients.WPF.Components.Companies
                                               {
                                                   await _employeeRepository.DeleteItem(SelectedEmployee);
                                                   ToastSuccess();
-                                              }).Show();
+                                              })
+                          .Show();
         }
-
     }
 }

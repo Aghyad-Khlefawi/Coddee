@@ -229,6 +229,7 @@
     <Compile Include="Regions\RegionManager.cs" />
     <Compile Include="Security\ILoginViewModel.cs" />
     <Compile Include="Common\SelectableItem.cs" />
+    <Compile Include="XamlHelpers\ToggleVisibility.cs" />
     <Compile Include="XamlHelpers\UpdatableMarkupExtension.cs" />
     <Compile Include="XamlHelpers\Validate.cs" />
     <Compile Include="WPFModulesDefnitions.cs" />

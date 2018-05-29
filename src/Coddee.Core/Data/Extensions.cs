@@ -114,7 +114,7 @@ namespace Coddee.Data
                 UpdateCollectionOnRepositoryChange<T, TKey, TTarget>(collection, locator, e, target);
             };
         }
-
+        
         /// <summary>
         /// Updates the collection base on the operation type 
         /// </summary>

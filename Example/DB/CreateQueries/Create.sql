@@ -148,7 +148,8 @@ GO
 			dbo.Cities.CountryId,
 			dbo.Cities.Name AS CityName,
 			dbo.Countries.Name AS CountryName,
-			dbo.Companies.Name AS CompanyName
+			dbo.Companies.Name AS CompanyName,
+			(SELECT COUNT(*) FROM dbo.EmployeeJobs WHERE dbo.EmployeeJobs.BranchId = dbo.Branches.Id AND EndDate IS NULL) AS EmployeeCount
 			FROM dbo.Branches
 			INNER JOIN dbo.Cities ON Cities.Id = Branches.CityId
 			INNER JOIN dbo.Countries ON Countries.Id = Cities.CountryId
@@ -172,4 +173,43 @@ GO
  -- WITH CHECK OPTION
  GO
  
+/*---------------------------------------------------*/
+
+/*-----------------------EmployeeJobsView-----------------------*/
+ CREATE VIEW dbo.EmployeeJobsView
+ --WITH ENCRYPTION, SCHEMABINDING, VIEW_METADATA
+ AS
+     SELECT EmployeeJobs.EmployeeId,
+            EmployeeJobs.JobId,
+            EmployeeJobs.DepartmentId,
+            EmployeeJobs.StartDate,
+            EmployeeJobs.EndDate,
+            EmployeeJobs.BranchId,
+			dbo.Branches.Name AS BranchName,
+			dbo.Jobs.Title AS JobTitle,
+			dbo.Departments.Title AS DepartmentTitle,
+			dbo.Employees.FirstName AS EmployeeFirstName,
+			dbo.Employees.LastName AS EmployeeLastName,
+			dbo.Branches.CompanyId,
+			dbo.Companies.Name AS CompanyName
+			FROM dbo.EmployeeJobs 
+			INNER JOIN dbo.Employees ON Employees.Id = EmployeeJobs.EmployeeId
+			INNER JOIN dbo.Jobs ON Jobs.Id = EmployeeJobs.JobId
+			INNER JOIN dbo.Departments ON Departments.Id = EmployeeJobs.DepartmentId
+			INNER JOIN dbo.Branches ON Branches.Id = EmployeeJobs.BranchId
+			INNER JOIN dbo.Companies ON Companies.Id = Branches.CompanyId
+ -- WITH CHECK OPTION
+ GO
+/*--------------------------------------------------------------*/
+/*-----------------------EmployeeView-----------------------*/
+CREATE VIEW dbo.EmployeesView
+--WITH ENCRYPTION, SCHEMABINDING, VIEW_METADATA
+AS
+     SELECT Employees.Id,
+        Employees.FirstName,
+        Employees.LastName,
+		(SELECT TOP 1 dbo.EmployeeJobsView.JobTitle FROM dbo.EmployeeJobsView WHERE EmployeeId = dbo.Employees.Id AND EndDate IS NULL) AS CurrentJobTitle
+		FROM dbo.Employees		
+-- WITH CHECK OPTION
+GO
 /*---------------------------------------------------*/

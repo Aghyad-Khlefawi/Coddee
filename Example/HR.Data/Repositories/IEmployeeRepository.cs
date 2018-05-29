@@ -23,5 +23,7 @@ namespace HR.Data.Repositories
     {
         Task<EmployeeJob> InsertEmployeeJob(EmployeeJob item);
         Task<IEnumerable<EmployeeJob>> GetEmployeeJobsByEmployee(int employeeId);
+        Task<IEnumerable<Employee>> GetItemsWithDetailes();
+        Task<Employee> GetItemWithDetailes(int employeeId);
     }
 }

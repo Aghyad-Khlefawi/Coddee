@@ -36,5 +36,15 @@ namespace HR.Data.Rest.Repositories
         {
             return GetFromController<IEnumerable<EmployeeJob>>(KeyValue(nameof(employeeId), employeeId));
         }
+
+        public Task<IEnumerable<Employee>> GetItemsWithDetailes()
+        {
+            return GetFromController<IEnumerable<Employee>>();
+        }
+
+        public Task<Employee> GetItemWithDetailes(int employeeId)
+        {
+            return GetFromController<Employee>(KeyValue(nameof(employeeId), employeeId));
+        }
     }
 }
