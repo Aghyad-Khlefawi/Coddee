@@ -35,7 +35,8 @@
 
                         </Border>
                         <DockPanel Margin="5">
-                            <Button Background="WhiteSmoke" DockPanel.Dock="Bottom" Margin="0 5 0 0"
+                            <Button Background="{coddee:TintBrush Brush=WhiteSmoke,Amount=100}"
+                                    DockPanel.Dock="Bottom" Margin="0 5 0 0"
                                     coddee:ToggleVisibility.Element="{Binding ElementName=Details}">
                                 <StackPanel Orientation="Horizontal"
                                             HorizontalAlignment="Center">
