@@ -30,5 +30,10 @@ namespace Coddee.Loggers
         /// Writes the log to a file
         /// </summary>
         File = 1 << 2,
+
+        /// <summary>
+        /// In memory logger.
+        /// </summary>
+        InMemmory = 1<<3
     }
 }

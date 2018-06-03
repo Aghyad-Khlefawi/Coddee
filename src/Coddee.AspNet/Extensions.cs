@@ -2,6 +2,7 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Principal;
 using Coddee.AppBuilder;
@@ -53,10 +54,10 @@ namespace Coddee.AspNet
         /// <summary>
         /// Register an <see cref="IContainer"/> object
         /// </summary>
-        public static void AddContainer(
+        public static IContainer AddContainer(
             this IServiceCollection services)
         {
-            var container = new AspCoreContainer(services);
+            return new AspCoreContainer(services);
         }
         /// <summary>
         /// Configure the application to use a <see cref="SingletonRepositoryManager"/> that returns the same repository instance on each call.
@@ -77,7 +78,7 @@ namespace Coddee.AspNet
         public static IRepositoryManager AddLinqRepositories<TDBManager>(
                 this IServiceCollection services,
                 LinqInitializerConfig config,
-                bool registerAsServices=false)
+                bool registerAsServices = false)
                 where TDBManager : ILinqDBManager, new()
         {
             if (services.All(e => e.ServiceType != typeof(IRepositoryManager)))
@@ -140,6 +141,11 @@ namespace Coddee.AspNet
             appBuilder.UseMiddleware<CoddeeDynamicApi>(setContext);
             return appBuilder;
         }
+        public static IApplicationBuilder UseCoddeeDynamicApi2(this IApplicationBuilder appBuilder)
+        {
+            appBuilder.UseMiddleware<CoddeeDynamicApi2>();
+            return appBuilder;
+        }
         public static IApplicationBuilder UseCoddeeDynamicApi(this IApplicationBuilder appBuilder)
         {
             appBuilder.UseMiddleware<CoddeeDynamicApi>(null);
@@ -147,8 +153,24 @@ namespace Coddee.AspNet
         }
         public static IServiceCollection AddDynamicApi(this IServiceCollection services)
         {
-            var manager = new CoddeeControllersManager(services);
-            services.AddSingleton(manager);
+            return AddDynamicApiInternal(services, null);
+        }
+
+        public static IServiceCollection AddDynamicApi(this IServiceCollection services, IEnumerable<Type> controllers)
+        {
+            return AddDynamicApiInternal(services, controllers);
+        }
+        private static IServiceCollection AddDynamicApiInternal(IServiceCollection services,IEnumerable<Type> controllers)
+        {
+            var serviceProvider = services.BuildServiceProvider();
+            var container = serviceProvider.GetService<IContainer>();
+            var manager = new DynamicApiControllersManager();
+            controllers.ForEach(manager.RegisterController);
+            container.RegisterInstance(manager);
+
+            var api = new CoddeeDynamicApi2(container);
+            api.CacheRegisteredControllers();
+            container.RegisterInstance(api);
             return services;
         }
         public static IServiceCollection AddDynamicApi(this IServiceCollection services, Action<CoddeeControllersManager> config)

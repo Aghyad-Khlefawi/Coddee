@@ -23,8 +23,8 @@ namespace HR.Clients.WPF.Main
         public MainViewModel(IApplicationModulesManager modules)
         {
             _modules = modules;
+
         }
-     
         protected override async Task OnInitialization()
         {
             try

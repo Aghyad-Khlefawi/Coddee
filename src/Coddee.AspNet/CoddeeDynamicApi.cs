@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -49,10 +48,10 @@ namespace Coddee.AspNet
 
         /// <inheritdoc />
         public CoddeeDynamicApi(RequestDelegate next,
-            IRepositoryManager repositoryManager,
-            CoddeeControllersManager controllersManager,
+                                IRepositoryManager repositoryManager,
+                                CoddeeControllersManager controllersManager,
                                 IContainer container,
-            Func<IIdentity, object> setContext)
+                                Func<IIdentity, object> setContext)
         {
             _next = next;
             _repositoryManager = repositoryManager;
@@ -93,7 +92,7 @@ namespace Coddee.AspNet
         {
             if (req.Path.HasValue)
             {
-                context.Response.Headers.Add("X-Powered-By","Coddee dynamic API");
+                context.Response.Headers.Add("X-Powered-By", "Coddee dynamic API");
                 _logger?.Log(_eventsSource, $"Request received to path {req.Path.Value}", LogRecordTypes.Debug);
 
                 //  Split the path
@@ -117,20 +116,19 @@ namespace Coddee.AspNet
                     _logger?.Log(_eventsSource, $"Action for path {req.Path.Value} not found", LogRecordTypes.Debug);
                     // Action not found
                     await context.Response.WriteAsync("Action not found.");
-                    context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                    context.Response.StatusCode = (int) HttpStatusCode.InternalServerError;
                     return true;
                 }
 
                 // Check for authentication and authorization
                 if (action.RequiredAuthentication)
                 {
-
                     var authoized = context.User.Identity.IsAuthenticated && (string.IsNullOrEmpty(action.Claim) || context.User.Identity is ClaimsIdentity identity && identity.Claims.Any(e => e.Value == action.Claim));
 
                     if (!authoized)
                     {
                         _logger?.Log(_eventsSource, $"Client is unauthorized for {req.Path.Value}", LogRecordTypes.Debug);
-                        context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                        context.Response.StatusCode = (int) HttpStatusCode.Unauthorized;
                         await context.Response.WriteAsync("Unauthorized.");
                         return true;
                     }
@@ -147,7 +145,7 @@ namespace Coddee.AspNet
                     catch (APIException ex)
                     {
                         _logger?.Log(_eventsSource, $"Parsing parameters for {req.Path.Value} failed", LogRecordTypes.Debug);
-                        context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                        context.Response.StatusCode = (int) HttpStatusCode.BadRequest;
                         await context.Response.WriteAsync(ex.Message);
                         return true;
                     }
@@ -168,7 +166,7 @@ namespace Coddee.AspNet
                         res = await action.Invoke(args);
 
                     _logger?.Log(_eventsSource, $"Action invoked successfully {req.Path.Value}", LogRecordTypes.Debug);
-                    context.Response.StatusCode = (int)HttpStatusCode.OK;
+                    context.Response.StatusCode = (int) HttpStatusCode.OK;
                     if (action.RetrunsValue)
                     {
                         context.Response.ContentType = "application/json";
@@ -182,26 +180,27 @@ namespace Coddee.AspNet
                     {
                         var apiEx = new APIException(dbexc);
                         var ex = JsonConvert.SerializeObject(apiEx);
-                        context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                        context.Response.StatusCode = (int) HttpStatusCode.BadRequest;
                         await context.Response.WriteAsync(ex);
                     }
                     else if (e.InnerException is AggregateException aggregate && aggregate.InnerExceptions.First() is DBException adbexc)
                     {
                         var apiEx = new APIException(adbexc);
                         var ex = JsonConvert.SerializeObject(apiEx);
-                        context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                        context.Response.StatusCode = (int) HttpStatusCode.BadRequest;
                         await context.Response.WriteAsync(ex);
                     }
                     else
                     {
                         var ex = JsonConvert.SerializeObject(new APIException(e));
-                        context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                        context.Response.StatusCode = (int) HttpStatusCode.BadRequest;
                         await context.Response.WriteAsync(ex);
                     }
-
                 }
+
                 return true;
             }
+
             return false;
         }
 
@@ -229,9 +228,9 @@ namespace Coddee.AspNet
 
                 // find the requested method info
                 var method = repository
-                    .GetType()
-                    .GetMethods()
-                    .FirstOrDefault(e => e.Name.Equals(actionName, StringComparison.InvariantCultureIgnoreCase));
+                             .GetType()
+                             .GetMethods()
+                             .FirstOrDefault(e => e.Name.Equals(actionName, StringComparison.InvariantCultureIgnoreCase));
 
                 var interfaceMethod = repository.ImplementedInterface
                                                 .GetMethods(BindingFlags.FlattenHierarchy)
@@ -267,6 +266,7 @@ namespace Coddee.AspNet
                         action.Claim = authAttr.Claim;
                     }
                 }
+
                 if (!_apiActions.ContainsKey(path))
                     _apiActions.TryAdd(path, action);
             }
@@ -274,6 +274,7 @@ namespace Coddee.AspNet
             {
                 _logger?.Log(_eventsSource, $"repository '{repositoryName}' not found", LogRecordTypes.Debug);
             }
+
             return action;
         }
 
@@ -318,20 +319,24 @@ namespace Coddee.AspNet
                                     }
                                     else
                                     {
-                                        args.Add(JsonConvert.DeserializeObject(queryParam.Value, parameterInfo.Type, new IsoDateTimeConverter
-                                        {
-                                            DateTimeFormat = DefaultDateTimeFormat
-                                        }));
+                                        args.Add(JsonConvert.DeserializeObject(queryParam.Value,
+                                                                               parameterInfo.Type,
+                                                                               new IsoDateTimeConverter
+                                                                               {
+                                                                                   DateTimeFormat = DefaultDateTimeFormat
+                                                                               }));
                                     }
                                 }
                                 catch (Exception)
                                 {
                                     args.Add(JsonConvert.DeserializeObject($"\"{queryParam.Value}\"", parameterInfo.Type));
                                 }
+
                                 found = true;
                                 break;
                             }
                         }
+
                         if (!found)
                             throw new APIException(APIExceptionCodes.MissingParamters, $"Missing parameters '{parameterInfo.Name}'");
                     }
@@ -352,6 +357,7 @@ namespace Coddee.AspNet
                         else
                             bodyParams = JObject.Parse(text);
                     }
+
                     if (isPrimitveParam)
                     {
                         AddPrimitiveParam(args, premitiveParam, param.ElementAt(0));
@@ -367,6 +373,7 @@ namespace Coddee.AspNet
                         }
                 }
             }
+
             return args;
         }
 
@@ -377,6 +384,7 @@ namespace Coddee.AspNet
                 args.Add(value.ToObject(parameterInfo.Type));
             }
         }
+
         private static void AddPrimitiveParam(List<object> args, JToken bodyParams, ActionParameter parameterInfo)
         {
             args.Add(bodyParams.ToObject(parameterInfo.Type));

@@ -13,6 +13,8 @@ namespace Coddee.AspNet
     public class AspCoreContainer : IContainer
     {
         private readonly IServiceCollection _service;
+        private IServiceProvider _provider;
+
 
         /// <inheritdoc />
         public AspCoreContainer(IServiceCollection service)
@@ -24,6 +26,7 @@ namespace Coddee.AspNet
         public void RegisterInstance(Type type, object instance)
         {
             _service.AddSingleton(type, instance);
+            _provider = _service.BuildServiceProvider();
         }
 
         /// <inheritdoc />
@@ -44,18 +47,19 @@ namespace Coddee.AspNet
         public void RegisterType<T, TImplementation>() where TImplementation : T
         {
             _service.AddTransient(typeof(T), typeof(TImplementation));
+            _provider = _service.BuildServiceProvider();
         }
 
         /// <inheritdoc />
         public object Resolve(Type type)
         {
-            return _service.BuildServiceProvider().GetService(type);
+            return GetProvider().GetService(type);
         }
 
         /// <inheritdoc />
         public T Resolve<T>()
         {
-            return _service.BuildServiceProvider().GetService<T>();
+            return GetProvider().GetService<T>();
         }
 
         /// <inheritdoc />
@@ -68,6 +72,11 @@ namespace Coddee.AspNet
         public bool IsRegistered(Type type)
         {
             return _service.Any(e => e.ServiceType == type);
+        }
+
+        IServiceProvider GetProvider()
+        {
+            return _provider ?? (_provider = _service.BuildServiceProvider());
         }
     }
 }

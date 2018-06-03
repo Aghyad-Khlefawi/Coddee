@@ -374,6 +374,7 @@
     <Compile Include="AspCoreContainer.cs" />
     <Compile Include="CoddeeControllersManager.cs" />
     <Compile Include="CoddeeDynamicApi.cs" />
+    <Compile Include="CoddeeDynamicApi2.cs" />
     <Compile Include="DelegateAction.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="IApiAction.cs" />

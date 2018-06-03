@@ -2,16 +2,19 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
+using System.Threading.Tasks;
 using Coddee;
 using Coddee.AppBuilder;
 using Coddee.AspNet;
 using Coddee.Loggers;
 using Coddee.Windows.AppBuilder;
 using HR.Data.LinqToSQL;
+using HR.Data.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -63,10 +66,17 @@ namespace HR.Web
                     ValidateLifetime = true,
                 };
             });
-            services.AddDynamicApi(config =>
+
+            services.AddDynamicApi(new[]
             {
-                config.RegisterController<AuthController>();
+                typeof(AuthController),
+                typeof(CompanyController),
             });
+
+            //services.AddDynamicApi(config =>
+            //{
+            //    config.RegisterController<AuthController>();
+            //});
 
             var temp = new DebugOuputLogger();
             temp.Initialize(LogRecordTypes.Debug);
@@ -81,7 +91,19 @@ namespace HR.Web
 
             app.UseAuthentication();
 
-            app.UseCoddeeDynamicApi(i => new { Username = ((ClaimsIdentity)i).Claims.FirstOrDefault(e => e.Type == "username") });
+            app.UseCoddeeDynamicApi2();
+        }
+    }
+
+    public class CompanyController
+    {
+        [ApiAction("Company/GetCompaniesById", HttpMethod.Post)]
+        public Task<IEnumerable<Company>> GetCompaniesById(Company id)
+        {
+            return Task.Run(() => new[]
+            {
+                new Company {Name = "Company123"}
+            }.AsEnumerable());
         }
     }
 }

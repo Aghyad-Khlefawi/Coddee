@@ -48,7 +48,7 @@
                                 </StackPanel>
                             </Button>
                             <DockPanel x:Name="Details" DockPanel.Dock="Bottom" Visibility="Collapsed">
-                                <Label>Details</Label>
+                                <ItemsControl ItemsSource="{Binding Employees}"></ItemsControl>
                             </DockPanel>
                             <StackPanel>
                                 <Label Content="{Binding Name}"

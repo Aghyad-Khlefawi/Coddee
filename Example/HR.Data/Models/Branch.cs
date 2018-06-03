@@ -10,20 +10,24 @@
 
 using Coddee;
 using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 
 namespace HR.Data.Models
 {
-    
+
     public class Branch : IUniqueObject<int>, IEquatable<IUniqueObject<int>>, IEquatable<Branch>
     {
-		public System.Int32 Id { get; set; }
-		public System.String Name { get; set; }
-		public System.Int32 CompanyId { get; set; }
-		public System.Int32 CityId { get; set; }
-		[IgnoreDataMember]
-		public System.Int32 GetKey =>Id;
+        public System.Int32 Id { get; set; }
+        public System.String Name { get; set; }
+        public System.Int32 CompanyId { get; set; }
+        public System.Int32 CityId { get; set; }
+
+        public List<Employee> Employees { get; set; }
+
+        [IgnoreDataMember]
+        public System.Int32 GetKey => Id;
 
         public int CountryId { get; set; }
 
@@ -34,7 +38,7 @@ namespace HR.Data.Models
 
         public override bool Equals(object obj)
         {
-			var other = obj as IUniqueObject<System.Int32>;
+            var other = obj as IUniqueObject<System.Int32>;
             if (other != null)
             {
                 return this.Equals(other);
@@ -50,7 +54,7 @@ namespace HR.Data.Models
         }
         public virtual bool Equals(IUniqueObject<int> other)
         {
-            if (((this.GetKey != -1) 
+            if (((this.GetKey != -1)
                         && (other.GetKey != -1)))
             {
                 return (this.GetKey == other.GetKey);
@@ -62,7 +66,7 @@ namespace HR.Data.Models
         }
         public virtual bool Equals(Branch other)
         {
-            if (((this.GetKey != -1) 
+            if (((this.GetKey != -1)
                         && (other.GetKey != -1)))
             {
                 return (this.GetKey == other.GetKey);

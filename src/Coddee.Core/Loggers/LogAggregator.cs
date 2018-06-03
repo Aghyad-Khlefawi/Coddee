@@ -29,7 +29,6 @@ namespace Coddee.Loggers
         /// <inheritdoc />
         protected override void CommitLog(LogRecord record)
         {
-            _records.Add(record);
             foreach (var logger in _loggers.ToList())
                 logger.Log(record);
         }

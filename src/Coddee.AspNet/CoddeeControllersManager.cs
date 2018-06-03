@@ -59,9 +59,12 @@ namespace Coddee.AspNet
 
         public void RegisterController<T>() where T : class
         {
-            var type = typeof(T);
+            RegisterController(typeof(T));
+        }
+        public void RegisterController(Type type)
+        {
             _controllerTypes.Add(type);
-            _container.AddTransient<T>();
+            _container.AddTransient(type);
         }
     }
 }
