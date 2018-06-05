@@ -372,12 +372,23 @@
     <Compile Include="ApiActionAttribute.cs" />
     <Compile Include="ApiControllerBase.cs" />
     <Compile Include="AspCoreContainer.cs" />
-    <Compile Include="CoddeeControllersManager.cs" />
-    <Compile Include="CoddeeDynamicApi.cs" />
-    <Compile Include="CoddeeDynamicApi2.cs" />
-    <Compile Include="DelegateAction.cs" />
+    <Compile Include="DynamicApi\ApiActionsCache.cs" />
+    <Compile Include="DynamicApi\DynamicApi.cs" />
+    <Compile Include="DynamicApi\DynamicApiActionBase.cs" />
+    <Compile Include="DynamicApi\DynamicApiActionParameter.cs" />
+    <Compile Include="DynamicApi\DynamicApiActionParameterValue.cs" />
+    <Compile Include="DynamicApi\DynamicApiActionPath.cs" />
+    <Compile Include="DynamicApi\DynamicApiConfigurations.cs" />
+    <Compile Include="DynamicApi\DynamicApiControllersAction.cs" />
+    <Compile Include="DynamicApi\DynamicApiControllersManager.cs" />
+    <Compile Include="DynamicApi\DynamicApiException.cs" />
+    <Compile Include="DynamicApi\DynamicApiParametersParser.cs" />
+    <Compile Include="DynamicApi\DynamicApiRepositoryAction.cs" />
+    <Compile Include="DynamicApi\DynamicApiRequest.cs" />
+    <Compile Include="DynamicApi\HttpMethod.cs" />
+    <Compile Include="DynamicApi\IAuthorizationValidator.cs" />
+    <Compile Include="DynamicApi\IDynamicApiAction.cs" />
     <Compile Include="Extensions.cs" />
-    <Compile Include="IApiAction.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

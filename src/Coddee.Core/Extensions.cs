@@ -319,18 +319,21 @@ namespace Coddee
             if (level != 0)
                 for (int i = 0; i < level + 1; i++)
                 {
-                    append += "\t";
+                    append += "  ";
                 }
-            execptionInfoBuilder.Append($"\n{append}\tException Type : {exception.GetType().Name}");
-            execptionInfoBuilder.Append($"\n{append}\tDetails: {exception.Message}");
+            execptionInfoBuilder.Append($"\n{append}  Exception Type : {exception.GetType().Name}");
+            execptionInfoBuilder.Append($"\n{append}  Details: {exception.Message}");
             if (debuginfo)
             {
-                execptionInfoBuilder.Append($"\n{append}\tSource: {exception.Source}");
-                execptionInfoBuilder.Append($"\n{append}\tTrace: {exception.StackTrace}");
+                execptionInfoBuilder.Append($"\n{append}  Source: {exception.Source}");
+                execptionInfoBuilder.Append($"\n{append}  Trace: {exception.StackTrace}");
             }
-            execptionInfoBuilder.Append("\n");
+
             if (exception.InnerException != null)
+            {
+                execptionInfoBuilder.Append("\n");
                 execptionInfoBuilder.Append(exception.InnerException.BuildExceptionString(level + 1, debuginfo));
+            }
             return execptionInfoBuilder.ToString();
         }
 

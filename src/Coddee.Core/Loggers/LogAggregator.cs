@@ -12,7 +12,11 @@ namespace Coddee.Loggers
     public class LogAggregator : LoggerBase
     {
         private readonly IList<ILogger> _loggers;
-        private readonly IList<LogRecord> _records;
+
+        /// <summary>
+        /// The log record inserted to the logger.
+        /// </summary>
+        public IList<LogRecord> Records { get; }
 
         /// <summary>
         /// The allowed logger types.
@@ -23,7 +27,14 @@ namespace Coddee.Loggers
         public LogAggregator()
         {
             _loggers = new List<ILogger>();
-            _records = new List<LogRecord>();
+            Records = new List<LogRecord>();
+        }
+
+        /// <inheritdoc />
+        public override void Log(LogRecord record)
+        {
+            base.Log(record);
+            Records.Add(record);
         }
 
         /// <inheritdoc />
@@ -40,7 +51,7 @@ namespace Coddee.Loggers
         {
             if (!AllowedTypes.HasFlag(type))
                 return;
-            foreach (var log in _records.ToList())
+            foreach (var log in Records.ToList())
                 if (log.Type >= MinimumLevel)
                     logger.Log(log);
             _loggers.Add(logger);

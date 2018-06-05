@@ -67,7 +67,10 @@ namespace HR.Web
                 };
             });
 
-            services.AddDynamicApi(new[]
+            var config = DynamicApiConfigurations.Default;
+            config.UseLoggingPage = true;
+
+            services.AddDynamicApi(config, new[]
             {
                 typeof(AuthController),
                 typeof(CompanyController),
@@ -91,7 +94,7 @@ namespace HR.Web
 
             app.UseAuthentication();
 
-            app.UseCoddeeDynamicApi2();
+            app.UseCoddeeDynamicApi();
         }
     }
 

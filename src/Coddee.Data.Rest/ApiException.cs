@@ -66,12 +66,12 @@ namespace Coddee.Data
         /// <summary>
         /// Indicates that the request is missing a parameter.
         /// </summary>
-        public static int MissingParamters = 0;
+        public static int MissingParamters = 200;
 
         /// <summary>
         /// Indicates that the server returned an empty response.
         /// </summary>
-        public static int EmptyResponse = 1;
+        public static int EmptyResponse = 201;
 
 
     }

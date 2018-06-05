@@ -2,6 +2,7 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
 using System;
+using System.Text;
 
 namespace Coddee.Loggers
 {
@@ -59,5 +60,16 @@ namespace Coddee.Loggers
         /// The exception object in case the record type is Error
         /// </summary>
         public Exception Exception { get; set; }
+
+        /// <inheritdoc />
+        public override string ToString()
+        {
+            var eventInfoBuilder = new StringBuilder();
+            eventInfoBuilder.Append($">[{DateTime.Now}]");
+            eventInfoBuilder.Append($"  [{Type}]");
+            eventInfoBuilder.Append($"  [{Source}]");
+            eventInfoBuilder.Append($"  {Content}");
+            return eventInfoBuilder.ToString();
+        }
     }
 }

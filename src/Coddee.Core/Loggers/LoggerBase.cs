@@ -103,11 +103,7 @@ namespace Coddee.Loggers
         /// <returns></returns>
         protected string BuildEvent(LogRecord log, bool insertNewLine = false)
         {
-            var eventInfoBuilder = new StringBuilder();
-            eventInfoBuilder.Append($">[{DateTime.Now}]");
-            eventInfoBuilder.Append($"  [{log.Type}]");
-            eventInfoBuilder.Append($"  [{log.Source}]");
-            eventInfoBuilder.Append($"  {log.Content}");
+            var eventInfoBuilder = new StringBuilder(log.ToString());
             if (insertNewLine)
                 eventInfoBuilder.Append(Environment.NewLine);
             return eventInfoBuilder.ToString();

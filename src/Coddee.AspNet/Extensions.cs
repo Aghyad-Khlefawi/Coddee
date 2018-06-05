@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Principal;
 using Coddee.AppBuilder;
 using Coddee.Data;
 using Coddee.Data.LinqToSQL;
@@ -18,8 +17,14 @@ using IApplicationBuilder = Microsoft.AspNetCore.Builder.IApplicationBuilder;
 
 namespace Coddee.AspNet
 {
+    /// <summary>
+    /// Extensions methods for ASP Core.
+    /// </summary>
     public static class Extensions
     {
+        /// <summary>
+        /// Register an instance of <see cref="ILObjectsMapper"/>.
+        /// </summary>
         public static IServiceCollection AddILObjectMapper(this IServiceCollection services)
         {
             var mapper = new ILObjectsMapper();
@@ -27,6 +32,9 @@ namespace Coddee.AspNet
             return services;
         }
 
+        /// <summary>
+        /// Configure the application logging service.
+        /// </summary>
         public static IServiceCollection AddLogger(this IServiceCollection services,
                                                    LoggerOptions options)
         {
@@ -75,6 +83,9 @@ namespace Coddee.AspNet
             services.AddSingleton<IRepositoryManager>(new TransientRepositoryManager());
         }
 
+        /// <summary>
+        /// Configure and register linq repositories.
+        /// </summary>
         public static IRepositoryManager AddLinqRepositories<TDBManager>(
                 this IServiceCollection services,
                 LinqInitializerConfig config,
@@ -104,6 +115,9 @@ namespace Coddee.AspNet
             return repositoryManager;
         }
 
+        /// <summary>
+        /// Configure and register Mongo DB repositories.
+        /// </summary>
         public static IServiceCollection AddMongoRepositoryManager(
             this IServiceCollection services,
             string connectionString,
@@ -128,57 +142,64 @@ namespace Coddee.AspNet
             }
             return services;
         }
+
+        /// <summary>
+        /// Use the default routing used by the library.
+        /// </summary>
         public static IApplicationBuilder UseMVCWithCoddeeRoutes(this IApplicationBuilder app, string apiPrefix)
         {
             return app.UseMvc(routes => { routes.MapRoute("default", $"{apiPrefix}/{{controller}}/{{action}}"); });
         }
+
+        /// <inheritdoc cref="UseMVCWithCoddeeRoutes(Microsoft.AspNetCore.Builder.IApplicationBuilder,string)"/>
         public static IApplicationBuilder UseMVCWithCoddeeRoutes(this IApplicationBuilder app)
         {
             return app.UseMVCWithCoddeeRoutes("api");
         }
-        public static IApplicationBuilder UseCoddeeDynamicApi(this IApplicationBuilder appBuilder, Func<IIdentity, object> setContext)
-        {
-            appBuilder.UseMiddleware<CoddeeDynamicApi>(setContext);
-            return appBuilder;
-        }
-        public static IApplicationBuilder UseCoddeeDynamicApi2(this IApplicationBuilder appBuilder)
-        {
-            appBuilder.UseMiddleware<CoddeeDynamicApi2>();
-            return appBuilder;
-        }
-        public static IApplicationBuilder UseCoddeeDynamicApi(this IApplicationBuilder appBuilder)
-        {
-            appBuilder.UseMiddleware<CoddeeDynamicApi>(null);
-            return appBuilder;
-        }
+
+        /// <summary>
+        /// Register Coddee dynamic API.
+        /// </summary>
         public static IServiceCollection AddDynamicApi(this IServiceCollection services)
         {
-            return AddDynamicApiInternal(services, null);
+            return AddDynamicApi(services, DynamicApiConfigurations.Default, null);
         }
 
+        /// <summary>
+        /// Register Coddee dynamic API.
+        /// </summary>
         public static IServiceCollection AddDynamicApi(this IServiceCollection services, IEnumerable<Type> controllers)
         {
-            return AddDynamicApiInternal(services, controllers);
+            return AddDynamicApi(services, DynamicApiConfigurations.Default, controllers);
         }
-        private static IServiceCollection AddDynamicApiInternal(IServiceCollection services,IEnumerable<Type> controllers)
+
+        /// <summary>
+        /// Register Coddee dynamic API.
+        /// </summary>
+        public static IServiceCollection AddDynamicApi(this IServiceCollection services, DynamicApiConfigurations config, IEnumerable<Type> controllers)
         {
             var serviceProvider = services.BuildServiceProvider();
             var container = serviceProvider.GetService<IContainer>();
             var manager = new DynamicApiControllersManager();
+
+            container.RegisterInstance(config);
+
             controllers.ForEach(manager.RegisterController);
             container.RegisterInstance(manager);
 
-            var api = new CoddeeDynamicApi2(container);
+            var api = new DynamicApi(container);
             api.CacheRegisteredControllers();
             container.RegisterInstance(api);
             return services;
         }
-        public static IServiceCollection AddDynamicApi(this IServiceCollection services, Action<CoddeeControllersManager> config)
+
+        /// <summary>
+        /// Add Coddee <see cref="DynamicApi"/> middleware
+        /// </summary>
+        public static IApplicationBuilder UseCoddeeDynamicApi(this IApplicationBuilder appBuilder)
         {
-            var manager = new CoddeeControllersManager(services);
-            config(manager);
-            services.AddSingleton(manager);
-            return services;
+            appBuilder.UseMiddleware<DynamicApi>();
+            return appBuilder;
         }
     }
 }

@@ -42,7 +42,7 @@ namespace Coddee.WPF.DebugTool
         }
 
         private ViewModelExplorerViewModel _viewModelExplorer;
-        
+
         /// <summary>
         /// <see cref="ViewModelExplorerViewModel"/>
         /// </summary>
@@ -81,7 +81,7 @@ namespace Coddee.WPF.DebugTool
             var shellWindow = (Window)Resolve<IShell>();
             shellWindow.KeyDown += (sender, args) =>
             {
-                if (_toggleCondition(args))
+                if (_toggleCondition != null && _toggleCondition(args))
                     ToggleWindow();
             };
         }
@@ -122,7 +122,7 @@ namespace Coddee.WPF.DebugTool
         {
             ViewModelInfo = viewModelInfo;
             Name = viewModelInfo.ViewModel.__Name;
-            
+
         }
 
         /// <summary>
@@ -140,7 +140,7 @@ namespace Coddee.WPF.DebugTool
             get { return _name; }
             set { SetProperty(ref this._name, value); }
         }
-        
+
         /// <summary>
         /// Triggered when the navigation to ViewModel is required.
         /// </summary>
