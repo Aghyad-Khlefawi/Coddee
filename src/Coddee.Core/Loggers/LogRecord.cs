@@ -65,7 +65,7 @@ namespace Coddee.Loggers
         public override string ToString()
         {
             var eventInfoBuilder = new StringBuilder();
-            eventInfoBuilder.Append($">[{DateTime.Now}]");
+            eventInfoBuilder.Append($">[{Date}]");
             eventInfoBuilder.Append($"  [{Type}]");
             eventInfoBuilder.Append($"  [{Source}]");
             eventInfoBuilder.Append($"  {Content}");
