@@ -22,6 +22,12 @@ namespace Coddee.AspNet
             _service = service;
             _service.AddSingleton<IContainer>(this);
         }
+
+        /// <summary>
+        /// Returns the internal service provider instance.
+        /// </summary>
+        public IServiceProvider ServiceProvider => _provider;
+
         /// <inheritdoc />
         public void RegisterInstance(Type type, object instance)
         {

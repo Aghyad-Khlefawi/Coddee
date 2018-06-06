@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Linq;
-using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -26,24 +24,26 @@ namespace Coddee.AspNet
         private readonly IRepositoryManager _repositoryManager;
         private readonly IsoDateTimeConverter _dateTimeConverter;
         private readonly IAuthorizationValidator _authorizationValidator;
+        private readonly PagesProvider _pagesProvider;
+        private readonly RepositoryActionLoactor _repositoryActionLoactor;
         private long _lastId;
 
         /// <inheritdoc />
         public DynamicApi(IContainer container)
         {
-            _configurations = container.IsRegistered<DynamicApiConfigurations>() ?
-                                  container.Resolve<DynamicApiConfigurations>() :
-                                  DynamicApiConfigurations.Default;
-
+            _configurations = container.Resolve<DynamicApiConfigurations>();
 
             _dateTimeConverter = new IsoDateTimeConverter
             {
                 DateTimeFormat = _configurations.DateTimeForamt
             };
 
+            _pagesProvider = new PagesProvider();
             _cache = new ApiActionsCache();
             _parser = new DynamicApiParametersParser(_dateTimeConverter);
             _authorizationValidator = _configurations.AuthorizationValdiator;
+            _repositoryActionLoactor = new RepositoryActionLoactor();
+
 
             if (container.IsRegistered<DynamicApiControllersManager>())
                 _controllersManager = container.Resolve<DynamicApiControllersManager>();
@@ -83,48 +83,11 @@ namespace Coddee.AspNet
                 var request = CreateApiRequest(context);
                 Log(request, $"Request is valid, requesting [Controller:{request.RequestedActionPath.RequestedController}] [Action:{request.RequestedActionPath.RequestedAction}]");
 
-                async Task HandleRequest()
-                {
-
-
-                    IDynamicApiAction action = _cache.GetAction(request);
-                    Log(request, $"Checking cache for action.");
-
-                    if (action == null)
-                    {
-                        Log(request, $"Action not found in cache.");
-                        Log(request, $"Looking in repository actions.");
-
-                        action = CreateRepositoryAction(request);
-                        if (action == null)
-                            throw new DynamicApiException(DynamicApiExceptionCodes.ActionNotFound, "Action not found in repository.", request);
-
-                        Log(request, $"Repository action created.");
-                    }
-                    else
-                    {
-                        Log(request, $"Action found in cache.");
-                    }
-
-
-                    Log(request, $"Parsing request parameters.");
-                    var parameters = await _parser.ParseParameters(action, request);
-
-                    if (action.RequiresAuthorization)
-                    {
-                        if (!_authorizationValidator.IsAuthorized(action, request))
-                            throw new DynamicApiException(DynamicApiExceptionCodes.Unauthorized, "Unauthorized client.", request);
-                    }
-
-                    Log(request, $"Invoking action.");
-                    await InvokeAction(context, action, parameters);
-                    Log(request, $"Response completed in {(DateTime.Now - request.Date).Milliseconds} ms");
-                }
 
                 DynamicApiException exception = null;
                 try
                 {
-                    await Task.Run(HandleRequest);
+                    await Task.Run(() => HandleRequest(request));
                 }
                 catch (DynamicApiException dynamicApiException)
                 {
@@ -136,13 +99,72 @@ namespace Coddee.AspNet
                 }
 
                 if (exception != null)
-                    await HandleException(exception);
+                    await HandleException(request, exception);
             }
 
             else
             {
                 await next(context);
             }
+        }
+
+        private async Task HandleRequest(DynamicApiRequest request)
+        {
+            IDynamicApiAction action = _cache.GetAction(request);
+            Log(request, $"Checking cache for action.");
+
+            if (action == null)
+            {
+                Log(request, $"Action not found in cache.");
+                Log(request, $"Looking in repository actions.");
+
+                action = _repositoryActionLoactor.CreateRepositoryAction(_repositoryManager, request);
+                if (action == null)
+                    throw new DynamicApiException(DynamicApiExceptionCodes.ActionNotFound, "Action not found.", request);
+                _cache.AddAction(action);
+                Log(request, $"Repository action created.");
+            }
+            else
+            {
+                Log(request, $"Action found in cache.");
+            }
+
+
+            Log(request, $"Parsing request parameters.");
+            var parameters = await _parser.ParseParameters(action, request);
+
+            if (action.RequiresAuthorization)
+            {
+                if (!_authorizationValidator.IsAuthorized(action, request))
+                    throw new DynamicApiException(DynamicApiExceptionCodes.Unauthorized, "Unauthorized client.", request);
+            }
+
+            Log(request, $"Invoking action.");
+            var resLength = await InvokeAction(request, action, parameters);
+
+            Log(request, $"Response completed in {(DateTime.Now - request.Date).Milliseconds} ms, content size:{SizeToString(resLength)}");
+        }
+
+        private string SizeToString(long resLength)
+        {
+            const int kb = 1024;
+            const int mb = 1024 * 1024;
+            const int gb = 1024 * 1024 * 1024;
+
+            if (resLength < kb)
+            {
+                return $"{resLength} B";
+            }
+            if (resLength < mb)
+            {
+                return $"{(float)resLength / kb} KB";
+            }
+            if (resLength < gb)
+            {
+                return $"{(float)resLength / mb} MB";
+            }
+
+            return $"{resLength} B";
         }
 
         private async Task ShowLogPage(HttpContext context)
@@ -157,76 +179,55 @@ namespace Coddee.AspNet
             await context.Response.WriteAsync(log.ToString());
         }
 
-        private async Task HandleException(DynamicApiException exception)
+        private async Task HandleException(DynamicApiRequest request, DynamicApiException exception)
         {
             Log(exception);
+            var statusCode = request.HttpContext.Response.StatusCode = GetExceptionStatusCode(exception);
+            request.HttpContext.Response.Headers.Add("X-Coddee-Exception", exception.Code.ToString());
 
+            if (_configurations.UseErrorPages)
+            {
+                string content = null;
+                if (_configurations.ErrorPagesConfiguration.DisplayExceptionDetailes)
+                    content = exception.BuildExceptionString(debuginfo: true);
+                string page = _pagesProvider.GetErrorPage(statusCode, content);
+                await request.HttpContext.Response.WriteAsync(page);
+            }
+            else if (_configurations.ReturnException)
+            {
+                await request.HttpContext.Response.WriteAsync(JsonConvert.SerializeObject(exception));
+            }
         }
 
-        private async Task InvokeAction(HttpContext context, IDynamicApiAction action, DynamicApiActionParameterValue[] parameters)
+
+
+        private int GetExceptionStatusCode(DynamicApiException exception)
+        {
+            switch (exception.Code)
+            {
+                case DynamicApiExceptionCodes.Unauthorized:
+                    return StatusCodes.Status401Unauthorized;
+                case DynamicApiExceptionCodes.ActionNotFound:
+                    return StatusCodes.Status404NotFound;
+                case DynamicApiExceptionCodes.MissingParameter:
+                    return StatusCodes.Status400BadRequest;
+                default:
+                    return StatusCodes.Status500InternalServerError;
+            }
+        }
+
+        private async Task<long> InvokeAction(DynamicApiRequest request, IDynamicApiAction action, DynamicApiActionParameterValue[] parameters)
         {
             var value = await action.Invoke(parameters);
-            await context.Response.WriteAsync(JsonConvert.SerializeObject(value, _dateTimeConverter));
+            var res = JsonConvert.SerializeObject(value, _dateTimeConverter);
+            var response = request.HttpContext.Response;
+            response.Headers.Add("Content-Type", "application/json");
+            await response.WriteAsync(res);
+            return Encoding.UTF8.GetByteCount(res);
+
         }
 
-        private IDynamicApiAction CreateRepositoryAction(DynamicApiRequest request)
-        {
-            if (_repositoryManager == null)
-                return null;
 
-            var repositoryName = request.RequestedActionPath.RequestedController;
-            var repository = _repositoryManager.GetRepository(repositoryName);
-            if (repository == null)
-                return null;
-
-            var actionName = request.RequestedActionPath.RequestedAction;
-            if (actionName == "getitem")
-                actionName = "get_item";
-
-            var method = repository
-                         .GetType()
-                         .GetMethods()
-                         .FirstOrDefault(e => e.Name.Equals(actionName, StringComparison.InvariantCultureIgnoreCase));
-
-            var interfaceMethod = GetInterfaceMethod(repository, actionName);
-
-            if (method == null || interfaceMethod == null)
-                return null;
-
-            var action = new DynamicApiRepositoryAction
-            {
-                ReturnType = interfaceMethod.ReturnType,
-                RepositoryManager = _repositoryManager,
-                Method = method,
-                RepositoryName = repositoryName,
-                Parameters = DynamicApiActionParameter.GetParameters(interfaceMethod),
-                Path = new DynamicApiActionPath(repositoryName, actionName),
-                ReturnsValue = interfaceMethod.ReturnType != typeof(Task) && interfaceMethod.ReturnType != typeof(void),
-            };
-
-            return action;
-        }
-
-        private static MethodInfo GetInterfaceMethod(IRepository repository, string actionName)
-        {
-            MethodInfo GetMethodFromType(Type type)
-            {
-                return type.GetMethods()
-                       .FirstOrDefault(e => e.Name.Equals(actionName, StringComparison.InvariantCultureIgnoreCase));
-            }
-
-            var method = GetMethodFromType(repository.ImplementedInterface);
-            if (method == null)
-            {
-                foreach (var interf in repository.ImplementedInterface.GetInterfaces())
-                {
-                    method = GetMethodFromType(interf);
-                    if (method != null)
-                        return method;
-                }
-            }
-            return method;
-        }
 
         /// <summary>
         /// Add the controllers to the cache.
@@ -268,8 +269,7 @@ namespace Coddee.AspNet
 
         private void SetHeaders(HttpResponse response)
         {
-            response.Headers.Add("X-Powered-By", "Coddee Dynamic API");
-            response.Headers.Add("Content-Type", "application/json");
+            response.Headers.Add("X-Coddee-DAPI", "v1");
         }
 
         private bool ValidateRequest(HttpContext context)

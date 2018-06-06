@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Coddee.AspNet
 {
@@ -7,6 +8,14 @@ namespace Coddee.AspNet
     /// </summary>
     public class DynamicApiControllersAction : DynamicApiActionBase
     {
+        private readonly IContainer _container;
+
+        /// <inheritdoc />
+        public DynamicApiControllersAction(IContainer container)
+        {
+            _container = container;
+        }
+
         /// <summary>
         /// They type of the controller.
         /// </summary>
@@ -15,7 +24,7 @@ namespace Coddee.AspNet
         /// <inheritdoc />
         protected override object GetInstnaceOwner()
         {
-            return Activator.CreateInstance(ControllerType);
+            return ActivatorUtilities.CreateInstance(((AspCoreContainer)_container).ServiceProvider, ControllerType);
         }
     }
 }

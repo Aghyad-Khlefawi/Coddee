@@ -388,6 +388,8 @@
     <Compile Include="DynamicApi\HttpMethod.cs" />
     <Compile Include="DynamicApi\IAuthorizationValidator.cs" />
     <Compile Include="DynamicApi\IDynamicApiAction.cs" />
+    <Compile Include="DynamicApi\PagesProvider.cs" />
+    <Compile Include="DynamicApi\RepositoryActionLoactor.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -422,6 +424,12 @@
   <ItemGroup>
     <Analyzer Include="..\..\packages\Microsoft.CodeAnalysis.Analyzers.1.1.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.Analyzers.dll" />
     <Analyzer Include="..\..\packages\Microsoft.CodeAnalysis.Analyzers.1.1.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.CSharp.Analyzers.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Pages\Error.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Pages\ErrorWithDetailes.html" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\..\packages\NETStandard.Library.2.0.1\build\netstandard2.0\NETStandard.Library.targets" Condition="Exists('..\..\packages\NETStandard.Library.2.0.1\build\netstandard2.0\NETStandard.Library.targets')" />

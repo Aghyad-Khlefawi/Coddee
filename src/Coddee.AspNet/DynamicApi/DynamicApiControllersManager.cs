@@ -12,11 +12,13 @@ namespace Coddee.AspNet
     /// </summary>
     public class DynamicApiControllersManager
     {
+        private readonly IContainer _container;
         private readonly List<IDynamicApiAction> _actions;
 
         /// <inheritdoc />
-        public DynamicApiControllersManager()
+        public DynamicApiControllersManager(IContainer container)
         {
+            _container = container;
             _actions = new List<IDynamicApiAction>();
         }
 
@@ -40,15 +42,13 @@ namespace Coddee.AspNet
                 var attribute = action.GetCustomAttribute<ApiActionAttribute>();
                 var path = attribute.Path.Split('/');
 
-                var controllerAction = new DynamicApiControllersAction
+                var controllerAction = new DynamicApiControllersAction(_container)
                 {
                     Path = new DynamicApiActionPath(path[0], path[1]),
                     ControllerType = type,
-                    Method = action,
                     Parameters = DynamicApiActionParameter.GetParameters(action),
-                    ReturnsValue = action.ReturnType != typeof(Task) && action.ReturnType != typeof(void),
-                    ReturnType = action.ReturnType,
                 };
+                controllerAction.SetMethod(action);
                 _actions.Add(controllerAction);
             }
         }

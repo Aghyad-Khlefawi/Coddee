@@ -162,7 +162,7 @@ namespace Coddee.AspNet
         /// </summary>
         public static IServiceCollection AddDynamicApi(this IServiceCollection services)
         {
-            return AddDynamicApi(services, DynamicApiConfigurations.Default, null);
+            return AddDynamicApi(services, null, null);
         }
 
         /// <summary>
@@ -170,19 +170,21 @@ namespace Coddee.AspNet
         /// </summary>
         public static IServiceCollection AddDynamicApi(this IServiceCollection services, IEnumerable<Type> controllers)
         {
-            return AddDynamicApi(services, DynamicApiConfigurations.Default, controllers);
+            return AddDynamicApi(services, null, controllers);
         }
 
         /// <summary>
         /// Register Coddee dynamic API.
         /// </summary>
-        public static IServiceCollection AddDynamicApi(this IServiceCollection services, DynamicApiConfigurations config, IEnumerable<Type> controllers)
+        public static IServiceCollection AddDynamicApi(this IServiceCollection services, Action<DynamicApiConfigurations> config, IEnumerable<Type> controllers)
         {
             var serviceProvider = services.BuildServiceProvider();
             var container = serviceProvider.GetService<IContainer>();
-            var manager = new DynamicApiControllersManager();
+            var manager = new DynamicApiControllersManager(container);
 
-            container.RegisterInstance(config);
+            DynamicApiConfigurations configInstance = DynamicApiConfigurations.Default();
+            config?.Invoke(configInstance);
+            container.RegisterInstance(configInstance);
 
             controllers.ForEach(manager.RegisterController);
             container.RegisterInstance(manager);

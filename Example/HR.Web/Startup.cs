@@ -55,6 +55,7 @@ namespace HR.Web
             {
                 options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
             })
+
             .AddJwtBearer(options =>
             {
                 options.TokenValidationParameters = new TokenValidationParameters
@@ -67,19 +68,16 @@ namespace HR.Web
                 };
             });
 
-            var config = DynamicApiConfigurations.Default;
-            config.UseLoggingPage = true;
-
-            services.AddDynamicApi(config, new[]
+            services.AddDynamicApi(config =>
+            {
+                config.UseLoggingPage = true;
+                config.ReturnException = true;
+                config.UseErrorPages = false;
+            }, new[]
             {
                 typeof(AuthController),
                 typeof(CompanyController),
             });
-
-            //services.AddDynamicApi(config =>
-            //{
-            //    config.RegisterController<AuthController>();
-            //});
 
             var temp = new DebugOuputLogger();
             temp.Initialize(LogRecordTypes.Debug);
@@ -89,11 +87,7 @@ namespace HR.Web
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
-            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-            loggerFactory.AddDebug();
-
             app.UseAuthentication();
-
             app.UseCoddeeDynamicApi();
         }
     }
@@ -101,7 +95,7 @@ namespace HR.Web
     public class CompanyController
     {
         [ApiAction("Company/GetCompaniesById", HttpMethod.Post)]
-        public Task<IEnumerable<Company>> GetCompaniesById(Company id)
+        public Task<IEnumerable<Company>> GetCompaniesById(int id)
         {
             return Task.Run(() => new[]
             {

@@ -8,12 +8,18 @@
         /// <summary>
         /// The default configurations values.
         /// </summary>
-        public static DynamicApiConfigurations Default => new DynamicApiConfigurations
+        public static DynamicApiConfigurations Default() => new DynamicApiConfigurations
         {
             RoutePrefix = "/dapi",
             LoggingPageRoute = "/__log",
             DateTimeForamt = "dd/MM/yyyy HH:mm:ss",
-            UseLoggingPage = false
+            UseLoggingPage = false,
+            ReturnException = false,
+            UseErrorPages = false,
+            ErrorPagesConfiguration = new ErrorPagesConfiguration
+            {
+                DisplayExceptionDetailes = true
+            }
         };
 
         /// <summary>
@@ -41,5 +47,32 @@
         /// <remarks>This route will be appended to <see cref="RoutePrefix"/></remarks>
         /// </summary>
         public string LoggingPageRoute { get; set; }
+
+        /// <summary>
+        /// If set to true the exception object will be returned to the client.
+        /// <remarks>Doesn't work if <see cref="UseErrorPages"/> is true</remarks>
+        /// </summary>
+        public bool ReturnException { get; set; }
+
+        /// <summary>
+        /// If true an HTML error page will be returned to the client.
+        /// </summary>
+        public bool UseErrorPages { get; set; }
+
+        /// <summary>
+        /// Configurations for error pages.
+        /// </summary>
+        public ErrorPagesConfiguration ErrorPagesConfiguration { get; set; }
+    }
+
+    /// <summary>
+    /// Configurations object for error pages.
+    /// </summary>
+    public class ErrorPagesConfiguration
+    {
+        /// <summary>
+        /// If true the exception details will be shown in the error page.
+        /// </summary>
+        public bool DisplayExceptionDetailes { get; set; }
     }
 }
