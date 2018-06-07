@@ -372,6 +372,7 @@
     <Compile Include="ApiActionAttribute.cs" />
     <Compile Include="ApiControllerBase.cs" />
     <Compile Include="AspCoreContainer.cs" />
+    <Compile Include="DynamicApi\ActionDelegate.cs" />
     <Compile Include="DynamicApi\ApiActionsCache.cs" />
     <Compile Include="DynamicApi\DynamicApi.cs" />
     <Compile Include="DynamicApi\DynamicApiActionBase.cs" />
@@ -391,6 +392,7 @@
     <Compile Include="DynamicApi\PagesProvider.cs" />
     <Compile Include="DynamicApi\RepositoryActionLoactor.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="JwtAuthorizationValidator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

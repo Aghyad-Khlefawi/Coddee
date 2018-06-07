@@ -35,7 +35,7 @@
         /// <summary>
         /// An instance of a <see cref="IAuthorizationValidator"/>
         /// </summary>
-        public IAuthorizationValidator AuthorizationValdiator { get; set; }
+        public IAuthorizationValidator AuthorizationValidator { get; set; }
 
         /// <summary>
         /// If true a page will display the API log on <see cref="LoggingPageRoute"/>
@@ -63,6 +63,7 @@
         /// Configurations for error pages.
         /// </summary>
         public ErrorPagesConfiguration ErrorPagesConfiguration { get; set; }
+        
     }
 
     /// <summary>

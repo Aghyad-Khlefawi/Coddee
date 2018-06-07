@@ -41,7 +41,7 @@ namespace Coddee.AspNet
             _pagesProvider = new PagesProvider();
             _cache = new ApiActionsCache();
             _parser = new DynamicApiParametersParser(_dateTimeConverter);
-            _authorizationValidator = _configurations.AuthorizationValdiator;
+            _authorizationValidator = _configurations.AuthorizationValidator;
             _repositoryActionLoactor = new RepositoryActionLoactor();
 
 

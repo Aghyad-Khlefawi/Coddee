@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using Coddee;
 using Coddee.AppBuilder;
 using Coddee.AspNet;
+using Coddee.Attributes;
 using Coddee.Loggers;
 using Coddee.Windows.AppBuilder;
 using HR.Data.LinqToSQL;
@@ -73,6 +74,7 @@ namespace HR.Web
                 config.UseLoggingPage = true;
                 config.ReturnException = true;
                 config.UseErrorPages = false;
+                config.AuthorizationValidator = new JwtAuthorizationValidator();
             }, new[]
             {
                 typeof(AuthController),
@@ -95,6 +97,7 @@ namespace HR.Web
     public class CompanyController
     {
         [ApiAction("Company/GetCompaniesById", HttpMethod.Post)]
+        [Authorize]
         public Task<IEnumerable<Company>> GetCompaniesById(int id)
         {
             return Task.Run(() => new[]

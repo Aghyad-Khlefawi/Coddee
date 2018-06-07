@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Coddee.AspNet;
 using Coddee.Data;
 using Coddee.Security;
+using HR.Data;
 using HR.Data.Repositories;
 using Microsoft.IdentityModel.Tokens;
 
@@ -27,9 +28,9 @@ namespace HR.Web
         }
 
         [ApiAction("User/AuthenticationUser")]
-        public async Task<AuthenticationResponse> Authenticate(string username, string password)
+        public async Task<AuthenticationResponse> Authenticate(AuthRequest param)
         {
-            var res = await _userRepository.AuthenticationUser(username, password);
+            var res = await _userRepository.AuthenticationUser(param.Username, param.Password);
             if (res.Status == AuthenticationStatus.Successfull)
                 res.AuthenticationToken = CreateToken(new List<Claim> { new Claim("username", res.Username) }, DateTime.Now.AddDays(1));
             return res;
