@@ -1,4 +1,4 @@
-﻿namespace Coddee.AspNet
+﻿namespace Coddee
 {
     /// <summary>
     /// HTTP methods.

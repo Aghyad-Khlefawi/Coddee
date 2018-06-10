@@ -61,6 +61,8 @@ namespace Coddee.AspNet
             {
                 _logger = new LogAggregator();
             }
+
+
         }
 
         /// <inheritdoc />
@@ -232,10 +234,29 @@ namespace Coddee.AspNet
         /// <summary>
         /// Add the controllers to the cache.
         /// </summary>
-        public void CacheRegisteredControllers()
+        public void CacheActions()
         {
             if (_controllersManager != null)
                 _controllersManager.GetRegisteredAction().ForEach(_cache.AddAction);
+
+            if (_configurations.CacheRepositoryActionsOnStartup)
+            {
+                CacheRepositoryActions();
+            }
+        }
+
+        private void CacheRepositoryActions()
+        {
+            if (_repositoryManager == null)
+                return;
+
+            foreach (var repository in _repositoryManager.GetRepositories())
+            {
+                foreach (var repositoryAction in _repositoryActionLoactor.GetRepositoryActions(_repositoryManager, repository))
+                {
+                    _cache.AddAction(repositoryAction);
+                }
+            }
         }
 
         private void Log(string content, LogRecordTypes logType = LogRecordTypes.Information)

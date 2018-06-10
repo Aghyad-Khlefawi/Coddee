@@ -49,7 +49,7 @@ namespace Coddee.Data
         /// <summary>
         /// Set the sync service to be used in the repository
         /// </summary>
-        void SetSyncService(IRepositorySyncService syncService,bool sendSyncRequests = true);
+        void SetSyncService(IRepositorySyncService syncService, bool sendSyncRequests = true);
 
         /// <summary>
         /// Sets the context object that may change the repository behavior according to the context
@@ -85,7 +85,11 @@ namespace Coddee.Data
         /// </summary>
         /// <param name="index">The item Key(ID)</param>
         /// <returns></returns>
-        Task<TModel> this[TKey index] { get; }
+        Task<TModel> this[TKey index]
+        {
+            [ApiAction("{repository}/GetItem",HttpMethod.Get)]
+            get;
+        }
     }
 
     /// <summary>
@@ -101,6 +105,7 @@ namespace Coddee.Data
         /// Returns all the items in the repository
         /// </summary>
         /// <returns></returns>
+        [ApiAction("{repository}/GetItems",HttpMethod.Get)]
         Task<IEnumerable<TModel>> GetItems();
     }
 
@@ -117,21 +122,25 @@ namespace Coddee.Data
         /// <summary>
         /// Updates and items in the repository
         /// </summary>
+        [ApiAction("{repository}/UpdateItem", HttpMethod.Post)]
         Task<TModel> UpdateItem(TModel item);
 
         /// <summary>
         /// Inserts a new items to the repository
         /// </summary>
+        [ApiAction("{repository}/InsertItem", HttpMethod.Post)]
         Task<TModel> InsertItem(TModel item);
 
         /// <summary>
         /// Deletes an item from the repository by it's key
         /// </summary>
+        [ApiAction("{repository}/DeleteItemByKey", HttpMethod.Post)]
         Task DeleteItemByKey(TKey ID);
 
         /// <summary>
         /// Deletes an item from the repository 
         /// </summary>
+        [ApiAction("{repository}/DeleteItem", HttpMethod.Post)]
         Task DeleteItem(TModel item);
     }
 }

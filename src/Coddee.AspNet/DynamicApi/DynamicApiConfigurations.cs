@@ -16,6 +16,7 @@
             UseLoggingPage = false,
             ReturnException = false,
             UseErrorPages = false,
+            CacheRepositoryActionsOnStartup = false,
             ErrorPagesConfiguration = new ErrorPagesConfiguration
             {
                 DisplayExceptionDetailes = true
@@ -63,7 +64,13 @@
         /// Configurations for error pages.
         /// </summary>
         public ErrorPagesConfiguration ErrorPagesConfiguration { get; set; }
-        
+
+
+        /// <summary>
+        /// If set to true then the repository actions will be cached on the application startup.
+        /// </summary>
+        public bool CacheRepositoryActionsOnStartup { get; set; }
+
     }
 
     /// <summary>

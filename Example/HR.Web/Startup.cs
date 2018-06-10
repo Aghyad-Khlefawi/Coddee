@@ -74,6 +74,7 @@ namespace HR.Web
                 config.UseLoggingPage = true;
                 config.ReturnException = true;
                 config.UseErrorPages = false;
+                config.CacheRepositoryActionsOnStartup = true;
                 config.AuthorizationValidator = new JwtAuthorizationValidator();
             }, new[]
             {

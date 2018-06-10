@@ -190,7 +190,7 @@ namespace Coddee.AspNet
             container.RegisterInstance(manager);
 
             var api = new DynamicApi(container);
-            api.CacheRegisteredControllers();
+            api.CacheActions();
             container.RegisterInstance(api);
             return services;
         }

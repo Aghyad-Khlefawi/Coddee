@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Coddee.Attributes;
-using Microsoft.AspNetCore.Http;
-
-namespace Coddee.AspNet
+﻿namespace Coddee.AspNet
 {
     /// <summary>
     /// Validates that a client have sufficient permissions to call a dynamic API action.

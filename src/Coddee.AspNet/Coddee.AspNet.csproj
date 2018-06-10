@@ -369,7 +369,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ApiActionAttribute.cs" />
     <Compile Include="ApiControllerBase.cs" />
     <Compile Include="AspCoreContainer.cs" />
     <Compile Include="DynamicApi\ActionDelegate.cs" />
@@ -386,7 +385,6 @@
     <Compile Include="DynamicApi\DynamicApiParametersParser.cs" />
     <Compile Include="DynamicApi\DynamicApiRepositoryAction.cs" />
     <Compile Include="DynamicApi\DynamicApiRequest.cs" />
-    <Compile Include="DynamicApi\HttpMethod.cs" />
     <Compile Include="DynamicApi\IAuthorizationValidator.cs" />
     <Compile Include="DynamicApi\IDynamicApiAction.cs" />
     <Compile Include="DynamicApi\PagesProvider.cs" />

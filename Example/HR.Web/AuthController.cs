@@ -7,6 +7,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using Coddee;
 using Coddee.AspNet;
 using Coddee.Data;
 using Coddee.Security;

@@ -69,6 +69,13 @@ namespace Coddee.Data
         /// Adds a repository initializer to the repository manager.
         /// </summary>
         IEnumerable<IRepositoryInitializer> GetRepositoryInitializers();
+
+        /// <summary>
+        /// Returns the name that identifies the repository.
+        /// </summary>
+        /// <param name="repository"></param>
+        /// <returns></returns>
+        string GetRepositoryName(IRepository repository);
     }
 
 

@@ -66,6 +66,7 @@
     <Compile Include="AppBuilder\IApplicationIdentifier.cs" />
     <Compile Include="AsyncLinq.cs" />
     <Compile Include="Attributes\AllowAnonymous.cs" />
+    <Compile Include="Attributes\ApiActionAttribute.cs" />
     <Compile Include="Attributes\Authorize.cs" />
     <Compile Include="Attributes\NameAttribute.cs" />
     <Compile Include="Commands\IReactiveCommand.cs" />
@@ -91,6 +92,7 @@
     <Compile Include="Delegates.cs" />
     <Compile Include="Diff.cs" />
     <Compile Include="Exceptions\ValidationException.cs" />
+    <Compile Include="HttpMethod.cs" />
     <Compile Include="Mvvm\BindableBase.cs" />
     <Compile Include="Mvvm\Delegates.cs" />
     <Compile Include="Mvvm\IEditorViewModel.cs" />

@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Coddee.AspNet
+namespace Coddee
 {
     /// <summary>
     /// Identifies a function that is used in an API controller class.
@@ -12,8 +12,14 @@ namespace Coddee.AspNet
     public sealed class ApiActionAttribute : Attribute
     {
         /// <inheritdoc />
+        public ApiActionAttribute()
+        {
+
+        }
+
+        /// <inheritdoc />
         public ApiActionAttribute(string path)
-            : this(path, AspNet.HttpMethod.Get)
+            : this(path, Coddee.HttpMethod.Get)
         {
         }
 
@@ -30,7 +36,7 @@ namespace Coddee.AspNet
         public string Path { get; }
 
         /// <summary>
-        /// The required <see cref="AspNet.HttpMethod"/>.
+        /// The required <see cref="Coddee.HttpMethod"/>.
         /// </summary>
         public string HttpMethod { get; set; }
     }

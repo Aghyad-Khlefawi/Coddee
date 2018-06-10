@@ -1,7 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 using Coddee.Data;
 
 namespace Coddee.AspNet
@@ -37,7 +37,12 @@ namespace Coddee.AspNet
 
             if (method == null || interfaceMethod == null)
                 return null;
+            DynamicApiRepositoryAction action = CreateAction(repositoryManager, repositoryName, actionName, method, interfaceMethod);
+            return action;
+        }
 
+        private static DynamicApiRepositoryAction CreateAction(IRepositoryManager repositoryManager, string repositoryName, string actionName, MethodInfo method, MethodInfo interfaceMethod)
+        {
             var action = new DynamicApiRepositoryAction
             {
                 RepositoryManager = repositoryManager,
@@ -68,6 +73,43 @@ namespace Coddee.AspNet
                 }
             }
             return method;
+        }
+
+        /// <summary>
+        /// Create an <see cref="IDynamicApiAction"/> for a repository method.
+        /// </summary>
+        /// <returns></returns>
+        public IDynamicApiAction CreateRepositoryAction(IRepositoryManager repositoryManager, IRepository repository, MethodInfo methodInfo, MethodInfo interfaceMethodInfo)
+        {
+            var repositoryName = repositoryManager.GetRepositoryName(repository);
+            return CreateAction(repositoryManager, repositoryName, interfaceMethodInfo.Name.ToLower(), methodInfo, interfaceMethodInfo);
+        }
+
+        /// <summary>
+        /// Returns the actions available in repository.
+        /// </summary>
+        public IEnumerable<IDynamicApiAction> GetRepositoryActions(IRepositoryManager repositoryManager, IRepository repository)
+        {
+            var repositoryType = repository.GetType();
+            var interfaceType = repository.ImplementedInterface;
+
+            const BindingFlags flags = BindingFlags.Public | BindingFlags.FlattenHierarchy | BindingFlags.Instance;
+            var interfaceMethods = new List<MethodInfo>(interfaceType.GetMethods(flags)
+                                                                     .Where(e => Attribute.IsDefined(e, typeof(ApiActionAttribute))));
+            foreach (Type interf in interfaceType.GetInterfaces())
+            {
+                foreach (MethodInfo method in interf.GetMethods(flags)
+                                                    .Where(e => Attribute.IsDefined(e, typeof(ApiActionAttribute))))
+                    if (!interfaceMethods.Contains(method))
+                        interfaceMethods.Add(method);
+            }
+
+
+            foreach (var interfaceMethodInfo in interfaceMethods)
+            {
+                var methodInfo = repositoryType.GetMethod(interfaceMethodInfo.Name);
+                yield return CreateRepositoryAction(repositoryManager, repository, methodInfo, interfaceMethodInfo);
+            }
         }
     }
 }

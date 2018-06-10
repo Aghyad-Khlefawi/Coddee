@@ -103,6 +103,22 @@ namespace Coddee.Data
         }
 
         /// <inheritdoc />
+        public string GetRepositoryName(IRepository repository)
+        {
+            var type = repository.ImplementedInterface.GetTypeInfo();
+            var nameAttrs = type.GetCustomAttribute<NameAttribute>();
+            if (nameAttrs != null)
+                return nameAttrs.Value;
+
+            var repoName = type.Name;
+            repoName = repoName.Remove(0, 1);
+            if (repoName.EndsWith("Repository"))
+                repoName = repoName.Substring(0, repoName.Length - 10);
+
+            return repoName;
+        }
+
+        /// <inheritdoc />
         public void AddRepositoryInitializer(IRepositoryInitializer initializer)
         {
             _repositoryInitializers[initializer.RepositoryType] = initializer;
