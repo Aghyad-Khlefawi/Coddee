@@ -61,8 +61,6 @@ namespace Coddee.AspNet
             {
                 _logger = new LogAggregator();
             }
-
-
         }
 
         /// <inheritdoc />
@@ -75,7 +73,7 @@ namespace Coddee.AspNet
 
                 if (_configurations.UseLoggingPage)
                 {
-                    if (context.Request.Path.ToString() == $"{_configurations.RoutePrefix}{_configurations.LoggingPageRoute}")
+                    if (IsLoggingPageRequest(context))
                     {
                         await ShowLogPage(context);
                         return;
@@ -87,6 +85,7 @@ namespace Coddee.AspNet
 
 
                 DynamicApiException exception = null;
+
                 try
                 {
                     await Task.Run(() => HandleRequest(request));
@@ -110,6 +109,11 @@ namespace Coddee.AspNet
             }
         }
 
+        private bool IsLoggingPageRequest(HttpContext context)
+        {
+            return context.Request.Path.ToString() == $"{_configurations.RoutePrefix}{_configurations.LoggingPageRoute}";
+        }
+
         private async Task HandleRequest(DynamicApiRequest request)
         {
             IDynamicApiAction action = _cache.GetAction(request);
@@ -119,7 +123,6 @@ namespace Coddee.AspNet
             {
                 Log(request, $"Action not found in cache.");
                 Log(request, $"Looking in repository actions.");
-
                 action = _repositoryActionLoactor.CreateRepositoryAction(_repositoryManager, request);
                 if (action == null)
                     throw new DynamicApiException(DynamicApiExceptionCodes.ActionNotFound, "Action not found.", request);
@@ -131,7 +134,6 @@ namespace Coddee.AspNet
                 Log(request, $"Action found in cache.");
             }
 
-
             Log(request, $"Parsing request parameters.");
             var parameters = await _parser.ParseParameters(action, request);
 
@@ -142,7 +144,11 @@ namespace Coddee.AspNet
             }
 
             Log(request, $"Invoking action.");
-            var resLength = await InvokeAction(request, action, parameters);
+
+            var context = _configurations.GetApiContext(request);
+            Log(request, $"Context: {context}.");
+
+            var resLength = await InvokeAction(request, action, parameters, context);
 
             Log(request, $"Response completed in {(DateTime.Now - request.Date).Milliseconds} ms, content size:{SizeToString(resLength)}");
         }
@@ -177,7 +183,6 @@ namespace Coddee.AspNet
                 log.Append(loggerRecord);
                 log.Append(Environment.NewLine);
             }
-
             await context.Response.WriteAsync(log.ToString());
         }
 
@@ -218,15 +223,14 @@ namespace Coddee.AspNet
             }
         }
 
-        private async Task<long> InvokeAction(DynamicApiRequest request, IDynamicApiAction action, DynamicApiActionParameterValue[] parameters)
+        private async Task<long> InvokeAction(DynamicApiRequest request, IDynamicApiAction action, DynamicApiActionParameterValue[] parameters, object context)
         {
-            var value = await action.Invoke(parameters);
+            var value = await action.Invoke(parameters, context);
             var res = JsonConvert.SerializeObject(value, _dateTimeConverter);
             var response = request.HttpContext.Response;
             response.Headers.Add("Content-Type", "application/json");
             await response.WriteAsync(res);
             return Encoding.UTF8.GetByteCount(res);
-
         }
 
 

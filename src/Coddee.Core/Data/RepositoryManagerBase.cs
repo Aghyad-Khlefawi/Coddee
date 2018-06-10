@@ -77,7 +77,7 @@ namespace Coddee.Data
                 var repositories =
                     Assembly.Load(new AssemblyName(assembly))
                             .DefinedTypes
-                            .Where(e => CustomAttributeExtensions.GetCustomAttribute<RepositoryAttribute>((MemberInfo) e) != null && CustomAttributeExtensions.GetCustomAttribute<RepositoryAttribute>((MemberInfo) e).Discoverable)
+                            .Where(e => e.GetCustomAttribute<RepositoryAttribute>() != null && e.GetCustomAttribute<RepositoryAttribute>().Discoverable)
                             .Select(e => new KeyValuePair<Type, Type>(e.GetCustomAttribute<RepositoryAttribute>().ImplementedRepository, e.AsType()))
                             .ToArray();
                 RegisterRepositories(repositories);

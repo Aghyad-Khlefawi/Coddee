@@ -22,7 +22,7 @@ namespace Coddee.AspNet
         /// <summary>
         /// Invoke the action.
         /// </summary>
-        Task<object> Invoke(DynamicApiActionParameterValue[] parametersValue);
+        Task<object> Invoke(DynamicApiActionParameterValue[] parametersValue, object context);
         
         /// <summary>
         /// Indicates whether the client require a specific permission to call the action.

@@ -1,4 +1,6 @@
-﻿namespace Coddee.AspNet
+﻿using System;
+
+namespace Coddee.AspNet
 {
     /// <summary>
     /// Configurations object for <see cref="DynamicApi"/>
@@ -70,6 +72,11 @@
         /// If set to true then the repository actions will be cached on the application startup.
         /// </summary>
         public bool CacheRepositoryActionsOnStartup { get; set; }
+
+        /// <summary>
+        /// Called before calling an action to give context to the action owner.
+        /// </summary>
+        public Func<DynamicApiRequest, object> GetApiContext { get; set; }
 
     }
 

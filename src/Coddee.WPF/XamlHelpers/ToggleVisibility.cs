@@ -35,11 +35,17 @@ namespace Coddee.WPF.XamlHelpers
             }
         }
 
+        /// <summary>
+        /// Set <see cref="ElementProperty"/>
+        /// </summary>
         public static void SetElement(DependencyObject element, UIElement value)
         {
             element.SetValue(ElementProperty, value);
         }
 
+        /// <summary>
+        /// Get <see cref="ElementProperty"/>
+        /// </summary>
         public static UIElement GetElement(DependencyObject element)
         {
             return (UIElement)element.GetValue(ElementProperty);

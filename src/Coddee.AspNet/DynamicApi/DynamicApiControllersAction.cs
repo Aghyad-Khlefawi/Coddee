@@ -21,8 +21,9 @@ namespace Coddee.AspNet
         /// </summary>
         public Type ControllerType { get; set; }
 
+        /// <param name="context"></param>
         /// <inheritdoc />
-        protected override object GetInstnaceOwner()
+        protected override object GetInstnaceOwner(object context)
         {
             return ActivatorUtilities.CreateInstance(((AspCoreContainer)_container).ServiceProvider, ControllerType);
         }

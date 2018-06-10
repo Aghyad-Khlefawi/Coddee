@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Coddee;
@@ -76,6 +75,7 @@ namespace HR.Web
                 config.UseErrorPages = false;
                 config.CacheRepositoryActionsOnStartup = true;
                 config.AuthorizationValidator = new JwtAuthorizationValidator();
+                config.GetApiContext = CreateContextObject;
             }, new[]
             {
                 typeof(AuthController),
@@ -85,6 +85,12 @@ namespace HR.Web
             var temp = new DebugOuputLogger();
             temp.Initialize(LogRecordTypes.Debug);
             temp.Log("WebApp", "DebugAppStarted");
+        }
+
+        private int count = 0;
+        private object CreateContextObject(DynamicApiRequest arg)
+        {
+            return ++count;
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

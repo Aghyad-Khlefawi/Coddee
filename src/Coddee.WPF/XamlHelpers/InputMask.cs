@@ -8,9 +8,19 @@ using System.Windows.Controls.Primitives;
 
 namespace Coddee.WPF
 {
+    /// <summary>
+    /// Text input types.
+    /// </summary>
     public enum InputType
     {
+        /// <summary>
+        /// Text is alphabetic characters only.
+        /// </summary>
         Alphabetic,
+
+        /// <summary>
+        /// Text is numbers only.
+        /// </summary>
         Numeric
     }
 
@@ -19,6 +29,9 @@ namespace Coddee.WPF
     /// </summary>
     public class InputMask
     {
+        /// <summary>
+        /// The required text type.
+        /// </summary>
         public static readonly DependencyProperty InputTypeProperty = DependencyProperty.RegisterAttached(
                                                                 "InputType",
                                                                 typeof(InputType?),
@@ -40,11 +53,17 @@ namespace Coddee.WPF
             }
         }
 
+        /// <summary>
+        /// Set <see cref="InputTypeProperty"/>
+        /// </summary>
         public static void SetInputType(DependencyObject element, InputType? value)
         {
             element.SetValue(InputTypeProperty, value);
         }
 
+        /// <summary>
+        /// Get <see cref="InputTypeProperty"/>
+        /// </summary>
         public static InputType? GetInputType(DependencyObject element)
         {
             return (InputType?) element.GetValue(InputTypeProperty);

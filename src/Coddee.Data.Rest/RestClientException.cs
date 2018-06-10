@@ -41,6 +41,9 @@ namespace Coddee.Data.REST
             ResponseContent = responseContent;
         }
 
+        /// <summary>
+        /// The content of the response that caused the exception.
+        /// </summary>
         public string ResponseContent { get; set; }
     }
 }

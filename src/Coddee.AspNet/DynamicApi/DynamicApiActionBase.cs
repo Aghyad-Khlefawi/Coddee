@@ -20,16 +20,18 @@ namespace Coddee.AspNet
         public List<DynamicApiActionParameter> Parameters { get; set; }
 
         /// <inheritdoc />
-        public Task<object> Invoke(DynamicApiActionParameterValue[] parametersValue)
+        public virtual Task<object> Invoke(DynamicApiActionParameterValue[] parametersValue, object context)
         {
-            return _delegate.Invoke(parametersValue);
+            var deleg = CreateDelegate(context);
+            return deleg.Invoke(parametersValue);
         }
 
         /// <summary>
         /// Get an instance of the owner type to invoke the action.
         /// </summary>
+        /// <param name="context"></param>
         /// <returns></returns>
-        protected abstract object GetInstnaceOwner();
+        protected abstract object GetInstnaceOwner(object context);
 
         /// <inheritdoc />
         public bool RequiresAuthorization { get; set; }
@@ -49,10 +51,9 @@ namespace Coddee.AspNet
         {
             Method = method;
             SetAuthorizationInfo();
-            CreateDelegate();
         }
 
-        private void CreateDelegate()
+        private ActionDelegate CreateDelegate(object context)
         {
             var args = new Type[Parameters.Count + 1];
             for (int i = 0; i < Parameters.Count; i++)
@@ -60,8 +61,8 @@ namespace Coddee.AspNet
                 args[i] = Parameters[i].Type;
             }
             args[args.Length - 1] = Method.ReturnType;
-            var instance = GetInstnaceOwner();
-            _delegate = ActionDelegate.Create(Method, args, instance);
+            var instance = GetInstnaceOwner(context);
+            return ActionDelegate.Create(Method, args, instance);
         }
 
         /// <summary>

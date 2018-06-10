@@ -1,4 +1,5 @@
-﻿using Coddee.Data;
+﻿using System.Threading.Tasks;
+using Coddee.Data;
 
 namespace Coddee.AspNet
 {
@@ -7,6 +8,7 @@ namespace Coddee.AspNet
     /// </summary>
     public class DynamicApiRepositoryAction : DynamicApiActionBase
     {
+       
         /// <summary>
         /// The name of the repository.
         /// </summary>
@@ -17,10 +19,13 @@ namespace Coddee.AspNet
         /// </summary>
         public IRepositoryManager RepositoryManager { get; set; }
 
+        /// <param name="context"></param>
         /// <inheritdoc />
-        protected override object GetInstnaceOwner()
+        protected override object GetInstnaceOwner(object context)
         {
-            return RepositoryManager.GetRepository(RepositoryName);
+            var instance = RepositoryManager.GetRepository(RepositoryName);
+            instance.SetContext(context);
+            return  instance;
         }
     }
 }
