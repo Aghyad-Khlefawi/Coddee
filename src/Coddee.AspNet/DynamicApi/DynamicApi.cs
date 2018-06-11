@@ -145,8 +145,11 @@ namespace Coddee.AspNet
 
             Log(request, $"Invoking action.");
 
-            var context = _configurations.GetApiContext(request);
-            Log(request, $"Context: {context}.");
+            object context = null; 
+            if (_configurations.GetApiContext != null)
+            {
+                context = _configurations.GetApiContext(request);
+            }
 
             var resLength = await InvokeAction(request, action, parameters, context);
 
