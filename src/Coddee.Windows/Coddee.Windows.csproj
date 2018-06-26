@@ -31,17 +31,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Coddee.Core\Coddee.Core.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Reference Include="System.DirectoryServices">
-      <HintPath>..\Ref\System.DirectoryServices.dll</HintPath>
-    </Reference>
-    <Reference Include="System.DirectoryServices.AccountManagement">
-      <HintPath>..\Ref\System.DirectoryServices.AccountManagement.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Management">
-      <HintPath>..\Ref\System.Management.dll</HintPath>
-    </Reference>
-  </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard1.3'">
     <PackageReference Include="Microsoft.Win32.Registry">
       <Version>4.5.0</Version>
@@ -50,6 +39,20 @@
       <Version>4.3.0</Version>
     </PackageReference>
     <PackageReference Include="System.Reflection.TypeExtensions">
+      <Version>4.5.0</Version>
+    </PackageReference>
+    <PackageReference Include="System.Security.Cryptography.Algorithms">
+      <Version>4.3.1</Version>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'net45'">
+    <PackageReference Include="System.DirectoryServices">
+      <Version>4.5.0</Version>
+    </PackageReference>
+    <PackageReference Include="System.DirectoryServices.AccountManagement">
+      <Version>4.5.0</Version>
+    </PackageReference>
+    <PackageReference Include="System.Management">
       <Version>4.5.0</Version>
     </PackageReference>
   </ItemGroup>

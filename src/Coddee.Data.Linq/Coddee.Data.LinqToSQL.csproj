@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFrameworks>net461</TargetFrameworks>
     <Authors>Aghyad khlefawi</Authors>
     <Description>Coddee core assembly</Description>
     <Copyright>Copyright ©  2018 Aghyad khlefawi</Copyright>
@@ -21,11 +21,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Coddee.Core\Coddee.Core.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Reference Include="System.Data.Linq">
-      <HintPath>..\Ref\System.Data.Linq.dll</HintPath>
-    </Reference>
-
+  <ItemGroup Condition="'$(TargetFramework)' == 'net461'">
+    <Reference Include="System.Data.Linq" />
   </ItemGroup>
-
 </Project>
