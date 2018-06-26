@@ -71,8 +71,8 @@ namespace HR.Web
             services.AddDynamicApi(config =>
             {
                 config.UseLoggingPage = true;
-                config.ReturnException = true;
-                config.UseErrorPages = false;
+                config.ReturnException = false;
+                config.UseErrorPages = true;
                 config.CacheRepositoryActionsOnStartup = true;
                 config.AuthorizationValidator = new JwtAuthorizationValidator();
                 config.GetApiContext = CreateContextObject;

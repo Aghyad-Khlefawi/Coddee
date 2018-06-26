@@ -186,7 +186,9 @@ namespace Coddee.AspNet
                 log.Append(loggerRecord);
                 log.Append(Environment.NewLine);
             }
-            await context.Response.WriteAsync(log.ToString());
+
+            context.Response.ContentType = "text/html";
+            await context.Response.WriteAsync(_pagesProvider.GetLogPage(log.ToString()));
         }
 
         private async Task HandleException(DynamicApiRequest request, DynamicApiException exception)

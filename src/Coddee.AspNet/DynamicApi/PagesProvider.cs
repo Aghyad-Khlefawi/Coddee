@@ -19,6 +19,11 @@ namespace Coddee.AspNet
         /// And error page with exception details.
         /// </summary>
         public const string ErrorDetailed = "Pages/ErrorWithDetailes.html";
+
+        /// <summary>
+        /// Display the log messages.
+        /// </summary>
+        public const string Log = "Pages/Log.html";
     }
 
     /// <summary>
@@ -67,6 +72,17 @@ namespace Coddee.AspNet
         }
 
         /// <summary>
+        /// Return HTML for log page.
+        /// </summary>
+        /// <param name="content"></param>
+        /// <returns></returns>
+        public string GetLogPage(string content)
+        {
+            return GetPage(CoddeePages.Log).Replace("$Details$", content);
+        }
+        
+
+        /// <summary>
         /// Return HTML for an error page
         /// </summary>
         /// <returns></returns>
@@ -91,8 +107,8 @@ namespace Coddee.AspNet
             {
                 case StatusCodes.Status401Unauthorized:
                     return "Unauthorized.";
-                case DynamicApiExceptionCodes.ActionNotFound:
-                    return "Not found.";
+                case StatusCodes.Status404NotFound:
+                    return "Action not found.";
                 case StatusCodes.Status400BadRequest:
                     return "Bad request.";
                 default:
