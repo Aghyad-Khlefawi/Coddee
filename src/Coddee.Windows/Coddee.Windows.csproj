@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net45;netstandard1.3</TargetFrameworks>
+    <TargetFrameworks>net46;netstandard2.0</TargetFrameworks>
     <Authors>Aghyad khlefawi</Authors>
     <Description>Coddee Windows assembly</Description>
     <Copyright>Copyright ©  2018 Aghyad khlefawi</Copyright>
@@ -31,7 +31,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Coddee.Core\Coddee.Core.csproj" />
   </ItemGroup>
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard1.3'">
+  <ItemGroup>
     <PackageReference Include="Microsoft.Win32.Registry">
       <Version>4.5.0</Version>
     </PackageReference>
@@ -44,8 +44,6 @@
     <PackageReference Include="System.Security.Cryptography.Algorithms">
       <Version>4.3.1</Version>
     </PackageReference>
-  </ItemGroup>
-  <ItemGroup Condition="'$(TargetFramework)' == 'net45'">
     <PackageReference Include="System.DirectoryServices">
       <Version>4.5.0</Version>
     </PackageReference>

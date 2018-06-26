@@ -51,7 +51,7 @@ namespace HR.Web
             services.AddILObjectMapper();
             services.AddTransientRepositoryManager();
             services.AddLinqRepositories<HRDBManager>(new LinqInitializerConfig(c => @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\HRDatabase.mdf;Integrated Security=True;Connect Timeout=30", "HR.Data.LinqToSQL"));
-
+            
             services.AddAuthentication(options =>
             {
                 options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;

@@ -104,7 +104,7 @@ namespace Coddee.AppBuilder
 
             if (!BuildActionsCoordinator.BuildActionExists(BuildActionsKeys.ConfigureGlobalVariabls))
                 ConfigureGlobalVariables();
-#if NET45
+#if NET46
             if (!BuildActionsCoordinator.BuildActionExists(BuildActionsKeys.ConfigFile))
                 this.UseConfigurationFile(AppDomain.CurrentDomain.BaseDirectory);
 #endif

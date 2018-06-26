@@ -63,7 +63,7 @@ namespace Coddee.Windows
         /// <returns></returns>
         public static void WriteKeyValues<T>(string keyPath, T value)
         {
-#if NET45
+#if NET46
             var key = Registry.LocalMachine.OpenSubKey(keyPath, RegistryKeyPermissionCheck.ReadWriteSubTree) ??
                       Registry.LocalMachine.CreateSubKey(keyPath, RegistryKeyPermissionCheck.ReadWriteSubTree);
 

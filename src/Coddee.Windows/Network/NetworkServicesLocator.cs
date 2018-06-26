@@ -59,7 +59,7 @@ namespace Coddee.Network
         public static void StopBroadcastServer()
         {
             _isBroadcasting = false;
-#if NET45
+#if NET46
 
             _server.Close();
 #else

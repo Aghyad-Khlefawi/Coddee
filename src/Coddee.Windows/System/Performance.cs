@@ -78,7 +78,7 @@ namespace Coddee.Windows
             Process proc = Process.GetCurrentProcess();
             return proc.PrivateMemorySize64 / 1048576;
         }
-#if NET45
+#if NET46
         /// <summary>
         /// Return the CPU usage percentage
         /// </summary>

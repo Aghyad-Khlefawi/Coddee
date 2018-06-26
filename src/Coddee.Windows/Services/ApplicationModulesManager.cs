@@ -69,12 +69,12 @@ namespace Coddee.Services
         /// <inheritdoc />
         public IEnumerable<Module> DescoverModulesFromAssambles(string location, string assembliesPrefix = null)
         {
-#if NET45
+#if NET46
             string path = Path.GetDirectoryName(location);
             return DescoverModulesFromAssambles(Directory.GetFiles(path, $"{assembliesPrefix}*.dll")
                                                     .Select(e => Assembly.LoadFile(e))
                                           .ToArray());
-#elif NETSTANDARD1_3
+#elif NETSTANDARD2_0
             throw new NotImplementedException("This is supported in NET framework 4.5 and heigher");
 #endif
         }

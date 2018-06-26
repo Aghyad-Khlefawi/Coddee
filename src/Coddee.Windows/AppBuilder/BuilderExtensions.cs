@@ -22,7 +22,7 @@ namespace Coddee.AppBuilder
     /// </summary>
     public static class BuilderExtensions
     {
-#if NET45
+#if NET46
 
         /// <summary>
         /// Initialize <see cref="ILocalizationManager"/> service.
