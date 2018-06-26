@@ -20,6 +20,8 @@ namespace Coddee.Windows
             return Drive.GetDrive(drive).SerialNumber.ToString();
         }
 
+#if NET45
+
         /// <summary>
         /// returns the CPU unique identifier
         /// Requires a reference to System.Management.dll
@@ -36,5 +38,7 @@ namespace Coddee.Windows
             }
             return "NotSupported";
         }
+#endif
+
     }
 }

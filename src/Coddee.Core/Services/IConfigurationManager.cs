@@ -11,8 +11,9 @@ namespace Coddee.Services
         /// <summary>
         /// Initialize the configuration manager.
         /// </summary>
+        /// <param name="fileLocation"></param>
         /// <param name="defaultConfigurationFile">The default configuration file to be used if no file name is specified.</param>
-        void Initialize(IConfigurationFile defaultConfigurationFile);
+        void Initialize(string fileLocation, IConfigurationFile defaultConfigurationFile);
 
         /// <summary>
         /// Add a new configuration file.

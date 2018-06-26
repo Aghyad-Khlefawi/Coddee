@@ -6,8 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Coddee.AppBuilder;
 using Coddee.Data;
-using Coddee.Data.LinqToSQL;
-using Coddee.Data.MongoDB;
 using Coddee.Loggers;
 using Coddee.Windows.AppBuilder;
 using Coddee.Windows.Mapper;
@@ -83,79 +81,6 @@ namespace Coddee.AspNet
             services.AddSingleton<IRepositoryManager>(new TransientRepositoryManager());
         }
 
-        /// <summary>
-        /// Configure and register linq repositories.
-        /// </summary>
-        public static IRepositoryManager AddLinqRepositories<TDBManager>(
-                this IServiceCollection services,
-                LinqInitializerConfig config,
-                bool registerAsServices = false)
-                where TDBManager : ILinqDBManager, new()
-        {
-            if (services.All(e => e.ServiceType != typeof(IRepositoryManager)))
-                throw new ApplicationBuildException("RepositoryManager is not registered. call AddSingletonRepositoryManager or AddTransientRepositoryManager to configuration the repository manager.");
-
-
-            var serviceProvider = services.BuildServiceProvider();
-            var mapper = serviceProvider.GetService<IObjectMapper>();
-            var dbManager = new TDBManager();
-            dbManager.Initialize(config.DatabaseConnection(serviceProvider.GetService<IContainer>()));
-
-            services.AddSingleton<ILinqDBManager>(dbManager);
-            var repositoryManager = serviceProvider.GetService<IRepositoryManager>();
-
-            repositoryManager.AddRepositoryInitializer(new LinqRepositoryInitializer(dbManager, mapper, config.RepositoryConfigurations));
-
-            repositoryManager.RegisterRepositories(config.RepositoriesAssembly);
-            if (registerAsServices)
-                foreach (var repository in repositoryManager.GetRepositories())
-                {
-                    services.AddSingleton(repository.ImplementedInterface, repository);
-                }
-            return repositoryManager;
-        }
-
-        /// <summary>
-        /// Configure and register Mongo DB repositories.
-        /// </summary>
-        public static IServiceCollection AddMongoRepositoryManager(
-            this IServiceCollection services,
-            string connectionString,
-            string dbName,
-            string repositoriesAssembly)
-        {
-            if (services.All(e => e.ServiceType != typeof(IRepositoryManager)))
-                services.AddSingleton<IRepositoryManager>(new SingletonRepositoryManager());
-
-            var serviceProvider = services.BuildServiceProvider();
-            var repositoryManager = serviceProvider.GetService<IRepositoryManager>();
-            var mapper = serviceProvider.GetService<IObjectMapper>();
-
-            var dbManager = new MongoDBManager(connectionString, dbName);
-            repositoryManager.AddRepositoryInitializer(new MongoRepositoryInitializer(dbManager, mapper));
-            repositoryManager.RegisterRepositories(repositoriesAssembly);
-            services.AddSingleton<IMongoDBManager>(dbManager);
-            services.AddSingleton<IRepositoryManager>(repositoryManager);
-            foreach (var repository in repositoryManager.GetRepositories())
-            {
-                services.AddSingleton(repository.ImplementedInterface, repository);
-            }
-            return services;
-        }
-
-        /// <summary>
-        /// Use the default routing used by the library.
-        /// </summary>
-        public static IApplicationBuilder UseMVCWithCoddeeRoutes(this IApplicationBuilder app, string apiPrefix)
-        {
-            return app.UseMvc(routes => { routes.MapRoute("default", $"{apiPrefix}/{{controller}}/{{action}}"); });
-        }
-
-        /// <inheritdoc cref="UseMVCWithCoddeeRoutes(Microsoft.AspNetCore.Builder.IApplicationBuilder,string)"/>
-        public static IApplicationBuilder UseMVCWithCoddeeRoutes(this IApplicationBuilder app)
-        {
-            return app.UseMVCWithCoddeeRoutes("api");
-        }
 
         /// <summary>
         /// Register Coddee dynamic API.

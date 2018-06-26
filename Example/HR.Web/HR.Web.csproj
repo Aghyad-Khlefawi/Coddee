@@ -15,18 +15,19 @@
     <None Remove="wwwroot\**" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.1.1" />
-    <PackageReference Include="Microsoft.AspNetCore" Version="2.0.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="2.0.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.0.1" />
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.3.0" />
+    <PackageReference Include="Microsoft.AspNetCore" Version="2.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="2.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.0.1" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="2.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="2.1.1" />
   </ItemGroup>
   <ItemGroup>
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="1.0.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Coddee.AspNet\Coddee.AspNet.csproj" />
+    <ProjectReference Include="..\..\Coddee.AspNet.LinqToSql\Coddee.AspNetCore.LinqToSql.csproj" />
+    <ProjectReference Include="..\..\src\Coddee.AspNet\Coddee.AspNetCore.csproj" />
     <ProjectReference Include="..\..\src\Coddee.Core\Coddee.Core.csproj" />
     <ProjectReference Include="..\..\src\Coddee.Crypto\Coddee.Crypto.csproj" />
     <ProjectReference Include="..\..\src\Coddee.Data.Linq\Coddee.Data.LinqToSQL.csproj" />

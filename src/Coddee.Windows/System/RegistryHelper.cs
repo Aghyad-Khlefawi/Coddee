@@ -4,7 +4,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.Serialization;
+using System.Security.AccessControl;
 using Microsoft.Win32;
 
 namespace Coddee.Windows
@@ -61,8 +63,14 @@ namespace Coddee.Windows
         /// <returns></returns>
         public static void WriteKeyValues<T>(string keyPath, T value)
         {
+#if NET45
             var key = Registry.LocalMachine.OpenSubKey(keyPath, RegistryKeyPermissionCheck.ReadWriteSubTree) ??
                       Registry.LocalMachine.CreateSubKey(keyPath, RegistryKeyPermissionCheck.ReadWriteSubTree);
+
+#else
+            var key = Registry.LocalMachine.OpenSubKey(keyPath, RegistryRights.ReadPermissions) ??
+                      Registry.LocalMachine.CreateSubKey(keyPath, true);
+#endif
 
             foreach (var property in typeof(T).GetProperties())
             {
@@ -92,10 +100,6 @@ namespace Coddee.Windows
         {
         }
 
-        /// <inheritdoc />
-        protected RegistryKeyNotFoundException(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-        }
     }
 
 }

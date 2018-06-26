@@ -22,6 +22,7 @@ namespace Coddee.AppBuilder
     /// </summary>
     public static class BuilderExtensions
     {
+#if NET45
 
         /// <summary>
         /// Initialize <see cref="ILocalizationManager"/> service.
@@ -62,6 +63,7 @@ namespace Coddee.AppBuilder
             }));
             return builder;
         }
+#endif
 
         /// <summary>
         /// Use the IL object mapper
@@ -139,12 +141,13 @@ namespace Coddee.AppBuilder
         /// Initialize the configuration manager
         /// </summary>
         public static IApplicationBuilder UseConfigurationFile(
-            this IApplicationBuilder builder)
+            this IApplicationBuilder builder,
+            string fileLocation)
         {
             builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.ConfigFileBuildAction((container) =>
             {
                 var config = container.Resolve<IConfigurationManager>();
-                config.Initialize(new ConfigurationFile("config", Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "config.cfg")));
+                config.Initialize(fileLocation, new ConfigurationFile("config", Path.Combine(fileLocation, "config.cfg")));
             }));
             return builder;
         }

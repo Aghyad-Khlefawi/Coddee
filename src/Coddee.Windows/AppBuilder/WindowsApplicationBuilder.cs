@@ -97,16 +97,17 @@ namespace Coddee.AppBuilder
 
             BuildActionsCoordinator.AddAction(DefaultBuildActions.RegisterDefaultModulesBuildAction(container =>
             {
-                var applicationModulesManager = container.RegisterInstance<IApplicationModulesManager,ApplicationModulesManager>();
+                var applicationModulesManager = container.RegisterInstance<IApplicationModulesManager, ApplicationModulesManager>();
                 applicationModulesManager.RegisterModule(GetDefaultModules());
                 applicationModulesManager.InitializeAutoModules().GetAwaiter().GetResult();
             }));
 
             if (!BuildActionsCoordinator.BuildActionExists(BuildActionsKeys.ConfigureGlobalVariabls))
                 ConfigureGlobalVariables();
-            
+#if NET45
             if (!BuildActionsCoordinator.BuildActionExists(BuildActionsKeys.ConfigFile))
-                this.UseConfigurationFile(null);
+                this.UseConfigurationFile(AppDomain.CurrentDomain.BaseDirectory);
+#endif
         }
 
         /// <summary>

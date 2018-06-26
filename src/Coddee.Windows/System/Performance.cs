@@ -78,7 +78,7 @@ namespace Coddee.Windows
             Process proc = Process.GetCurrentProcess();
             return proc.PrivateMemorySize64 / 1048576;
         }
-
+#if NET45
         /// <summary>
         /// Return the CPU usage percentage
         /// </summary>
@@ -92,6 +92,7 @@ namespace Coddee.Windows
             Thread.Sleep(200);
             return System.Math.Round(cpuUsage.NextValue(), 0) + " %";
         }
+#endif
 
     }
 

@@ -23,7 +23,7 @@ namespace Coddee.Crypto
                                            string secrectKey,
                                            SymmetricAlgorithm alg=null)
         {
-            using (alg = alg ?? new AesManaged())
+            using (alg = alg ?? Aes.Create())
             {
                 try
                 {
@@ -78,7 +78,7 @@ namespace Coddee.Crypto
                                      string secrectKey,
                                      SymmetricAlgorithm alg=null)
         {
-            using (alg = alg ?? new AesManaged())
+            using (alg = alg ?? Aes.Create())
             {
                 try
                 {

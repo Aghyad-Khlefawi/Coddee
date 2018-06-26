@@ -30,7 +30,7 @@ namespace Coddee.Services
         }
 
         private readonly Dictionary<string, Module> _modules;
-       
+
         /// <inheritdoc />
         public IEnumerable<Module> RegisterModule(params Module[] modules)
         {
@@ -48,7 +48,7 @@ namespace Coddee.Services
             var res = new List<Module>();
             foreach (var type in modules)
             {
-                var attr = type.GetCustomAttributes();
+                var attr = type.GetTypeInfo().GetCustomAttributes();
                 if (!attr.Any() || !attr.Any(e => e is ModuleAttribute))
                     continue;
 
@@ -67,12 +67,16 @@ namespace Coddee.Services
         }
 
         /// <inheritdoc />
-        public IEnumerable<Module> DescoverModulesFromAssambles(string assembliesPrefix = null)
+        public IEnumerable<Module> DescoverModulesFromAssambles(string location, string assembliesPrefix = null)
         {
-            string path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+#if NET45
+            string path = Path.GetDirectoryName(location);
             return DescoverModulesFromAssambles(Directory.GetFiles(path, $"{assembliesPrefix}*.dll")
-                                                    .Select(Assembly.LoadFile)
-                                                    .ToArray());
+                                                    .Select(e => Assembly.LoadFile(e))
+                                          .ToArray());
+#elif NETSTANDARD1_3
+            throw new NotImplementedException("This is supported in NET framework 4.5 and heigher");
+#endif
         }
         /// <inheritdoc />
         public IEnumerable<Module> DescoverModulesFromAssambles(params Assembly[] assemblies)
@@ -82,7 +86,7 @@ namespace Coddee.Services
             {
                 foreach (var type in assembly.GetTypes())
                 {
-                    var attr = type.GetCustomAttributes();
+                    var attr = type.GetTypeInfo().GetCustomAttributes();
                     if (!attr.Any() || !attr.Any(e => e is ModuleAttribute))
                         continue;
 
@@ -94,7 +98,7 @@ namespace Coddee.Services
                         Dependencies = module.Dependencies,
                         InitializationType = module.InitializationTypes
                     };
-                    if (type.GetInterface(typeof(IModule).Name) == null)
+                    if (type.GetInterfaces().All(e => e == typeof(IModule)))
                         throw new ModuleException($"The module {appModule.Name} doesn't implements IMoudle");
 
                     if (type.GetConstructor(Type.EmptyTypes) == null)
@@ -138,7 +142,7 @@ namespace Coddee.Services
         /// <summary>
         /// Aggregate through the modules to resolve and initialize there dependencies then initialize the requested module
         /// </summary>
-       public async Task InitializeModuleWithDependincies(Module module, List<string> dependencyStack)
+        public async Task InitializeModuleWithDependincies(Module module, List<string> dependencyStack)
         {
             if (module.Initialized)
             {

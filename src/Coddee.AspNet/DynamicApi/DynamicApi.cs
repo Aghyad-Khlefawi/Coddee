@@ -102,7 +102,6 @@ namespace Coddee.AspNet
                 if (exception != null)
                     await HandleException(request, exception);
             }
-
             else
             {
                 await next(context);

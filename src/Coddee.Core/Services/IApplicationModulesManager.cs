@@ -31,9 +31,10 @@ namespace Coddee.Services
         /// Search for modules in the executable folder.
         /// Finds the modules based on the ApplicationModuleAttribute
         /// </summary>
+        /// <param name="location">the directory to look for the assemblies in.</param>
         /// <param name="assembliesPrefix">A prefix for the assemblies to look for</param>
         /// <exception cref="ModuleException"></exception>
-        IEnumerable<Module> DescoverModulesFromAssambles(string assembliesPrefix = null);
+        IEnumerable<Module> DescoverModulesFromAssambles(string location,string assembliesPrefix = null);
 
         /// <summary>
         /// Search for modules in the executable folder.

@@ -44,15 +44,17 @@ namespace Coddee.AppBuilder
         /// Initialize the configuration manager
         /// </summary>
         /// <param name="builder">the application builder.</param>
+        /// <param name="fileLocation"></param>
         /// <param name="defaultFile">The default configurations file.</param>
         public static IApplicationBuilder UseConfigurationFile(
             this IApplicationBuilder builder,
+            string fileLocation,
            IConfigurationFile defaultFile=null)
         {
             builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.ConfigFileBuildAction((container) =>
                   {
                       var config = container.Resolve<IConfigurationManager>();
-                      config.Initialize(defaultFile);
+                      config.Initialize(fileLocation,defaultFile);
                   }));
             return builder;
         }

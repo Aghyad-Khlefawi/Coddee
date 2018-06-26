@@ -1,0 +1,40 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Authors>Aghyad khlefawi</Authors>
+    <Description>Coddee AspNet assembly</Description>
+    <Copyright>Copyright ©  2018 Aghyad khlefawi</Copyright>
+    <Version>1.2.3</Version>
+    <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/Aghyad-Khlefawi/Coddee</PackageProjectUrl>
+    <PackageIconUrl>https://en.gravatar.com/userimage/66313960/62579b8b8fd6557dd54bbb9766b1ba23.png</PackageIconUrl>
+    <RepositoryUrl>https://github.com/Aghyad-Khlefawi/Coddee</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageId>Coddee.AspNetCore</PackageId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Pages\Error.html" />
+    <None Remove="Pages\ErrorWithDetailes.html" />
+    <None Remove="Pages\Log.html" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Pages\Error.html" />
+    <EmbeddedResource Include="Pages\ErrorWithDetailes.html" />
+    <EmbeddedResource Include="Pages\Log.html" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore" Version="2.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.1.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Coddee.Core\Coddee.Core.csproj" />
+    <ProjectReference Include="..\Coddee.Windows\Coddee.Windows.csproj" />
+  </ItemGroup>
+
+</Project>

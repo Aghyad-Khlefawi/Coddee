@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Coddee;
 using Coddee.AppBuilder;
 using Coddee.AspNet;
+using Coddee.AspNet.LinqToSql;
 using Coddee.Attributes;
 using Coddee.Loggers;
 using Coddee.Windows.AppBuilder;
@@ -46,7 +47,7 @@ namespace HR.Web
             var dbLocation = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..\\", "..\\", "..\\", "..\\", "..\\", "DB"));
             AppDomain.CurrentDomain.SetData("DataDirectory", dbLocation);
             services.AddContainer();
-            services.AddLogger(new LoggerOptions(LoggerTypes.DebugOutput, LogRecordTypes.Debug));
+            services.AddLogger(new LoggerOptions(LoggerTypes.DebugOutput, LogRecordTypes.Debug, AppDomain.CurrentDomain.BaseDirectory));
             services.AddILObjectMapper();
             services.AddTransientRepositoryManager();
             services.AddLinqRepositories<HRDBManager>(new LinqInitializerConfig(c => @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\HRDatabase.mdf;Integrated Security=True;Connect Timeout=30", "HR.Data.LinqToSQL"));

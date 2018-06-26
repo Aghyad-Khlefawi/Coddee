@@ -12,13 +12,7 @@ namespace Coddee.Windows.AppBuilder
     /// </summary>
     public class LoggerOptions
     {
-        /// <param name="loggerType">The logging service type</param>
-        /// <param name="level" >The minimum logging level</param>
-        public LoggerOptions(LoggerTypes loggerType, LogRecordTypes level)
-            : this(loggerType, level, null)
-        {
-        }
-
+        
         /// <param name="loggerType">The logging service type</param>
         /// <param name="level" >The minimum logging level</param>
         /// <param name="logFilePath">The full path of the log file</param>
@@ -28,7 +22,7 @@ namespace Coddee.Windows.AppBuilder
             Level = level;
 
             if (string.IsNullOrEmpty(logFilePath))
-                logFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "log.txt");
+                throw new ArgumentNullException(nameof(logFilePath));
             LogFilePath = logFilePath;
         }
 

@@ -282,7 +282,7 @@ namespace Coddee.Data.REST
 
             try
             {
-                return JsonConvert.DeserializeObject<T>(resString);
+                return JsonConvert.DeserializeObject<T>(resString, DefaultDateTimeConverter);
             }
             catch (Exception e)
             {

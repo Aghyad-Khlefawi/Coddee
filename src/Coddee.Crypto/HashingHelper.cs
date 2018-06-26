@@ -55,7 +55,7 @@ namespace Coddee.Crypto
                 Buffer.BlockCopy(textbytes, 0, finalresult, 0, textbytes.Length);
                 Buffer.BlockCopy(saltbytes, 0, finalresult, textbytes.Length, saltbytes.Length);
                 byte[] hashData = alg.ComputeHash(finalresult);
-                alg.Clear();
+                alg.Dispose();
                 return new HashedValue(Encoding.ASCII.GetString(hashData), salt);
             }
         }
@@ -69,7 +69,7 @@ namespace Coddee.Crypto
         public static HashedValue GenerateHash(string text,
                                                HashAlgorithm alg = null)
         {
-            return GenerateHash(text, GenerateRandomSalt(new RNGCryptoServiceProvider(), 16), alg);
+            return GenerateHash(text, GenerateRandomSalt(RandomNumberGenerator.Create(), 16), alg);
         }
 
         /// <summary>
@@ -90,7 +90,7 @@ namespace Coddee.Crypto
         /// <param name="rng">CryptoServiceProvider</param>
         /// <param name="size">salt size</param>
         /// <returns></returns>
-        public static string GenerateRandomSalt(RNGCryptoServiceProvider rng, int size)
+        public static string GenerateRandomSalt(RandomNumberGenerator rng, int size)
         {
             var bytes = new Byte[size];
             rng.GetBytes(bytes);

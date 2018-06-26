@@ -5,6 +5,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Reflection.Emit;
 
 namespace Coddee.Windows.Mapper
@@ -101,7 +102,7 @@ namespace Coddee.Windows.Mapper
                 {
                     if (sourceProperty == null &&
                                 targetPoperty.PropertyType.GenericTypeArguments.Any() &&
-                                !targetPoperty.PropertyType.GenericTypeArguments[0].IsClass &&
+                                !targetPoperty.PropertyType.GenericTypeArguments[0].IsByRef &&
                                 targetPoperty.PropertyType == typeof(Nullable<>).MakeGenericType(targetPoperty.PropertyType.GenericTypeArguments))
                     {
                         sourceProperty =
@@ -303,7 +304,7 @@ namespace Coddee.Windows.Mapper
             var dm = new DynamicMethod($"_MAP_{sourceType.Name}_{targetType.Name}",
                                        typeof(void),
                                        new[] { sourceType, targetType },
-                                       typeof(TTarget).Module);
+                                       typeof(TTarget).GetTypeInfo().Module);
             var il = dm.GetILGenerator();
 
             var source = il.DeclareLocal(sourceType);
@@ -343,7 +344,7 @@ namespace Coddee.Windows.Mapper
             var dm = new DynamicMethod($"_MAP_{sourceType.Name}_{targetType.Name}",
                                        targetType,
                                        new[] { sourceType },
-                                       typeof(TTarget).Module);
+                                       typeof(TTarget).GetTypeInfo().Module);
             var il = dm.GetILGenerator();
 
             var source = il.DeclareLocal(sourceType);
@@ -437,7 +438,7 @@ namespace Coddee.Windows.Mapper
             var dm = new DynamicMethod($"_MAP_LIST_{sourceType.Name}_{targetType.Name}",
                                        typeof(TTarget[]),
                                        new[] { typeof(ILMappingInfo), typeof(IList<TSource>) },
-                                       typeof(TTarget).Module);
+                                       typeof(TTarget).GetTypeInfo().Module);
             var il = dm.GetILGenerator();
 
 

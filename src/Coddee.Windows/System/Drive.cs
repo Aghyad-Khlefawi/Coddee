@@ -31,7 +31,7 @@ namespace Coddee.Windows
         /// </summary>
         public string DriveLetter { get; set; }
 
-        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        [DllImport("kernel32.dll", CharSet = CharSet.Ansi, SetLastError = true)]
         private static extern bool GetVolumeInformation(
             string rootPathName,
             StringBuilder volumeNameBuffer,

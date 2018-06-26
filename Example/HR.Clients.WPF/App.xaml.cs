@@ -32,7 +32,7 @@ namespace HR.Clients.WPF
 
                              //Configure the logger to use the application console, visual studio output window and a text file
                              //with the minimum displayed records of type debug
-                             .UseLogger(new LoggerOptions(LoggerTypes.ApplicationConsole | LoggerTypes.DebugOutput | LoggerTypes.File, LogRecordTypes.Debug)
+                             .UseLogger(new LoggerOptions(LoggerTypes.ApplicationConsole | LoggerTypes.DebugOutput | LoggerTypes.File, LogRecordTypes.Debug,AppDomain.CurrentDomain.BaseDirectory)
                              {
                                  LogFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "log.txt"),
                                  UseFileCompression = true

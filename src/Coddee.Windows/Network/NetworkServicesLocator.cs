@@ -2,7 +2,6 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
 using System;
-using Timer = System.Timers.Timer;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
@@ -31,7 +30,8 @@ namespace Coddee.Network
                 StopBroadcastServer();
             _token = new CancellationTokenSource();
             _isBroadcasting = true;
-            await Task.Factory.StartNew(() =>
+
+            async Task BroadcastServicesInternal()
             {
                 _server = new UdpClient(12100);
                 while (_isBroadcasting)
@@ -39,16 +39,18 @@ namespace Coddee.Network
                     try
                     {
                         var clientEP = new IPEndPoint(IPAddress.Any, 0);
-                        _server.Receive(ref clientEP);
+                        await _server.ReceiveAsync();
                         var data = JsonConvert.SerializeObject(services);
                         var buffer = Encoding.UTF8.GetBytes(data);
-                        _server.Send(buffer, buffer.Length, clientEP);
+                        await _server.SendAsync(buffer, buffer.Length, clientEP);
                     }
                     catch
                     {
                     }
                 }
-            }, _token.Token, TaskCreationOptions.LongRunning, TaskScheduler.Default);
+            }
+
+            await Task.Factory.StartNew(BroadcastServicesInternal, _token.Token, TaskCreationOptions.LongRunning, TaskScheduler.Default);
         }
 
         /// <summary>
@@ -57,7 +59,12 @@ namespace Coddee.Network
         public static void StopBroadcastServer()
         {
             _isBroadcasting = false;
+#if NET45
+
             _server.Close();
+#else
+            _server.Dispose();
+#endif
             _token.Cancel();
         }
 
@@ -82,18 +89,24 @@ namespace Coddee.Network
         public async void StartServicesDiscoveryAsync(int timeoutSeconds)
         {
             var result = new List<NetworkService>();
-            var timer = new Timer(timeoutSeconds * 100);
+
+
+
+            Timer timer = null;
+            timer = new Timer(TimerElapsed, null, 0, timeoutSeconds * 100);
+
             _completed = false;
-            timer.Elapsed += delegate
+
+            void TimerElapsed(object state)
             {
                 if (!_completed)
                 {
                     _completed = true;
                     OnServiceDiscoveryCompleted?.Invoke(this, result);
                 }
-                timer.Stop();
-            };
-            timer.Start();
+                timer.Dispose();
+            }
+
             _startDate = DateTime.Now;
             _client = new UdpClient();
             await _client.SendAsync(new byte[] { }, 0, new IPEndPoint(IPAddress.Broadcast, 12100));
@@ -101,7 +114,7 @@ namespace Coddee.Network
             {
                 var res = await _client.ReceiveAsync();
                 var resStr = Encoding.UTF8.GetString(res.Buffer);
-                
+
                 result.AddRange(JsonConvert.DeserializeObject<NetworkService[]>(resStr));
                 foreach (var item in result)
                 {

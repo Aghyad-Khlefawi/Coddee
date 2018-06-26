@@ -24,12 +24,12 @@ namespace Coddee.Services.Configuration
         private readonly Dictionary<string, IConfigurationFile> _configurationFiles;
 
         /// <inheritdoc />
-        public void Initialize(IConfigurationFile defaultConfigurationFile)
+        public void Initialize(string fileLocation,IConfigurationFile defaultConfigurationFile)
         {
             if (defaultConfigurationFile == null)
                 defaultConfigurationFile =
                     new ConfigurationFile(_defaultConfigFile,
-                                          Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
+                                          Path.Combine(fileLocation,
                                                        $"{_defaultConfigFile}.config"));
             _configurationFiles.Clear();
             AddConfigurationFile(defaultConfigurationFile);
