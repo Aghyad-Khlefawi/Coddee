@@ -70,7 +70,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HR.Clients.Xamarin", "Examp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Coddee.Data.SQLite", "src\Coddee.Data.SQLite\Coddee.Data.SQLite.csproj", "{779047AA-504A-4FB7-AAD1-11C8F9B01C46}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Coddee.AspNetCore.LinqToSql", "Coddee.AspNet.LinqToSql\Coddee.AspNetCore.LinqToSql.csproj", "{60D5A2AF-170F-49C1-ABD9-B097F1274DF5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Coddee.AspNetCore.LinqToSql", "src\Coddee.AspNet.LinqToSql\Coddee.AspNetCore.LinqToSql.csproj", "{60D5A2AF-170F-49C1-ABD9-B097F1274DF5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
