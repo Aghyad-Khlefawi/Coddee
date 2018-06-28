@@ -61,5 +61,6 @@ namespace Coddee.WPF.DefaultShell
         {
             SetState(WindowState.Maximized);
         }
+
     }
 }

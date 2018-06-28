@@ -148,14 +148,7 @@ namespace Coddee.WPF.Controls
 
         private void OnChildChanged()
         {
-            if (Child != null && Child.BorderThickness != _zeroThickness)
-                Child.BorderThickness = _zeroThickness;
-        }
-
-        public override void OnApplyTemplate()
-        {
-            base.OnApplyTemplate();
-            if (Child != null && Child.BorderThickness != _zeroThickness)
+            if (Child != null && Child.BorderThickness != _zeroThickness && Visibility == Visibility.Visible)
                 Child.BorderThickness = _zeroThickness;
         }
 

@@ -389,7 +389,8 @@
             </Trigger>
         </Style.Triggers>
     </Style>
-    <Style TargetType="Button" BasedOn="{StaticResource HighlightButton}"/>
+    <Style  x:Key="ButtonBase" TargetType="Button" BasedOn="{StaticResource HighlightButton}"/>
+    <Style TargetType="Button" BasedOn="{StaticResource ButtonBase}"/>
 
     <Style x:Key="MenuBorder" TargetType="Border">
         <Setter Property="BorderThickness" Value="0 0 2 0" />

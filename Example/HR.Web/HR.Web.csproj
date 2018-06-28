@@ -26,7 +26,7 @@
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="1.0.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Coddee.AspNet.LinqToSql\Coddee.AspNetCore.LinqToSql.csproj" />
+    <ProjectReference Include="..\..\src\Coddee.AspNet.LinqToSql\Coddee.AspNetCore.LinqToSql.csproj" />
     <ProjectReference Include="..\..\src\Coddee.AspNet\Coddee.AspNetCore.csproj" />
     <ProjectReference Include="..\..\src\Coddee.Core\Coddee.Core.csproj" />
     <ProjectReference Include="..\..\src\Coddee.Crypto\Coddee.Crypto.csproj" />

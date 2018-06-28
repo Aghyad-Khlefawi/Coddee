@@ -41,11 +41,11 @@
             <DockPanel>
                 <Border DockPanel.Dock="Top"
                         BorderThickness="0 0 0 2"
-                        Background="{x:Static local:ApplicationTheme.ApplicationAccentColor}"
                         BorderBrush="{x:Static local:ApplicationTheme.ApplicationAccentColorDarker}">
                     <DockPanel 
                            x:Name="ToolBar"
                            Margin="0 0 0 0"
+                           Background="{x:Static local:ApplicationTheme.ApplicationAccentColor}"
                            LastChildFill="False"
                            Height="35">
                         <Label Content="{Binding ApplicationName}"
@@ -113,22 +113,22 @@
                                 Region="{x:Static defaultShell:DefaultRegions.ApplicationMainRegion}" />
                         </DockPanel>
 
-                        <Grid HorizontalAlignment="Right" Margin="0 5 10 5">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height=".4*"/>
-                                <RowDefinition Height=".6*"/>
-                            </Grid.RowDefinitions>
-                            <controls:RegionControl Width="300" 
-                                                    Region="{x:Static defaultShell:DefaultRegions.ToastRegion}" />
-                            <controls:RegionControl Grid.Row="1"
-                                                    VerticalAlignment="Bottom"
-                                                    Region="{x:Static defaultShell:DefaultRegions.NotificationRegion}" />
-                        </Grid>
 
                     </Grid>
                     <controls:RegionControl HorizontalAlignment="Left"
                                             Region="{x:Static defaultShell:DefaultRegions.NavbarRegion}" />
                     <controls:RegionControl Region="{x:Static defaultShell:DefaultRegions.DialogRegion}" />
+                    <Grid HorizontalAlignment="Right" Margin="0 5 10 5">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height=".4*"/>
+                            <RowDefinition Height=".6*"/>
+                        </Grid.RowDefinitions>
+                        <controls:RegionControl Width="300" 
+                                                Region="{x:Static defaultShell:DefaultRegions.ToastRegion}" />
+                        <controls:RegionControl Grid.Row="1"
+                                                VerticalAlignment="Bottom"
+                                                Region="{x:Static defaultShell:DefaultRegions.NotificationRegion}" />
+                    </Grid>
 
                 </Grid>
             </DockPanel>

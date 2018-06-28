@@ -22,7 +22,7 @@ namespace Coddee.WPF.Services.Dialogs
         /// <summary>
         /// The dialog title.
         /// </summary>
-        public string Title { get; set; }
+        public string DialogTitle { get; set; }
 
         /// <summary>
         /// Show the dialog.
@@ -30,7 +30,7 @@ namespace Coddee.WPF.Services.Dialogs
         public void Show()
         {
             if (_dialog == null)
-                _dialog = _dialogService.CreateDialog(Title, this, GetOptions(), GetCommands()?.ToArray());
+                _dialog = _dialogService.CreateDialog(DialogTitle, this, GetOptions(), GetCommands()?.ToArray());
             _dialog.Show();
         }
 

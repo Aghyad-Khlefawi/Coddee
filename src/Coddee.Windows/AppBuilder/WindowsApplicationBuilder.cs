@@ -72,13 +72,14 @@ namespace Coddee.AppBuilder
         /// </summary>
         public virtual void Start()
         {
-            _logger.Log(_eventsSource, "Application build started.", LogRecordTypes.Information);
+            _logger.Log(_eventsSource, "Application build started.", LogRecordTypes.Debug);
             try
             {
                 SetupDefaultBuildActions();
 
                 Log($"Invoking build actions.");
                 BuildActionsCoordinator.InvokeAll(_container);
+                _logger.Log(_eventsSource, "Application build completed.", LogRecordTypes.Debug);
             }
             catch (Exception ex)
             {
