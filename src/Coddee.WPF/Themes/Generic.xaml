@@ -26,9 +26,10 @@
                     <Border Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}">
-                        <ContentPresenter Content="{Binding RelativeSource={RelativeSource TemplatedParent},Path=Region.Content}"
-                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" />
+                        <ContentPresenter
+                            Content="{Binding RelativeSource={RelativeSource TemplatedParent},Path=Region.Content}"
+                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" />
                     </Border>
                 </ControlTemplate>
             </Setter.Value>
@@ -36,7 +37,7 @@
     </Style>
 
     <Style TargetType="{x:Type local:BusyIndicator}">
-        <Setter Property="FillColor" Value="{x:Static wpf:ApplicationTheme.ApplicationAccentColor}"/>
+        <Setter Property="FillColor" Value="{x:Static wpf:ApplicationTheme.ApplicationAccentColor}" />
         <Setter Property="IsTabStop"
                 Value="False" />
         <Setter Property="Template">
@@ -52,10 +53,12 @@
                                     <Style.Triggers>
                                         <MultiDataTrigger>
                                             <MultiDataTrigger.Conditions>
-                                                <Condition Binding="{Binding RelativeSource={RelativeSource TemplatedParent},Path=IsBusy}"
-                                                           Value="true" />
-                                                <Condition Binding="{Binding RelativeSource={RelativeSource TemplatedParent},Path=HideContentOnBusy}"
-                                                           Value="true" />
+                                                <Condition
+                                                    Binding="{Binding RelativeSource={RelativeSource TemplatedParent},Path=IsBusy}"
+                                                    Value="true" />
+                                                <Condition
+                                                    Binding="{Binding RelativeSource={RelativeSource TemplatedParent},Path=HideContentOnBusy}"
+                                                    Value="true" />
                                             </MultiDataTrigger.Conditions>
                                             <MultiDataTrigger.Setters>
                                                 <Setter Property="Visibility"
@@ -68,8 +71,8 @@
                         </ContentPresenter>
                         <Grid x:Name="Root"
                               Visibility="{Binding RelativeSource={RelativeSource TemplatedParent},Path=IsBusy,Converter={StaticResource BoolToVisibilityConverter}}">
-                            <Border Background="{TemplateBinding Background}" 
-                                    
+                            <Border Background="{TemplateBinding Background}"
+
                                     Opacity="0.7" />
                             <DockPanel VerticalAlignment="Center"
                                        HorizontalAlignment="Center">
@@ -98,9 +101,10 @@
                                                         <DataTrigger.EnterActions>
                                                             <BeginStoryboard>
                                                                 <Storyboard>
-                                                                    <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)"
-                                                                                                   RepeatBehavior="Forever"
-                                                                                                   SpeedRatio="4">
+                                                                    <DoubleAnimationUsingKeyFrames
+                                                                        Storyboard.TargetProperty="(UIElement.Opacity)"
+                                                                        RepeatBehavior="Forever"
+                                                                        SpeedRatio="4">
                                                                         <EasingDoubleKeyFrame KeyTime="0"
                                                                                               Value="0.6" />
                                                                         <EasingDoubleKeyFrame KeyTime="0:0:0.2"
@@ -154,9 +158,10 @@
                                                         <DataTrigger.EnterActions>
                                                             <BeginStoryboard>
                                                                 <Storyboard>
-                                                                    <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)"
-                                                                                                   RepeatBehavior="Forever"
-                                                                                                   SpeedRatio="4">
+                                                                    <DoubleAnimationUsingKeyFrames
+                                                                        Storyboard.TargetProperty="(UIElement.Opacity)"
+                                                                        RepeatBehavior="Forever"
+                                                                        SpeedRatio="4">
                                                                         <EasingDoubleKeyFrame KeyTime="0"
                                                                                               Value="0.4" />
                                                                         <EasingDoubleKeyFrame KeyTime="0:0:0.2"
@@ -210,9 +215,10 @@
                                                         <DataTrigger.EnterActions>
                                                             <BeginStoryboard>
                                                                 <Storyboard>
-                                                                    <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)"
-                                                                                                   RepeatBehavior="Forever"
-                                                                                                   SpeedRatio="4">
+                                                                    <DoubleAnimationUsingKeyFrames
+                                                                        Storyboard.TargetProperty="(UIElement.Opacity)"
+                                                                        RepeatBehavior="Forever"
+                                                                        SpeedRatio="4">
                                                                         <EasingDoubleKeyFrame KeyTime="0"
                                                                                               Value="0.5" />
                                                                         <EasingDoubleKeyFrame KeyTime="0:0:0.2"
@@ -266,9 +272,10 @@
                                                         <DataTrigger.EnterActions>
                                                             <BeginStoryboard>
                                                                 <Storyboard>
-                                                                    <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)"
-                                                                                                   RepeatBehavior="Forever"
-                                                                                                   SpeedRatio="4">
+                                                                    <DoubleAnimationUsingKeyFrames
+                                                                        Storyboard.TargetProperty="(UIElement.Opacity)"
+                                                                        RepeatBehavior="Forever"
+                                                                        SpeedRatio="4">
                                                                         <EasingDoubleKeyFrame KeyTime="0"
                                                                                               Value="0.6" />
                                                                         <EasingDoubleKeyFrame KeyTime="0:0:0.2"
@@ -322,9 +329,10 @@
                                                         <DataTrigger.EnterActions>
                                                             <BeginStoryboard>
                                                                 <Storyboard>
-                                                                    <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)"
-                                                                                                   RepeatBehavior="Forever"
-                                                                                                   SpeedRatio="4">
+                                                                    <DoubleAnimationUsingKeyFrames
+                                                                        Storyboard.TargetProperty="(UIElement.Opacity)"
+                                                                        RepeatBehavior="Forever"
+                                                                        SpeedRatio="4">
                                                                         <EasingDoubleKeyFrame KeyTime="0"
                                                                                               Value="0.7" />
                                                                         <EasingDoubleKeyFrame KeyTime="0:0:0.2"
@@ -378,9 +386,10 @@
                                                         <DataTrigger.EnterActions>
                                                             <BeginStoryboard>
                                                                 <Storyboard>
-                                                                    <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)"
-                                                                                                   RepeatBehavior="Forever"
-                                                                                                   SpeedRatio="4">
+                                                                    <DoubleAnimationUsingKeyFrames
+                                                                        Storyboard.TargetProperty="(UIElement.Opacity)"
+                                                                        RepeatBehavior="Forever"
+                                                                        SpeedRatio="4">
                                                                         <EasingDoubleKeyFrame KeyTime="0"
                                                                                               Value="0.8" />
                                                                         <EasingDoubleKeyFrame KeyTime="0:0:0.2"
@@ -433,9 +442,10 @@
                                                         <DataTrigger.EnterActions>
                                                             <BeginStoryboard>
                                                                 <Storyboard>
-                                                                    <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)"
-                                                                                                   RepeatBehavior="Forever"
-                                                                                                   SpeedRatio="4">
+                                                                    <DoubleAnimationUsingKeyFrames
+                                                                        Storyboard.TargetProperty="(UIElement.Opacity)"
+                                                                        RepeatBehavior="Forever"
+                                                                        SpeedRatio="4">
                                                                         <EasingDoubleKeyFrame KeyTime="0"
                                                                                               Value="0.9" />
                                                                         <EasingDoubleKeyFrame KeyTime="0:0:0.2"
@@ -487,9 +497,10 @@
                                                         <DataTrigger.EnterActions>
                                                             <BeginStoryboard>
                                                                 <Storyboard>
-                                                                    <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)"
-                                                                                                   RepeatBehavior="Forever"
-                                                                                                   SpeedRatio="4">
+                                                                    <DoubleAnimationUsingKeyFrames
+                                                                        Storyboard.TargetProperty="(UIElement.Opacity)"
+                                                                        RepeatBehavior="Forever"
+                                                                        SpeedRatio="4">
                                                                         <EasingDoubleKeyFrame KeyTime="0"
                                                                                               Value="1" />
                                                                         <EasingDoubleKeyFrame KeyTime="0:0:0.2"
@@ -558,11 +569,12 @@
                                                  HideContentOnBusy="True"
                                                  Background="Transparent">
                                 <Grid>
-                                    <local:ValidationBorder 
-                                                        Visibility="{Binding RelativeSource={RelativeSource TemplatedParent},Path=ShowValidationBorder,Converter={StaticResource BoolToVisibilityConverter}}"
-                                                        Child="{TemplateBinding Content}"
-                                                        ValidatedPropertyName="{TemplateBinding ValidatedPropertyName}"
-                                                        HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" />
+                                    <local:ValidationBorder
+                                        IsEnabled="{TemplateBinding ShowValidationBorder}"
+                                        Visibility="{Binding RelativeSource={RelativeSource TemplatedParent},Path=ShowValidationBorder,Converter={StaticResource BoolToVisibilityConverter}}"
+                                        Child="{TemplateBinding Content}"
+                                        ValidatedPropertyName="{TemplateBinding ValidatedPropertyName}"
+                                        HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" />
                                     <ContentPresenter
                                         Visibility="{Binding RelativeSource={RelativeSource TemplatedParent},Path=ShowValidationBorder,Converter={StaticResource BoolToVisibilityConverter},ConverterParameter=R}"
                                         Content="{TemplateBinding Content}"
@@ -592,8 +604,8 @@
     </Style>
 
     <Style TargetType="{x:Type local:WaterMarkTextBox}">
-        <Setter Property="IsTabStop" Value="False"/>
-        <Setter Property="Focusable" Value="False"/>
+        <Setter Property="IsTabStop" Value="False" />
+        <Setter Property="Focusable" Value="False" />
         <Setter Property="Background"
                 Value="White" />
         <Setter Property="VerticalContentAlignment"
@@ -634,8 +646,8 @@
     </Style>
 
     <Style TargetType="{x:Type local:WaterMarkPasswordBox}">
-        <Setter Property="IsTabStop" Value="False"/>
-        <Setter Property="Focusable" Value="False"/>
+        <Setter Property="IsTabStop" Value="False" />
+        <Setter Property="Focusable" Value="False" />
         <Setter Property="Background"
                 Value="White" />
         <Setter Property="VerticalContentAlignment"
@@ -690,8 +702,9 @@
                                             <Setter Property="Background"
                                                     Value="{Binding RelativeSource={RelativeSource AncestorType=local:TabsPanel,Mode=FindAncestor},Path=ItemBackground}" />
                                             <Style.Triggers>
-                                                <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=local:TabsPanelItem,Mode=FindAncestor},Path=IsSelected}"
-                                                             Value="true">
+                                                <DataTrigger
+                                                    Binding="{Binding RelativeSource={RelativeSource AncestorType=local:TabsPanelItem,Mode=FindAncestor},Path=IsSelected}"
+                                                    Value="true">
                                                     <DataTrigger.Setters>
                                                         <Setter Property="Background"
                                                                 Value="{Binding RelativeSource={RelativeSource AncestorType=local:TabsPanel,Mode=FindAncestor},Path=HeaderForeground}" />
@@ -712,14 +725,17 @@
 
                                                     <MultiDataTrigger>
                                                         <MultiDataTrigger.Conditions>
-                                                            <Condition Binding="{Binding RelativeSource={RelativeSource AncestorType=Grid,Mode=FindAncestor},Path=IsMouseOver}"
-                                                                       Value="True" />
-                                                            <Condition Binding="{Binding RelativeSource={RelativeSource AncestorType=local:TabsPanelItem,Mode=FindAncestor},Path=IsSelected}"
-                                                                       Value="False" />
+                                                            <Condition
+                                                                Binding="{Binding RelativeSource={RelativeSource AncestorType=Grid,Mode=FindAncestor},Path=IsMouseOver}"
+                                                                Value="True" />
+                                                            <Condition
+                                                                Binding="{Binding RelativeSource={RelativeSource AncestorType=local:TabsPanelItem,Mode=FindAncestor},Path=IsSelected}"
+                                                                Value="False" />
                                                         </MultiDataTrigger.Conditions>
                                                         <MultiDataTrigger.EnterActions>
                                                             <BeginStoryboard>
-                                                                <Storyboard TargetProperty="(Button.Background).(SolidColorBrush.Color)">
+                                                                <Storyboard
+                                                                    TargetProperty="(Button.Background).(SolidColorBrush.Color)">
                                                                     <ColorAnimation From="Transparent"
                                                                                     To="#989898"
                                                                                     Duration="0:0:0.2" />
@@ -728,7 +744,8 @@
                                                         </MultiDataTrigger.EnterActions>
                                                         <MultiDataTrigger.ExitActions>
                                                             <BeginStoryboard>
-                                                                <Storyboard TargetProperty="(Button.Background).(SolidColorBrush.Color)">
+                                                                <Storyboard
+                                                                    TargetProperty="(Button.Background).(SolidColorBrush.Color)">
                                                                     <ColorAnimation From="#989898"
                                                                                     To="Transparent"
                                                                                     Duration="0:0:0.2" />
@@ -741,17 +758,20 @@
                                             </Style>
                                         </Border.Style>
                                     </Border>
-                                    <DockPanel Margin="{Binding RelativeSource={RelativeSource AncestorType=local:TabsPanel,Mode=FindAncestor},Path=ItemsMargin}"
-                                               VerticalAlignment="Center"
-                                               HorizontalAlignment="Center">
-                                        <TextBlock Text="{Binding RelativeSource={RelativeSource AncestorType=local:TabsPanelItem,Mode=FindAncestor},Path=Header}">
+                                    <DockPanel
+                                        Margin="{Binding RelativeSource={RelativeSource AncestorType=local:TabsPanel,Mode=FindAncestor},Path=ItemsMargin}"
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Center">
+                                        <TextBlock
+                                            Text="{Binding RelativeSource={RelativeSource AncestorType=local:TabsPanelItem,Mode=FindAncestor},Path=Header}">
                                             <TextBlock.Style>
                                                 <Style TargetType="TextBlock">
                                                     <Setter Property="Foreground"
                                                             Value="{Binding RelativeSource={RelativeSource AncestorType=local:TabsPanel,Mode=FindAncestor},Path=HeaderForeground}" />
                                                     <Style.Triggers>
-                                                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=local:TabsPanelItem,Mode=FindAncestor},Path=IsSelected}"
-                                                                     Value="true">
+                                                        <DataTrigger
+                                                            Binding="{Binding RelativeSource={RelativeSource AncestorType=local:TabsPanelItem,Mode=FindAncestor},Path=IsSelected}"
+                                                            Value="true">
                                                             <DataTrigger.Setters>
                                                                 <Setter Property="Foreground"
                                                                         Value="{Binding RelativeSource={RelativeSource AncestorType=local:TabsPanel,Mode=FindAncestor},Path=ItemBackground}" />
@@ -792,10 +812,11 @@
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}">
                         <DockPanel>
-                            <ItemsControl Height="{Binding RelativeSource={RelativeSource TemplatedParent},Path=TabsBarHeight}"
-                                          DockPanel.Dock="Top"
-                                          ItemsSource="{Binding RelativeSource={RelativeSource TemplatedParent},Path=Items}"
-                                          ScrollViewer.VerticalScrollBarVisibility="Hidden">
+                            <ItemsControl
+                                Height="{Binding RelativeSource={RelativeSource TemplatedParent},Path=TabsBarHeight}"
+                                DockPanel.Dock="Top"
+                                ItemsSource="{Binding RelativeSource={RelativeSource TemplatedParent},Path=Items}"
+                                ScrollViewer.VerticalScrollBarVisibility="Hidden">
                                 <ItemsControl.ItemsPanel>
                                     <ItemsPanelTemplate>
                                         <StackPanel Orientation="Horizontal" />
@@ -806,9 +827,10 @@
                                         DockPanel.Dock="Top"
                                         Margin="0 -1 0 0"
                                         Background="LightGray" />
-                            <ContentPresenter MaxHeight="{Binding RelativeSource={RelativeSource TemplatedParent},Path=MaxContentHeight}"
-                                              Margin="{Binding RelativeSource={RelativeSource AncestorType=local:TabsPanel,Mode=FindAncestor},Path=Padding}"
-                                              Content="{Binding RelativeSource={RelativeSource AncestorType=local:TabsPanel,Mode=FindAncestor},Path=CurrentTab.Content}" />
+                            <ContentPresenter
+                                MaxHeight="{Binding RelativeSource={RelativeSource TemplatedParent},Path=MaxContentHeight}"
+                                Margin="{Binding RelativeSource={RelativeSource AncestorType=local:TabsPanel,Mode=FindAncestor},Path=Padding}"
+                                Content="{Binding RelativeSource={RelativeSource AncestorType=local:TabsPanel,Mode=FindAncestor},Path=CurrentTab.Content}" />
                         </DockPanel>
                     </Border>
                 </ControlTemplate>
@@ -878,7 +900,8 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:ViewModelPresenter}">
-                    <ContentPresenter Margin="{TemplateBinding Padding}" Content="{Binding RelativeSource={RelativeSource TemplatedParent},Path=Content}" />
+                    <ContentPresenter Margin="{TemplateBinding Padding}"
+                                      Content="{Binding RelativeSource={RelativeSource TemplatedParent},Path=Content}" />
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
@@ -919,7 +942,8 @@
                         </DockPanel>
                         <DockPanel DockPanel.Dock="Top"
                                    HorizontalAlignment="Center">
-                            <ItemsControl ItemsSource="{Binding Steps, RelativeSource={RelativeSource TemplatedParent}}">
+                            <ItemsControl
+                                ItemsSource="{Binding Steps, RelativeSource={RelativeSource TemplatedParent}}">
                                 <ItemsControl.ItemsPanel>
                                     <ItemsPanelTemplate>
                                         <StackPanel Orientation="Horizontal" />
@@ -929,10 +953,11 @@
 
                         </DockPanel>
                         <DockPanel Margin="0 20 0 0">
-                            <ContentPresenter Margin="{Binding Padding, RelativeSource={RelativeSource TemplatedParent}}"
-                                              VerticalAlignment="{Binding VerticalContentAlignment, RelativeSource={RelativeSource TemplatedParent}}"
-                                              HorizontalAlignment="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource TemplatedParent}}"
-                                              Content="{Binding CurrentStep.Content, RelativeSource={RelativeSource TemplatedParent}}" />
+                            <ContentPresenter
+                                Margin="{Binding Padding, RelativeSource={RelativeSource TemplatedParent}}"
+                                VerticalAlignment="{Binding VerticalContentAlignment, RelativeSource={RelativeSource TemplatedParent}}"
+                                HorizontalAlignment="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource TemplatedParent}}"
+                                Content="{Binding CurrentStep.Content, RelativeSource={RelativeSource TemplatedParent}}" />
                         </DockPanel>
                     </DockPanel>
                 </ControlTemplate>
@@ -1053,7 +1078,8 @@
                     <StackPanel Orientation="Horizontal">
                         <Grid>
                             <Ellipse Style="{StaticResource StepEllipse}" />
-                            <Grid Visibility="{Binding IsValidated,Converter={StaticResource BoolToVisibilityConverter}}">
+                            <Grid
+                                Visibility="{Binding IsValidated,Converter={StaticResource BoolToVisibilityConverter}}">
                                 <Path VerticalAlignment="Center"
                                       Visibility="{Binding ValidationResult.IsValidWithoutWarrnings,Converter={StaticResource BoolToVisibilityConverter}}"
                                       Height="10"
@@ -1087,9 +1113,10 @@
 
                         <Grid>
                             <Ellipse Style="{StaticResource StepEllipse}" />
-                            <Grid Visibility="{Binding IsValidated,Converter={StaticResource BoolToVisibilityConverter}}">
+                            <Grid
+                                Visibility="{Binding IsValidated,Converter={StaticResource BoolToVisibilityConverter}}">
                                 <Path VerticalAlignment="Center"
-                                      Height="10"                         
+                                      Height="10"
                                       Visibility="{Binding ValidationResult.IsValidWithoutWarrnings,Converter={StaticResource BoolToVisibilityConverter}}"
                                       Style="{StaticResource Shape_CheckMark}"
                                       HorizontalAlignment="Center" />
@@ -1119,7 +1146,8 @@
                                    Margin="0 0 -4 0" />
                         <Grid>
                             <Ellipse Style="{StaticResource StepEllipse}" />
-                            <Grid Visibility="{Binding IsValidated,Converter={StaticResource BoolToVisibilityConverter}}">
+                            <Grid
+                                Visibility="{Binding IsValidated,Converter={StaticResource BoolToVisibilityConverter}}">
                                 <Path VerticalAlignment="Center"
                                       Style="{StaticResource Shape_CheckMark}"
                                       Height="10"
@@ -1171,13 +1199,14 @@
                             Name="PART_BUTTON">
                         <Button.Template>
                             <ControlTemplate>
-                                <ContentPresenter Content="{Binding RelativeSource={RelativeSource AncestorType=local:WizardStep,Mode=FindAncestor}}">
+                                <ContentPresenter
+                                    Content="{Binding RelativeSource={RelativeSource AncestorType=local:WizardStep,Mode=FindAncestor}}">
                                     <ContentPresenter.ContentTemplateSelector>
-                                        <local:WizardStepTemplateSelector FirstStepTemplate="{StaticResource FirstStepTemplate}"
-                                                                          LastStepTemplate="{StaticResource LastStepTemplate}"
-                                                                          StepTemplate="{StaticResource StepTemplate}"
-                                                                          OnlyStepTemplate="{StaticResource OnlyStepTemplate}"
-                                                                          />
+                                        <local:WizardStepTemplateSelector
+                                            FirstStepTemplate="{StaticResource FirstStepTemplate}"
+                                            LastStepTemplate="{StaticResource LastStepTemplate}"
+                                            StepTemplate="{StaticResource StepTemplate}"
+                                            OnlyStepTemplate="{StaticResource OnlyStepTemplate}" />
                                     </ContentPresenter.ContentTemplateSelector>
                                 </ContentPresenter>
                             </ControlTemplate>
@@ -1189,9 +1218,9 @@
     </Style>
 
     <Style TargetType="{x:Type local:ValidationBorder}">
-        <Setter Property="IsTabStop" Value="false"/>
-        <Setter Property="BorderThickness" Value="1"/>
-        <Setter Property="BorderBrush" Value="{x:Static SystemColors.ActiveBorderBrush}"/>
+        <Setter Property="IsTabStop" Value="false" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderBrush" Value="{x:Static SystemColors.ActiveBorderBrush}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:ValidationBorder}">
@@ -1199,9 +1228,17 @@
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}">
                         <Grid>
-                            <ContentPresenter Content="{TemplateBinding Child}"/>
-                            <Path Margin="0 -1 -1 0"  Visibility="{TemplateBinding HasWarning,Converter={StaticResource BoolToVisibilityConverter}}"  Data="M233,173l169.5,169.5V173H233z M356.2,185.1l-1.5,57.9H346l-1.7-57.9H356.2z M357,261	c-0.4,0.9-0.9,1.7-1.6,2.3c-0.7,0.7-1.4,1.2-2.3,1.6c-0.9,0.4-1.9,0.6-2.9,0.6c-1,0-2-0.2-2.9-0.6s-1.7-0.9-2.4-1.6	c-0.7-0.7-1.2-1.4-1.6-2.3c-0.4-0.9-0.6-1.9-0.6-2.9s0.2-2,0.6-2.9c0.4-0.9,0.9-1.7,1.6-2.4c0.7-0.7,1.5-1.2,2.4-1.6	c0.9-0.4,1.9-0.6,2.9-0.6c1,0,2,0.2,2.9,0.6c0.9,0.4,1.7,0.9,2.3,1.6c0.7,0.7,1.2,1.5,1.6,2.4c0.4,0.9,0.6,1.9,0.6,2.9	S357.4,260.1,357,261z" Fill="{StaticResource WarningColor}" Stretch="Uniform" HorizontalAlignment="Right" Height="20" VerticalAlignment="Top" ToolTip="{TemplateBinding Message}"/>
-                            <Path Margin="0 -1 -1 0"  Visibility="{TemplateBinding HasError,Converter={StaticResource BoolToVisibilityConverter}}"  Data="M233,173l169.5,169.5V173H233z M370.6,251.9l-13.9-23.1l-14,23.1H333l19-29.2l-17.5-28h9.2l13.1,21.5	l13.2-21.5h9l-17.5,27.6l19,29.6H370.6z" Fill="{StaticResource ErrorColor}" Stretch="Uniform" HorizontalAlignment="Right" Height="20" VerticalAlignment="Top" ToolTip="{TemplateBinding Message}"/>
+                            <ContentPresenter Content="{TemplateBinding Child}" />
+                            <Path Margin="0 -1 -1 0"
+                                  Visibility="{TemplateBinding HasWarning,Converter={StaticResource BoolToVisibilityConverter}}"
+                                  Data="M233,173l169.5,169.5V173H233z M356.2,185.1l-1.5,57.9H346l-1.7-57.9H356.2z M357,261	c-0.4,0.9-0.9,1.7-1.6,2.3c-0.7,0.7-1.4,1.2-2.3,1.6c-0.9,0.4-1.9,0.6-2.9,0.6c-1,0-2-0.2-2.9-0.6s-1.7-0.9-2.4-1.6	c-0.7-0.7-1.2-1.4-1.6-2.3c-0.4-0.9-0.6-1.9-0.6-2.9s0.2-2,0.6-2.9c0.4-0.9,0.9-1.7,1.6-2.4c0.7-0.7,1.5-1.2,2.4-1.6	c0.9-0.4,1.9-0.6,2.9-0.6c1,0,2,0.2,2.9,0.6c0.9,0.4,1.7,0.9,2.3,1.6c0.7,0.7,1.2,1.5,1.6,2.4c0.4,0.9,0.6,1.9,0.6,2.9	S357.4,260.1,357,261z"
+                                  Fill="{StaticResource WarningColor}" Stretch="Uniform" HorizontalAlignment="Right"
+                                  Height="20" VerticalAlignment="Top" ToolTip="{TemplateBinding Message}" />
+                            <Path Margin="0 -1 -1 0"
+                                  Visibility="{TemplateBinding HasError,Converter={StaticResource BoolToVisibilityConverter}}"
+                                  Data="M233,173l169.5,169.5V173H233z M370.6,251.9l-13.9-23.1l-14,23.1H333l19-29.2l-17.5-28h9.2l13.1,21.5	l13.2-21.5h9l-17.5,27.6l19,29.6H370.6z"
+                                  Fill="{StaticResource ErrorColor}" Stretch="Uniform" HorizontalAlignment="Right"
+                                  Height="20" VerticalAlignment="Top" ToolTip="{TemplateBinding Message}" />
                         </Grid>
                     </Border>
                 </ControlTemplate>
@@ -1214,12 +1251,17 @@
                 <ControlTemplate TargetType="{x:Type local:FileBrowser}">
                     <DockPanel>
                         <Grid>
-                            <Path VerticalAlignment="Center"  Style="{StaticResource Shape_Success}" Fill="ForestGreen" Height="15" Visibility="{TemplateBinding IsValidFile,Converter={StaticResource BoolToVisibilityConverter}}"/>
-                            <Path VerticalAlignment="Center"  Style="{StaticResource Shape_Error}" Fill="{StaticResource ErrorColor}" Height="15" Visibility="{TemplateBinding IsValidFile,Converter={StaticResource BoolToVisibilityConverter},ConverterParameter=R}"/>
+                            <Path VerticalAlignment="Center" Style="{StaticResource Shape_Success}" Fill="ForestGreen"
+                                  Height="15"
+                                  Visibility="{TemplateBinding IsValidFile,Converter={StaticResource BoolToVisibilityConverter}}" />
+                            <Path VerticalAlignment="Center" Style="{StaticResource Shape_Error}"
+                                  Fill="{StaticResource ErrorColor}" Height="15"
+                                  Visibility="{TemplateBinding IsValidFile,Converter={StaticResource BoolToVisibilityConverter},ConverterParameter=R}" />
                         </Grid>
-                        <Label Width="{TemplateBinding TitleWidth}" Content="{TemplateBinding Title}"   />
-                        <Button Width="40" DockPanel.Dock="Right"  Content="..." Command="{Binding RelativeSource={RelativeSource TemplatedParent},Path=BrowseCommand}"/>
-                        <Label VerticalContentAlignment="Center"  Margin="5 0" Content="{TemplateBinding FileName}"/>
+                        <Label Width="{TemplateBinding TitleWidth}" Content="{TemplateBinding Title}" />
+                        <Button Width="40" DockPanel.Dock="Right" Content="..."
+                                Command="{Binding RelativeSource={RelativeSource TemplatedParent},Path=BrowseCommand}" />
+                        <Label VerticalContentAlignment="Center" Margin="5 0" Content="{TemplateBinding FileName}" />
                     </DockPanel>
                 </ControlTemplate>
             </Setter.Value>
@@ -1227,65 +1269,65 @@
     </Style>
 
     <Style TargetType="{x:Type local:MultiSelect}">
-        <Setter Property="BorderThickness" Value="1"/>
-        <Setter Property="Background" Value="White"/>
-        <Setter Property="BorderBrush" Value="{x:Static SystemColors.ActiveBorderBrush}"/>
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Background" Value="White" />
+        <Setter Property="BorderBrush" Value="{x:Static SystemColors.ActiveBorderBrush}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:MultiSelect}">
                     <Grid>
-                        <Border    Background="{TemplateBinding Background}"
-                                    BorderBrush="{TemplateBinding BorderBrush}"
-                                    BorderThickness="{TemplateBinding BorderThickness}">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}">
                             <DockPanel>
                                 <Button Name="PART_OpenButton" Style="{x:Null}"
-                                            Cursor="Hand"
+                                        Cursor="Hand"
                                         Width="20"
-                                            DockPanel.Dock="Right">
+                                        DockPanel.Dock="Right">
                                     <Button.Template>
                                         <ControlTemplate>
                                             <Border Background="White">
                                                 <Path
-                                                    Style="{StaticResource Shape_Arrow_Down}"    
+                                                    Style="{StaticResource Shape_Arrow_Down}"
                                                     Fill="DarkGray"
-                                                        Margin="5"
-                                                        Width="8"/>
+                                                    Margin="5"
+                                                    Width="8" />
                                             </Border>
                                         </ControlTemplate>
                                     </Button.Template>
                                 </Button>
                                 <TextBox
-                                        Text="{TemplateBinding Content}"
-                                        Width="Auto"
-                                        BorderThickness="0"
-                                        IsReadOnly="True" />
+                                    Text="{TemplateBinding Content}"
+                                    Width="Auto"
+                                    BorderThickness="0"
+                                    IsReadOnly="True" />
                             </DockPanel>
                         </Border>
                         <Popup Placement="Bottom"
-                                   x:Name="PART_Popup"
-                                   StaysOpen="False" 
-                                   PlacementTarget="{Binding ElementName=PART_RootBorder}"
-                                   Width="{TemplateBinding ActualWidth}">
+                               x:Name="PART_Popup"
+                               StaysOpen="False"
+                               PlacementTarget="{Binding ElementName=PART_RootBorder}"
+                               Width="{TemplateBinding ActualWidth}">
                             <Border Background="{TemplateBinding Background}"
-                                        BorderBrush="{TemplateBinding BorderBrush}"
-                                        BorderThickness="1">
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="1">
                                 <DockPanel>
                                     <Grid DockPanel.Dock="Top">
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="1*"/>
-                                            <ColumnDefinition Width="1"/>
-                                            <ColumnDefinition Width="1*"/>
+                                            <ColumnDefinition Width="1*" />
+                                            <ColumnDefinition Width="1" />
+                                            <ColumnDefinition Width="1*" />
                                         </Grid.ColumnDefinitions>
                                         <Button Name="PART_AllButton">All</Button>
-                                        <Border Background="{TemplateBinding BorderBrush}" Width="1" Grid.Column="1"/>
+                                        <Border Background="{TemplateBinding BorderBrush}" Width="1" Grid.Column="1" />
                                         <Button Name="PART_AllNone" Grid.Column="2">None</Button>
                                     </Grid>
-                                    <Border Height="1" Background="{TemplateBinding BorderBrush}"/>
+                                    <Border Height="1" Background="{TemplateBinding BorderBrush}" />
                                     <ItemsControl Style="{StaticResource VirtualizingItemsControl}" Height="150"
-                                                      ItemsSource="{Binding RelativeSource={RelativeSource TemplatedParent},Path=Selectables}">
+                                                  ItemsSource="{Binding RelativeSource={RelativeSource TemplatedParent},Path=Selectables}">
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
-                                                <CheckBox Content="{Binding Title}" IsChecked="{Binding IsSelected}"/>
+                                                <CheckBox Content="{Binding Title}" IsChecked="{Binding IsSelected}" />
                                             </DataTemplate>
                                         </ItemsControl.ItemTemplate>
                                     </ItemsControl>
@@ -1313,7 +1355,8 @@
                                             Visibility="{Binding IsSelected,Converter={StaticResource BoolToVisibilityConverter}}">
                                         <Button.Template>
                                             <ControlTemplate>
-                                                <ContentPresenter Content="{Binding Item}" ContentTemplate="{Binding RelativeSource={RelativeSource AncestorType=local:SelectableItemsControl,Mode=FindAncestor},Path=SelectedItemTemplate}"/>
+                                                <ContentPresenter Content="{Binding Item}"
+                                                                  ContentTemplate="{Binding RelativeSource={RelativeSource AncestorType=local:SelectableItemsControl,Mode=FindAncestor},Path=SelectedItemTemplate}" />
                                             </ControlTemplate>
                                         </Button.Template>
                                     </Button>
@@ -1322,7 +1365,8 @@
                                             Visibility="{Binding IsSelected,Converter={StaticResource BoolToVisibilityConverter},ConverterParameter=R}">
                                         <Button.Template>
                                             <ControlTemplate>
-                                                <ContentPresenter Content="{Binding Item}" ContentTemplate="{Binding RelativeSource={RelativeSource AncestorType=local:SelectableItemsControl,Mode=FindAncestor},Path=ItemTemplate}"/>
+                                                <ContentPresenter Content="{Binding Item}"
+                                                                  ContentTemplate="{Binding RelativeSource={RelativeSource AncestorType=local:SelectableItemsControl,Mode=FindAncestor},Path=ItemTemplate}" />
                                             </ControlTemplate>
                                         </Button.Template>
                                     </Button>
@@ -1335,4 +1379,3 @@
         </Setter>
     </Style>
 </ResourceDictionary>
-    

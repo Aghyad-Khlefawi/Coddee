@@ -27,6 +27,10 @@ namespace Coddee.WPF.Controls
             DataContextProperty.OverrideMetadata(typeof(ValidationBorder), new FrameworkPropertyMetadata(default(object), FrameworkPropertyMetadataOptions.Inherits, BorderDataContextChanged));
         }
 
+        public ValidationBorder()
+        {
+            IsEnabledChanged += ValidationBorder_IsEnabledChanged;
+        }
 
 
         public static readonly DependencyProperty ValidatedPropertyNameProperty = DependencyProperty.Register(
@@ -62,7 +66,7 @@ namespace Coddee.WPF.Controls
                                                                       new PropertyMetadata(default(string)));
 
         public static readonly DependencyProperty MessageProperty = MessagePropertyKey.DependencyProperty;
-       
+
 
         public string Message
         {
@@ -148,9 +152,25 @@ namespace Coddee.WPF.Controls
 
         private void OnChildChanged()
         {
-            if (Child != null && Child.BorderThickness != _zeroThickness && Visibility == Visibility.Visible)
-                Child.BorderThickness = _zeroThickness;
+            if (Child != null)
+            {
+                _originalBorder = Child.BorderThickness;
+                if (Child.BorderThickness != _zeroThickness && Visibility == Visibility.Visible && IsEnabled)
+                {
+                    Child.BorderThickness = _zeroThickness;
+                }
+            }
         }
+
+        private void ValidationBorder_IsEnabledChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            if (Child != null && (bool)e.NewValue == false)
+            {
+                Child.BorderThickness = _originalBorder;
+            }
+        }
+
+
 
         private void GetValidationRules(IViewModel vm)
         {
@@ -178,6 +198,7 @@ namespace Coddee.WPF.Controls
             });
         }
 
+        private Thickness _originalBorder;
         private readonly Thickness _zeroThickness = new Thickness(0);
 
 
