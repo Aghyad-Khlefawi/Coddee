@@ -31,6 +31,11 @@ namespace Coddee.Data
         /// <summary>
         /// A repository that stores the data in a SQLite database using SQLite-Net
         /// </summary>
-        SQLite
+        SQLite,
+
+        /// <summary>
+        /// A repository that stores the data in files on the disk
+        /// </summary>
+        File
     }
 }

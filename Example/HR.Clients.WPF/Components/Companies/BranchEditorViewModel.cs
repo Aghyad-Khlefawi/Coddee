@@ -94,6 +94,9 @@ namespace HR.Clients.WPF.Components.Companies
         {
             item.CityId = SelectedCity.Id;
             item.CompanyId = SelectedCompany.Id;
+            item.CompanyName = SelectedCompany.Name;
+            item.CityName = SelectedCity.Name;
+            item.CountryName = SelectedCountry.Name;
             return base.MapEditorToEditedItem(item);
         }
 

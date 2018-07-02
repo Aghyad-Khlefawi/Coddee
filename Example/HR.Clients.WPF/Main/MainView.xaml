@@ -15,10 +15,6 @@
         
     </UserControl.Resources>
     <controls:BusyIndicator d:DataContext="{StaticResource designData}" IsBusy="{Binding IsBusy}">
-        <Grid VerticalAlignment="Center">
-            <controls:FormField Title="Test" ShowValidationBorder="False">
-                <CheckBox VerticalAlignment="Center"></CheckBox>
-            </controls:FormField>
-        </Grid>
+       
     </controls:BusyIndicator>
 </UserControl>

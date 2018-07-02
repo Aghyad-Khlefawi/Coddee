@@ -12,6 +12,7 @@ using Coddee.Unity;
 using Coddee.Windows.AppBuilder;
 using Coddee.WPF;
 using HR.Clients.WPF.Main;
+using HR.Data.LinqToSQL;
 
 namespace HR.Clients.WPF
 {
@@ -64,15 +65,15 @@ namespace HR.Clients.WPF
                              //Use a singleton repository manager that will keep
                              //using the same instance of the repositories for the 
                              //entire life of the application 
-
-                             .UseRESTRepositories(config => new RESTInitializerConfig("http://localhost:15297/dapi/", null, "HR.Data.REST"))
+                             .UseLinqRepositories<HRDBManager>(new LinqInitializerConfig(GetDbConnection, "HR.Data.LinqToSQL"))
+                             //.UseRESTRepositories(config => new RESTInitializerConfig("http://localhost:15297/dapi/", null, "HR.Data.REST"))
+                             //.UseFileRepositories(Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"data"),"HR.Clients.WPF")
                              .UseSingletonRepositoryManager();
 
                          //Add Rest repositories to the repository manager;
 
                          //To use linq repositories you can change the last line to:
-                         //.UseLinqRepositories<HRDBManager>(new LinqInitializerConfig(GetDbConnection, "HR.Data.LinqToSQL"))
-
+                         
                      },
                      args);
 

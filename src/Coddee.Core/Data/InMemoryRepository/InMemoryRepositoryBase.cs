@@ -5,8 +5,6 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection;
 using System.Threading.Tasks;
 
 namespace Coddee.Data
@@ -14,7 +12,7 @@ namespace Coddee.Data
     /// <summary>
     /// Base implementation for an InMemory repository
     /// </summary>
-    public class InMemoryRepositoryBase<TModel, TKey> : RepositoryBase<TModel>, IRepository<TModel, TKey> where TModel : IUniqueObject<TKey>
+    public abstract class InMemoryRepositoryBase<TModel, TKey> : RepositoryBase<TModel>, IRepository<TModel, TKey> where TModel : IUniqueObject<TKey>
     {
         /// <inheritdoc />
         public override int RepositoryType { get; } = (int)RepositoryTypes.InMemory;
@@ -63,7 +61,7 @@ namespace Coddee.Data
     /// <summary>
     /// <see cref="IIndexedRepository{TModel,TKey}"/> implementation for in memory repositories.
     /// </summary>
-    public class IndexedInMemoryRepositoryBase<TModel, TKey> : InMemoryRepositoryBase<TModel, TKey>, IIndexedRepository<TModel, TKey> where TModel : IUniqueObject<TKey>
+    public abstract class IndexedInMemoryRepositoryBase<TModel, TKey> : InMemoryRepositoryBase<TModel, TKey>, IIndexedRepository<TModel, TKey> where TModel : IUniqueObject<TKey>
     {
 
         /// <inheritdoc />
@@ -80,7 +78,7 @@ namespace Coddee.Data
     /// <summary>
     /// <see cref="IReadOnlyRepository{TModel,TKey}"/> implementation for in memory repositories.
     /// </summary>
-    public class ReadOnlyInMemoryRepositoryBase<TModel, TKey> : IndexedInMemoryRepositoryBase<TModel, TKey>, IReadOnlyRepository<TModel, TKey> where TModel : IUniqueObject<TKey>
+    public abstract class ReadOnlyInMemoryRepositoryBase<TModel, TKey> : IndexedInMemoryRepositoryBase<TModel, TKey>, IReadOnlyRepository<TModel, TKey> where TModel : IUniqueObject<TKey>
     {
         /// <inheritdoc />
         public virtual Task<IEnumerable<TModel>> GetItems()
@@ -92,7 +90,7 @@ namespace Coddee.Data
     /// <summary>
     /// <see cref="ICRUDRepository{TModel,TKey}"/> implementation for in memory repositories.
     /// </summary>
-    public class CRUDInMemoryRepositoryBase<TModel, TKey> : ReadOnlyInMemoryRepositoryBase<TModel, TKey>, ICRUDRepository<TModel, TKey> where TModel : IUniqueObject<TKey>
+    public abstract class CRUDInMemoryRepositoryBase<TModel, TKey> : ReadOnlyInMemoryRepositoryBase<TModel, TKey>, ICRUDRepository<TModel, TKey> where TModel : IUniqueObject<TKey>
     {
         /// <inheritdoc />
         public virtual Task<TModel> UpdateItem(TModel item)

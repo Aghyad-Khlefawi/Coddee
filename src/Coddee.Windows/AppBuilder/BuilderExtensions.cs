@@ -9,9 +9,12 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Resources;
+using Coddee.Data;
+using Coddee.Loggers;
 using Coddee.Services;
 using Coddee.Services.Configuration;
 using Coddee.Windows.AppBuilder;
+using Coddee.Windows.Data.FileRepository;
 using Coddee.Windows.Mapper;
 
 
@@ -22,6 +25,8 @@ namespace Coddee.AppBuilder
     /// </summary>
     public static class BuilderExtensions
     {
+        private const string EventsSource = "ApplicationBuilder";
+
 #if NET46
 
         /// <summary>
@@ -174,5 +179,40 @@ namespace Coddee.AppBuilder
             return buillder;
         }
 
+        /// <summary>
+        /// Configure the repository manager to use InMemory repositories
+        /// </summary>
+        /// <param name="builder">Application builder</param>
+        /// <param name="filesLocation">The direction that the files are stored in.</param>
+        /// <param name="repositoriesAssembly">The name of the assembly containing the repositories
+        /// <remarks>The assembly name should not contain the extension.</remarks></param>
+        /// <param name="config">The configuration object to be passed to the repositories</param>
+        /// <returns>Application builder</returns>
+        public static T UseFileRepositories<T>(this T builder, string filesLocation,string repositoriesAssembly,
+                                                              RepositoryConfigurations config = null) where T : IApplicationBuilder
+        {
+            builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.InMemoryRepositoryBuildAction((container) =>
+            {
+                if (!container.IsRegistered<IRepositoryManager>())
+                    throw new ApplicationBuildException("RepositoryManager is not registered. call UseSingletonRepositoryManager or UseTransientRepositoryManager to configuration the repository manager.");
+
+                var repositoryManager = container.Resolve<IRepositoryManager>();
+
+                repositoryManager.AddRepositoryInitializer(new FileRepositoryInitializer(filesLocation, container.Resolve<IObjectMapper>(), config));
+                repositoryManager.RegisterRepositories(repositoriesAssembly);
+
+                var logger = container.Resolve<ILogger>();
+                container.RegisterInstance<IRepositoryManager>(repositoryManager);
+
+                foreach (var repository in repositoryManager.GetRepositories())
+                {
+                    logger.Log(EventsSource,
+                               $"Registering repository of type {repository.GetType().Name}",
+                               LogRecordTypes.Debug);
+                    container.RegisterInstance(repository.ImplementedInterface, repository);
+                }
+            }));
+            return builder;
+        }
     }
 }

@@ -169,6 +169,13 @@
     </Compile>
     <Compile Include="Components\Managements\ManagementMainViewModel.cs" />
     <Compile Include="Components\Managements\ManagementViewModelBase.cs" />
+    <Compile Include="FileRepositories\BranchRepository.cs" />
+    <Compile Include="FileRepositories\CityRepository.cs" />
+    <Compile Include="FileRepositories\CompanyRepository.cs" />
+    <Compile Include="FileRepositories\CountryRepository.cs" />
+    <Compile Include="FileRepositories\DepartmentRepository.cs" />
+    <Compile Include="FileRepositories\EmployeeRepository.cs" />
+    <Compile Include="FileRepositories\JobRepository.cs" />
     <Compile Include="IManagementViewModel.cs" />
     <Compile Include="Interfaces\IBranchEditor.cs" />
     <Compile Include="Interfaces\IBranchViewer.cs" />
