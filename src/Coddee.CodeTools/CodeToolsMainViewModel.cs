@@ -57,8 +57,9 @@ namespace Coddee.CodeTools
         private void LoadSolutionProperties()
         {
             var fileName = $"{_solutionHelper.GetCurrentSolutionName()}.json";
-            IConfigurationFile file = new ConfigurationFile(fileName, Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Coddee", "CoddeeTools", fileName));
-            _configurationManager.Initialize(file);
+            var directory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Coddee", "CoddeeTools");
+            IConfigurationFile file = new ConfigurationFile(fileName, Path.Combine(directory, fileName));
+            _configurationManager.Initialize(directory,file);
             _eventDispatcher.GetEvent<SolutionLoadedEvent>().Raise(file);
         }
 

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net461</TargetFrameworks>
+    <TargetFrameworks>net46</TargetFrameworks>
     <Authors>Aghyad khlefawi</Authors>
     <Description>Coddee LinqToSQL assembly</Description>
     <Copyright>Copyright ©  2018 Aghyad khlefawi</Copyright>
@@ -27,6 +27,9 @@
     <ProjectReference Include="..\Coddee.Core\Coddee.Core.csproj" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'net461'">
+    <Reference Include="System.Data.Linq" />
+  </ItemGroup>
+  <ItemGroup>
     <Reference Include="System.Data.Linq" />
   </ItemGroup>
 </Project>

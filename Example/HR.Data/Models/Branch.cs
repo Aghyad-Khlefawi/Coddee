@@ -16,9 +16,10 @@ using System.Runtime.Serialization;
 
 namespace HR.Data.Models
 {
-
+   
     public class Branch : IUniqueObject<int>, IEquatable<IUniqueObject<int>>, IEquatable<Branch>
     {
+        
         public System.Int32 Id { get; set; }
         public System.String Name { get; set; }
         public System.Int32 CompanyId { get; set; }
