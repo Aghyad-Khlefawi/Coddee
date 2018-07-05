@@ -20,7 +20,8 @@
         ResizeMode="NoResize"
         d:DesignHeight="768"
         d:DesignWidth="1366"
-        x:Name="ShellWindow">
+        x:Name="ShellWindow"
+        Foreground="{x:Static local:ApplicationTheme.Foreground}">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -35,7 +36,7 @@
           x:Name="RootGrid">
         
         <Border x:Name="ContentBorder"
-                Background="WhiteSmoke"
+                Background="{x:Static local:ApplicationTheme.Background}"
                 BorderBrush="LightGray"
                 BorderThickness="1">
             <DockPanel>

@@ -3,6 +3,7 @@
 
 using System;
 using System.Threading.Tasks;
+using Coddee.Services;
 
 namespace Coddee
 {
@@ -82,6 +83,15 @@ namespace Coddee
         /// </summary>
         public Action Action { get; set; }
 
+        /// <summary>
+        /// Default close action.
+        /// </summary>
+        public static ActionCommandBase DefaultCloseAction => CloseActionCommand.DefaultCloseAction;
+
+        /// <summary>
+        /// Default save action.
+        /// </summary>
+        public static ActionCommandBase DefaultSaveAction(Action action) => new ActionCommand(LocalizationManager.DefaultLocalizationManager["Save"], action);
     }
 
     /// <summary>
@@ -101,5 +111,26 @@ namespace Coddee
         /// </summary>
         public Func<Task<bool>> Action { get; set; }
 
+    }
+
+    /// <summary>
+    /// A close button <see cref="ActionCommand"/>
+    /// </summary>
+    public class CloseActionCommand : ActionCommand
+    {
+        /// <inheritdoc />
+        public CloseActionCommand(string title) : base(title, null)
+        {
+        }
+
+        /// <inheritdoc />
+        public CloseActionCommand(string title, Action aditionalAction) : base(title, aditionalAction)
+        {
+        }
+
+        /// <summary>
+        /// Default instance of the type.
+        /// </summary>
+        public static CloseActionCommand Default = new CloseActionCommand(LocalizationManager.DefaultLocalizationManager["Close"]);
     }
 }

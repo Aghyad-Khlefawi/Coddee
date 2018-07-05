@@ -1250,7 +1250,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:FileBrowser}">
                     <DockPanel>
-                        <Grid>
+                        <Grid Margin="3 0 0 0">
                             <Path VerticalAlignment="Center" Style="{StaticResource Shape_Success}" Fill="ForestGreen"
                                   Height="15"
                                   Visibility="{TemplateBinding IsValidFile,Converter={StaticResource BoolToVisibilityConverter}}" />
@@ -1258,10 +1258,10 @@
                                   Fill="{StaticResource ErrorColor}" Height="15"
                                   Visibility="{TemplateBinding IsValidFile,Converter={StaticResource BoolToVisibilityConverter},ConverterParameter=R}" />
                         </Grid>
-                        <Label Width="{TemplateBinding TitleWidth}" Content="{TemplateBinding Title}" />
+                        <Label Width="{TemplateBinding TitleWidth}" Content="{TemplateBinding Title}" Visibility="{TemplateBinding Title,Converter={StaticResource NullToVisibilityConverter}}"/>
                         <Button Width="40" DockPanel.Dock="Right" Content="..."
                                 Command="{Binding RelativeSource={RelativeSource TemplatedParent},Path=BrowseCommand}" />
-                        <Label VerticalContentAlignment="Center" Margin="5 0" Content="{TemplateBinding FileName}" />
+                        <Label VerticalContentAlignment="Center" HorizontalAlignment="Left" Margin="5 0" Content="{TemplateBinding FileName}" />
                     </DockPanel>
                 </ControlTemplate>
             </Setter.Value>

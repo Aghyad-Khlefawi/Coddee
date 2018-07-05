@@ -28,6 +28,17 @@ namespace Coddee.WPF
         public SolidColorBrush NavbarBackground { get; set; }
 
         /// <summary>
+        /// The foreground color of the text.
+        /// </summary>
+        public SolidColorBrush Foreground { get; set; }
+
+        /// <summary>
+        /// The background color of the app.
+        /// </summary>
+        public SolidColorBrush Background { get; set; }
+
+
+        /// <summary>
         /// The default Coddee application theme
         /// </summary>
         public static ApplicationColors Default { get; } = new ApplicationColors
@@ -35,7 +46,9 @@ namespace Coddee.WPF
             ApplicationAccentColor = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#1987c4")),
             ApplicationAccentColorDarker = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#10729d")),
             NavigationBarBorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#10729d")),
-            NavbarBackground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#888888"))
+            NavbarBackground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#888888")),
+            Foreground = new SolidColorBrush(Colors.Black),
+            Background = new SolidColorBrush(Colors.WhiteSmoke)
         };
 
     }
@@ -53,7 +66,7 @@ namespace Coddee.WPF
         /// <summary>
         /// A darker shade of the <see cref="ApplicationAccentColor"/>
         /// </summary>
-        public static SolidColorBrush ApplicationAccentColorDarker { get; private set; } 
+        public static SolidColorBrush ApplicationAccentColorDarker { get; private set; }
 
         /// <summary>
         /// The color of the navigation bar border
@@ -65,6 +78,15 @@ namespace Coddee.WPF
         /// </summary>
         public static SolidColorBrush NavbarBackground { get; private set; }
 
+        /// <summary>
+        /// The foreground color of the text.
+        /// </summary>
+        public static SolidColorBrush Foreground { get; private set; }
+
+        /// <summary>
+        /// The background color of the app.
+        /// </summary>
+        public static SolidColorBrush Background { get; private set; }
 
         static ApplicationTheme()
         {
@@ -80,6 +102,8 @@ namespace Coddee.WPF
             ApplicationAccentColorDarker = colors.ApplicationAccentColorDarker;
             NavbarBackground = colors.NavbarBackground;
             NavigationBarBorderBrush = colors.NavigationBarBorderBrush;
+            Foreground = colors.Foreground;
+            Background = colors.Background;
 
             var app = WPFApplication.Current;
             if (app != null)
@@ -89,6 +113,11 @@ namespace Coddee.WPF
                 sysApp.Resources[nameof(ApplicationAccentColorDarker)] = ApplicationAccentColorDarker;
                 sysApp.Resources[nameof(NavbarBackground)] = NavbarBackground;
                 sysApp.Resources[nameof(NavigationBarBorderBrush)] = NavigationBarBorderBrush;
+                sysApp.Resources[nameof(Background)] = Background;
+                sysApp.Resources[nameof(Foreground)] = Foreground;
+
+                if (sysApp.MainWindow != null)
+                    sysApp.MainWindow.Foreground = Foreground;
             }
         }
     }

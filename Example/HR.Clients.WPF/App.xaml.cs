@@ -5,6 +5,7 @@ using System;
 using System.IO;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
 using Coddee;
 using Coddee.AppBuilder;
 using Coddee.Loggers;
@@ -33,10 +34,10 @@ namespace HR.Clients.WPF
 
                              //Configure the logger to use the application console, visual studio output window and a text file
                              //with the minimum displayed records of type debug
-                             .UseLogger(new LoggerOptions(LoggerTypes.ApplicationConsole | LoggerTypes.DebugOutput | LoggerTypes.File, LogRecordTypes.Debug,AppDomain.CurrentDomain.BaseDirectory)
+                             .UseLogger(new LoggerOptions(LoggerTypes.ApplicationConsole | LoggerTypes.DebugOutput | LoggerTypes.File, LogRecordTypes.Debug, AppDomain.CurrentDomain.BaseDirectory)
                              {
                                  LogFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "log.txt"),
-                                 UseFileCompression = true
+                                 UseFileCompression = false
                              })
 
                              //Configure the application console to toggle when F12 if pressed
@@ -60,7 +61,7 @@ namespace HR.Clients.WPF
                              .UseDialogs()
 
                              //Use localization file for Arabic and English
-                             .UseLocalization("HR.Clients.WPF.Properties.Resources", "HR.Clients.WPF.exe", new[] {"ar-SY", "en-US"}, "ar-SY")
+                             .UseLocalization("HR.Clients.WPF.Properties.Resources", "HR.Clients.WPF.exe", new[] { "ar-SY", "en-US" }, "ar-SY")
 
                              //Use a singleton repository manager that will keep
                              //using the same instance of the repositories for the 
@@ -68,12 +69,13 @@ namespace HR.Clients.WPF
                              .UseLinqRepositories<HRDBManager>(new LinqInitializerConfig(GetDbConnection, "HR.Data.LinqToSQL"))
                              //.UseRESTRepositories(config => new RESTInitializerConfig("http://localhost:15297/dapi/", null, "HR.Data.REST"))
                              //.UseFileRepositories(Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"data"),"HR.Clients.WPF")
-                             .UseSingletonRepositoryManager();
+                             .UseSingletonRepositoryManager()
+                             .UseTheme(GetTheme());
 
                          //Add Rest repositories to the repository manager;
 
                          //To use linq repositories you can change the last line to:
-                         
+
                      },
                      args);
 
@@ -81,9 +83,16 @@ namespace HR.Clients.WPF
             base.OnStartup(args);
         }
 
+        private ApplicationColors GetTheme()
+        {
+            var theme = ApplicationColors.Default;
+            theme.Foreground = new SolidColorBrush(Colors.White);
+            return theme;
+        }
+
         string GetDbConnection(IContainer container)
         {
-            var dbLocation = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "DB"));
+            var dbLocation = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..\\..\\..\\", "DB"));
             return $@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename={dbLocation}\HRDatabase.mdf;Integrated Security=True;Connect Timeout=30";
         }
     }

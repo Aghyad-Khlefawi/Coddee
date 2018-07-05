@@ -70,7 +70,6 @@ namespace Coddee.CodeTools
             modules.RegisterModule(WPFModuleDefinitions.Modules);
             modules.InitializeAutoModules().Wait();
 
-            //Initialize View model
             Application.Current.Resources.Add("ApplicationAccentColorLighter", new SolidColorBrush((Color)ColorConverter.ConvertFromString("#444F5A")));
             Application.Current.Resources.Add("ApplicationAccentColor", new SolidColorBrush((Color)ColorConverter.ConvertFromString("#283645")));
             Application.Current.Resources.Add("ApplicationAccentColorDarker", new SolidColorBrush((Color)ColorConverter.ConvertFromString("#151824")));

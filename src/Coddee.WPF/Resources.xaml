@@ -46,6 +46,14 @@
     <!--#endregion-->
 
     <!--#region Shapes-->
+    <Style x:Key="ContentBase" TargetType="Control">
+        <Setter Property="Background" Value="{x:Static local:ApplicationTheme.Background}"/>
+        <Setter Property="Foreground" Value="{x:Static local:ApplicationTheme.Foreground}"/>
+    </Style>
+
+    <Style TargetType="Window" BasedOn="{StaticResource ContentBase}"/>
+    <Style TargetType="UserControl" BasedOn="{StaticResource ContentBase}"/>
+
     <Style TargetType="ItemsControl">
         <Setter Property="IsTabStop" Value="False" />
     </Style>
