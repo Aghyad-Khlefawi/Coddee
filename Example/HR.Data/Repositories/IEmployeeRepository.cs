@@ -25,5 +25,8 @@ namespace HR.Data.Repositories
         Task<IEnumerable<EmployeeJob>> GetEmployeeJobsByEmployee(int employeeId);
         Task<IEnumerable<Employee>> GetItemsWithDetailes();
         Task<Employee> GetItemWithDetailes(int employeeId);
+        Task DeleteEmployeeJob(EmployeeJob employeeJob);
+
+        event EventHandler<RepositoryChangeEventArgs<EmployeeJob>> EmployeeJobsChanged;
     }
 }

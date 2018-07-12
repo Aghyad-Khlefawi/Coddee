@@ -15,6 +15,7 @@ using HR.Data.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Coddee.Data;
 
 namespace HR.Data.Rest.Repositories
 {
@@ -27,9 +28,11 @@ namespace HR.Data.Rest.Repositories
         {
         }
 
-        public Task<EmployeeJob> InsertEmployeeJob(EmployeeJob item)
+        public async Task<EmployeeJob> InsertEmployeeJob(EmployeeJob item)
         {
-            return PostToController<EmployeeJob>(nameof(InsertEmployeeJob), item);
+            var res = await PostToController<EmployeeJob>(nameof(InsertEmployeeJob), item);
+            EmployeeJobsChanged?.Invoke(this, new RepositoryChangeEventArgs<EmployeeJob>(OperationType.Add, item));
+            return res;
         }
 
         public Task<IEnumerable<EmployeeJob>> GetEmployeeJobsByEmployee(int employeeId)
@@ -46,5 +49,13 @@ namespace HR.Data.Rest.Repositories
         {
             return GetFromController<Employee>(KeyValue(nameof(employeeId), employeeId));
         }
+
+        public async Task DeleteEmployeeJob(EmployeeJob employeeJob)
+        {
+            await PostToController(nameof(DeleteEmployeeJob), employeeJob);
+            EmployeeJobsChanged?.Invoke(this, new RepositoryChangeEventArgs<EmployeeJob>(OperationType.Delete, employeeJob));
+        }
+
+        public event EventHandler<RepositoryChangeEventArgs<EmployeeJob>> EmployeeJobsChanged;
     }
 }

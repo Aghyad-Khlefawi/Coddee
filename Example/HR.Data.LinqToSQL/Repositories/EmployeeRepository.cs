@@ -27,9 +27,9 @@ namespace HR.Data.Linq.Repositories
         public override void RegisterMappings(IObjectMapper mapper)
         {
             base.RegisterMappings(mapper);
-            mapper.RegisterTwoWayMap<DB.EmployeeJob,EmployeeJob>();
-            mapper.RegisterMap<DB.EmployeeJobsView,EmployeeJob>();
-            mapper.RegisterMap<DB.EmployeesView,Employee>();
+            mapper.RegisterTwoWayMap<DB.EmployeeJob, EmployeeJob>();
+            mapper.RegisterMap<DB.EmployeeJobsView, EmployeeJob>();
+            mapper.RegisterMap<DB.EmployeesView, Employee>();
         }
 
         public Task<EmployeeJob> InsertEmployeeJob(EmployeeJob item)
@@ -38,6 +38,7 @@ namespace HR.Data.Linq.Repositories
             {
                 var dbItem = _mapper.Map<DB.EmployeeJob>(item);
                 db.EmployeeJobs.InsertOnSubmit(dbItem);
+                EmployeeJobsChanged?.Invoke(this, new RepositoryChangeEventArgs<EmployeeJob>(OperationType.Add, item));
                 return item;
             });
         }
@@ -54,7 +55,21 @@ namespace HR.Data.Linq.Repositories
 
         public Task<Employee> GetItemWithDetailes(int employeeId)
         {
-            return ExecuteAndMap(db => db.EmployeesViews.First(e=>e.Id == employeeId));
+            return ExecuteAndMap(db => db.EmployeesViews.First(e => e.Id == employeeId));
         }
+
+        public Task DeleteEmployeeJob(EmployeeJob employeeJob)
+        {
+            return Execute(db =>
+            {
+                var job = db.EmployeeJobs.FirstOrDefault(e => e.BranchId == employeeJob.BranchId && e.DepartmentId == employeeJob.DepartmentId && e.JobId == employeeJob.JobId && e.EmployeeId == employeeJob.EmployeeId);
+                if (job != null)
+                    db.EmployeeJobs.DeleteOnSubmit(job);
+                db.SubmitChanges();
+                EmployeeJobsChanged?.Invoke(this, new RepositoryChangeEventArgs<EmployeeJob>(OperationType.Delete, employeeJob));
+            });
+        }
+
+        public event EventHandler<RepositoryChangeEventArgs<EmployeeJob>> EmployeeJobsChanged;
     }
 }

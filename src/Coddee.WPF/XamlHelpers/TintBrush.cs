@@ -4,10 +4,32 @@ using System.Windows.Media;
 namespace Coddee.WPF.XamlHelpers
 {
     /// <summary>
+    /// The return type available for the MarkupExtension
+    /// </summary>
+    public enum TintBrushReturn
+    {
+        /// <summary>
+        /// Returns a <see cref="SolidColorBrush"/> object
+        /// </summary>
+        Brush,
+
+        /// <summary>
+        /// Returns a <see cref="Color"/> object
+        /// </summary>
+        Color
+    }
+
+    /// <summary>
     /// Returns a tinted shade of a brush.
     /// </summary>
     public class TintBrush : MarkupExtension
     {
+
+        /// <summary>
+        /// Specifies the return type of the extension
+        /// </summary>
+        public TintBrushReturn Return { get; set; }
+
         /// <summary>
         /// The target bush
         /// </summary>
@@ -21,7 +43,10 @@ namespace Coddee.WPF.XamlHelpers
         /// <inheritdoc />
         public override object ProvideValue(IServiceProvider serviceProvider)
         {
-            return new SolidColorBrush(DarkenColor());
+            var color = DarkenColor();
+            if (Return == TintBrushReturn.Brush)
+                return new SolidColorBrush(color);
+            return color;
         }
 
         Color DarkenColor()

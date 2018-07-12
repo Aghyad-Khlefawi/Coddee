@@ -109,66 +109,7 @@
                     </DockPanel>
                 </Border>
                 <ItemsControl Margin="0 5 0 0"
-                              ItemsSource="{Binding EmployeeJobs}">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Grid Margin="0 0 0 5">
-                                <Grid.Resources>
-                                    <Style TargetType="Label">
-                                        <Setter Property="Foreground" Value="{StaticResource Foreground}" />
-                                        <Setter Property="Padding" Value="0" />
-                                    </Style>
-                                    <Style TargetType="TextBlock">
-                                        <Setter Property="Foreground" Value="{StaticResource Foreground}" />
-                                    </Style>
-                                </Grid.Resources>
-                                <Border Background="WhiteSmoke"
-                                        BorderBrush="DimGray"
-                                        BorderThickness="1">
-                                    <Border.Effect>
-                                        <DropShadowEffect BlurRadius="4" ShadowDepth="1" Direction="265"
-                                                          Opacity="0.595" />
-                                    </Border.Effect>
-
-                                </Border>
-
-                                <DockPanel Margin="10 5 5 10">
-                                    <StackPanel>
-                                        <DockPanel Margin="0 0 0 5">
-                                            <Label Content="{Binding JobTitle}"
-                                                   VerticalAlignment="Center"
-                                                   Padding="0"
-                                                   FontSize="22" Foreground="#FF1D1D1D" />
-                                            <Grid>
-                                                <TextBlock HorizontalAlignment="Right"
-                                                           Margin="5 0 5 0"
-                                                           FontSize="22"
-                                                           Visibility="{Binding EndDate,Converter={StaticResource NullToVisibilityConverter}}"
-                                                           Foreground="{StaticResource Foreground}">
-                                                    <TextBlock.Text>
-                                                        <MultiBinding StringFormat="{}{0:d} - {1:d}">
-                                                            <Binding Path="StartDate" />
-                                                            <Binding Path="EndDate" />
-                                                        </MultiBinding>
-                                                    </TextBlock.Text>
-                                                </TextBlock>
-                                                <TextBlock HorizontalAlignment="Right"
-                                                           Text="{Binding StartDate,StringFormat=d}"
-                                                           FontSize="22"
-                                                           Margin="5 0 5 0"
-                                                           Visibility="{Binding EndDate,Converter={StaticResource NullToVisibilityConverter},ConverterParameter=R}"
-                                                           Foreground="{StaticResource Foreground}" />
-                                            </Grid>
-                                        </DockPanel>
-                                        <TextBlock FontSize="16" Text="{Binding DepartmentTitle,StringFormat={}Department: {0}}" />
-                                        <TextBlock FontSize="16" Text="{Binding CompanyName,StringFormat={}Company: {0}}" />
-                                        <TextBlock FontSize="16" Text="{Binding BranchName,StringFormat={}Branch: {0}}" />
-                                    </StackPanel>
-                                </DockPanel>
-                            </Grid>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
+                              ItemsSource="{Binding EmployeeJobs}" ItemTemplate="{StaticResource ViewModelDataTemplate}" Style="{StaticResource VirtualizingItemsControl}"/>
                 <!--<DataGrid Margin="0 5 0 0"
                           AutoGenerateColumns="False"
                           ItemsSource="{Binding EmployeeJobs}">

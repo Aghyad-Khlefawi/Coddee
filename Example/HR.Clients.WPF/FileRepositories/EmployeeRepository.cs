@@ -8,14 +8,14 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+using System;
 using Coddee.Data;
 using HR.Data.Models;
-using HR.Data.Repositories;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace HR.Data.Rest.Repositories
+namespace HR.Data.Repositories
 {
 
     [Coddee.Data.RepositoryAttribute(typeof(IEmployeeRepository))]
@@ -49,6 +49,7 @@ namespace HR.Data.Rest.Repositories
             }
 
             await _employeeJobs.UpdateFile();
+            EmployeeJobsChanged?.Invoke(this, new RepositoryChangeEventArgs<EmployeeJob>(Coddee.OperationType.Add, item));
             return item;
         }
 
@@ -69,5 +70,17 @@ namespace HR.Data.Rest.Repositories
         {
             return this[employeeId];
         }
+
+        public async Task DeleteEmployeeJob(EmployeeJob employeeJob)
+        {
+            var collection = await _employeeJobs.GetCollection();
+            var jobs = collection[employeeJob.EmployeeId];
+            var job = jobs.FirstOrDefault(e => e.BranchId == employeeJob.BranchId && e.DepartmentId == employeeJob.DepartmentId && e.JobId == employeeJob.JobId);
+            if (job != null)
+                jobs.Remove(job);
+            EmployeeJobsChanged?.Invoke(this, new RepositoryChangeEventArgs<EmployeeJob>(Coddee.OperationType.Delete, employeeJob));
+        }
+
+        public event EventHandler<RepositoryChangeEventArgs<EmployeeJob>> EmployeeJobsChanged;
     }
 }

@@ -66,15 +66,12 @@ namespace HR.Clients.WPF
                              //Use a singleton repository manager that will keep
                              //using the same instance of the repositories for the 
                              //entire life of the application 
+                             .UseSingletonRepositoryManager()
+
                              .UseLinqRepositories<HRDBManager>(new LinqInitializerConfig(GetDbConnection, "HR.Data.LinqToSQL"))
                              //.UseRESTRepositories(config => new RESTInitializerConfig("http://localhost:15297/dapi/", null, "HR.Data.REST"))
                              //.UseFileRepositories(Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"data"),"HR.Clients.WPF")
-                             .UseSingletonRepositoryManager()
                              .UseTheme(GetTheme());
-
-                         //Add Rest repositories to the repository manager;
-
-                         //To use linq repositories you can change the last line to:
 
                      },
                      args);
@@ -86,7 +83,6 @@ namespace HR.Clients.WPF
         private ApplicationColors GetTheme()
         {
             var theme = ApplicationColors.Default;
-            theme.Foreground = new SolidColorBrush(Colors.White);
             return theme;
         }
 

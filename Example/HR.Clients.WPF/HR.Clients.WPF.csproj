@@ -121,6 +121,10 @@
       <DependentUpon>EmployeeJobEditorView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Components\Companies\EmployeeJobEditorViewModel.cs" />
+    <Compile Include="Components\Companies\EmployeeJobView.xaml.cs">
+      <DependentUpon>EmployeeJobView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Components\Companies\EmployeeJobViewModel.cs" />
     <Compile Include="Components\Companies\EmployeesView.xaml.cs">
       <DependentUpon>EmployeesView.xaml</DependentUpon>
     </Compile>
@@ -301,6 +305,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Components\Companies\EmployeeJobEditorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Components\Companies\EmployeeJobView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

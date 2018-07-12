@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Coddee;
@@ -19,8 +20,8 @@ namespace HR.Clients.WPF.Components.Companies
         private IEmployeeEditor _employeeEditor;
         private IEmployeeJobEditor _employeeJobEditor;
 
-        private AsyncObservableCollection<EmployeeJob> _employeeJobs;
-        public AsyncObservableCollection<EmployeeJob> EmployeeJobs
+        private AsyncObservableCollection<EmployeeJobViewModel> _employeeJobs;
+        public AsyncObservableCollection<EmployeeJobViewModel> EmployeeJobs
         {
             get { return _employeeJobs; }
             set { SetProperty(ref _employeeJobs, value); }
@@ -32,6 +33,8 @@ namespace HR.Clients.WPF.Components.Companies
             get { return _employeeList; }
             set { SetProperty(ref this._employeeList, value); }
         }
+
+        
 
         private Employee _selectedEmployee;
         public Employee SelectedEmployee
@@ -76,31 +79,19 @@ namespace HR.Clients.WPF.Components.Companies
             set { SetProperty(ref _addJobCommand, value); }
         }
 
+
         protected override void OnDesignMode()
         {
             base.OnDesignMode();
-            EmployeeJobs = new AsyncObservableCollection<EmployeeJob>
+            EmployeeJobs = new AsyncObservableCollection<EmployeeJobViewModel>
             {
-                new EmployeeJob
+                new EmployeeJobViewModel
                 {
-                    BranchName = "Branch1",
-                    CompanyName = "Samsongs",
-                    DepartmentTitle = "Development",
-                    EmployeeFirstName = "Aghyad",
-                    EmployeeLastName = "Khlefawi",
-                    JobTitle = "Developer",
-                    StartDate = DateTime.Now
+                    
                 },
-                new EmployeeJob
+                new EmployeeJobViewModel
                 {
-                    BranchName = "Branch1",
-                    CompanyName = "Samsongs",
-                    DepartmentTitle = "Development",
-                    EmployeeFirstName = "Aghyad",
-                    EmployeeLastName = "Khlefawi",
-                    JobTitle = "Developer",
-                    StartDate = DateTime.Now,
-                    EndDate = DateTime.Now.AddYears(1)
+                    
                 }
             };
         }
@@ -118,11 +109,44 @@ namespace HR.Clients.WPF.Components.Companies
             _employeeEditor = CreateViewModel<IEmployeeEditor>();
             _employeeJobEditor = CreateViewModel<IEmployeeJobEditor>();
             _employeeRepository = GetRepository<IEmployeeRepository>();
-
+            _employeeRepository.EmployeeJobsChanged += EmployeeJobsChanged;
             EmployeeList = await _employeeRepository.GetItemsWithDetailes().ToAsyncObservableCollection();
             EmployeeList.BindToRepositoryChangesAsync(_employeeRepository,
                                                       async e => await _employeeRepository.GetItemWithDetailes(e.Id),
                                                       e => EmployeeList.First(e.Id));
+        }
+
+        private async void EmployeeJobsChanged(object sender, RepositoryChangeEventArgs<EmployeeJob> args)
+        {
+            if (SelectedEmployee != null && SelectedEmployee.Id == args.Item.EmployeeId)
+            {
+                async Task AddJob()
+                {
+                    var job = CreateEmployeeJobViewModel(args.Item);
+                    await job.Initialize();
+                    EmployeeJobs.Add(job);
+                }
+                void DeleteJob()
+                {
+                    var job = EmployeeJobs.FirstOrDefault(e => e.EmployeeJob.Equals(args.Item));
+                    EmployeeJobs.Remove(job);
+                }
+                switch (args.OperationType)
+                {
+                    case OperationType.Add:
+                        await AddJob();
+                        break;
+                    case OperationType.Edit:
+                        DeleteJob();
+                        await AddJob();
+                        break;
+                    case OperationType.Delete:
+                        DeleteJob();
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
         }
 
         private async void OnEmployeeSelected(Employee value)
@@ -130,10 +154,20 @@ namespace HR.Clients.WPF.Components.Companies
             async Task LoadEmployees()
             {
                 EmployeeJobs = await _employeeRepository.GetEmployeeJobsByEmployee(value.Id)
+                                                        .Select(CreateEmployeeJobViewModel)
                                                         .ToAsyncObservableCollection();
+
+                await EmployeeJobs.InitializeAll();
             }
 
             await ToggleBusyAsync(LoadEmployees());
+        }
+
+        private EmployeeJobViewModel CreateEmployeeJobViewModel(EmployeeJob arg)
+        {
+            var vm = CreateViewModel<EmployeeJobViewModel>();
+            vm.SetEmployeeJob(arg);
+            return vm;
         }
 
         public async void Edit()
