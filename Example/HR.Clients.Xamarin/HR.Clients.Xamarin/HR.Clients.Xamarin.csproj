@@ -10,10 +10,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\src\Coddee.Xamarin\Coddee.Xamarin.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Reference Include="Unity.Abstractions">
       <HintPath>..\..\packages\Unity.5.6.0\lib\netstandard1.0\Unity.Abstractions.dll</HintPath>
     </Reference>
