@@ -27,22 +27,7 @@ namespace Coddee.Services
         /// <exception cref="ModuleException"></exception>
         IEnumerable<Module> RegisterModule(params Type[] modules);
 
-        /// <summary>
-        /// Search for modules in the executable folder.
-        /// Finds the modules based on the ApplicationModuleAttribute
-        /// </summary>
-        /// <param name="location">the directory to look for the assemblies in.</param>
-        /// <param name="assembliesPrefix">A prefix for the assemblies to look for</param>
-        /// <exception cref="ModuleException"></exception>
-        IEnumerable<Module> DescoverModulesFromAssambles(string location,string assembliesPrefix = null);
 
-        /// <summary>
-        /// Search for modules in the executable folder.
-        /// Finds the modules based on the ApplicationModuleAttribute
-        /// </summary>
-        /// <param name="assemblies">A specific assemblies to search for modules</param>
-        /// <exception cref="ModuleException"></exception>
-        IEnumerable<Module> DescoverModulesFromAssambles(params Assembly[] assemblies);
 
         /// <summary>
         /// Calls the initialization method on the modules
@@ -62,5 +47,28 @@ namespace Coddee.Services
         /// </summary>
         /// <exception cref="ModuleException"></exception>
         Task InitializeModule(string moduleName);
+    }
+
+    /// <summary>
+    /// Responsible for discovering and initializing the application modules
+    /// </summary>
+    public interface IWindowsApplicationModulesManager: IApplicationModulesManager
+    {
+        /// <summary>
+        /// Search for modules in the executable folder.
+        /// Finds the modules based on the ApplicationModuleAttribute
+        /// </summary>
+        /// <param name="location">the directory to look for the assemblies in.</param>
+        /// <param name="assembliesPrefix">A prefix for the assemblies to look for</param>
+        /// <exception cref="ModuleException"></exception>
+        IEnumerable<Module> DescoverModulesFromAssambles(string location, string assembliesPrefix = null);
+
+        /// <summary>
+        /// Search for modules in the executable folder.
+        /// Finds the modules based on the ApplicationModuleAttribute
+        /// </summary>
+        /// <param name="assemblies">A specific assemblies to search for modules</param>
+        /// <exception cref="ModuleException"></exception>
+        IEnumerable<Module> DescoverModulesFromAssambles(params Assembly[] assemblies);
     }
 }

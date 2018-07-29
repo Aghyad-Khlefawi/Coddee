@@ -64,7 +64,7 @@ namespace Coddee.AppBuilder
         /// </summary>
         /// <param name="action">The action to add.</param>
         /// <param name="index">The order in which the action should be executed in.</param>
-        public void AddAction(BuildAction action, int index)
+        public void AddAction(BuildAction action, double index)
         {
             if (_buildActions.Any(e => e.Name == action.Name))
                 throw new ApplicationBuildException($"There is already a build action with the same name '{action.Name}'");
@@ -79,7 +79,7 @@ namespace Coddee.AppBuilder
         /// <param name="action">The action to add.</param>
         public void AddAction(BuildAction action)
         {
-            AddAction(action, action.DefaultInvokeOrder ?? _buildActions.Count);
+            AddAction(action, action.DefaultInvokeOrder ?? Convert.ToDouble(_buildActions.Count));
         }
 
         /// <summary>

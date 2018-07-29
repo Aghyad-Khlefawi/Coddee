@@ -136,7 +136,15 @@ namespace Coddee.AppBuilder
         /// </summary>
         public static BuildAction SetupViewModelBaseBuildAction(Action<IContainer> action)
         {
-            return new BuildAction(BuildActionsKeys.SetupViewModelBase, action, 9);
+            return new BuildAction(BuildActionsKeys.SetupViewModelBase, action, 9.1f);
+        }
+
+        /// <summary>
+        /// Creates a build action for setting up the ViewModel base class.
+        /// </summary>
+        public static BuildAction SetupWpfViewModelBaseBuildAction(Action<IContainer> action)
+        {
+            return new BuildAction(BuildActionsKeys.SetupWpfViewModelBase, action, 9.2f);
         }
 
         /// <summary>

@@ -27,6 +27,7 @@ namespace Coddee.AppBuilder
         public const string DialogService = nameof(DialogService);
         public const string DebugTool = nameof(DebugTool);
         public const string SetupViewModelBase = nameof(SetupViewModelBase);
+        public const string SetupWpfViewModelBase = nameof(SetupWpfViewModelBase);
         public const string Localization = nameof(Localization);
 
         public const string DiscoverModules = nameof(DiscoverModules);

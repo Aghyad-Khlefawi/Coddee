@@ -168,7 +168,7 @@ namespace Coddee.AppBuilder
             buillder.BuildActionsCoordinator.AddAction(DefaultBuildActions.DiscoverModulesBuildAction(
                                                                                              container =>
                                                                                              {
-                                                                                                 var _modulesManager = container.Resolve<ApplicationModulesManager>();
+                                                                                                 var _modulesManager = container.Resolve<WindowsApplicationModulesManager>();
                                                                                                  if (modulesAssemblies != null)
                                                                                                      foreach (var assembly in modulesAssemblies)
                                                                                                      {

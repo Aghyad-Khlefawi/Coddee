@@ -5,6 +5,7 @@ using System;
 using System.Linq;
 using Coddee.Loggers;
 using Coddee.ModuleDefinitions;
+using Coddee.Mvvm;
 using Coddee.Services;
 
 namespace Coddee.AppBuilder
@@ -12,7 +13,7 @@ namespace Coddee.AppBuilder
     /// <summary>
     /// Base class for windows applications builders.
     /// </summary>
-    public abstract class WindowsApplicationBuilder : IApplicationBuilder
+    public class ApplicationBuilder : IApplicationBuilder
     {
         /// <summary>
         /// The source for the logging service.
@@ -35,7 +36,7 @@ namespace Coddee.AppBuilder
         protected readonly LogAggregator _logger;
 
         /// <inheritdoc />
-        protected WindowsApplicationBuilder(IApplication app, IContainer container)
+        public ApplicationBuilder(IApplication app, IContainer container)
         {
             _app = app;
             _container = container;
@@ -98,17 +99,29 @@ namespace Coddee.AppBuilder
 
             BuildActionsCoordinator.AddAction(DefaultBuildActions.RegisterDefaultModulesBuildAction(container =>
             {
-                var applicationModulesManager = container.RegisterInstance<IWindowsApplicationModulesManager, WindowsApplicationModulesManager>();
+                var applicationModulesManager = container.RegisterInstance<IApplicationModulesManager, ApplicationModulesManager>();
                 applicationModulesManager.RegisterModule(GetDefaultModules());
                 applicationModulesManager.InitializeAutoModules().GetAwaiter().GetResult();
             }));
 
             if (!BuildActionsCoordinator.BuildActionExists(BuildActionsKeys.ConfigureGlobalVariabls))
                 ConfigureGlobalVariables();
-#if NET46
-            if (!BuildActionsCoordinator.BuildActionExists(BuildActionsKeys.ConfigFile))
-                this.UseConfigurationFile(AppDomain.CurrentDomain.BaseDirectory);
-#endif
+
+            BuildActionsCoordinator.AddAction(DefaultBuildActions.SetupViewModelBaseBuildAction(container =>
+            {
+                SetupViewModelBase();
+            }));
+        }
+
+        /// <summary>
+        /// Set the ViewModelBase dependencies.
+        /// </summary>
+        protected virtual void SetupViewModelBase()
+        {
+            Log($"Setting up Wpf ViewModelBase.");
+
+            UniversalViewModelBase.SetApplication(_app);
+            UniversalViewModelBase.SetContainer(_container);
         }
 
         /// <summary>
@@ -116,7 +129,7 @@ namespace Coddee.AppBuilder
         /// </summary>
         protected virtual Type[] GetDefaultModules()
         {
-            return CoreModuleDefinitions.Modules.Concat(WindowsModuleDefinitions.Modules).ToArray();
+            return CoreModuleDefinitions.Modules.Concat(CoreModuleDefinitions.Modules).ToArray();
         }
     }
 }

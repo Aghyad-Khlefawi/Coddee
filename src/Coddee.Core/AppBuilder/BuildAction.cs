@@ -25,7 +25,7 @@ namespace Coddee.AppBuilder
         }
 
         /// <inheritdoc />
-        public BuildAction(string name, Action<IContainer> action, int defaultInvokeOrder)
+        public BuildAction(string name, Action<IContainer> action, double defaultInvokeOrder)
             :this(name,action)
         {
             DefaultInvokeOrder = defaultInvokeOrder;
@@ -44,12 +44,12 @@ namespace Coddee.AppBuilder
         /// <summary>
         /// The default ordered of this action.
         /// </summary>
-        public int? DefaultInvokeOrder { get; set; }
+        public double? DefaultInvokeOrder { get; set; }
 
         /// <summary>
         /// The order that the action will be called in.
         /// </summary>
-        public int InvokeOrder { get; set; }
+        public double InvokeOrder { get; set; }
 
         /// <summary>
         /// Determine whether this action has been called or not. 

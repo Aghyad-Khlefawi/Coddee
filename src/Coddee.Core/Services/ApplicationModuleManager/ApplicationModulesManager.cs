@@ -18,8 +18,8 @@ namespace Coddee.Services
     {
         private const string EventsSource = "ApplicationModulesManager";
 
-        private readonly IContainer _container;
-        private readonly ILogger _logger;
+        protected readonly IContainer _container;
+        protected readonly ILogger _logger;
 
         /// <inheritdoc />
         public ApplicationModulesManager(IContainer container, ILogger logger)
@@ -66,53 +66,7 @@ namespace Coddee.Services
             return res;
         }
 
-        /// <inheritdoc />
-        public IEnumerable<Module> DescoverModulesFromAssambles(string location, string assembliesPrefix = null)
-        {
-#if NET46
-            string path = Path.GetDirectoryName(location);
-            return DescoverModulesFromAssambles(Directory.GetFiles(path, $"{assembliesPrefix}*.dll")
-                                                    .Select(e => Assembly.LoadFile(e))
-                                          .ToArray());
-#elif NETSTANDARD2_0
-            throw new NotImplementedException("This is supported in NET framework 4.5 and heigher");
-#endif
-        }
-        /// <inheritdoc />
-        public IEnumerable<Module> DescoverModulesFromAssambles(params Assembly[] assemblies)
-        {
-            var res = new List<Module>();
-            foreach (var assembly in assemblies)
-            {
-                foreach (var type in assembly.GetTypes())
-                {
-                    var attr = type.GetTypeInfo().GetCustomAttributes();
-                    if (!attr.Any() || !attr.Any(e => e is ModuleAttribute))
-                        continue;
-
-                    var module = attr.OfType<ModuleAttribute>().First();
-                    var appModule = new Module
-                    {
-                        Type = type,
-                        Name = module.ModuleName,
-                        Dependencies = module.Dependencies,
-                        InitializationType = module.InitializationTypes
-                    };
-                    if (type.GetInterfaces().All(e => e == typeof(IModule)))
-                        throw new ModuleException($"The module {appModule.Name} doesn't implements IMoudle");
-
-                    if (type.GetConstructor(Type.EmptyTypes) == null)
-                        throw new ModuleException(
-                                                  $"The module {appModule.Name} must have a parameterless constructor");
-
-                    _logger.Log(EventsSource, $"Module discovered [{appModule.Name}]", LogRecordTypes.Debug);
-                    res.Add(appModule);
-                }
-            }
-            return res;
-        }
-
-        /// <inheritdoc />
+      /// <inheritdoc />
         public async Task InitializeModules(params Module[] modules)
         {
             foreach (var module in modules)

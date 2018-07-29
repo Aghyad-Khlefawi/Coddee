@@ -48,7 +48,7 @@ namespace Coddee.WPF
         {
             base.SetupDefaultBuildActions();
 
-            BuildActionsCoordinator.AddAction(DefaultBuildActions.SetupViewModelBaseBuildAction(container =>
+            BuildActionsCoordinator.AddAction(DefaultBuildActions.SetupWpfViewModelBaseBuildAction(container =>
             {
                 SetupViewModelBase();
             }));
@@ -69,10 +69,7 @@ namespace Coddee.WPF
         /// </summary>
         protected virtual void SetupViewModelBase()
         {
-            Log($"Setting up ViewModelBase.");
-            UniversalViewModelBase.SetApplication((WPFApplication)_app);
-            UniversalViewModelBase.SetContainer(_container);
-
+            Log($"Setting up Wpf ViewModelBase.");
             ViewModelBase.SetContainer(_container);
             ViewModelEvent.SetViewModelManager(_container.Resolve<IViewModelsManager>());
         }
