@@ -129,7 +129,7 @@ namespace Coddee.AppBuilder
         /// </summary>
         protected virtual Type[] GetDefaultModules()
         {
-            return CoreModuleDefinitions.Modules.Concat(CoreModuleDefinitions.Modules).ToArray();
+            return CoreModuleDefinitions.Modules;
         }
     }
 }

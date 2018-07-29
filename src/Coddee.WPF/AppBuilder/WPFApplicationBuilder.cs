@@ -22,7 +22,6 @@ namespace Coddee.WPF
     /// <inheritdoc cref="IWPFApplicationBuilder"/>
     public class WPFApplicationBuilder : WindowsApplicationBuilder, IWPFApplicationBuilder
     {
-
         private Application _systemApplication => ((WPFApplication)_app).GetSystemApplication();
 
         /// <inheritdoc />
@@ -47,12 +46,6 @@ namespace Coddee.WPF
         protected override void SetupDefaultBuildActions()
         {
             base.SetupDefaultBuildActions();
-
-            BuildActionsCoordinator.AddAction(DefaultBuildActions.SetupWpfViewModelBaseBuildAction(container =>
-            {
-                SetupViewModelBase();
-            }));
-
             if (BuildActionsCoordinator.GetAction(BuildActionsKeys.ApplicationTheme) == null)
                 this.UseTheme(ApplicationColors.Default);
         }
@@ -61,14 +54,15 @@ namespace Coddee.WPF
         /// <inheritdoc />
         protected override Type[] GetDefaultModules()
         {
-            return CoreModuleDefinitions.Modules.Concat(WindowsModuleDefinitions.Modules.Concat(WPFModuleDefinitions.Modules)).ToArray();
+            return base.GetDefaultModules().Concat(WPFModuleDefinitions.Modules).ToArray();
         }
 
         /// <summary>
         /// Set the ViewModelBase dependencies.
         /// </summary>
-        protected virtual void SetupViewModelBase()
+        protected override void SetupViewModelBase()
         {
+            base.SetupViewModelBase();
             Log($"Setting up Wpf ViewModelBase.");
             ViewModelBase.SetContainer(_container);
             ViewModelEvent.SetViewModelManager(_container.Resolve<IViewModelsManager>());

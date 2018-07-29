@@ -17,17 +17,14 @@ namespace Coddee.WPF
     /// The WPF application wrapper
     /// Extend the functionality of the regular WPF Application class
     /// </summary>
-    public class WPFApplication : IApplication
+    public class WPFApplication : Application<IWPFApplicationBuilder>
     {
         private const string _eventsSource = "Application";
 
         /// <inheritdoc />
         public WPFApplication(Guid applicationID, string applicationName, IContainer container)
+            : base(applicationID, applicationName, ApplicationTypes.WPF, container)
         {
-            ApplicationID = applicationID;
-            ApplicationName = applicationName;
-            ApplicationType = ApplicationTypes.WPF;
-            _container = container;
         }
 
         /// <inheritdoc />
@@ -62,18 +59,12 @@ namespace Coddee.WPF
         {
             Current = this;
             _systemApplication = Application.Current;
-
-            
             _systemApplication.ShutdownMode = ShutdownMode.OnExplicitShutdown;
-            _container.RegisterInstance<IApplication>(this);
-            _container.RegisterInstance(this);
-            var builder = _container.Resolve<WPFApplicationBuilder>();
             _logger = _container.Resolve<ILogger>();
             LogStart();
             ResolveStartupArgs(startupEventArgs);
-            BuildApplication(builder);
 
-          
+            base.Run(BuildApplication);         
         }
 
         /// <summary>
@@ -100,23 +91,10 @@ namespace Coddee.WPF
             StartupCommands = parsedCommands;
         }
 
-        /// <summary>
-        /// Dependency container
-        /// </summary>
-        protected IContainer _container;
-
-        /// <summary>
+       /// <summary>
         /// The base Application class instance
         /// </summary>
         protected Application _systemApplication;
-
-        /// <inheritdoc />
-        public Guid ApplicationID { get; }
-        /// <inheritdoc />
-        public string ApplicationName { get; }
-        /// <inheritdoc />
-        public ApplicationTypes ApplicationType { get; }
-
 
         /// <summary>
         /// Returns the dependency container used in the application.
@@ -144,6 +122,10 @@ namespace Coddee.WPF
             _systemApplication.MainWindow.Show();
         }
 
-        
+        /// <inheritdoc />
+        protected override IWPFApplicationBuilder ResolveBuilder()
+        {
+            return _container.Resolve<WPFApplicationBuilder>();
+        }
     }
 }

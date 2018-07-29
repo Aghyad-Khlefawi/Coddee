@@ -124,6 +124,14 @@ namespace Coddee.AppBuilder
         }
 
         /// <summary>
+        /// Creates a build action for the Xamarin main page.
+        /// </summary>
+        public static BuildAction MainPageAction(Action<IContainer> action)
+        {
+            return new BuildAction(BuildActionsKeys.MainPage, action, 8);
+        }
+
+        /// <summary>
         /// Creates a build action for the application theme.
         /// </summary>
         public static BuildAction ApplicationThemeAction(Action<IContainer> action)

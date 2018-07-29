@@ -1,25 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿// Copyright (c) Aghyad khlefawi. All rights reserved.  
+// Licensed under the MIT License. See LICENSE file in the project root for full license information.  
+
+using System;
 using Coddee.AppBuilder;
+using Coddee.Xamarin.Forms.AppBuilder;
 
 namespace Coddee.Xamarin.Forms
 {
-    public class XamarinFormsApplication : IApplication
+    public class XamarinFormsApplication : Application<IXamarinApplicationBuilder>
     {
         /// <inheritdoc />
-        public XamarinFormsApplication(Guid applicationID, string applicationName)
+        public XamarinFormsApplication(Guid applicationID, string applicationName,IContainer container)
+        :base(applicationID,applicationName,ApplicationTypes.XamarinForms,container)
         {
-            ApplicationID = applicationID;
-            ApplicationName = applicationName;
-            ApplicationType = ApplicationTypes.Console;
         }
 
-        /// <inheritdoc />
-        public Guid ApplicationID { get; }
-        /// <inheritdoc />
-        public string ApplicationName { get; }
-        /// <inheritdoc />
-        public ApplicationTypes ApplicationType { get; }
+        protected override IXamarinApplicationBuilder ResolveBuilder()
+        {
+            return _container.Resolve<XamarinApplicationBuilder>();
+        }
     }
 }

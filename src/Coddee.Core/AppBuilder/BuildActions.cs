@@ -35,6 +35,8 @@ namespace Coddee.AppBuilder
         public const string ConfigureGlobalVariabls = nameof(ConfigureGlobalVariabls);
         public const string ConsoleMain = nameof(ConsoleMain);
         public const string ApplicationTheme = nameof(ApplicationTheme);
+
+        public const string MainPage = nameof(MainPage);
 #pragma warning restore 1591
     }
 }

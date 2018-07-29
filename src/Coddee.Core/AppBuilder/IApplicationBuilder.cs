@@ -14,5 +14,10 @@ namespace Coddee.AppBuilder
         /// A build action coordinator
         /// </summary>
         BuildActionsCoordinator BuildActionsCoordinator { get; }
+
+        /// <summary>
+        /// Start the application build process.
+        /// </summary>
+        void Start();
     }
 }

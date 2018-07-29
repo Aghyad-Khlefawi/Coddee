@@ -24,8 +24,8 @@ namespace Coddee.AppBuilder
         WebAPI,
 
         /// <summary>
-        /// Xamarin application
+        /// Xamarin.Forms application
         /// </summary>
-        Xamarin
+        XamarinForms
     }
 }

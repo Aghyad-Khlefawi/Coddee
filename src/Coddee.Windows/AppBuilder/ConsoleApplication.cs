@@ -8,15 +8,12 @@ namespace Coddee.AppBuilder
     /// <summary>
     /// A windows console application.
     /// </summary>
-    public class ConsoleApplication : IApplication
+    public class ConsoleApplication : Application<IConsoleApplicationBuilder>
     {
         /// <inheritdoc />
         public ConsoleApplication(Guid applicationID, string applicationName, IContainer container)
+            : base(applicationID, applicationName, ApplicationTypes.Console, container)
         {
-            ApplicationID = applicationID;
-            ApplicationName = applicationName;
-            ApplicationType = ApplicationTypes.Console;
-            _container = container;
         }
 
         /// <inheritdoc />
@@ -25,33 +22,10 @@ namespace Coddee.AppBuilder
         {
 
         }
-        
-        /// <inheritdoc />
-        public Guid ApplicationID { get; protected set; }
 
-        /// <inheritdoc />
-        public string ApplicationName { get; protected set; }
-
-        /// <inheritdoc />
-        public ApplicationTypes ApplicationType { get; protected set; }
-
-        /// <summary>
-        /// Dependency container
-        /// </summary>
-        protected IContainer _container;
-
-
-        /// <summary>
-        /// Start the application build process.
-        /// </summary>
-        /// <param name="BuildApplication"></param>
-        public void Run(Action<IConsoleApplicationBuilder> BuildApplication)
+        protected override IConsoleApplicationBuilder ResolveBuilder()
         {
-            _container.RegisterInstance<IApplication>(this);
-            _container.RegisterInstance(this);
-            var factory = _container.Resolve<ConsoleApplicationBuilder>();
-            BuildApplication(factory);
-            factory.Start();
+            return _container.Resolve<ConsoleApplicationBuilder>();
         }
     }
 }

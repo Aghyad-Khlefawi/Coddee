@@ -61,6 +61,7 @@
     <Compile Include="Repositories\EmployeeRepository.cs" />
     <Compile Include="Repositories\JobRepository.cs" />
     <Compile Include="Repositories\UserRepository.cs" />
+    <Compile Include="RestRepositories.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="LICENSE.txt" />

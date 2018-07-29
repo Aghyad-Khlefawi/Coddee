@@ -12,7 +12,10 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\Coddee.Xamarin.Forms\Coddee.Xamarin.Forms.csproj" />
     <ProjectReference Include="..\..\..\src\Coddee.Core\Coddee.Core.csproj" />
+    <ProjectReference Include="..\..\..\src\Coddee.Data.Rest\Coddee.Data.REST.csproj" />
     <ProjectReference Include="..\..\..\src\Coddee.Unity\Coddee.Unity.csproj" />
+    <ProjectReference Include="..\..\HR.Data.REST\HR.Data.REST.csproj" />
+    <ProjectReference Include="..\..\HR.Data\HR.Data.csproj" />
   </ItemGroup>
 
   <ItemGroup>

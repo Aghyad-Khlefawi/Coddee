@@ -31,7 +31,7 @@ namespace Coddee.AppBuilder
         /// <summary>
         /// Use the basic object mapper
         /// </summary>
-        public static IApplicationBuilder UseBasicMapper(this IApplicationBuilder builder)
+        public static TBuilder UseBasicMapper<TBuilder>(this TBuilder builder) where TBuilder : IApplicationBuilder
         {
             builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.MapperBuildAction((container) =>
                   {
@@ -49,12 +49,12 @@ namespace Coddee.AppBuilder
         public static IApplicationBuilder UseConfigurationFile(
             this IApplicationBuilder builder,
             string fileLocation,
-           IConfigurationFile defaultFile=null)
+           IConfigurationFile defaultFile = null)
         {
             builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.ConfigFileBuildAction((container) =>
                   {
                       var config = container.Resolve<IConfigurationManager>();
-                      config.Initialize(fileLocation,defaultFile);
+                      config.Initialize(fileLocation, defaultFile);
                   }));
             return builder;
         }
