@@ -77,8 +77,9 @@ namespace HR.Data.Linq.Repositories
             return ExecuteAndMapCollection(db =>
             {
                 var employees = db.EmployeeJobs.Where(e => e.BranchId == branchId)
-                                  .Select(e => e.Employee)
+                                  .Select(e => e.EmployeeId)
                                   .Distinct()
+                                  .Select(e => db.EmployeesViews.First(v => v.Id == e))
                                   .ToList();
                 return employees;
             });
