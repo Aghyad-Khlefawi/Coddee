@@ -71,5 +71,17 @@ namespace HR.Data.Linq.Repositories
         }
 
         public event EventHandler<RepositoryChangeEventArgs<EmployeeJob>> EmployeeJobsChanged;
+
+        public Task<IEnumerable<Employee>> GetItemsWithDetailesByBranch(int branchId)
+        {
+            return ExecuteAndMapCollection(db =>
+            {
+                var employees = db.EmployeeJobs.Where(e => e.BranchId == branchId)
+                                  .Select(e => e.Employee)
+                                  .Distinct()
+                                  .ToList();
+                return employees;
+            });
+        }
     }
 }

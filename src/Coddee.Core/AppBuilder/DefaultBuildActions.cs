@@ -123,14 +123,7 @@ namespace Coddee.AppBuilder
             return new BuildAction(BuildActionsKeys.ConsoleMain, action, 8);
         }
 
-        /// <summary>
-        /// Creates a build action for the Xamarin main page.
-        /// </summary>
-        public static BuildAction MainPageAction(Action<IContainer> action)
-        {
-            return new BuildAction(BuildActionsKeys.MainPage, action, 8);
-        }
-
+       
         /// <summary>
         /// Creates a build action for the application theme.
         /// </summary>
@@ -161,6 +154,14 @@ namespace Coddee.AppBuilder
         public static BuildAction LoginBuildAction(Action<IContainer> action)
         {
             return new BuildAction(BuildActionsKeys.Login, action, 10);
+        }
+
+        /// <summary>
+        /// Creates a build action for the Xamarin main page.
+        /// </summary>
+        public static BuildAction MainPageAction(Action<IContainer> action)
+        {
+            return new BuildAction(BuildActionsKeys.MainPage, action, 10);
         }
 
         /// <summary>

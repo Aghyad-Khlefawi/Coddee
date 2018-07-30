@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="HR.Clients.Components.BranchesPage"
+             xmlns:Coddee="clr-namespace:Coddee.Xamarin.Forms;assembly=Coddee.Xamarin.Forms"
+             Title="Branches"
+             x:Name="Root">
+    <ContentPage.Content>
+        <Coddee:BusyIndicator IsBusy="{Binding IsBusy}">
+                <Coddee:BusyIndicator.DisplayedContent>
+                    <ListView ItemsSource="{Binding Branches}"
+                              SelectedItem="{Binding Branches.SelectedItem,Mode=TwoWay}">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                            <TextCell  Command="{Binding Source={Reference Root},Path=BindingContext.SelectBranchCommand}" 
+                                       CommandParameter="{Binding}"
+                                       Text="{Binding Name}" />
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </Coddee:BusyIndicator.DisplayedContent>
+            </Coddee:BusyIndicator>
+    </ContentPage.Content>
+</ContentPage>

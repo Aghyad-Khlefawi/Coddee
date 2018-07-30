@@ -14,14 +14,12 @@ namespace HR.Clients
         public App()
         {
             InitializeComponent();
-
-            var container = new CoddeeUnityContainer();
-            new XamarinFormsApplication(Guid.Empty, "HR", container).Run(app =>
+            new XamarinFormsApplication(Guid.Empty, "HR", new CoddeeUnityContainer()).Run(app =>
             {
                 app.UseBasicMapper()
                    .UseSingletonRepositoryManager()
-                   .UseRESTRepositories(config => new RESTInitializerConfig("http://localhost:15297/dapi/", null, RestRepositories.All, null))
-                   .UseMainPage<MainPageViewModel>();
+                   .UseRESTRepositories(container => new RESTInitializerConfig("http://192.168.1.170:5000/dapi/", RestRepositories.All))
+                   .UseNavigationMainPage<MainPageViewModel>();
             });
         }
 

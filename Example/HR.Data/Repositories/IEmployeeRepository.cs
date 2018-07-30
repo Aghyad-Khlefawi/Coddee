@@ -28,5 +28,6 @@ namespace HR.Data.Repositories
         Task DeleteEmployeeJob(EmployeeJob employeeJob);
 
         event EventHandler<RepositoryChangeEventArgs<EmployeeJob>> EmployeeJobsChanged;
+        Task<IEnumerable<Employee>> GetItemsWithDetailesByBranch(int branchId);
     }
 }

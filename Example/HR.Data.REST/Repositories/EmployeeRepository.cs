@@ -57,5 +57,10 @@ namespace HR.Data.Rest.Repositories
         }
 
         public event EventHandler<RepositoryChangeEventArgs<EmployeeJob>> EmployeeJobsChanged;
+
+        public Task<IEnumerable<Employee>> GetItemsWithDetailesByBranch(int branchId)
+        {
+            return GetFromController<IEnumerable<Employee>>(KeyValue(nameof(branchId), branchId));
+        }
     }
 }

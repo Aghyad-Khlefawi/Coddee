@@ -24,6 +24,8 @@ namespace HR.Data.Models
         public int BranchCount { get; set; }
         public int EmployeeCount { get; set; }
 
+        public string Detail => $"Branches: {BranchCount}    Employees: {EmployeeCount}";
+
 		[IgnoreDataMember]
 		public System.Int32 GetKey =>Id;
 

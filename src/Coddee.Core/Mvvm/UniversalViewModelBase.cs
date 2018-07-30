@@ -419,7 +419,15 @@ namespace Coddee.Mvvm
             object view = null;
             ExecuteOnUIContext(() =>
             {
-                view = (object)Activator.CreateInstance(viewType);
+                try
+                {
+
+                    view = (object)Activator.CreateInstance(viewType);
+                }
+                catch (Exception e)
+                {
+                    throw;
+                }
                 _views[index] = view;
                 // Check if the view is a Framework element then
                 // set the DataContext to this ViewModel
