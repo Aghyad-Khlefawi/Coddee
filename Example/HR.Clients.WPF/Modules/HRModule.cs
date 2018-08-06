@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Coddee;
+using Coddee.Modules;
 using HR.Clients.WPF.Components;
 using HR.Clients.WPF.Components.Companies;
 using HR.Clients.WPF.Components.Managements;
@@ -7,7 +8,7 @@ using HR.Clients.WPF.Interfaces;
 
 namespace HR.Clients.WPF.Modules
 {
-    [Module(nameof(HRModule))]
+    [Module(nameof(HRModule), ModuleInitializationTypes.Manual, nameof(ViewModelManagerModule))]
     public class HRModule : IModule
     {
         public Task Initialize(IContainer container)

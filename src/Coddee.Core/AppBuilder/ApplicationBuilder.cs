@@ -99,7 +99,7 @@ namespace Coddee.AppBuilder
 
             BuildActionsCoordinator.AddAction(DefaultBuildActions.RegisterDefaultModulesBuildAction(container =>
             {
-                var applicationModulesManager = container.RegisterInstance<IApplicationModulesManager, ApplicationModulesManager>();
+                IApplicationModulesManager applicationModulesManager = CreateApplicationModuleManager(container);
                 applicationModulesManager.RegisterModule(GetDefaultModules());
                 applicationModulesManager.InitializeAutoModules().GetAwaiter().GetResult();
             }));
@@ -111,6 +111,11 @@ namespace Coddee.AppBuilder
             {
                 SetupViewModelBase();
             }));
+        }
+
+        protected virtual IApplicationModulesManager CreateApplicationModuleManager(IContainer container)
+        {
+            return container.RegisterInstance<IApplicationModulesManager, ApplicationModulesManager>();
         }
 
         /// <summary>

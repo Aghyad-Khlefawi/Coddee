@@ -67,7 +67,7 @@ namespace HR.Clients.WPF
                              //using the same instance of the repositories for the 
                              //entire life of the application 
                              .UseSingletonRepositoryManager()
-
+                             .UseModules(AppDomain.CurrentDomain.BaseDirectory,"HR.Clients.WPF.exe")
                              .UseLinqRepositories<HRDBManager>(new LinqInitializerConfig(GetDbConnection, "HR.Data.LinqToSQL"))
                              //.UseRESTRepositories(config => new RESTInitializerConfig("http://localhost:15297/dapi/", null, "HR.Data.REST"))
                              //.UseFileRepositories(Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"data"),"HR.Clients.WPF")

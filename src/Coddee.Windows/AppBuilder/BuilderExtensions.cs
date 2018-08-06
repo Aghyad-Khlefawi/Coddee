@@ -163,16 +163,16 @@ namespace Coddee.AppBuilder
         /// <param name="buillder"></param>
         /// <param name="modulesAssemblies">The names of the assemblies containing the modules.</param>
         /// <returns></returns>
-        public static IApplicationBuilder UseModules(this IApplicationBuilder buillder, params string[] modulesAssemblies)
+        public static IApplicationBuilder UseModules(this IApplicationBuilder buillder,string assemblyLocation, params string[] modulesAssemblies)
         {
             buillder.BuildActionsCoordinator.AddAction(DefaultBuildActions.DiscoverModulesBuildAction(
                                                                                              container =>
                                                                                              {
-                                                                                                 var _modulesManager = container.Resolve<WindowsApplicationModulesManager>();
+                                                                                                 var _modulesManager = container.Resolve<IWindowsApplicationModulesManager>();
                                                                                                  if (modulesAssemblies != null)
                                                                                                      foreach (var assembly in modulesAssemblies)
                                                                                                      {
-                                                                                                         _modulesManager.RegisterModule(_modulesManager.DescoverModulesFromAssambles(assembly).ToArray());
+                                                                                                         _modulesManager.RegisterModule(_modulesManager.DescoverModulesFromAssambles(assemblyLocation,assembly).ToArray());
                                                                                                      }
                                                                                                  _modulesManager.InitializeAutoModules().GetAwaiter().GetResult();
                                                                                              }));

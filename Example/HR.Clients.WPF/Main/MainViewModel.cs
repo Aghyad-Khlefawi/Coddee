@@ -5,6 +5,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using Coddee;
 using Coddee.Services;
 using Coddee.Services.ApplicationSearch;
 using Coddee.WPF;
@@ -29,7 +30,7 @@ namespace HR.Clients.WPF.Main
         {
             try
             {
-                await _modules.InitializeModules(_modules.RegisterModule(typeof(HRModule)).ToArray());
+                //await _modules.InitializeModules(_modules.RegisterModule(typeof(HRModule)).ToArray());
 
                 var shellVM = Resolve<IDefaultShellViewModel>();
                 var applicationQuickSearch = Resolve<IApplicationQuickSearch>();
