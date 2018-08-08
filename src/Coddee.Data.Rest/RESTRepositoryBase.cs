@@ -257,11 +257,13 @@ namespace Coddee.Data.REST
                     urlBuilder.Append("&");
                 }
             }
+
+            var requestUri = urlBuilder.ToString(0,
+                                                 param != null
+                                                     ? urlBuilder.Length - 1
+                                                     : urlBuilder.Length);
             var res =
-                await _httpClient.GetAsync(urlBuilder.ToString(0,
-                                                               param != null
-                                                                   ? urlBuilder.Length - 1
-                                                                   : urlBuilder.Length));
+                await _httpClient.GetAsync(requestUri);
             return await HandleResquestResponse<T>(res);
         }
 

@@ -20,7 +20,7 @@ namespace HR.Clients
             {
                 app.UseBasicMapper()
                    .UseSingletonRepositoryManager()
-                   .UseRESTRepositories(config => new RESTInitializerConfig("http://localhost:15297/dapi/", null, RestRepositories.All, null))
+                   .UseRESTRepositories(config => new RESTInitializerConfig("http://192.168.1.170:15297/dapi/", null, RestRepositories.All, null))
                    .UseMainPage<MainPageViewModel>();
             });
         }
