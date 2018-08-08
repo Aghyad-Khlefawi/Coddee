@@ -9,7 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\Coddee.Core\Coddee.Core.csproj" />
+    <ProjectReference Include="..\Coddee.Core\Coddee.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>
