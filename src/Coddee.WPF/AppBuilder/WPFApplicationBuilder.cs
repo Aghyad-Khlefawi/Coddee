@@ -8,6 +8,7 @@ using System.Windows;
 using Coddee.AppBuilder;
 using Coddee.ModuleDefinitions;
 using Coddee.Mvvm;
+using Coddee.Services;
 
 namespace Coddee.WPF
 {
@@ -50,6 +51,13 @@ namespace Coddee.WPF
                 this.UseTheme(ApplicationColors.Default);
         }
 
+        protected override IApplicationModulesManager CreateApplicationModuleManager(IContainer container)
+        {
+            var moduleManager = container.RegisterInstance<IWindowsApplicationModulesManager, WindowsApplicationModulesManager>(); 
+            container.RegisterInstance<IWindowsApplicationModulesManager>(moduleManager);
+            container.RegisterInstance<IApplicationModulesManager>(moduleManager);
+            return moduleManager;
+        }
 
         /// <inheritdoc />
         protected override Type[] GetDefaultModules()

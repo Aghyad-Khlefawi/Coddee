@@ -30,14 +30,21 @@ namespace Coddee
         /// Start the application build process.
         /// </summary>
         /// <param name="BuildApplication"></param>
-        public virtual void Run(Action<TBuilder> BuildApplication)
+        public void Run(Action<TBuilder> buildApplication)
+        {
+            TBuilder builder = RegisterApplication();
+            buildApplication(builder);
+            builder.Start();
+        }
+
+        protected virtual TBuilder RegisterApplication()
         {
             _container.RegisterInstance<IApplication>(this);
             _container.RegisterInstance(this);
             var Builder = ResolveBuilder();
-            BuildApplication(Builder);
-            Builder.Start();
+            return Builder;
         }
+
 
         protected virtual TBuilder ResolveBuilder()
         {

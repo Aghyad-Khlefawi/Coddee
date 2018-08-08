@@ -82,5 +82,12 @@ namespace HR.Data.Repositories
         }
 
         public event EventHandler<RepositoryChangeEventArgs<EmployeeJob>> EmployeeJobsChanged;
+
+        public async Task<IEnumerable<Employee>> GetItemsWithDetailesByBranch(int branchId)
+        {
+            var collection = await _employeeJobs.GetCollection();
+            var branchEmployees = collection.Where(e => e.Value.Any(j => j.BranchId == branchId));
+            return (await GetCollection()).Where(e => branchEmployees.Any(b => b.Key == e.Key)).Select(e=>e.Value).AsEnumerable();
+        }
     }
 }

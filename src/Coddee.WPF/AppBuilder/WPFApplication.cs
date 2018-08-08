@@ -52,19 +52,27 @@ namespace Coddee.WPF
 
         ILogger _logger;
 
+
         /// <summary>
         /// Start the application build process.
         /// </summary>
         public void Run(Action<IWPFApplicationBuilder> BuildApplication, StartupEventArgs startupEventArgs)
         {
-            Current = this;
-            _systemApplication = Application.Current;
-            _systemApplication.ShutdownMode = ShutdownMode.OnExplicitShutdown;
+            var builder = RegisterApplication();
+
             _logger = _container.Resolve<ILogger>();
             LogStart();
             ResolveStartupArgs(startupEventArgs);
+            BuildApplication(builder);
+        }
 
-            base.Run(BuildApplication);         
+        protected override IWPFApplicationBuilder RegisterApplication()
+        {
+            Current = this;
+            _systemApplication = Application.Current;
+            _systemApplication.ShutdownMode = ShutdownMode.OnExplicitShutdown;
+            _container.RegisterInstance<WPFApplication>(this);
+            return base.RegisterApplication();
         }
 
         /// <summary>

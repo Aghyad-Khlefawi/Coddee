@@ -1,4 +1,7 @@
-﻿using System;
+﻿// Copyright (c) Aghyad khlefawi. All rights reserved.  
+// Licensed under the MIT License. See LICENSE file in the project root for full license information.  
+
+using System;
 using Coddee.Commands;
 using Coddee.Mvvm;
 using Xamarin.Forms;
@@ -20,10 +23,9 @@ namespace Coddee.Xamarin.Forms
                 frameworkElement.BindingContext = this;
 
             base.OnViewCreated(view);
-
         }
 
-        
+
         /// <summary>
         /// Create a <see cref="ReactiveCommand{TObserved}"/> observing this ViewModel
         /// </summary>
@@ -58,6 +60,17 @@ namespace Coddee.Xamarin.Forms
     public class ViewModelBase<TView> : ViewModelBase, IPresentable<TView>
         where TView : VisualElement, new()
     {
+
+        /// <summary>
+        /// The view navigation object.
+        /// </summary>
+        protected INavigation Navigation
+        {
+            get
+            {
+                return View.Navigation;
+            }
+        }
 
         /// <summary>
         /// <inheritdoc cref="View"/>
@@ -117,6 +130,9 @@ namespace Coddee.Xamarin.Forms
         {
             return (TView)GetView(0);
         }
+
+
+
     }
 
 }

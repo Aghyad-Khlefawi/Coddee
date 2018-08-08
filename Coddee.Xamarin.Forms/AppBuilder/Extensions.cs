@@ -26,5 +26,22 @@ namespace Coddee.AppBuilder
             return builder;
         }
 
+        /// <summary>
+        /// Sets the application MainNavigationPage
+        /// </summary>
+        public static IXamarinApplicationBuilder UseNavigationMainPage<TMain>(
+            this IXamarinApplicationBuilder builder)
+            where TMain : IPresentableViewModel
+        {
+            builder.BuildActionsCoordinator.AddAction(DefaultBuildActions.MainPageAction((container) =>
+            {
+                var app = Application.Current;
+                var main = container.Resolve<TMain>();
+                app.MainPage = new NavigationPage((Page)main.GetView());
+                main.Initialize();
+            }));
+            return builder;
+        }
+
     }
 }

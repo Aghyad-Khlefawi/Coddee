@@ -14,6 +14,7 @@ namespace HR.Web
                 .UseKestrel()
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseIISIntegration()
+                       .UseUrls("http://192.168.1.170:5000")
                 .UseStartup<Startup>()
                 .UseApplicationInsights()
                 .Build();

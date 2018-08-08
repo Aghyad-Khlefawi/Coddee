@@ -25,11 +25,11 @@ namespace Coddee.Services
         }
 
         /// <inheritdoc />
-        public IEnumerable<Module> DescoverModulesFromAssambles(string location, string assembliesPrefix = null)
+        public IEnumerable<Module> DescoverModulesFromAssambles(string location, string assebmly = null)
         {
 #if NET46
             string path = Path.GetDirectoryName(location);
-            return DescoverModulesFromAssambles(Directory.GetFiles(path, $"{assembliesPrefix}*.dll")
+            return DescoverModulesFromAssambles(Directory.GetFiles(path, $"{assebmly}")
                                                     .Select(e => Assembly.LoadFile(e))
                                           .ToArray());
 #elif NETSTANDARD2_0
@@ -56,7 +56,7 @@ namespace Coddee.Services
                         Dependencies = module.Dependencies,
                         InitializationType = module.InitializationTypes
                     };
-                    if (type.GetInterfaces().All(e => e == typeof(IModule)))
+                    if (type.GetInterfaces().All(e => e != typeof(IModule)))
                         throw new ModuleException($"The module {appModule.Name} doesn't implements IMoudle");
 
                     if (type.GetConstructor(Type.EmptyTypes) == null)

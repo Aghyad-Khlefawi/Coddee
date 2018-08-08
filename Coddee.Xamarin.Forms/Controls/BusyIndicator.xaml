@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Coddee.Xamarin.Forms.BusyIndicator"
+             xmlns:Coddee="clr-namespace:Coddee.Xamarin.Forms;assembly=Coddee.Xamarin.Forms"
+             x:Name="Root">
+    <ContentView.Resources>
+        <Coddee:BoolReverseConverter x:Key="BoolReverseConverter" />
+    </ContentView.Resources>
+    <ContentView.Content>
+        <Grid>
+            <ContentView IsVisible="{Binding IsBusy,Converter={StaticResource BoolReverseConverter},Source={Reference Root}}"
+                         Content="{Binding DisplayedContent,Source={Reference Root}}" />
+            <ActivityIndicator VerticalOptions="Center"
+                               HorizontalOptions="Center"
+                               IsRunning="{Binding IsBusy}" 
+                               BindingContext="{Reference Root}"/>
+        </Grid>
+    </ContentView.Content>
+</ContentView>
