@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Coddee.AppBuilder;
+using Coddee.AspNetCore.Sync;
 using Coddee.Data;
 using Coddee.Loggers;
 using Coddee.Windows.AppBuilder;
@@ -91,6 +92,27 @@ namespace Coddee.AspNet
         }
 
         /// <summary>
+        /// Configure the application to use SignalR hub form repository sync.
+        /// </summary>
+        public static void AddRepositorySyncHub(this IServiceCollection services)
+        {
+            services.AddSingleton(new HubAuthorizationProvider());
+            services.AddSignalR();
+        }
+
+        /// <summary>
+        /// Add SignalR middleware and configure repository sync.
+        /// </summary>
+        public static IApplicationBuilder UseRepositorySyncHub(this IApplicationBuilder appBuilder)
+        {
+            appBuilder.UseSignalR(routes =>
+            {
+                routes.MapHub<RepositorySyncHub>("/repoSync");
+            });
+            return appBuilder;
+        }
+
+        /// <summary>
         /// Register Coddee dynamic API.
         /// </summary>
         public static IServiceCollection AddDynamicApi(this IServiceCollection services, IEnumerable<Type> controllers)
@@ -128,5 +150,7 @@ namespace Coddee.AspNet
             appBuilder.UseMiddleware<DynamicApi>();
             return appBuilder;
         }
+
+
     }
 }

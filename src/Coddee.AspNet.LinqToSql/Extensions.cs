@@ -32,7 +32,7 @@ namespace Coddee.AspNet.LinqToSql
             var repositoryManager = serviceProvider.GetService<IRepositoryManager>();
 
             repositoryManager.AddRepositoryInitializer(new LinqRepositoryInitializer(dbManager, mapper, config.RepositoryConfigurations));
-
+            
             repositoryManager.RegisterRepositories(config.RepositoriesAssembly);
             if (registerAsServices)
                 foreach (var repository in repositoryManager.GetRepositories())

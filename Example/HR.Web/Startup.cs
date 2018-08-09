@@ -76,28 +76,23 @@ namespace HR.Web
                 config.UseErrorPages = true;
                 config.CacheRepositoryActionsOnStartup = true;
                 config.AuthorizationValidator = new JwtAuthorizationValidator();
-                config.GetApiContext = CreateContextObject;
+
             }, new[]
             {
                 typeof(AuthController),
                 typeof(CompanyController),
             });
 
-            var temp = new DebugOuputLogger();
-            temp.Initialize(LogRecordTypes.Debug);
-            temp.Log("WebApp", "DebugAppStarted");
+            services.AddRepositorySyncHub();
+
         }
 
-        private int count = 0;
-        private object CreateContextObject(DynamicApiRequest arg)
-        {
-            return ++count;
-        }
-
+       
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             app.UseAuthentication();
+            app.UseRepositorySyncHub();
             app.UseCoddeeDynamicApi();
         }
     }
