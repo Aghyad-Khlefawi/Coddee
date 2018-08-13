@@ -142,7 +142,7 @@ namespace Coddee.Data.REST
             if (res.IsSuccessStatusCode)
             {
 
-                return JsonConvert.DeserializeObject<T>(resString);
+                return JsonConvert.DeserializeObject<T>(resString, DefaultDateTimeConverter);
             }
 
             if (res.StatusCode == HttpStatusCode.Unauthorized || res.StatusCode == HttpStatusCode.Forbidden)

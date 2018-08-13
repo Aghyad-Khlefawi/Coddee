@@ -11,6 +11,7 @@ using Coddee;
 using Coddee.AppBuilder;
 using Coddee.AspNet;
 using Coddee.AspNet.LinqToSql;
+using Coddee.AspNetCore.Sync;
 using Coddee.Attributes;
 using Coddee.Loggers;
 using Coddee.Windows.AppBuilder;
@@ -51,7 +52,7 @@ namespace HR.Web
             services.AddILObjectMapper();
             services.AddTransientRepositoryManager();
             services.AddLinqRepositories<HRDBManager>(new LinqInitializerConfig(c => @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\HRDatabase.mdf;Integrated Security=True;Connect Timeout=30", "HR.Data.LinqToSQL"));
-            
+
             services.AddAuthentication(options =>
             {
                 options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -83,11 +84,14 @@ namespace HR.Web
                 typeof(CompanyController),
             });
 
-            services.AddRepositorySyncHub();
+            services.AddRepositorySyncHub(new RepositorySyncHubConfig
+            {
+                HubAuthorizationProvider = null
+            });
 
         }
 
-       
+
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {

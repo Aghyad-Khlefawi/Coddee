@@ -3,8 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using Coddee.AppBuilder;
 using Coddee.AspNetCore.Sync;
 using Coddee.Data;
 using Coddee.Loggers;
@@ -94,9 +92,9 @@ namespace Coddee.AspNet
         /// <summary>
         /// Configure the application to use SignalR hub form repository sync.
         /// </summary>
-        public static void AddRepositorySyncHub(this IServiceCollection services)
+        public static void AddRepositorySyncHub(this IServiceCollection services,RepositorySyncHubConfig config)
         {
-            services.AddSingleton(new HubAuthorizationProvider());
+            services.AddSingleton(config);
             services.AddSignalR();
         }
 

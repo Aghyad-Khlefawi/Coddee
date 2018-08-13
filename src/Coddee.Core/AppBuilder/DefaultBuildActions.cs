@@ -72,15 +72,25 @@ namespace Coddee.AppBuilder
         /// </summary>
         public static BuildAction ConfigFileBuildAction(Action<IContainer> action)
         {
-            return new BuildAction(BuildActionsKeys.ConfigFile, action, 6);
+            return new BuildAction(BuildActionsKeys.ConfigFile, action, 5.1);
         }
 
+       
+        
         /// <summary>
         /// Creates a build action for the repository manager
         /// </summary>
         public static BuildAction RepositoryManagerBuildAction(Action<IContainer> action)
         {
             return new BuildAction(BuildActionsKeys.RepositoryManager, action, 6);
+        }
+        
+        /// <summary>
+        /// Creates a build action for the repository manager
+        /// </summary>
+        public static BuildAction RepositorySyncClient(Action<IContainer> action)
+        {
+            return new BuildAction(BuildActionsKeys.RepositorySyncClient, action, 6.1);
         }
 
         /// <summary>

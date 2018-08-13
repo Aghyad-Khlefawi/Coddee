@@ -5,35 +5,63 @@ using System;
 using System.Threading.Tasks;
 using Coddee.Core;
 using Coddee.Data;
+using Coddee.Loggers;
 using Microsoft.AspNetCore.SignalR.Client;
 
 namespace Coddee.SignalR
 {
-   public class RepositorySyncClient:IRepositorySyncService
-   {
-       private HubConnection _connection;
+    public class RepositorySyncClient : IRepositorySyncService
+    {
+        private const string _eventsSource = "RepositorySyncClient";
 
-       public async Task Connect(string url)
-       {
-           _connection = new HubConnectionBuilder()
-                         .WithUrl(url)
-                         .Build();
+        private readonly ILogger _logger;
+        private RepositorySyncClientConfig _configs;
+        private HubConnection _connection;
 
-           _connection.On<string, RepositorySyncEventArgs>(SyncActions.SyncReceived, OnSyncReceived);
+        public RepositorySyncClient(ILogger logger)
+        {
+            _logger = logger;
+        }
 
-           await _connection.StartAsync();
-       }
+        public async Task Connect()
+        {
+            try
+            {
+                if (_configs == null)
+                    throw new ConfigurationException("The sync services is not configured, call The configure method before connecting.");
 
-       private void OnSyncReceived(string arg1, RepositorySyncEventArgs arg2)
-       {
-           SyncReceived?.Invoke(arg1,arg2);
-       }
+                _logger.Log(_eventsSource, "Connecting to sync hub...");
+                _connection = new HubConnectionBuilder()
+                              .WithUrl(_configs.HubUrl)
+                              .Build();
 
-       public event Action<string, RepositorySyncEventArgs> SyncReceived;
+                _connection.On<string, RepositorySyncEventArgs>(SyncActions.SyncReceived, OnSyncReceived);
 
-       public void SyncItem(string identifire, RepositorySyncEventArgs args)
-       {
-           _connection.InvokeAsync(SyncActions.SyncItem, identifire, args);
-       }
-   }
+                await _connection.StartAsync();
+                _logger.Log(_eventsSource, "Connected to sync hub successfully");
+
+            }
+            catch (Exception e)
+            {
+                _logger.Log(_eventsSource, e);
+            }
+        }
+
+        private void OnSyncReceived(string arg1, RepositorySyncEventArgs arg2)
+        {
+            SyncReceived?.Invoke(arg1, arg2);
+        }
+
+        public event Action<string, RepositorySyncEventArgs> SyncReceived;
+
+        public void SyncItem(string identifire, RepositorySyncEventArgs args)
+        {
+            _connection.InvokeAsync(SyncActions.SyncItem, identifire, args);
+        }
+
+        public void Configure(RepositorySyncClientConfig config)
+        {
+            _configs = config;
+        }
+    }
 }

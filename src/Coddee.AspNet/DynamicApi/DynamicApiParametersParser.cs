@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Primitives;
@@ -81,8 +82,15 @@ namespace Coddee.AspNet
 
         private object ParseGetValue(DynamicApiActionParameter actionParameter, StringValues queryParam)
         {
-            var converter = TypeDescriptor.GetConverter(actionParameter.Type);
-            return converter.ConvertFrom(queryParam.ToString());
+            try
+            {
+                var converter = TypeDescriptor.GetConverter(actionParameter.Type);
+                return converter.ConvertFrom(queryParam.ToString());
+            }
+            catch (NotSupportedException)
+            {
+                return JsonConvert.DeserializeObject(queryParam.ToString(), actionParameter.Type, _dateTimeConverter);
+            }
         }
     }
 }

@@ -18,7 +18,7 @@ namespace Coddee.AspNetCore.Sync
         public string Token { get; set; }
     }
 
-    public class HubAuthorizationProvider
+    public class HubAuthorizationProvider 
     {
         public HubAuthorizationProvider()
         {
@@ -62,33 +62,51 @@ namespace Coddee.AspNetCore.Sync
             return _authorizedUsers.Keys.ToList();
         }
     }
-
+    public class RepositorySyncHubConfig
+    {
+        public HubAuthorizationProvider HubAuthorizationProvider { get; set; }
+    }
     public class RepositorySyncHub : Hub
     {
         private readonly HubAuthorizationProvider _authorizationProvider;
+        private readonly RepositorySyncHubConfig _configs;
 
-        public RepositorySyncHub(HubAuthorizationProvider authorizationProvider)
+        public RepositorySyncHub(RepositorySyncHubConfig config)
         {
-            _authorizationProvider = authorizationProvider;
+            _configs = config;
+            _authorizationProvider = _configs.HubAuthorizationProvider;
         }
+
 
         /// <summary>
         /// Send a sync request to the hub clients.
         /// </summary>
         public virtual async Task SyncItem(string identifire, RepositorySyncEventArgs args)
         {
-            await Clients.Users(_authorizationProvider.GetAuthorizedUsers()).SendCoreAsync(SyncActions.SyncReceived, new object[] { identifire, args });
+            await GetOthers().SendCoreAsync(SyncActions.SyncReceived, new object[] { identifire, args });
+        }
+
+        private IClientProxy GetOthers()
+        {
+            if (_authorizationProvider != null)
+            {
+                var users = _authorizationProvider.GetAuthorizedUsers().ToList();
+                users.Remove(Context.ConnectionId);
+                return Clients.Users(users);
+            }
+
+            return Clients.Others;
         }
 
         public virtual Task Identify(string token)
         {
-            _authorizationProvider.AuthorizeUser(token, Context);
+            _authorizationProvider?.AuthorizeUser(token, Context);
             return Task.CompletedTask;
         }
 
         public override Task OnDisconnectedAsync(Exception exception)
         {
-            _authorizationProvider.RemoveUser(Context);
+            _authorizationProvider?.RemoveUser(Context);
             return base.OnDisconnectedAsync(exception);
         }
     }

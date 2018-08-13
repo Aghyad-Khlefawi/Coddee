@@ -8,7 +8,7 @@ using HR.Clients.WPF.Interfaces;
 
 namespace HR.Clients.WPF.Modules
 {
-    [Module(nameof(HRModule), ModuleInitializationTypes.Manual, nameof(ViewModelManagerModule))]
+    [Module(nameof(HRModule), ModuleInitializationTypes.Auto, nameof(ViewModelManagerModule))]
     public class HRModule : IModule
     {
         public Task Initialize(IContainer container)

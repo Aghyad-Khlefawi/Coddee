@@ -4,7 +4,7 @@
 
 using System;
 
-namespace Coddee.Services.Configuration
+namespace Coddee
 {
     /// <summary>
     /// An exception that occurs while reading or writing the application configurations.
