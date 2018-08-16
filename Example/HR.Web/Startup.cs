@@ -84,11 +84,7 @@ namespace HR.Web
                 typeof(CompanyController),
             });
 
-            services.AddRepositorySyncHub(new RepositorySyncHubConfig
-            {
-                HubAuthorizationProvider = null
-            });
-
+            services.AddRepositorySyncHub(new RepositorySyncHubConfig());
         }
 
 
