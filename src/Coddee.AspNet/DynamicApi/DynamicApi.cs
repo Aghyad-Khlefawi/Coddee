@@ -23,6 +23,8 @@ namespace Coddee.AspNet
         private readonly ApiActionsCache _cache;
         private readonly IRepositoryManager _repositoryManager;
         private readonly IsoDateTimeConverter _dateTimeConverter;
+        private readonly JsonSerializerSettings _jsonSerializer;
+
         private readonly IAuthorizationValidator _authorizationValidator;
         private readonly PagesProvider _pagesProvider;
         private readonly RepositoryActionLoactor _repositoryActionLoactor;
@@ -37,7 +39,10 @@ namespace Coddee.AspNet
             {
                 DateTimeFormat = _configurations.DateTimeForamt
             };
-
+            _jsonSerializer = new JsonSerializerSettings
+            {
+                DateFormatString = _configurations.DateTimeForamt
+            };
             _pagesProvider = new PagesProvider();
             _cache = new ApiActionsCache();
             _parser = new DynamicApiParametersParser(_dateTimeConverter);
@@ -144,7 +149,7 @@ namespace Coddee.AspNet
 
             Log(request, $"Invoking action.");
 
-            object context = null; 
+            object context = null;
             if (_configurations.GetApiContext != null)
             {
                 context = _configurations.GetApiContext(request);
@@ -206,7 +211,7 @@ namespace Coddee.AspNet
             }
             else if (_configurations.ReturnException)
             {
-                await request.HttpContext.Response.WriteAsync(JsonConvert.SerializeObject(exception));
+                await request.HttpContext.Response.WriteAsync(JsonConvert.SerializeObject(exception, _jsonSerializer));
             }
         }
 
@@ -230,7 +235,7 @@ namespace Coddee.AspNet
         private async Task<long> InvokeAction(DynamicApiRequest request, IDynamicApiAction action, DynamicApiActionParameterValue[] parameters, object context)
         {
             var value = await action.Invoke(parameters, context);
-            var res = JsonConvert.SerializeObject(value, _dateTimeConverter);
+            var res = JsonConvert.SerializeObject(value, _jsonSerializer);
             var response = request.HttpContext.Response;
             response.Headers.Add("Content-Type", "application/json");
             await response.WriteAsync(res);
@@ -299,6 +304,13 @@ namespace Coddee.AspNet
         private void SetHeaders(HttpResponse response)
         {
             response.Headers.Add("X-Coddee-DAPI", "v1");
+
+            if (_configurations.UseCors)
+            {
+                response.Headers.Add("Access-Control-Allow-Headers", "Content-Type");
+                response.Headers.Add("Access-Control-Allow-Methods", "GET,POST");
+                response.Headers.Add("Access-Control-Allow-Origin", "*");
+            }
         }
 
         private bool ValidateRequest(HttpContext context)

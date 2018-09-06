@@ -35,7 +35,7 @@ namespace HR.Clients.Components
         {
             if (company == null)
                 return;
-            Device.BeginInvokeOnMainThread(() => { Navigation.PushAsync(_branchesViewModel.GetDefaultView()); });
+            NavigationPush(_branchesViewModel.GetDefaultView());
 
             await _branchesViewModel.Initialize();
             await _branchesViewModel.SetCompany(company);

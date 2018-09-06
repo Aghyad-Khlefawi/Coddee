@@ -73,6 +73,7 @@ namespace Coddee.CodeTools.Components.Data
         {
             return $"{SingularName}{_solution.ModelProjectConfiguration.Prefix}.cs";
         }
+
         public string GetRepsotioryInterfaceFileName()
         {
             return $"I{SingularName}Repository.cs";

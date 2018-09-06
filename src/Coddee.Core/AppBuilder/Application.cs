@@ -29,8 +29,7 @@ namespace Coddee
         /// <summary>
         /// Start the application build process.
         /// </summary>
-        /// <param name="BuildApplication"></param>
-        public void Run(Action<TBuilder> buildApplication)
+        public virtual void Run(Action<TBuilder> buildApplication)
         {
             TBuilder builder = RegisterApplication();
             buildApplication(builder);

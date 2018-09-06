@@ -9,7 +9,7 @@
                   SelectedItem="{Binding Companies.SelectedItem,Mode=TwoWay}">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <TextCell  Command="{Binding Source={Reference Root},Path=BindingContext.SelectCompanyCommand}" 
+                    <TextCell  Command="{Binding Source={x:Reference Root},Path=BindingContext.SelectCompanyCommand}" 
                                CommandParameter="{Binding}"
                                Text="{Binding Name}"
                                TextColor="Black"

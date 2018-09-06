@@ -97,7 +97,7 @@ namespace Coddee.CodeTools.Components.Data
         {
             void ImportAllInternal()
             {
-                _importWizardViewModel.SetTables(new TableImportArguments{ImprotRestRepository = true},Tables.ToArray());
+                _importWizardViewModel.SetTables(new TableImportArguments { ImprotRestRepository = true }, Tables.ToArray());
             }
             await ToggleBusyAsync(Task.Run(new Action(ImportAllInternal)));
             _importWizardViewModel.Show();
@@ -219,19 +219,29 @@ namespace Coddee.CodeTools.Components.Data
 
         private void ValidateTables(IEnumerable<SqlTableViewModel> sqlTables)
         {
-            var models = new DirectoryInfo(!string.IsNullOrEmpty(_solution.ModelProjectConfiguration.GeneratedCodeFolder)? Path.Combine(_solution.ModelProjectConfiguration.ProjectFolder, _solution.ModelProjectConfiguration.GeneratedCodeFolder): _solution.ModelProjectConfiguration.ProjectFolder).GetFiles();
-            var repositories = new DirectoryInfo(!string.IsNullOrEmpty(_solution.DataProjectConfiguration.GeneratedCodeFolder) ? Path.Combine(_solution.DataProjectConfiguration.ProjectFolder, _solution.DataProjectConfiguration.GeneratedCodeFolder): _solution.DataProjectConfiguration.ProjectFolder).GetFiles();
-            var linqRepositories = new DirectoryInfo(!string.IsNullOrEmpty(_solution.LinqProjectConfiguration.GeneratedCodeFolder) ? Path.Combine(_solution.LinqProjectConfiguration.ProjectFolder, _solution.LinqProjectConfiguration.GeneratedCodeFolder) : _solution.DataProjectConfiguration.ProjectFolder).GetFiles();
-            var restRepositories = new DirectoryInfo(!string.IsNullOrEmpty(_solution.RestProjectConfiguration.GeneratedCodeFolder) ? Path.Combine(_solution.RestProjectConfiguration.ProjectFolder, _solution.RestProjectConfiguration.GeneratedCodeFolder) : _solution.RestProjectConfiguration.ProjectFolder).GetFiles();
+            FileInfo[] restRepositories = null;
+            FileInfo[] repositories = null;
+            FileInfo[] linqRepositories = null;
+
+            var models = new DirectoryInfo(!string.IsNullOrEmpty(_solution.ModelProjectConfiguration.GeneratedCodeFolder) ? Path.Combine(_solution.ModelProjectConfiguration.ProjectFolder, _solution.ModelProjectConfiguration.GeneratedCodeFolder) : _solution.ModelProjectConfiguration.ProjectFolder).GetFiles();
+
+            if (_solution.DataProjectConfiguration != null && !string.IsNullOrEmpty(_solution.DataProjectConfiguration.ProjectPath))
+                repositories = new DirectoryInfo(!string.IsNullOrEmpty(_solution.DataProjectConfiguration.GeneratedCodeFolder) ? Path.Combine(_solution.DataProjectConfiguration.ProjectFolder, _solution.DataProjectConfiguration.GeneratedCodeFolder) : _solution.DataProjectConfiguration.ProjectFolder).GetFiles();
+
+            if (_solution.LinqProjectConfiguration != null && !string.IsNullOrEmpty(_solution.LinqProjectConfiguration.ProjectPath))
+                linqRepositories = new DirectoryInfo(!string.IsNullOrEmpty(_solution.LinqProjectConfiguration.GeneratedCodeFolder) ? Path.Combine(_solution.LinqProjectConfiguration.ProjectFolder, _solution.LinqProjectConfiguration.GeneratedCodeFolder) : _solution.DataProjectConfiguration.ProjectFolder).GetFiles();
+
+            if (_solution.RestProjectConfiguration != null && !string.IsNullOrEmpty(_solution.RestProjectConfiguration.ProjectPath))
+                restRepositories = new DirectoryInfo(!string.IsNullOrEmpty(_solution.RestProjectConfiguration.GeneratedCodeFolder) ? Path.Combine(_solution.RestProjectConfiguration.ProjectFolder, _solution.RestProjectConfiguration.GeneratedCodeFolder) : _solution.RestProjectConfiguration.ProjectFolder).GetFiles();
 
 
             foreach (var table in sqlTables)
             {
                 table.SingularName = _pluralizationServices.Singularize(table.TableName);
                 table.IsModelValid = models.Any(e => e.Name == table.GetModelFileName());
-                table.IsRepositoryInterfaceValid = repositories.Any(e => e.Name == table.GetRepsotioryInterfaceFileName());
-                table.IsLinqRepositoryValid = linqRepositories.Any(e => e.Name == table.GetRepsotioryFileName());
-                table.IsRestRepositoryValid = restRepositories.Any(e => e.Name == table.GetRepsotioryFileName());
+                table.IsRepositoryInterfaceValid = repositories?.Any(e => e.Name == table.GetRepsotioryInterfaceFileName()) ?? false;
+                table.IsLinqRepositoryValid = linqRepositories?.Any(e => e.Name == table.GetRepsotioryFileName()) ?? false;
+                table.IsRestRepositoryValid = restRepositories?.Any(e => e.Name == table.GetRepsotioryFileName()) ?? false;
             }
         }
 

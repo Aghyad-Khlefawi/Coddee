@@ -32,6 +32,13 @@ namespace Coddee.Data.REST
         {
             DateTimeFormat = DefaultDateTimeFormat
         };
+        /// <summary>
+        /// The default Json DateTime converter.
+        /// </summary>
+        public static JsonSerializerSettings DefaultJsonSerializerSettings = new JsonSerializerSettings
+        {
+            DateFormatString = DefaultDateTimeFormat
+        };
 
         /// <inheritdoc />
         public override int RepositoryType { get; } = (int)RepositoryTypes.REST;
@@ -115,7 +122,7 @@ namespace Coddee.Data.REST
         /// <returns></returns>
         protected virtual Exception HandleBadRequest(string ex)
         {
-            var exception = JsonConvert.DeserializeObject<APIException>(ex);
+            var exception = JsonConvert.DeserializeObject<APIException>(ex, DefaultJsonSerializerSettings);
             if (exception.InnerExceptionType == typeof(DBException))
             {
                 var jo = JObject.Parse(exception.InnerExceptionSeriailized);
@@ -142,7 +149,7 @@ namespace Coddee.Data.REST
             if (res.IsSuccessStatusCode)
             {
 
-                return JsonConvert.DeserializeObject<T>(resString, DefaultDateTimeConverter);
+                return JsonConvert.DeserializeObject<T>(resString, DefaultJsonSerializerSettings);
             }
 
             if (res.StatusCode == HttpStatusCode.Unauthorized || res.StatusCode == HttpStatusCode.Forbidden)
@@ -214,7 +221,7 @@ namespace Coddee.Data.REST
                                        object param = null)
         {
             var content = param != null
-                ? new StringContent(JsonConvert.SerializeObject(param), Encoding.UTF8, "application/json")
+                ? new StringContent(JsonConvert.SerializeObject(param, DefaultJsonSerializerSettings), Encoding.UTF8, "application/json")
                 : null;
             var res = await _httpClient.PutAsync(url, content);
             return await HandleResquestResponse<T>(res);
@@ -284,7 +291,7 @@ namespace Coddee.Data.REST
 
             try
             {
-                return JsonConvert.DeserializeObject<T>(resString, DefaultDateTimeConverter);
+                return JsonConvert.DeserializeObject<T>(resString, DefaultJsonSerializerSettings);
             }
             catch (Exception e)
             {
@@ -388,7 +395,7 @@ namespace Coddee.Data.REST
         /// </summary>
         protected virtual string SerializeObject<T>(T obj)
         {
-            return JsonConvert.SerializeObject(obj, DefaultDateTimeConverter);
+            return JsonConvert.SerializeObject(obj, DefaultJsonSerializerSettings);
         }
     }
 

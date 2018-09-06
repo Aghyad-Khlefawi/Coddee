@@ -75,7 +75,7 @@ namespace Coddee.CodeTools.Components.Data
 
         public void SetTables(TableImportArguments importOptions, params SqlTableViewModel[] tables)
         {
-            ImportArgumentes.ClearAndFill(tables.Select(e => CreateImportArgs(e)));
+            ImportArgumentes.ClearAndFill(tables.Select(CreateImportArgs));
             foreach (var importArgument in ImportArgumentes)
             {
                 importArgument.ImportModel = importOptions.ImprotModel;
@@ -132,7 +132,7 @@ namespace Coddee.CodeTools.Components.Data
 
         void GenerateFile(ProjectConfiguration project, TableImportArgumentsViewModel table, TypeCodeGenerator generator, string filename)
         {
-            var file = !string.IsNullOrEmpty(project.GeneratedCodeFolder) ? Path.Combine(project.ProjectFolder, project.GeneratedCodeFolder, $"{filename}.cs") : Path.Combine(project.ProjectFolder, $"{table.ModelName}.cs");
+            var file = !string.IsNullOrEmpty(project.GeneratedCodeFolder) ? Path.Combine(project.ProjectFolder, project.GeneratedCodeFolder, $"{filename}.cs") : Path.Combine(project.ProjectFolder, $"{filename}.cs");
 
             if (!File.Exists(file))
             {

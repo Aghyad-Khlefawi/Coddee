@@ -34,7 +34,7 @@ namespace HR.Clients.Components
         {
             if (branch == null)
                 return;
-            Device.BeginInvokeOnMainThread(() => { Navigation.PushAsync(_employeesViewModel.GetDefaultView()); });
+            NavigationPush(_employeesViewModel.GetDefaultView());
 
             await _employeesViewModel.Initialize();
             await _employeesViewModel.SetBranch(branch);

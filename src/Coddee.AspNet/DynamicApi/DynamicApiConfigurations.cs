@@ -78,6 +78,11 @@ namespace Coddee.AspNet
         /// </summary>
         public Func<DynamicApiRequest, object> GetApiContext { get; set; }
 
+        /// <summary>
+        /// When set to true Cros allow headers will be addred to the response
+        /// </summary>
+        public bool UseCors { get; set; }
+
     }
 
     /// <summary>

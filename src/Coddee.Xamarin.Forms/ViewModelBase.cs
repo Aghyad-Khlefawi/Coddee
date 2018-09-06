@@ -2,6 +2,7 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
 using System;
+using System.Threading.Tasks;
 using Coddee.Commands;
 using Coddee.Mvvm;
 using Xamarin.Forms;
@@ -104,6 +105,14 @@ namespace Coddee.Xamarin.Forms
             base.OnViewCreated(view);
             if (view is TView defaultView)
                 OnDefaultViewCreated(defaultView);
+        }
+
+        protected virtual void NavigationPush(Page page)
+        {
+            Device.BeginInvokeOnMainThread(async () =>
+            {
+                await Navigation.PushAsync(page);
+            });
         }
 
         /// <summary>

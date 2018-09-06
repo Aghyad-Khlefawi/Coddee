@@ -14,11 +14,16 @@ namespace Coddee.AspNet
     public class DynamicApiParametersParser
     {
         private readonly IsoDateTimeConverter _dateTimeConverter;
+        private readonly JsonSerializerSettings _jsonSerializer;
 
         /// <inheritdoc />
         public DynamicApiParametersParser(IsoDateTimeConverter dateTimeConverter)
         {
             _dateTimeConverter = dateTimeConverter;
+            _jsonSerializer = new JsonSerializerSettings
+            {
+                DateFormatString = _dateTimeConverter.DateTimeFormat
+            };
         }
 
         /// <summary>
@@ -77,7 +82,7 @@ namespace Coddee.AspNet
 
         private object ParsePostValue(DynamicApiActionParameter actionParameter, string content)
         {
-            return JsonConvert.DeserializeObject(content, actionParameter.Type, _dateTimeConverter);
+            return JsonConvert.DeserializeObject(content, actionParameter.Type, _jsonSerializer);
         }
 
         private object ParseGetValue(DynamicApiActionParameter actionParameter, StringValues queryParam)
@@ -89,7 +94,7 @@ namespace Coddee.AspNet
             }
             catch (NotSupportedException)
             {
-                return JsonConvert.DeserializeObject(queryParam.ToString(), actionParameter.Type, _dateTimeConverter);
+                return JsonConvert.DeserializeObject(queryParam.ToString(), actionParameter.Type, _jsonSerializer);
             }
         }
     }
