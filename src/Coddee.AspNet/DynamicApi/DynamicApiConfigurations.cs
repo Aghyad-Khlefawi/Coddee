@@ -14,15 +14,18 @@ namespace Coddee.AspNet
         {
             RoutePrefix = "/dapi",
             LoggingPageRoute = "/__log",
-            DateTimeForamt = "dd/MM/yyyy HH:mm:ss",
+            DateTimeFormat = "dd/MM/yyyy HH:mm:ss",
             UseLoggingPage = false,
             ReturnException = false,
             UseErrorPages = false,
             CacheRepositoryActionsOnStartup = false,
             ErrorPagesConfiguration = new ErrorPagesConfiguration
             {
-                DisplayExceptionDetailes = true
-            }
+                DisplayExceptionDetails = true
+            },
+            CorsAllowedHeaders = "Content-Type,Authorization",
+            CorsAllowedMethods = "GET,POST",
+            CorsAllowedOrigin = "*"
         };
 
         /// <summary>
@@ -33,7 +36,7 @@ namespace Coddee.AspNet
         /// <summary>
         /// The date and time format used to serialize and deserialize objects.
         /// </summary>
-        public string DateTimeForamt { get; set; }
+        public string DateTimeFormat { get; set; }
 
         /// <summary>
         /// An instance of a <see cref="IAuthorizationValidator"/>
@@ -79,10 +82,24 @@ namespace Coddee.AspNet
         public Func<DynamicApiRequest, object> GetApiContext { get; set; }
 
         /// <summary>
-        /// When set to true Cros allow headers will be addred to the response
+        /// When set to true CORS allow headers will be added to the response
         /// </summary>
         public bool UseCors { get; set; }
 
+        /// <summary>
+        /// Cors options
+        /// </summary>
+        public string CorsAllowedHeaders { get; set; }
+
+        /// <summary>
+        /// Cors options
+        /// </summary>
+        public string CorsAllowedMethods { get; set; }
+
+        /// <summary>
+        /// Cors options
+        /// </summary>
+        public string CorsAllowedOrigin { get; set; }
     }
 
     /// <summary>
@@ -93,6 +110,6 @@ namespace Coddee.AspNet
         /// <summary>
         /// If true the exception details will be shown in the error page.
         /// </summary>
-        public bool DisplayExceptionDetailes { get; set; }
+        public bool DisplayExceptionDetails { get; set; }
     }
 }

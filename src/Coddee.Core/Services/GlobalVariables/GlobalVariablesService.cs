@@ -12,17 +12,17 @@ namespace Coddee.Services
         /// <summary>
         /// A dictionary to store the variables values
         /// </summary>
-        private readonly Dictionary<Type, IGlobaleVariable> _variables;
+        private readonly Dictionary<Type, IGlobalVariable> _variables;
 
         /// <inheritdoc />
         public GlobalVariablesService()
         {
-            _variables = new Dictionary<Type, IGlobaleVariable>();
+            _variables = new Dictionary<Type, IGlobalVariable>();
         }
 
 
         /// <inheritdoc />
-        public T GetVariable<T>() where T : IGlobaleVariable, new()
+        public T GetVariable<T>() where T : IGlobalVariable, new()
         {
             if (!_variables.ContainsKey(typeof(T)))
                 _variables[typeof(T)] = new T();

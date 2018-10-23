@@ -10,6 +10,17 @@ namespace Coddee.Data
     /// </summary>
     public class RepositorySyncEventArgs
     {
+        public RepositorySyncEventArgs()
+        {
+            
+        }
+
+        public RepositorySyncEventArgs(OperationType operationType, object item)
+        {
+            Item = item;
+            OperationType = operationType;
+        }
+
         /// <summary>
         /// The items that was added, edited or deleted.
         /// </summary>

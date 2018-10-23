@@ -8,7 +8,7 @@ namespace Coddee
     /// <summary>
     /// Identifies a global variable object.
     /// </summary>
-    public interface IGlobaleVariable
+    public interface IGlobalVariable
     {
 
     }
@@ -17,7 +17,7 @@ namespace Coddee
     /// A global variable that can be Get or Set from anywhere in the application
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class GlobalVarialbe<T> : IGlobaleVariable
+    public class GlobalVariable<T> : IGlobalVariable
     {
         /// <summary>
         /// if false then the variable has the default value (<see langword="default"/>>(T))

@@ -11,6 +11,6 @@ namespace Coddee.Services
         /// <summary>
         /// Returns the instance of the global variable.
         /// </summary>
-        T GetVariable<T>() where T : IGlobaleVariable, new();
+        T GetVariable<T>() where T : IGlobalVariable, new();
     }
 }

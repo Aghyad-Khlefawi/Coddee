@@ -37,11 +37,11 @@ namespace Coddee.AspNet
 
             _dateTimeConverter = new IsoDateTimeConverter
             {
-                DateTimeFormat = _configurations.DateTimeForamt
+                DateTimeFormat = _configurations.DateTimeFormat
             };
             _jsonSerializer = new JsonSerializerSettings
             {
-                DateFormatString = _configurations.DateTimeForamt
+                DateFormatString = _configurations.DateTimeFormat
             };
             _pagesProvider = new PagesProvider();
             _cache = new ApiActionsCache();
@@ -88,24 +88,31 @@ namespace Coddee.AspNet
                 var request = CreateApiRequest(context);
                 Log(request, $"Request is valid, requesting [Controller:{request.RequestedActionPath.RequestedController}] [Action:{request.RequestedActionPath.RequestedAction}]");
 
-
-                DynamicApiException exception = null;
-
-                try
+                if (context.Request.Method == HttpMethods.Options && _configurations.UseCors)
                 {
-                    await Task.Run(() => HandleRequest(request));
+                    context.Response.StatusCode = StatusCodes.Status200OK;
+                    await context.Response.WriteAsync(string.Empty);
                 }
-                catch (DynamicApiException dynamicApiException)
+                else
                 {
-                    exception = dynamicApiException;
-                }
-                catch (Exception e)
-                {
-                    exception = new DynamicApiException(DynamicApiExceptionCodes.UnknownError, "An error occurred while processing the request.", e, request);
-                }
+                    DynamicApiException exception = null;
 
-                if (exception != null)
-                    await HandleException(request, exception);
+                    try
+                    {
+                        await Task.Run(() => HandleRequest(request));
+                    }
+                    catch (DynamicApiException dynamicApiException)
+                    {
+                        exception = dynamicApiException;
+                    }
+                    catch (Exception e)
+                    {
+                        exception = new DynamicApiException(DynamicApiExceptionCodes.UnknownError, "An error occurred while processing the request.", e, request);
+                    }
+
+                    if (exception != null)
+                        await HandleException(request, exception);
+                }
             }
             else
             {
@@ -204,7 +211,7 @@ namespace Coddee.AspNet
             if (_configurations.UseErrorPages)
             {
                 string content = null;
-                if (_configurations.ErrorPagesConfiguration.DisplayExceptionDetailes)
+                if (_configurations.ErrorPagesConfiguration.DisplayExceptionDetails)
                     content = exception.BuildExceptionString(debuginfo: true);
                 string page = _pagesProvider.GetErrorPage(statusCode, content);
                 await request.HttpContext.Response.WriteAsync(page);
@@ -307,9 +314,9 @@ namespace Coddee.AspNet
 
             if (_configurations.UseCors)
             {
-                response.Headers.Add("Access-Control-Allow-Headers", "Content-Type");
-                response.Headers.Add("Access-Control-Allow-Methods", "GET,POST");
-                response.Headers.Add("Access-Control-Allow-Origin", "*");
+                response.Headers.Add("Access-Control-Allow-Headers", _configurations.CorsAllowedHeaders);
+                response.Headers.Add("Access-Control-Allow-Methods", _configurations.CorsAllowedMethods);
+                response.Headers.Add("Access-Control-Allow-Origin", _configurations.CorsAllowedOrigin);
             }
         }
 

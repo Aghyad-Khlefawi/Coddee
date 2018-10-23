@@ -6,19 +6,19 @@ namespace Coddee
     /// <summary>
     /// A global variable that contains the current logged in user username
     /// </summary>
-    public class UsernameGlobalVariable : GlobalVarialbe<string> { }
+    public class UsernameGlobalVariable : GlobalVariable<string> { }
 
     /// <summary>
     /// A global variable that contains the current application name.
     /// </summary>
-    public class ApplicationNameGlobalVariable : GlobalVarialbe<string> { }
+    public class ApplicationNameGlobalVariable : GlobalVariable<string> { }
 
 
     /// <summary>
     /// A global variable that container a value that indicates whether the application is using a default
     /// of a custom shell
     /// </summary>
-    public class UsingDefaultShellGlobalVariable : GlobalVarialbe<bool> { }
+    public class UsingDefaultShellGlobalVariable : GlobalVariable<bool> { }
 
    
 }
