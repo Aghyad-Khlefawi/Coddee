@@ -69,8 +69,8 @@ namespace HR.Clients.WPF
                              //entire life of the application 
                              .UseSingletonRepositoryManager()
                              .UseModules(AppDomain.CurrentDomain.BaseDirectory,"HR.Clients.WPF.exe")
-                             .UseLinqRepositories<HRDBManager>(new LinqInitializerConfig(GetDbConnection, "HR.Data.LinqToSQL"))
-                             //.UseRESTRepositories(config => new RESTInitializerConfig("http://localhost:15298/dapi/", null, "HR.Data.REST"))
+                             //.UseLinqRepositories<HRDBManager>(new LinqInitializerConfig(GetDbConnection, "HR.Data.LinqToSQL"))
+                             .UseRESTRepositories(config => new RESTInitializerConfig("http://localhost:15298/dapi/", null, "HR.Data.REST"))
                              //.UseFileRepositories(Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"data"),"HR.Clients.WPF")
                              .UseRepositorySyncClient(container=> new RepositorySyncClientConfig("http://localhost:15298/repoSync"))
                              .UseTheme(GetTheme());

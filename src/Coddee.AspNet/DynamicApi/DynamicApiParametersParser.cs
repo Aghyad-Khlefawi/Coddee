@@ -89,6 +89,9 @@ namespace Coddee.AspNet
         {
             try
             {
+                if (actionParameter.Type == typeof(DateTime))
+                    return DateTime.ParseExact(queryParam.ToString(), _dateTimeConverter.DateTimeFormat, null);
+
                 var converter = TypeDescriptor.GetConverter(actionParameter.Type);
                 return converter.ConvertFrom(queryParam.ToString());
             }

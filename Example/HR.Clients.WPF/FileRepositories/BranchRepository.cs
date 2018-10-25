@@ -23,7 +23,7 @@ namespace HR.Data.FileRepositories
             return GetItems();
         }
 
-        public async Task<IEnumerable<Branch>> GetItemsWithDetailsByCompany(int companyId)
+        public async Task<IEnumerable<Branch>> GetItemsWithDetailsByCompany(int companyId, DateTime now)
         {
             return (await GetRepositoryItems()).Values.Where(e => e.CompanyId == companyId);
         }
