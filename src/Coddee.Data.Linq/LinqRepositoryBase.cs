@@ -633,30 +633,26 @@ namespace Coddee.Data.LinqToSQL
         /// <summary>
         /// Inserts a new items to the repository
         /// </summary>
-        public virtual async Task<TModel> InsertItem(TModel item)
+        public virtual Task<TModel> InsertItem(TModel item)
         {
-            using (var context = _dbManager.CreateContext())
+            return TransactionalExecute((context, transaction) =>
             {
-                var transcation = CreateTransaction(context);
-                var res = await InsertItemInner(item, context);
-                transcation.Commit();
+                var res = InsertItemInner(item, context);
+                transaction.Commit();
                 return res;
-            }
+            });
         }
 
         /// <summary>
         /// Inserts a new items to the repository
         /// </summary>
-        public virtual Task<TModel> InsertItemInner(TModel item, TDataContext context)
+        public virtual TModel InsertItemInner(TModel item, TDataContext db)
         {
-            return TransactionalExecute(context, (db, table) =>
-             {
-                 TTable tableItem = InsertToDB(item, db);
-                 AdditionalInsert(item, tableItem, db, db.Transaction);
-                 MapItemToModel(tableItem, item);
-                 RaiseItemsChanged(this, new RepositoryChangeEventArgs<TModel>(OperationType.Add, item, false));
-                 return item;
-             });
+            TTable tableItem = InsertToDB(item, db);
+            AdditionalInsert(item, tableItem, db, db.Transaction);
+            MapItemToModel(tableItem, item);
+            RaiseItemsChanged(this, new RepositoryChangeEventArgs<TModel>(OperationType.Add, item, false));
+            return item;
         }
 
         /// <summary>
@@ -674,7 +670,7 @@ namespace Coddee.Data.LinqToSQL
         {
             var tableitem = new TTable();
             MapItemToTable(item, tableitem);
-            AddionalInsertToDbMapping(tableitem,item);
+            AddionalInsertToDbMapping(tableitem, item);
             db.GetTable<TTable>().InsertOnSubmit(tableitem);
             db.SubmitChanges();
             return tableitem;

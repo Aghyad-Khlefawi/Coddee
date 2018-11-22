@@ -18,11 +18,11 @@ using System.Threading.Tasks;
 
 namespace HR.Data.Rest.Repositories
 {
-    
+
     [Coddee.Data.RepositoryAttribute(typeof(IBranchRepository))]
     public class BranchRepository : CRUDRESTRepositoryBase<Branch, int>, IBranchRepository
     {
-        public BranchRepository() : 
+        public BranchRepository() :
                 base("Branch")
         {
         }
@@ -34,7 +34,10 @@ namespace HR.Data.Rest.Repositories
 
         public Task<IEnumerable<Branch>> GetItemsWithDetailsByCompany(int companyId)
         {
-            return GetFromController<IEnumerable<Branch>>(KeyValue(nameof(companyId), companyId));
+            return GetFromController<IEnumerable<Branch>>(new Dictionary<string, string>
+            {
+                {nameof(companyId),companyId.ToString() },
+            });
         }
     }
 }

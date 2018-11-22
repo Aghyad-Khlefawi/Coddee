@@ -393,8 +393,20 @@ namespace Coddee.Data.REST
         /// <summary>
         /// Serialize an object to JSON.
         /// </summary>
-        protected virtual string SerializeObject<T>(T obj)
+        protected virtual string SerializeObject(object obj)
         {
+            if (obj is DateTime datetime)
+            {
+                return datetime.ToString(DefaultDateTimeFormat);
+            }
+            if (obj is int num)
+            {
+                return num.ToString();
+            }
+            if (obj is bool boolean)
+            {
+                return boolean.ToString();
+            }
             return JsonConvert.SerializeObject(obj, DefaultJsonSerializerSettings);
         }
     }

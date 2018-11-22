@@ -168,7 +168,7 @@ namespace HR.Clients.WPF.Components.Companies
             SelectedJob = JobList.First(e => e.Id == item.JobId);
             SelectedDepartment = DepartmentList.First(e => e.Id == item.DepartmentId);
             SelectedCompany = CompanyList.First(e => e.Id == item.CompanyId);
-            BranchList = await _branchRepository.GetItemsWithDetailsByCompany(item.CompanyId).ToAsyncObservableCollection();
+            BranchList = (await _branchRepository.GetItemsWithDetailsByCompany(item.CompanyId)).ToAsyncObservableCollection();
             SelectedBranch = BranchList.First(e => e.Id == item.BranchId);
         }
 
@@ -205,7 +205,7 @@ namespace HR.Clients.WPF.Components.Companies
             if (FillingValues || value == null)
                 return;
 
-            BranchList = await _branchRepository.GetItemsWithDetailsByCompany(value.Id).ToAsyncObservableCollection();
+            BranchList = (await _branchRepository.GetItemsWithDetailsByCompany(value.Id)).ToAsyncObservableCollection();
         }
     }
 }

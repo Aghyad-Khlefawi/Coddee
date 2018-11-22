@@ -24,7 +24,7 @@ namespace Coddee.Services.Configuration
         private readonly Dictionary<string, IConfigurationFile> _configurationFiles;
 
         /// <inheritdoc />
-        public void Initialize(string fileLocation,IConfigurationFile defaultConfigurationFile)
+        public void Initialize(string fileLocation, IConfigurationFile defaultConfigurationFile)
         {
             if (defaultConfigurationFile == null)
                 defaultConfigurationFile =
@@ -38,10 +38,10 @@ namespace Coddee.Services.Configuration
         /// <inheritdoc />
         public void AddConfigurationFile(IConfigurationFile configFile)
         {
-            if (_configurationFiles.ContainsKey(configFile.Name))
-                throw new ConfigurationException($"There is already a configuration file with the same name '{configFile.Name}'");
+            //if (_configurationFiles.ContainsKey(configFile.Name))
+            //    throw new ConfigurationException($"There is already a configuration file with the same name '{configFile.Name}'");
 
-            _configurationFiles.Add(configFile.Name, configFile);
+            _configurationFiles[configFile.Name] = configFile;
         }
 
         /// <inheritdoc />
@@ -74,7 +74,7 @@ namespace Coddee.Services.Configuration
             if (!string.IsNullOrWhiteSpace(fileName) && !_configurationFiles.ContainsKey(fileName))
                 throw new ConfigurationException($"There is no configuration file with the name '{fileName}'");
 
-            _configurationFiles[fileName].SetValue(key,value);
+            _configurationFiles[fileName].SetValue(key, value);
         }
     }
 }
