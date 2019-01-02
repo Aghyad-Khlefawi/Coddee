@@ -1,4 +1,7 @@
-﻿using System;
+﻿// Copyright (c) Aghyad khlefawi. All rights reserved.  
+// Licensed under the MIT License. See LICENSE file in the project root for full license information.  
+
+using System;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -49,7 +52,6 @@ namespace Coddee.AspNet
             _authorizationValidator = _configurations.AuthorizationValidator;
             _repositoryActionLoactor = new RepositoryActionLoactor();
 
-
             if (container.IsRegistered<DynamicApiControllersManager>())
                 _controllersManager = container.Resolve<DynamicApiControllersManager>();
 
@@ -75,7 +77,6 @@ namespace Coddee.AspNet
 
             if (ValidateRequest(context))
             {
-
                 if (_configurations.UseLoggingPage)
                 {
                     if (IsLoggingPageRequest(context))
@@ -95,19 +96,16 @@ namespace Coddee.AspNet
                 }
                 else
                 {
-                    DynamicApiException exception = null;
+                    Exception exception = null;
 
                     try
                     {
                         await Task.Run(() => HandleRequest(request));
                     }
-                    catch (DynamicApiException dynamicApiException)
-                    {
-                        exception = dynamicApiException;
-                    }
+                  
                     catch (Exception e)
                     {
-                        exception = new DynamicApiException(DynamicApiExceptionCodes.UnknownError, "An error occurred while processing the request.", e, request);
+                        exception = e;
                     }
 
                     if (exception != null)
@@ -136,7 +134,7 @@ namespace Coddee.AspNet
                 Log(request, $"Looking in repository actions.");
                 action = _repositoryActionLoactor.CreateRepositoryAction(_repositoryManager, request);
                 if (action == null)
-                    throw new DynamicApiException(DynamicApiExceptionCodes.ActionNotFound, "Action not found.", request);
+                    throw new DynamicApiException(DynamicApiExceptionCodes.ActionNotFound, "Action not found.");
                 _cache.AddAction(action);
                 Log(request, $"Repository action created.");
             }
@@ -151,7 +149,7 @@ namespace Coddee.AspNet
             if (action.RequiresAuthorization)
             {
                 if (!_authorizationValidator.IsAuthorized(action, request))
-                    throw new DynamicApiException(DynamicApiExceptionCodes.Unauthorized, "Unauthorized client.", request);
+                    throw new DynamicApiException(DynamicApiExceptionCodes.Unauthorized, "Unauthorized client.");
             }
 
             Log(request, $"Invoking action.");
@@ -177,13 +175,15 @@ namespace Coddee.AspNet
             {
                 return $"{resLength} B";
             }
+
             if (resLength < mb)
             {
-                return $"{(float)resLength / kb} KB";
+                return $"{(float) resLength / kb} KB";
             }
+
             if (resLength < gb)
             {
-                return $"{(float)resLength / mb} MB";
+                return $"{(float) resLength / mb} MB";
             }
 
             return $"{resLength} B";
@@ -202,12 +202,11 @@ namespace Coddee.AspNet
             await context.Response.WriteAsync(_pagesProvider.GetLogPage(log.ToString()));
         }
 
-        private async Task HandleException(DynamicApiRequest request, DynamicApiException exception)
+        private async Task HandleException(DynamicApiRequest request, Exception exception)
         {
-            Log(exception);
+            Log(request, exception);
             var statusCode = request.HttpContext.Response.StatusCode = GetExceptionStatusCode(exception);
-            request.HttpContext.Response.Headers.Add("X-Coddee-Exception", exception.Code.ToString());
-
+            request.HttpContext.Response.Headers.Add(HttpHeaders.XCoddeeException, exception.GetType().AssemblyQualifiedName);
             if (_configurations.UseErrorPages)
             {
                 string content = null;
@@ -222,11 +221,10 @@ namespace Coddee.AspNet
             }
         }
 
-
-
-        private int GetExceptionStatusCode(DynamicApiException exception)
+        private int GetExceptionStatusCode(Exception exception)
         {
-            switch (exception.Code)
+            if(exception is DynamicApiException dynamicApiException)
+            switch (dynamicApiException.Code)
             {
                 case DynamicApiExceptionCodes.Unauthorized:
                     return StatusCodes.Status401Unauthorized;
@@ -237,6 +235,8 @@ namespace Coddee.AspNet
                 default:
                     return StatusCodes.Status500InternalServerError;
             }
+            return StatusCodes.Status500InternalServerError;
+
         }
 
         private async Task<long> InvokeAction(DynamicApiRequest request, IDynamicApiAction action, DynamicApiActionParameterValue[] parameters, object context)
@@ -248,8 +248,6 @@ namespace Coddee.AspNet
             await response.WriteAsync(res);
             return Encoding.UTF8.GetByteCount(res);
         }
-
-
 
         /// <summary>
         /// Add the controllers to the cache.
@@ -283,18 +281,17 @@ namespace Coddee.AspNet
         {
             _logger.Log(_eventsSource, content, logType);
         }
+
         private void Log(DynamicApiRequest request, string content, LogRecordTypes logType = LogRecordTypes.Information)
         {
             Log($"[Request Id:{request.Id}] {content}", logType);
         }
+
         private void Log(DynamicApiRequest request, Exception exception)
         {
             Log(request, exception.BuildExceptionString(0, true), LogRecordTypes.Error);
         }
-        private void Log(DynamicApiException exception)
-        {
-            Log(exception.Request, exception);
-        }
+
         private DynamicApiRequest CreateApiRequest(HttpContext context)
         {
             var path = context.Request.Path.ToString().Split('/');
@@ -310,7 +307,7 @@ namespace Coddee.AspNet
 
         private void SetHeaders(HttpResponse response)
         {
-            response.Headers.Add("X-Coddee-DAPI", "v1");
+            response.Headers.Add(HttpHeaders.XCoddeeDAPI, "v1");
 
             if (_configurations.UseCors)
             {

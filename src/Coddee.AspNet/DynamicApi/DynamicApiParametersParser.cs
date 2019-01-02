@@ -72,7 +72,7 @@ namespace Coddee.AspNet
                 }
 
                 if (!found)
-                    throw new DynamicApiException(DynamicApiExceptionCodes.MissingParameter, $"Parameter ({actionParameter.Name}) is missing.", request);
+                    throw new DynamicApiException(DynamicApiExceptionCodes.MissingParameter, $"Parameter ({actionParameter.Name}) is missing.");
             }
 
 

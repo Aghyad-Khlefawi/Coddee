@@ -329,7 +329,7 @@ namespace Coddee.Data.LinqToSQL
         /// <param name="context"></param>
         /// <param name="pk"></param>
         /// <returns></returns>
-        protected TTable GetItemByPrimaryKey(DataContext context, object pk)
+        protected virtual TTable GetItemByPrimaryKey(DataContext context, object pk)
         {
             var table = context.GetTable<TTable>();
             var mapping = context.Mapping.GetTable(typeof(TTable));

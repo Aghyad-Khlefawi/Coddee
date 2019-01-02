@@ -8,6 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+using System;
 using Coddee;
 using HR.Data.Models;
 using HR.Data.Repositories;
@@ -30,6 +31,7 @@ namespace HR.Data.Linq.Repositories
 
         public Task<IEnumerable<Company>> GetItemsWithDetails()
         {
+            throw new AccessViolationException("TestError");
             return ExecuteAndMapCollection(db => db.CompaniesViews.ToList());
         }
     }

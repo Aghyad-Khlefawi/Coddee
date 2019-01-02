@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Coddee.Collections;
 using Coddee.Data;
 using Coddee.WPF;
@@ -129,7 +130,14 @@ namespace HR.Clients.WPF.Components
                 BranchViewer = await InitializeViewModel<IBranchViewer>();
             }
 
-            await Task.WhenAll(LoadCompanies(), InitializeBranchViewer());
+            try
+            {
+                await Task.WhenAll(LoadCompanies(), InitializeBranchViewer());
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
         }
 
         private void CompanyEditorSaved(object sender, EditorSaveArgs<Company> e)

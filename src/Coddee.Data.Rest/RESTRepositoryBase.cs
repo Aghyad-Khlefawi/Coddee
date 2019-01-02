@@ -9,6 +9,7 @@ using System.Net.Http;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using Coddee.AspNet;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
@@ -41,7 +42,7 @@ namespace Coddee.Data.REST
         };
 
         /// <inheritdoc />
-        public override int RepositoryType { get; } = (int)RepositoryTypes.REST;
+        public override int RepositoryType { get; } = (int) RepositoryTypes.REST;
 
         /// <summary>
         /// The http client that will make the requests to the server.
@@ -72,7 +73,6 @@ namespace Coddee.Data.REST
             _httpClient = httpClient;
         }
 
-
         /// <summary>
         /// Send a post request that doesn't return a result
         /// </summary>
@@ -86,7 +86,6 @@ namespace Coddee.Data.REST
         {
             return Post($"{controller}/{action}", param);
         }
-
 
         /// <summary>
         /// Send a post request that doesn't return a result
@@ -103,7 +102,7 @@ namespace Coddee.Data.REST
             {
                 if (res.StatusCode == HttpStatusCode.Unauthorized || res.StatusCode == HttpStatusCode.Forbidden)
                     _unauthorizedRequestHandler?.Invoke();
-                throw HandleBadRequest(resString);
+                throw HandleBadRequest(res, resString);
             }
         }
 
@@ -118,18 +117,30 @@ namespace Coddee.Data.REST
         /// <summary>
         /// Handle responses with BadRequest response code.
         /// </summary>
+        /// <param name="res"></param>
         /// <param name="ex"></param>
         /// <returns></returns>
-        protected virtual Exception HandleBadRequest(string ex)
+        protected virtual Exception HandleBadRequest(HttpResponseMessage res, string ex)
         {
-            var exception = JsonConvert.DeserializeObject<APIException>(ex, DefaultJsonSerializerSettings);
-            if (exception.InnerExceptionType == typeof(DBException))
+            Exception exception = null;
+            if (res.Headers.Contains(HttpHeaders.XCoddeeException))
             {
-                var jo = JObject.Parse(exception.InnerExceptionSeriailized);
-                var code = exception.Code;
-                var message = jo[nameof(DBException.Message)].Value<string>();
-                return new DBException(code, message);
+                var exceptionHeader = res.Headers.First(e => e.Key == HttpHeaders.XCoddeeException).Value.First();
+                exception = (Exception) JsonConvert.DeserializeObject(ex, Type.GetType(exceptionHeader));
             }
+            else
+            {
+                var apiException = JsonConvert.DeserializeObject<APIException>(ex, DefaultJsonSerializerSettings);
+                exception = apiException;
+                if (apiException.InnerExceptionType == typeof(DBException))
+                {
+                    var jo = JObject.Parse(apiException.InnerExceptionSeriailized);
+                    var code = apiException.Code;
+                    var message = jo[nameof(DBException.Message)].Value<string>();
+                    return new DBException(code, message);
+                }
+            }
+
             return exception;
         }
 
@@ -148,14 +159,13 @@ namespace Coddee.Data.REST
 
             if (res.IsSuccessStatusCode)
             {
-
                 return JsonConvert.DeserializeObject<T>(resString, DefaultJsonSerializerSettings);
             }
 
             if (res.StatusCode == HttpStatusCode.Unauthorized || res.StatusCode == HttpStatusCode.Forbidden)
                 _unauthorizedRequestHandler?.Invoke();
 
-            throw HandleBadRequest(resString);
+            throw HandleBadRequest(res, resString);
         }
 
         /// <summary>
@@ -172,7 +182,6 @@ namespace Coddee.Data.REST
         {
             return Post<T>($"{controller}/{action}", param);
         }
-
 
         /// <summary>
         /// Send a Put request that doesn't return a result
@@ -198,15 +207,15 @@ namespace Coddee.Data.REST
                                  object param = null)
         {
             var content = param != null
-                ? new StringContent(SerializeObject(param), Encoding.UTF8, "application/json")
-                : null;
+                              ? new StringContent(SerializeObject(param), Encoding.UTF8, "application/json")
+                              : null;
             var res = await _httpClient.PutAsync(url, content);
             var resString = await res.Content.ReadAsStringAsync();
             if (!res.IsSuccessStatusCode)
             {
                 if (res.StatusCode == HttpStatusCode.Unauthorized || res.StatusCode == HttpStatusCode.Forbidden)
                     _unauthorizedRequestHandler?.Invoke();
-                throw HandleBadRequest(resString);
+                throw HandleBadRequest(res, resString);
             }
         }
 
@@ -221,8 +230,8 @@ namespace Coddee.Data.REST
                                        object param = null)
         {
             var content = param != null
-                ? new StringContent(JsonConvert.SerializeObject(param, DefaultJsonSerializerSettings), Encoding.UTF8, "application/json")
-                : null;
+                              ? new StringContent(JsonConvert.SerializeObject(param, DefaultJsonSerializerSettings), Encoding.UTF8, "application/json")
+                              : null;
             var res = await _httpClient.PutAsync(url, content);
             return await HandleResquestResponse<T>(res);
         }
@@ -284,7 +293,7 @@ namespace Coddee.Data.REST
                 _unauthorizedRequestHandler?.Invoke();
 
             if (!res.IsSuccessStatusCode)
-                throw HandleBadRequest(resString);
+                throw HandleBadRequest(res, resString);
 
             if (string.IsNullOrEmpty(resString))
                 throw new APIException(APIExceptionCodes.EmptyResponse, "Server returned an empty response");
@@ -357,11 +366,12 @@ namespace Coddee.Data.REST
                 urlBuilder.Append("=");
                 urlBuilder.Append(id);
             }
+
             var res =
                 await _httpClient.DeleteAsync(urlBuilder.ToString());
             var resString = await res.Content.ReadAsStringAsync();
             if (!res.IsSuccessStatusCode)
-                throw HandleBadRequest(resString);
+                throw HandleBadRequest(res, resString);
             if (res.StatusCode == HttpStatusCode.Unauthorized || res.StatusCode == HttpStatusCode.Forbidden)
                 _unauthorizedRequestHandler?.Invoke();
         }
@@ -399,14 +409,17 @@ namespace Coddee.Data.REST
             {
                 return datetime.ToString(DefaultDateTimeFormat);
             }
+
             if (obj is int num)
             {
                 return num.ToString();
             }
+
             if (obj is bool boolean)
             {
                 return boolean.ToString();
             }
+
             return JsonConvert.SerializeObject(obj, DefaultJsonSerializerSettings);
         }
     }
@@ -424,7 +437,6 @@ namespace Coddee.Data.REST
         /// </summary>
         protected readonly string _identifier;
 
-
         /// <inheritdoc />
         protected RESTRepositoryBase()
         {
@@ -441,7 +453,8 @@ namespace Coddee.Data.REST
             {
                 RaiseItemsChanged(this,
                                   new RepositoryChangeEventArgs<TModel>(args.OperationType,
-                                                                        ((JObject)args.Item).ToObject<TModel>(), true));
+                                                                        ((JObject) args.Item).ToObject<TModel>(),
+                                                                        true));
             }
         }
 
@@ -470,7 +483,7 @@ namespace Coddee.Data.REST
         protected virtual void OnItemsChanged(object sender, RepositoryChangeEventArgs<TModel> e)
         {
             if (!e.FromSync && _sendSyncRequests)
-                _syncService?.SyncItem(_identifier, new RepositorySyncEventArgs { Item = e.Item, OperationType = e.OperationType });
+                _syncService?.SyncItem(_identifier, new RepositorySyncEventArgs {Item = e.Item, OperationType = e.OperationType});
         }
 
         /// <inheritdoc />
@@ -483,7 +496,7 @@ namespace Coddee.Data.REST
     /// <typeparam name="TModel">The model type</typeparam>
     /// <typeparam name="TKey">The table key(ID) type</typeparam>
     public abstract class ReadOnlyRESTRepositoryBase<TModel, TKey> : RESTRepositoryBase<TModel, TKey>,
-        IReadOnlyRepository<TModel, TKey> where TModel : IUniqueObject<TKey>
+                                                                     IReadOnlyRepository<TModel, TKey> where TModel : IUniqueObject<TKey>
     {
         /// <inheritdoc />
         protected ReadOnlyRESTRepositoryBase(string controllerName)
@@ -500,7 +513,7 @@ namespace Coddee.Data.REST
         /// Sends a get request to the targeted controller
         /// </summary>
         /// <returns></returns>
-        protected Task<T> GetFromController<T>([CallerMemberName]string action = "",
+        protected Task<T> GetFromController<T>([CallerMemberName] string action = "",
                                                params KeyValuePair<string, string>[] param)
         {
             return Get<T>(ControllerName, action, param);
@@ -510,7 +523,7 @@ namespace Coddee.Data.REST
         /// Sends a get request to the targeted controller
         /// </summary>
         /// <returns></returns>
-        protected Task<T> GetFromController<T>(KeyValuePair<string, string> param, [CallerMemberName]string action = "")
+        protected Task<T> GetFromController<T>(KeyValuePair<string, string> param, [CallerMemberName] string action = "")
         {
             return Get<T>(ControllerName, action, param);
         }
@@ -519,7 +532,7 @@ namespace Coddee.Data.REST
         /// Sends a get request to the targeted controller
         /// </summary>
         /// <returns></returns>
-        protected Task<T> GetFromController<T>(IDictionary<string, string> param, [CallerMemberName]string action = "")
+        protected Task<T> GetFromController<T>(IDictionary<string, string> param, [CallerMemberName] string action = "")
         {
             return Get<T>(ControllerName, action, param);
         }
@@ -534,7 +547,6 @@ namespace Coddee.Data.REST
         {
             return GetFromController<IEnumerable<TModel>>(ApiCommonActions.GetItems);
         }
-
     }
 
     /// <summary>
@@ -543,7 +555,7 @@ namespace Coddee.Data.REST
     /// <typeparam name="TModel">The model type</typeparam>
     /// <typeparam name="TKey">The table key(ID) type</typeparam>
     public abstract class CRUDRESTRepositoryBase<TModel, TKey> : ReadOnlyRESTRepositoryBase<TModel, TKey>,
-        ICRUDRepository<TModel, TKey>
+                                                                 ICRUDRepository<TModel, TKey>
         where TModel : IUniqueObject<TKey>
     {
         /// <inheritdoc />
@@ -555,7 +567,7 @@ namespace Coddee.Data.REST
         /// Sends a POST request to the targeted controller
         /// </summary>
         protected virtual Task PostToController(string action,
-                                        object param = null)
+                                                object param = null)
         {
             return Post(ControllerName, action, param);
         }
@@ -564,7 +576,7 @@ namespace Coddee.Data.REST
         /// Sends a POST request to the targeted controller
         /// </summary>
         protected virtual Task<T> PostToController<T>(string action,
-                                              object param = null)
+                                                      object param = null)
         {
             return Post<T>(ControllerName, action, param);
         }
@@ -573,7 +585,7 @@ namespace Coddee.Data.REST
         /// Sends a POST request to the targeted controller
         /// </summary>
         protected virtual Task PutToController(string action,
-                                       object param = null)
+                                               object param = null)
         {
             return Put(ControllerName, action, param);
         }
@@ -582,7 +594,7 @@ namespace Coddee.Data.REST
         /// Sends a POST request to the targeted controller
         /// </summary>
         protected virtual Task<T> PutToController<T>(string action,
-                                             object param = null)
+                                                     object param = null)
         {
             return Put<T>(ControllerName, action, param);
         }
@@ -594,7 +606,6 @@ namespace Coddee.Data.REST
         {
             return Delete(ControllerName, action, id.ToString());
         }
-
 
         /// <inheritdoc />
         public virtual async Task<TModel> UpdateItem(TModel item)
