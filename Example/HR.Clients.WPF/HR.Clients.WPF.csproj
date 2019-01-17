@@ -30,9 +30,9 @@
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup>
-  <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-  <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
-</PropertyGroup>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
+  </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
@@ -361,7 +361,7 @@
       <Name>HR.Data.REST</Name>
     </ProjectReference>
     <ProjectReference Include="..\HR.Data\HR.Data.csproj">
-      <Project>{218FF723-CEB7-4BEB-834C-538B713839E3}</Project>
+      <Project>{218ff723-ceb7-4beb-834c-538b713839e3}</Project>
       <Name>HR.Data</Name>
     </ProjectReference>
   </ItemGroup>

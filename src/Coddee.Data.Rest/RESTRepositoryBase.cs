@@ -140,7 +140,6 @@ namespace Coddee.Data.REST
                     return new DBException(code, message);
                 }
             }
-
             return exception;
         }
 

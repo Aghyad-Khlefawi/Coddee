@@ -2,12 +2,14 @@
 using System.Linq;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Runtime.Serialization;
 
 namespace Coddee.AspNet
 {
     /// <summary>
     /// Dynamic API Exception.
     /// </summary>
+    [Serializable]
     public class DynamicApiException : CoddeeException
     {
         /// <inheritdoc />
@@ -24,9 +26,13 @@ namespace Coddee.AspNet
         public DynamicApiException(int code, string message, Exception inner) : base(code, message, inner)
         {
         }
-        
+        protected DynamicApiException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        {
+        }
     }
 
+    [Serializable]
     public class DynamicApiAggregateException : DynamicApiException
     {
         /// <inheritdoc />
@@ -49,7 +55,10 @@ namespace Coddee.AspNet
             InnerExceptions = new ReadOnlyCollection<Exception>(inner);
             Messages = new ReadOnlyCollection<string>(inner.Select(e=>e.Message).ToList());
         }
-
+        protected DynamicApiAggregateException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        {
+        }
         public ReadOnlyCollection<Exception> InnerExceptions { get; }
 
         public ReadOnlyCollection<string> Messages { get; }

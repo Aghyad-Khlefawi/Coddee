@@ -25,7 +25,7 @@ namespace Coddee.AppBuilder
         protected override void SetupDefaultBuildActions()
         {
             base.SetupDefaultBuildActions();
-#if NET46
+#if NET461
             if (!BuildActionsCoordinator.BuildActionExists(BuildActionsKeys.ConfigFile))
                 this.UseConfigurationFile(AppDomain.CurrentDomain.BaseDirectory);
 #endif

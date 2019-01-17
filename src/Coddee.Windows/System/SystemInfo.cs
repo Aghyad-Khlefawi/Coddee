@@ -20,7 +20,7 @@ namespace Coddee.Windows
             return Drive.GetDrive(drive).SerialNumber.ToString();
         }
 
-#if NET46
+#if NET461
 
         /// <summary>
         /// returns the CPU unique identifier

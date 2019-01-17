@@ -2,12 +2,14 @@
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.  
 
 using System;
+using System.Runtime.Serialization;
 
 namespace Coddee.Data
 {
     /// <summary>
     /// An exception that occurs while dealing with the database.
     /// </summary>
+    [Serializable]
     public class DBException : CoddeeException
     {
         /// <inheritdoc />
@@ -28,6 +30,10 @@ namespace Coddee.Data
 
         /// <inheritdoc />
         public DBException(int code, string message, Exception inner) : base(code, message, inner)
+        {
+        }
+        protected DBException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
         {
         }
     }

@@ -52,7 +52,5 @@ namespace Coddee.AppBuilder
             }));
             return builder;
         }
-
-
     }
 }

@@ -27,7 +27,7 @@ namespace Coddee.AppBuilder
     {
         private const string EventsSource = "ApplicationBuilder";
 
-#if NET46
+#if NET461
 
         /// <summary>
         /// Initialize <see cref="ILocalizationManager"/> service.

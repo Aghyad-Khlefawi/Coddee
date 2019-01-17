@@ -27,7 +27,7 @@ namespace Coddee.Services
         /// <inheritdoc />
         public IEnumerable<Module> DescoverModulesFromAssambles(string location, string assebmly = null)
         {
-#if NET46
+#if NET461
             string path = Path.GetDirectoryName(location);
             return DescoverModulesFromAssambles(Directory.GetFiles(path, $"{assebmly}")
                                                     .Select(e => Assembly.LoadFile(e))

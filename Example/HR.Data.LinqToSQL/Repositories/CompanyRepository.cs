@@ -31,7 +31,6 @@ namespace HR.Data.Linq.Repositories
 
         public Task<IEnumerable<Company>> GetItemsWithDetails()
         {
-            throw new AccessViolationException("TestError");
             return ExecuteAndMapCollection(db => db.CompaniesViews.ToList());
         }
     }
