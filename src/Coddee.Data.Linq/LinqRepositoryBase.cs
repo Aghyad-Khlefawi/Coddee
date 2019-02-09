@@ -187,7 +187,6 @@ namespace Coddee.Data.LinqToSQL
                     transaction.Rollback();
                     throw;
                 }
-
             });
         }
 

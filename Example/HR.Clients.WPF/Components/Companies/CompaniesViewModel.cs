@@ -121,7 +121,7 @@ namespace HR.Clients.WPF.Components
             
             async Task LoadCompanies()
             {
-                Companies = await _companyRepository.GetItemsWithDetails().ToAsyncObservableCollection();
+                Companies = await _companyRepository.GetItemsWithDetails(DateTime.Now).ToAsyncObservableCollection();
                 Companies.BindToRepositoryChanges(_companyRepository);
             }
 

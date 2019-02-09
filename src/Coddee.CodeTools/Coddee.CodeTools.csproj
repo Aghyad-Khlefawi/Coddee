@@ -282,7 +282,6 @@
       <Name>Coddee.Unity</Name>
     </ProjectReference>
     <ProjectReference Include="..\Coddee.Windows\Coddee.Windows.csproj">
-      <AdditionalProperties>TargetFramework=net46</AdditionalProperties>
       <Project>{91804c4a-4272-4736-8db9-61a0bbd21642}</Project>
       <Name>Coddee.Windows</Name>
     </ProjectReference>

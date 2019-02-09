@@ -18,7 +18,7 @@ namespace HR.Data.FileRepositories
 
         }
 
-        public Task<IEnumerable<Company>> GetItemsWithDetails()
+        public Task<IEnumerable<Company>> GetItemsWithDetails(DateTime test)
         {
             return GetItems();
         }

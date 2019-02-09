@@ -27,9 +27,12 @@ namespace HR.Data.Rest.Repositories
         {
         }
 
-        public Task<IEnumerable<Company>> GetItemsWithDetails()
+        public Task<IEnumerable<Company>> GetItemsWithDetails(DateTime test)
         {
-            return GetFromController<IEnumerable<Company>>();
+            return GetFromController<IEnumerable<Company>>(new Dictionary<string, string>
+            {
+                {nameof(test),SerializeObject(test) }
+            });
         }
     }
 }

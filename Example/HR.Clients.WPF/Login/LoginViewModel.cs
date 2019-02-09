@@ -27,7 +27,7 @@ namespace HR.Clients.WPF.Login
                 Login();
             };
 #endif
-        }
+        } 
 
         private IAuthenticationProvider<HRAuthenticationResponse> _authenticationProvider;
         public event EventHandler<AuthenticationResponse> LoggedIn;

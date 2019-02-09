@@ -8,7 +8,7 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>HR.Clients.Console</RootNamespace>
     <AssemblyName>HR.Clients.Console</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>

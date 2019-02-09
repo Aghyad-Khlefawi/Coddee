@@ -29,9 +29,10 @@ namespace HR.Data.Linq.Repositories
             mapper.RegisterMap<DB.CompaniesView,Company>();
         }
 
-        public Task<IEnumerable<Company>> GetItemsWithDetails()
+        public Task<IEnumerable<Company>> GetItemsWithDetails(DateTime test)
         {
             return ExecuteAndMapCollection(db => db.CompaniesViews.ToList());
         }
+        
     }
 }
