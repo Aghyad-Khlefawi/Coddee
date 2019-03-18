@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Authors>Aghyad khlefawi</Authors>
-    <Description>Coddee core assembly</Description>
+    <Description>Coddee unity assembly</Description>
     <Copyright>Copyright ©  2018 Aghyad khlefawi</Copyright>
     <Version>1.5.0</Version>
     <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>

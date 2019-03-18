@@ -46,7 +46,7 @@ namespace HR.Clients.Components
             await base.OnInitialization();
             _branchesViewModel = CreateViewModel<BranchesViewModel>();
 
-            Companies = await GetRepository<ICompanyRepository>().GetItemsWithDetails().ToAsyncObservableCollection();
+            Companies = await GetRepository<ICompanyRepository>().GetItemsWithDetails(DateTime.Now).ToAsyncObservableCollection();
         }
     }
 }

@@ -54,8 +54,11 @@ namespace Coddee.Data.REST
         /// </summary>
         protected Action _unauthorizedRequestHandler;
 
+        private bool _addTimeStampToRequests;
+
         /// <inheritdoc />
         public void Initialize(HttpClient httpClient,
+                               bool addTimeStampToRequests,
                                Action unauthorizedRequestHandler,
                                IRepositoryManager repositoryManager,
                                IObjectMapper mapper,
@@ -63,6 +66,7 @@ namespace Coddee.Data.REST
                                RepositoryConfigurations config = null)
         {
             SetHttpClient(httpClient);
+            _addTimeStampToRequests = addTimeStampToRequests;
             _unauthorizedRequestHandler = unauthorizedRequestHandler;
             Initialize(repositoryManager, mapper, implementedInterface, config);
         }
@@ -108,10 +112,19 @@ namespace Coddee.Data.REST
 
         private async Task<HttpResponseMessage> SendPostRequest(string url, object param)
         {
+            if (_addTimeStampToRequests)
+            {
+                url += CreateTimeStamp();
+            }
             var content = param != null
                               ? new StringContent(SerializeObject(param), Encoding.UTF8, "application/json")
                               : null;
             return await _httpClient.PostAsync(url, content);
+        }
+
+        private string CreateTimeStamp()
+        {
+            return $"?t={DateTime.Now:O}";
         }
 
         /// <summary>
@@ -205,6 +218,10 @@ namespace Coddee.Data.REST
         protected async Task Put(string url,
                                  object param = null)
         {
+            if (_addTimeStampToRequests)
+            {
+                url += CreateTimeStamp();
+            }
             var content = param != null
                               ? new StringContent(SerializeObject(param), Encoding.UTF8, "application/json")
                               : null;
@@ -228,6 +245,10 @@ namespace Coddee.Data.REST
         protected async Task<T> Put<T>(string url,
                                        object param = null)
         {
+            if (_addTimeStampToRequests)
+            {
+                url += CreateTimeStamp();
+            }
             var content = param != null
                               ? new StringContent(JsonConvert.SerializeObject(param, DefaultJsonSerializerSettings), Encoding.UTF8, "application/json")
                               : null;
@@ -270,6 +291,15 @@ namespace Coddee.Data.REST
                     urlBuilder.Append("=");
                     urlBuilder.Append(item.Value);
                     urlBuilder.Append("&");
+                }
+                if (_addTimeStampToRequests)
+                urlBuilder.Append(CreateTimeStamp().Replace("?","&"));
+            }
+            else
+            {
+                if (_addTimeStampToRequests)
+                {
+                    urlBuilder.Append(CreateTimeStamp());
                 }
             }
 
@@ -364,6 +394,14 @@ namespace Coddee.Data.REST
                 urlBuilder.Append("id");
                 urlBuilder.Append("=");
                 urlBuilder.Append(id);
+                if (_addTimeStampToRequests)
+                urlBuilder.Append(CreateTimeStamp().Replace("?", "&"));
+            }
+            else
+            {
+                if (_addTimeStampToRequests)
+                urlBuilder.Append(CreateTimeStamp());
+                
             }
 
             var res =
@@ -633,7 +671,7 @@ namespace Coddee.Data.REST
         /// <inheritdoc />
         public virtual async Task DeleteItem(TModel item)
         {
-            await DeleteItemByKey(item.GetKey);
+            await PostToController(nameof(DeleteItem),item);
         }
     }
 }

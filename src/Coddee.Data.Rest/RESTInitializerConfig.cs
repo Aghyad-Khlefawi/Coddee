@@ -70,5 +70,10 @@ namespace Coddee.AppBuilder
         /// </summary>
         public KeyValuePair<Type, Type>[] RepositoriesTypes { get; }
 
+        /// <summary>
+        /// Specifies the timeout for the Http client.
+        /// </summary>
+        public TimeSpan RequestTimeout { get; set; } = TimeSpan.FromSeconds(100);
+
     }
 }

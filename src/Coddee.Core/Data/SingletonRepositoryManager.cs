@@ -14,9 +14,12 @@ namespace Coddee.Data
     /// </summary>
     public class SingletonRepositoryManager : RepositoryManagerBase
     {
+        private readonly IContainer _container;
+
         /// <inheritdoc/>
-        public SingletonRepositoryManager()
+        public SingletonRepositoryManager(IContainer container)
         {
+            _container = container;
             _repositories = new Dictionary<Type, IRepository>();
         }
 
@@ -91,7 +94,7 @@ namespace Coddee.Data
                     IRepository repo;
                     try
                     {
-                        repo = (IRepository)Activator.CreateInstance(repository.Value);
+                        repo = (IRepository)_container.Resolve(repository.Value);
                     }
                     catch (Exception e)
                     {

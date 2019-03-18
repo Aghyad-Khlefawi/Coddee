@@ -13,9 +13,12 @@ namespace Coddee.Data
     /// </summary>
     public class TransientRepositoryManager : RepositoryManagerBase
     {
+        private readonly IContainer _container;
+
         /// <inheritdoc />
-        public TransientRepositoryManager()
+        public TransientRepositoryManager(IContainer container)
         {
+            _container = container;
             _registeredRepositoryTypes = new Dictionary<Type, Type>();
             _singletonRepositories = new Dictionary<Type, IRepository>();
         }
@@ -42,7 +45,7 @@ namespace Coddee.Data
                 throw new InvalidOperationException($"Repository of type {interfaceType} is not registered.");
 
             var implementation = _registeredRepositoryTypes[interfaceType];
-            var repo = (IRepository)Activator.CreateInstance(implementation);
+            var repo = (IRepository)_container.Resolve(implementation);
             InitializeRepository(repo, interfaceType);
 
             if (_syncService != null)

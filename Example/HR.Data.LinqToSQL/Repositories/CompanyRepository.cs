@@ -33,6 +33,5 @@ namespace HR.Data.Linq.Repositories
         {
             return ExecuteAndMapCollection(db => db.CompaniesViews.ToList());
         }
-        
     }
 }

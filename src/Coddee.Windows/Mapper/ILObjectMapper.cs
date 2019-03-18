@@ -186,6 +186,8 @@ namespace Coddee.Windows.Mapper
         /// <returns>A new object of the target type with the source object values</returns>
         public TTarget Map<TTarget>(object source) where TTarget : new()
         {
+            if (source == null)
+                return default(TTarget);
             var sourceType = source.GetType();
             var targetType = typeof(TTarget);
             if (!_mappings.ContainsKey(sourceType) || !_mappings[sourceType].ContainsKey(targetType))
@@ -464,7 +466,8 @@ namespace Coddee.Windows.Mapper
             // Define result array
             ;
             il.Emit(OpCodes.Ldloc, source);
-            il.Emit(OpCodes.Call, typeof(ICollection).GetMethod("get_Count"));
+            il.Emit(OpCodes.Call, typeof(ICollection).GetMethod
+                        ("get_Count"));
             il.Emit(OpCodes.Stloc, count);
             il.Emit(OpCodes.Ldloc, count);
             il.Emit(OpCodes.Newarr, typeof(TTarget));

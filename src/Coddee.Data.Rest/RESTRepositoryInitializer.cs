@@ -16,24 +16,32 @@ namespace Coddee.Data.REST
         private readonly IObjectMapper _mapper;
         private readonly RepositoryConfigurations _config;
         private HttpClient _client;
+        private readonly TimeSpan _requestTimeout;
 
         /// <inheritdoc />
         public int RepositoryType { get; } = (int)RepositoryTypes.REST;
 
+        /// <summary>
+        /// When set to true a time stamp parameter will be added to the query string of every request
+        /// </summary>
+        public bool AddTimeStampToRequests{ get; set; }
+        
         /// <inheritdoc />
         public RESTRepositoryInitializer(string apiBaseURL, Action unauthorizedRequestHandler, IObjectMapper mapper,
+                                         TimeSpan requestTimeout,
                                          RepositoryConfigurations config = null)
         {
             _unauthorizedRequestHandler = unauthorizedRequestHandler;
             _mapper = mapper;
             _config = config;
-            _client = new HttpClient { BaseAddress = new Uri(apiBaseURL, UriKind.Absolute) };
+            _requestTimeout = requestTimeout;
+            _client = new HttpClient { BaseAddress = new Uri(apiBaseURL, UriKind.Absolute),Timeout = requestTimeout};
         }
 
         /// <inheritdoc />
         public void InitializeRepository(IRepositoryManager repositoryManager, IRepository repository, Type implementedInterface)
         {
-            ((IRESTRepository)repository).Initialize(_client, _unauthorizedRequestHandler, repositoryManager, _mapper, implementedInterface, _config);
+            ((IRESTRepository)repository).Initialize(_client, AddTimeStampToRequests, _unauthorizedRequestHandler, repositoryManager, _mapper, implementedInterface, _config);
         }
 
         /// <summary>
@@ -43,7 +51,7 @@ namespace Coddee.Data.REST
         /// <param name="repositories"></param>
         public void SetApiBaseUrl(string url, IEnumerable<IRESTRepository> repositories)
         {
-            _client = new HttpClient { BaseAddress = new Uri(url, UriKind.Absolute) };
+            _client = new HttpClient { BaseAddress = new Uri(url, UriKind.Absolute),Timeout =_requestTimeout} ;
             repositories.ForEach(e => e.SetHttpClient(_client));
         }
     }
