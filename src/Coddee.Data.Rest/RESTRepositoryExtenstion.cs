@@ -32,7 +32,10 @@ namespace Coddee.AppBuilder
                 var repositoryManager = container.Resolve<IRepositoryManager>();
 
                 var configRes = config(container);
-                repositoryManager.AddRepositoryInitializer(new RESTRepositoryInitializer(configRes.ApiUrl, configRes.UnauthorizedRequestHandler, container.Resolve<IObjectMapper>(),configRes.RequestTimeout));
+                repositoryManager.AddRepositoryInitializer(new RESTRepositoryInitializer(configRes.ApiUrl, configRes.UnauthorizedRequestHandler, container.Resolve<IObjectMapper>(),configRes.RequestTimeout)
+                {
+                    AddTimestampToRequests = configRes.AddTimestampToRequests
+                });
 
                 if (!string.IsNullOrEmpty(configRes.RepositoriesAssembly))
                     repositoryManager.RegisterRepositories(configRes.RepositoriesAssembly);

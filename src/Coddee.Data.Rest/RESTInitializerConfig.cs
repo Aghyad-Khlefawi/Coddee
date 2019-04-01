@@ -75,5 +75,10 @@ namespace Coddee.AppBuilder
         /// </summary>
         public TimeSpan RequestTimeout { get; set; } = TimeSpan.FromSeconds(100);
 
+        /// <summary>
+        /// When true a time stamp parameter will be added to all requests
+        /// </summary>
+        public bool AddTimestampToRequests { get; set; }
+
     }
 }

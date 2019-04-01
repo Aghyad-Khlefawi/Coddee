@@ -24,7 +24,7 @@ namespace Coddee.Data.REST
         /// <summary>
         /// When set to true a time stamp parameter will be added to the query string of every request
         /// </summary>
-        public bool AddTimeStampToRequests{ get; set; }
+        public bool AddTimestampToRequests{ get; set; }
         
         /// <inheritdoc />
         public RESTRepositoryInitializer(string apiBaseURL, Action unauthorizedRequestHandler, IObjectMapper mapper,
@@ -41,7 +41,7 @@ namespace Coddee.Data.REST
         /// <inheritdoc />
         public void InitializeRepository(IRepositoryManager repositoryManager, IRepository repository, Type implementedInterface)
         {
-            ((IRESTRepository)repository).Initialize(_client, AddTimeStampToRequests, _unauthorizedRequestHandler, repositoryManager, _mapper, implementedInterface, _config);
+            ((IRESTRepository)repository).Initialize(_client, AddTimestampToRequests, _unauthorizedRequestHandler, repositoryManager, _mapper, implementedInterface, _config);
         }
 
         /// <summary>

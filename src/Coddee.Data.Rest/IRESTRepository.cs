@@ -16,7 +16,7 @@ namespace Coddee.Data.REST
         /// </summary>
         /// <param name="httpClient">The http client.</param>
         /// <param name="addTimeStampToRequests"></param>
-r        /// <param name="unauthorizedRequestHandler">An action that will be executed in case of an Unauthorized response.</param>
+        /// <param name="unauthorizedRequestHandler">An action that will be executed in case of an Unauthorized response.</param>
         /// <param name="repositoryManager">The repository manager holding the repository</param>
         /// <param name="mapper">Object mapper</param>
         /// <param name="implementedInterface">The repository interface implemented by this repository</param>
