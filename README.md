@@ -21,6 +21,7 @@ An example project is included in the source folder
 
 [Coddee.Security ](https://www.nuget.org/packages/Coddee.Security/1.0.0)
 
+[Coddee.Xamarin](https://www.nuget.org/packages/Coddee.Xamarin.Forms/1.0.0)
 
 [Coddee.Windows](https://www.nuget.org/packages/Coddee.Windows/1.0.0)
 
